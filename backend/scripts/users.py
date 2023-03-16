@@ -19,5 +19,6 @@ def create_user(name, username, password, email, birthdate):
     return {"name": name, "username": username, "password": password, "email": email, "birthdate": birthdate}
 
 if __name__ == "__main__":
-    print(create_users(1))
-    db.users.insert_many(create_users(5))
+    n = input('How many users?')
+    db.users.insert_many(create_users(int(n)))
+    print(f'Seeded {n} users')
