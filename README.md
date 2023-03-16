@@ -1,5 +1,10 @@
 # Seed Tracker
 
+## set up virtualenv
+
+pip install virtualenv || pip3 install virtualenv
+python3 -m venv seed
+
 ## to run backend
 
 pip install -r requirements.txt
@@ -7,13 +12,15 @@ pip install -r requirements.txt
 ### Windows:
 
 .\seed\Scripts\activate (activates virtual env)
-python seed-backend\app.py (starts the server)
+cd into seed-backend
+python app.py (starts the server)
 deactivate (deactivates virtual env)
 
 ### Mac/Linux:
 
 source seed/bin/activate (activates virtual env)
-python3 seed-backend\app.py (starts the server)
+cd into seed-backend
+python3 app.py (starts the server)
 deactivate (deactivates virtual env)
 
 ## to run frontend
