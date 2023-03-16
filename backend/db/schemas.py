@@ -1,3 +1,8 @@
+import sys
+sys.path.insert(0,"..")
+from db import db
+
+# schema validation:
 
 users_validator = {
     "$jsonSchema": {
@@ -163,14 +168,14 @@ user_symptoms_validator = {
                 "description": "required and must be the time the symptom started"
             },
             "meals": {
-                "bsonType: "array",
+                "bsonType": "array",
                 "description": "array of related meal ids"
             }  
         }
     }
 }
 
-def schemas()
+def create_schemas():
     try: 
         print('Adding schema validation...')
 
@@ -184,6 +189,6 @@ def schemas()
 
         print('Success!')
 
-    except:
-        print('Something went wrong!')
+    except Exception as e:
+        print('Something went wrong:', e)
 
