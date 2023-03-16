@@ -1,2 +1,4 @@
 # ignore virtualenv
 /seed
+env
+.env
