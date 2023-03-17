@@ -11,6 +11,7 @@ app = Flask(__name__)
 from api.auth import *
 from api.symptoms import *
 from api.foodroutes import *
+from api.foodgroups import *
 
 from api.auth import *
 from api.symptoms import *
