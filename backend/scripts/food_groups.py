@@ -18,4 +18,3 @@ foodGroups = [{ "name": "Fruit", "description": "berries, drupes, citrus, orchar
  {"name": "Caffeinated Beverages", "description": "coffee, tea, energy drinks"}]
 
 groups.insert_many(foodGroups)
-# print(groups)
