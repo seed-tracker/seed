@@ -1,9 +1,6 @@
-from flask import Flask, Blueprint
+from flask import Flask
+from app import app
 
-app = Flask(__name__)
-
-routes_bp = Blueprint('routes', __name__)
-
-@routes_bp.route("/symptoms/")
+@app.route("/symptoms")
 def symptoms():
     return "Symptoms"
