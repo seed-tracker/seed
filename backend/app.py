@@ -1,19 +1,26 @@
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+from flask_cors import CORS
+from flask import Flask
+import pprint
 import os
 
+from dotenv import load_dotenv, find_dotenv
+import os
+load_dotenv(find_dotenv())
+import os
+import pprint
+
 from flask import Flask
+from flask_pymongo import PyMongo
 
 app = Flask(__name__)
+from api.auth import *
+from api.symptoms import *
+from api.foodroutes import *
 
 # to protect the app
-app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
+app.config["SECRET_KEY"] = os.environ.get(SECRET_KEY)
 
-from routes import routes_bp
-from flask_cors import CORS
 cors = CORS(app)
 
-app.register_blueprint(routes_bp)
-
 if __name__ == "__main__":
-  app.run()
+    app.run()
