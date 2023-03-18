@@ -4,19 +4,22 @@ from app import app
 from bson import ObjectId
 
 # get all foods
-@app.route("/foods", methods=["GET"])
+@app.route('/foods', methods=['GET'])
 def get_foods():
     foods = db.foods.find()
-    # loops through every key in the object & makes sure it is a string
-    foodList = [{key: str(food[key]) for key in food} for food in foods]
-    return {
-        "data": foodList
-    }, 200
+    if foods:
+        food_list = [{key: str(food[key]) for key in food} for food in foods]
+        return {"data": food_list}, 200
+    else:
+        return "No foods found", 404
 
 # get a single food item
-@app.route("/foods/<string:id>", methods=["GET"])
-def get_foodById(id):
+@app.route('/foods/<string:id>', methods=['GET'])
+def get_food_by_id(id):
     food = db.foods.find_one(ObjectId(id))
-    print(food)
-    foodString = {key: str(food[key]) for key in food}
-    return foodString, 200
+    if food:
+        food_string = {key: str(food[key]) for key in food}
+        return food_string, 200
+    else:
+        return "Food not found", 404
+
