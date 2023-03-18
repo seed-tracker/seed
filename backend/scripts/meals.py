@@ -76,7 +76,7 @@ import datetime
 import sys
 from bson import ObjectId
 sys.path.insert(0,"..")
-from db import db
+from db import test_db, db
 
 
 def fetch_data():
@@ -84,128 +84,247 @@ def fetch_data():
  
     pipeline = [
         {
-            "$unwind": "$group_id"
+            "$unwind": "$groups"
         },
         {
             "$group": {
-                "_id": "$group_id",
-                "foods": {"$push": {"id": "$_id", "name": "$name"}}
+                "_id": "$groups",
+                "foods": {"$push": "$name"}
             }
-        },{
-        "$lookup": {
-            "from": "groups",
-            "localField": "_id",
-            "foreignField": "_id",
-            "as": "group"
-        }}
+        },
+        {
+            "$project": {
+                "group": "$_id",
+                "foods": 1,
+                "_id": 0
+            }
+        }
     ]
 
-    # groups = db.foods.aggregate(pipeline)
-    groups = [{'id': ObjectId('64137d120b63ba8c0db0d685'), 'foods': [{'id': ObjectId('641397d8fa6b4079054f3c2c'), 'name': 'Daiquiri'}, {'id': ObjectId('641397d8fa6b4079054f3c31'), 'name': 'Energy Drink'}, {'id': ObjectId('641397d8fa6b4079054f3c32'), 'name': 'Cola'}, {'id': ObjectId('641397d8fa6b4079054f3c33'), 'name': 'Donut'}, {'id': ObjectId('641397d8fa6b4079054f3c34'), 'name': 'Cereal, Sugary'}, {'id': ObjectId('641397d8fa6b4079054f3c35'), 'name': 'Cookie, Chocolate Chip'}, {'id': ObjectId('641397d8fa6b4079054f3c36'), 'name': 'Candy Bar'}, {'id': ObjectId('641397d8fa6b4079054f3c37'), 'name': 'Cupcake'}, {'id': ObjectId('641397d8fa6b4079054f3c48'), 'name': 'Vanilla Ice Cream'}, {'id': ObjectId('641397d8fa6b4079054f3c73'), 'name': 'Doughnuts'}], 'group': [{'id': ObjectId('64137d120b63ba8c0db0d685'), 'name': 'Refined Sugars', 'description': ' any foods with added sugar such as: chocolate, ice cream, cookies, cocktails, soda, non-fresh juice, canned fruits or fruits w/ added juice, dressings & spreads'}]}, {'id': ObjectId('64137d120b63ba8c0db0d682'), 'foods': [{'id': ObjectId('641397d8fa6b4079054f3c3d'), 'name': 'Walnut'}, {'id': ObjectId('641397d8fa6b4079054f3c3e'), 'name': 'Almond'}, {'id': ObjectId('641397d8fa6b4079054f3c3f'), 'name': 'Pistachio'}, {'id': ObjectId('641397d8fa6b4079054f3c40'), 'name': 'Peanut'}, {'id': ObjectId('641397d8fa6b4079054f3c41'), 'name': 'Cashew'}], 'group': [{'id': ObjectId('64137d120b63ba8c0db0d682'), 'name': 'Nuts and Seeds', 'description': 'tree nuts, nut butters, peanuts'}]}, {'id': ObjectId('64137d120b63ba8c0db0d687'), 'foods': [{'id': ObjectId('641397d8fa6b4079054f3c2e'), 'name': 'Coffee, Black'}, {'id': ObjectId('641397d8fa6b4079054f3c2f'), 'name': 'Tea, Black'}, {'id': ObjectId('641397d8fa6b4079054f3c30'), 'name': 'Yerba Mate'}, {'id': ObjectId('641397d8fa6b4079054f3c31'), 'name': 'Energy Drink'}, {'id': ObjectId('641397d8fa6b4079054f3c32'), 'name': 'Cola'}], 'group': [{'id': ObjectId('64137d120b63ba8c0db0d687'), 'name': 'Caffeinated Beverages', 'description': 'coffee, tea, energy drinks'}]}]
+    groups = db.foods.aggregate(pipeline)
 
     # get all the symptoms
-    # symptoms = db.symptoms.find()
-
-    symptoms = [{'id': 'lkd2dj', 'name': 'stomache ache'},{'id': 'lkfdsfdj', 'name': 'headache'},{'id': 'flkdj', 'name': 'nauseu'},{'id': 'fdslj;fd', 'name': 'vomiting'},{'id': 'fdjslds', 'name': 'fatigue'}]
+    symptoms = db.symptoms.find()
 
     # return them
     return [groups, symptoms]
 
 
-def create_user_data():
-    [groups, symptoms] = fetch_data()
-    generate_data('user_id', groups, symptoms)
+def create_user_data(username, days, num_s, num_g, max_meals, food_flex, symptom_thresh, consistency):
+    [groups_cursor, symptoms_cursor] = fetch_data()
+    groups = [g for g in groups_cursor]
+    symptoms = [s for s in symptoms_cursor]
+
+    generate_data(username, groups, symptoms, days, num_s, num_g, max_meals, food_flex, symptom_thresh, consistency)
 
 
-def generate_data(user_id, groups, symptoms):
+
+def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals, food_flex, symptom_thresh, consistency):
 
     # choose 3 food groups, store the indexes
-    main_groups = [randint(0, len(groups) - 3)]
-    for i in range(2):
-        main_groups.append(randint(main_groups[i - 1], len(groups) - 2 + i))
+    main_groups = [randint(0, len(groups) - num_g)]
+    for i in range(1, num_g):
+        main_groups.append(randint(main_groups[i - 1], len(groups) - num_g + i))
 
     # choose 3 main symptoms, store the indexes
-    main_symptoms = [randint(0, len(symptoms) - 3)]
-    for i in range(2):
-        main_symptoms.append(randint(main_symptoms[i - 1], len(symptoms) - 2 + i))
-
-    max_days = 5
+    main_symptoms = [randint(0, len(symptoms) - num_s)]
+    for i in range(1, num_s):
+        main_symptoms.append(randint(main_symptoms[i - 1], len(symptoms) - num_s + i))
 
     all_symptoms = []
     all_meals = []
 
     # go through all the days
     for d in range(max_days):
+        if(randint(0, 100) < consistency): continue
 
         symptom_prob = 1  # probability of a symptom
         hour = randint(5, 8)  # hour of first meal
-        num_meals = randint(1, 5)  # num of meals that day
+        num_meals = randint(2, max_meals)  # num of meals that day
         
         for m in range(num_meals):
             meal_foods = []
             meal_groups = []
 
             # include 1-6 foods
-            for f in range(randint(1, 6)):
+            for f in range(randint(1, 5)):
                 # added probability that it's a food from the main group
-                current_group = None
-                if(randint(1, 100) <= 10):
-                    current_group = main_groups[0]
-                elif(randint(1, 100) <= 5):
-                    current_group = main_groups[randint(1,2)]
+                groupIdx = None
+
+                if(randint(1, 100) <= food_flex):
+                    groupIdx = main_groups[0]
+                elif(randint(1, 100) <= int(food_flex/3)):
+                    groupIdx = main_groups[randint(1, len(main_groups) - 1)]
                 else:
-                    current_group = randint(0, len(groups) - 1)
+                    groupIdx = randint(0, len(groups) - 1)
                     
                 # increase probability of symptom
-                if(current_group == main_groups[0]):
+                if(groupIdx == main_groups[0]):
                     symptom_prob += 1
-                elif(current_group in main_groups):
+                elif(groupIdx in main_groups):
                     symptom_prob += 0.5
                 
-                possible_foods = groups[current_group]['foods']
-                group_id = groups[current_group]['id']
-                chosen_food_id = possible_foods[randint(0, len(possible_foods) - 1)]['id']
+                chosen_group = groups[groupIdx]['group']
+                possible_foods = groups[groupIdx]['foods']
 
-                if chosen_food_id not in meal_foods:
-                    meal_foods.append(chosen_food_id)
+                chosen_food = possible_foods[randint(0, len(possible_foods) - 1)]
+
+                if chosen_food not in meal_foods:
+                    meal_foods.append(chosen_food)
                 
-                if group_id not in meal_groups:
-                    meal_groups.append(groups[current_group]['id'])
+                if chosen_group not in meal_groups:
+                    meal_groups.append(chosen_group)
             
-            all_meals.append(create_meal(meal_foods, meal_groups, hour, d))
+            all_meals.append(create_meal(meal_foods, meal_groups, hour, d, username))
 
-            hour += 2
-        
+            hour = hour + randint(1, 3)
+            if hour > 23: hour = 23
+
+        symptom_prob /= (num_meals + 1)/5
+
+        # probability of the symptom occuring
         if(randint(0, 10) <= symptom_prob):
-            if(randint(0, 10) <= 6):
-                all_symptoms.append(create_user_symptom(main_symptoms[0], symptom_prob, hour + randint(-3, 3), d + 1, user_id, symptoms))
+
+            if(randint(0, 100) <= symptom_thresh):
+                all_symptoms.append(create_user_symptom(main_symptoms[0], int(symptom_prob), hour + randint(-3, 3), d + 1, username, symptoms))
             
-            if(randint(0, 10) <= 3):
-                all_symptoms.append(create_user_symptom(main_symptoms[randint(1, 2)], symptom_prob, hour + randint(0, 3), d + 1, user_id, symptoms))
+            if(randint(0, 100) <= int(symptom_thresh/2)):
+                all_symptoms.append(create_user_symptom(main_symptoms[randint(1, len(main_symptoms) - 1)], int(symptom_prob), hour + randint(-3, 3), d + 1, username, symptoms))
+        
 
     # insert all the meals the meals
     # all_created_meals = db.foods.insert_many(day_meals)
     # and loop through the symptoms, adding meals
 
-    # print(all_meals)
-    # print(all_symptoms)
+    # convert to dictionary
+    if(len(all_meals) < 20 or len(all_symptoms) < 20):
+        print('not enough symptoms or meals')
+
+    print(f'Seeding {len(all_meals)} meals and {len(all_symptoms)} symptoms')
+
+    meals_cursor = db.meals.insert_many(all_meals)
+    meals = [m for m in db.meals.find()]
+    all_symptoms.sort(key=lambda s: s['datetime'])
+    
+    
+    # when the first meal comes up for that given symptom, set that to the starting pointer
+    # starting from the pointer, find the first point when 
+    # go through until reaching a point where the time diff is too large
+    pointer = 0
+
+    for s in all_symptoms:
+        i = pointer
+        time = s['datetime']
+
+        while(i < len(meals) and not check_hour_dif(time, meals[i]['datetime'])):
+            i += 1
+        
+        pointer = i
+
+        while(i < len(meals)):
+            if(check_hour_dif(time, meals[i]['datetime'])):
+                s['meals'].append(meals[i]['_id'])
+                i += 1
+            else: break
+
+    db.user_symptoms.insert_many(all_symptoms)
 
 
-def create_user_symptom(idx, prob, hour, day, user_id, symptoms):
+
+
+def create_user_symptom(idx, prob, hour, day, username, symptoms):
     hour = hour % 23
     date = get_date(day, hour)
+    severity = randint(prob - 2, prob + 2)
+    if severity > 10 or severity < 1: severity = prob
 
-    return {'name': symptoms[idx]['name'], 'user_id': user_id, 'symptom_id': symptoms[idx]['id'], 'datetime': date, 'meals': [], 'severity': prob}
+    return {'username': username, 'symptom': symptoms[idx]['name'], 'datetime': date, 'meals': [], 'severity': severity}
 
-# datetime, groups, foods
-def create_meal(foods, groups, hour, day):
+
+def create_meal(foods, groups, hour, day, username):
     date = get_date(day, hour % 23)
-    print(date)
-    return {'datetime': date, 'groups': groups, 'foods': foods}
+
+    return {'username': username, 'datetime': date, 'groups': groups, 'foods': foods}
 
 
 def get_date(day, hour):
     return datetime.datetime(2022, 1, 1, hour, 0) + datetime.timedelta(day)
 
+
+def check_hour_dif(a, b):
+    diff = a - b
+    if 0 <= diff.total_seconds()/3600 <= 30:
+        return True
+
+    return False
+
+
+def run_seed():
+    start = input('Delete prev REAL data? y or n ')
+    if(start == 'y'): 
+        if(input('Are you sure? y or n  ') == 'y'):
+            db.meals.delete_many({})
+            db.user_symptoms.delete_many({})
+
+        if(input('stop? y or n ') == 'y'): 
+            return
+
+    
+
+    path = input('Random? y or n ')
+    users = [u for u in db.users.find()]
+    if(path == 'n'):
+        u = input('Specific user? y or n ')
+        if(u == 'y'):
+            answers = [
+                input('username?'),
+                int(input('number of months?  ')) * 30,
+                int(input('number of symptoms?  ')),
+                int(input('number of food groups?  ')),
+                int(input('max meals in a day?  ')),
+                int(input('food inflexibility? 1-100  ')),
+                int(input('symptom threshold? 1-100  ')),
+                int(input('consistency? 1-100  ')),
+            ]
+            create_user_data(**answers)
         
-create_user_data()
+        else:
+            num = int('number of users? ')
+            
+            for i in range(num):
+                username = users[i]['username']
+                answers = [
+                    int(input('number of months?  ')) * 30,
+                    int(input('number of symptoms?  ')),
+                    int(input('number of food groups?  ')),
+                    int(input('max meals in a day?  ')),
+                    int(input('food inflexibility? 1-100  ')),
+                    int(input('symptom threshold? 1-100  ')),
+                    int(input('consistency? 1-100  ')),
+                ]
+                create_user_data(username, **answers)
+
+    else:
+        num = input('number of users? all or number ')
+
+        if(num == 'all'):
+            num = len(users)
+        
+        num = int(num)
+        
+        for i in range(num):
+            create_user_data(
+                users[i]['username'],
+                randint(60, 450),
+                randint(2,5),
+                randint(2,10),
+                randint(2, 6),
+                randint(5, 60),
+                randint(18, 70),
+                randint(0, 40))
+
+    print('success!')
+
+if __name__ == '__main__':
+    run_seed()
+    

@@ -17,6 +17,6 @@ def get_foods():
 @app.route("/foods/<string:id>", methods=["GET"])
 def get_foodById(id):
     food = db.foods.find_one(ObjectId(id))
-    print(food)
+
     foodString = {key: str(food[key]) for key in food}
     return foodString, 200

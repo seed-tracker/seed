@@ -5,7 +5,7 @@ import datetime
 
 import sys
 sys.path.insert(0,"..")
-from db import db
+from db import db, test_db
 
 def create_users(n):
     user_list = []
@@ -20,5 +20,5 @@ def create_user(name, username, password, email, birthdate):
 
 if __name__ == "__main__":
     n = input('How many users?')
-    db.users.insert_many(create_users(int(n)))
+    test_db.users.insert_many(create_users(int(n)))
     print(f'Seeded {n} users')

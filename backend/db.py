@@ -12,11 +12,13 @@ load_dotenv(find_dotenv())
 def get_db():
 #     # create a connection with the client using MONGO_URI from .env folder
     client = MongoClient(os.environ.get('MONGO_URI'))
-    return client.production
+    return client
 
 
 
 
 # to get db instance globally
 # from db import get_db
-db = get_db()
+client = get_db()
+db = client.production
+test_db = client.test
