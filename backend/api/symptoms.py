@@ -13,7 +13,7 @@ def get_symptoms():
         return {"data": symptoms_list}, 200
     else:
         return "No symptoms found", 404
-    
+
 #get a single symptom
 @app.route('/symptoms/<string:name>', methods=['GET'])
 def get_symptom_by_name(name):
@@ -23,3 +23,7 @@ def get_symptom_by_name(name):
         return {"data": symptom}, 200
     else:
         return "Symptom not found", 404
+
+@routes_bp.route("/symptoms/")
+def symptoms():
+    return "Symptoms"
