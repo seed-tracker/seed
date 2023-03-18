@@ -22,3 +22,4 @@ def get_food_by_id(id):
         return food_string, 200
     else:
         return "Food not found", 404
+
