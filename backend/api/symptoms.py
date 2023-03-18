@@ -12,9 +12,9 @@ def get_symptoms():
     else:
         return "Symptoms not found", 404
 
+# right now only serves single symptom with capital. Ex: /symptoms/Fatigue
 @app.route('/symptoms/<string:name>', methods=['GET'])
 def get_symptom_by_name(name):
-    # right now only serves single symptom with capital. Ex: /symptoms/Fatigue
     symptom = db.symptoms.find_one({'name': name})
     if symptom:
         symptom['_id'] = str(symptom['_id'])
