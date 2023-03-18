@@ -76,7 +76,7 @@ import datetime
 import sys
 from bson import ObjectId
 sys.path.insert(0,"..")
-from db import test_db, db
+from db import db
 
 
 def fetch_data():
@@ -229,6 +229,9 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
 
     db.user_symptoms.insert_many(all_symptoms)
 
+    corrs = create_correlations(main_symptoms, main_groups, symptoms, groups, username)
+    db.correlations.insert_many(corrs)
+
 
 
 
@@ -258,6 +261,41 @@ def check_hour_dif(a, b):
 
     return False
 
+def create_stats(item):
+    lift = randint(2,3)/2
+    avg_severity = randint(6,14)/2
+    return {
+        'name': item,
+        'lift': lift,
+        'avg_severity': avg_severity,
+        'score': lift * avg_severity/10,
+        'avg_hours_passed': randint(0, 29)
+    }
+
+def create_correlations(main_symptoms, main_groups, symptoms, groups, username):
+    all_corrs = []
+
+    top_foods = []
+    top_groups = []
+
+    for i in main_groups:
+        if(not groups[i]['group'] in top_groups):
+            top_groups.append(groups[i]['group'])
+
+        rand_food = groups[i]['foods'][randint(0, len(groups[i]['foods']) - 1)]
+        if(not rand_food in top_foods):
+            top_foods.append(rand_food)
+    
+    for s in main_symptoms:
+        all_corrs.append({
+            'symptom': symptoms[s]['name'],
+            'username': username,
+            'top_groups': [create_stats(g) for g in top_groups],
+            'top_foods': [create_stats(f) for f in top_foods]
+        })
+
+    return all_corrs
+
 
 def run_seed():
     start = input('Delete prev REAL data? y or n ')
@@ -265,6 +303,7 @@ def run_seed():
         if(input('Are you sure? y or n  ') == 'y'):
             db.meals.delete_many({})
             db.user_symptoms.delete_many({})
+            db.correlations.delete_many({})
 
         if(input('stop? y or n ') == 'y'): 
             return
