@@ -1,13 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from app import app
 from db import db
 import bcrypt
 import jwt
 import os
 from datetime import datetime
-salt = bcrypt.gensalt(prefix=b"2b")
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+salt = bcrypt.gensalt(5)
 secret = os.environ.get('JWT_SECRET')
 
 @app.route('/auth/login', methods=['POST'])
@@ -34,10 +32,10 @@ def register():
       username = req_data['username']
       password = bcrypt.hashpw(req_data['password'].encode('utf-8'), salt)
       email = req_data['email']
-      if req_data['birthdate'] is None:
-        birthdate = None
+      if req_data['birthdate']:
+        birthdate = datetime.strptime(req_data['birthdate'], "%Y-%m-%d")
       else:
-        birthdate = datetime.strptime(req_data['birthdate'], "%m/%d/%Y")
+        birthdate = None
       new_user = db.users.insert_one({'name': name, 'username': username, 'password': password.decode('utf-8'), 'email': email, 'birthdate': birthdate})
       if new_user:
           return {"token": jwt.encode({"username": username}, secret, algorithm="HS256")}, 200
@@ -47,14 +45,15 @@ def register():
 
 @app.route('/auth/me', methods=['GET'])
 def authenticate():
-    req_data = request.get_json()
-    if req_data['token'] is not None:
-      token = req_data['token']
+
+    if request.headers['Authorization'] is not None:
+      token = request.headers['Authorization']
       userObj = jwt.decode(token, secret,  algorithms="HS256")
       username = userObj['username']
       user = db.users.find_one({"username": username})
       if user:
-        return 'ok', 200
+        user_string = {key: str(user[key]) for key in user}
+        return user_string, 200
       else:
         return 'no access', 401
     else:
