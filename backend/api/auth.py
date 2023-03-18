@@ -5,15 +5,16 @@ import bcrypt
 
 @app.route('/auth/login', methods=['POST'])
 def login():
-    email = request.form.get('email')
-    print(email)
-    password = request.form.get('password')
-    user = db.users.find_one({email: email, password: password})
+    req_data = request.get_json()
+    email = req_data['email']
+    password = req_data['password']
+    # this works for non hashed passwords
+    user = db.users.find_one({'email': email, 'password': password})
     # password_checked = bcrypt.check_password_hash(password, user.password)
     # if password_checked == true:
     #     login_user(user)
         # return redirect('/home')
-    return user
+    return "confirmed"
     # else:
     #     print('MPASS_WORG')
 
