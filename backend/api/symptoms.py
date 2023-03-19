@@ -26,7 +26,3 @@ def get_symptom_by_name(name):
         return {"data": symptom}, 200
     else:
         return "Symptom not found", 404
-
-@routes_bp.route("/symptoms/")
-def symptoms():
-    return "Symptoms"
