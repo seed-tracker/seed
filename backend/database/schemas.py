@@ -61,18 +61,14 @@ meals_validator = {
 correlations_validator = {
     "$jsonSchema": {
         "bsonType": "object",
-        "required": ["symptom_id", "symptom_name", "user_id"],
+        "required": [ "symptom_name", "username"],
         "properties": {
-            "symptom_id": {
-                "bsonType": "objectId",
-                "description": "object  symptom. required",
-            },
             "symptom_name": {
                 "bsonType": "string",
                 "description": "name of symptom. required.",
             },
-            "user_id": {
-                "bsonType": "objectId",
+            "username": {
+                "bsonType": "string",
                 "description": "object id of user. required",
             },
             "top_groups": {
