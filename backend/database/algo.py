@@ -20,3 +20,91 @@
 # 8. multiply the severity * lift
 # 9. create correlations from the avg time passed, severity, lift, score -- ranked by score, and ranking of most common symptoms, and username and symptom name
 # 10. remove previous correlations and insert new ones
+
+import sys
+sys.path.insert(0,"..")
+from db import db
+
+def find_correlations():
+    # find top 10 or less symptoms
+    # use those to find all associated foods and food groups
+    # unwind foods and food groups
+    # do I want to do two different calculations: food groups and foods? probably
+    #  
+    pipeline = [
+        { "$match": {
+                "username": "blackchristopher"
+            }
+        }, {
+            "$group": {
+                "_id": "$symptom",
+                "frequency": { "$sum": 1 },
+                "avg_severity": {"$avg": "$severity"},
+                "meal_dates": { "$push": {"meals": "$meals", "symptom_datetime": {"$toDate": "$datetime"}, "severity": "$severity"}}
+            }
+        },
+        { "$sort": { "frequency": -1 }
+        }, { "$limit": 5 },
+        { "$unwind": "$meal_dates" },
+        {
+            "$project": {
+                "_id": 0,
+                "symptom_name": "$_id",
+                "avg_severity": 1,
+                "meal": "$meal_dates.meals",
+                "symptom_datetime": "$meal_dates.symptom_datetime",
+                "severity": "$meal_dates.severity",
+                "total_frequency": "$frequency"
+            }
+        },
+        { "$unwind": "$meal" }, {
+            "$lookup": {
+                "from": "meals",
+                "localField": "meal",
+                "foreignField": "_id",
+                "pipeline": [
+                    {
+                        "$project": {
+                            "groups": 1,
+                            "foods": 1,
+                            "datetime": 1,
+                            "_id": 0
+                        }
+                    }
+                ],
+                "as": "meal"
+            }
+        }, 
+        { 
+            "$project": {
+                "symptom_name": 1,
+                "total_frequency": 1,
+                "avg_severity": 1,
+                "data": {
+                "severity": "$severity", 
+                "groups": {"$first": "$meal.groups"}, "foods": {"$first": "$meal.foods"},  "time_diff": {"$dateDiff": {
+                    "startDate": {
+                        "$toDate": {
+                            "$first": "$meal.datetime"}
+                    },
+                    "endDate": "$symptom_datetime",
+                    "unit": "hour"
+                },
+            }
+        }}},
+        {
+            "$group": {
+                "_id": {"name": "$symptom_name",
+                "frequency": "$total_frequency", "avg_severity": "$avg_severity"},
+                "data": {
+                    "$push": "$data"
+                }
+            }
+        }    
+    ]
+
+    sym = [s for s in db.user_symptoms.aggregate(pipeline)]
+    print(sym[0]['_id'])
+
+if __name__ == '__main__':
+    find_correlations()
