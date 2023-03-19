@@ -1,13 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { me } from "../store/authSlice";
+import Login from "../components/Login";
+import Signup from "../components/Signup";
+import Profile from "../components/Profile";
 
 const AppRoutes = () => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => !!state.auth.me.username);
+
+  useEffect(() => {
+    dispatch(me());
+  }, [dispatch]);
+
   return (
-    <div>
-      <Routes>
-        <Route path="/*" />
-      </Routes>
-    </div>
+    <main>
+      {isLoggedIn ? (
+        <Routes>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/*" />
+        </Routes>
+      ) : (
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/" />
+        </Routes>
+      )}
+    </main>
   );
 };
 
