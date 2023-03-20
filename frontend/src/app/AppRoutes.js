@@ -20,13 +20,13 @@ const AppRoutes = () => {
       {isLoggedIn ? (
         <Routes>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/entry/add/symptom" element={<SymptomForm />} />
           <Route path="/*" />
         </Routes>
       ) : (
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/entry/add/symptom" element={<SymptomForm />} />
           <Route path="/" />
         </Routes>
       )}
