@@ -7,28 +7,27 @@ import Signup from "../components/Signup";
 import Profile from "../components/Profile";
 
 const AppRoutes = () => {
-  // const dispatch = useDispatch();
-  // const isLoggedIn = useSelector((state) => !!state.auth.me);
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => !!state.auth.me._id);
 
-  // useEffect(() => {
-  //   dispatch(me());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(me());
+  }, [dispatch]);
 
   return (
     <main>
-      {/* {isLoggedIn ? (
+      {isLoggedIn ? (
         <Routes>
           <Route path="/profile" element={<Profile />} />
           <Route path="/*" />
         </Routes>
-      ) : ( */}
-      <Routes>
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/" />
-      </Routes>
-      {/* )} */}
+      ) : (
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/" />
+        </Routes>
+      )}
     </main>
   );
 };
