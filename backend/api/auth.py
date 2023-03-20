@@ -2,7 +2,7 @@ from flask import Flask, request
 from app import app
 from db import db
 import bcrypt
-import jwt
+# import jwt
 import os
 from datetime import datetime
 salt = bcrypt.gensalt(5)
@@ -15,7 +15,7 @@ def login():
     if user:
       password_checked = bcrypt.checkpw(req_data['password'].encode("utf-8"), user['password'].encode("utf-8"))
       if password_checked:
-        return {"token": jwt.encode({"username": str(user['username'])}, secret, algorithm="HS256")}, 200
+        return {"token": jwt.encode({"username": req_data['username']}, secret, algorithm="HS256")}, 200
       else:
         return "Password is not correct", 401
     else:
