@@ -31,7 +31,7 @@ create itemsets of foods and meals, including all the user's symptoms
 '''
 
 from mlxtend.preprocessing import TransactionEncoder
-from mlxtend.frequent_patterns import fpgrowth, association_rules, apriori, fpmax
+from mlxtend.frequent_patterns import fpgrowth, association_rules
 import pandas as pd
 
 import sys
@@ -48,7 +48,7 @@ def find_correlations():
     pipeline = [
         {
             "$match": {
-                "username": "brittany41"
+                "username": "blackchristopher"
             }
         },
         {
@@ -86,45 +86,31 @@ def find_correlations():
                 symptom_sets[name] = {'count': 0, 'groups': [], 'foods': []}
 
             symptom_sets[name]['count'] += 1
-            symptom_sets[name]['groups'].append(m['groups'])
-            symptom_sets[name]['foods'].append(m['foods'])
+            symptom_sets[name]['groups'].append([name, *m['groups']])
+            symptom_sets[name]['foods'].append([name, *m['foods']])
             
         food_sets.append(m['foods'])
         group_sets.append(m['groups'])
+
         
     
     # get top 5 symptoms in separated lists
 
     
-    top_symptoms = list(map(lambda t: [t[0], t[1]['count']], sorted(symptom_sets.items(), key=lambda x: -x[1]['count'])))
-    print(top_symptoms)
-    top_symptoms = list(filter(lambda t: t[1] > 20, top_symptoms))[:5]
+    top_symptoms = list(map(lambda t: {'symptom': t[0], 'count': t[1]['count'], 'foods': t[1]['foods'], 'groups': t[1]['groups']}, sorted(symptom_sets.items(), key=lambda x: -x[1]['count'])))[:5]
 
+    top_symptoms = (list(filter(lambda t: t['count'] > 20, top_symptoms)))
+
+    
     if(len(top_symptoms) < 1): return 'Not enough data'
 
 
-    for [name, data] in top_symptoms:
-        food_rules = find_top_items(data[0], food_sets, name)
-        group_rules = find_top_items(data[1], group_sets, name)
-        print('foods:')
+    for sym in top_symptoms:
+        name = sym['symptom']
+        food_rules = find_top_items(sym['foods'], food_sets, name)
+        group_rules = find_top_items(sym['groups'], group_sets, name)
+
         print(food_rules.to_string())
-
-        total_count = 0
-        count = 0
-        food = 'Eggs'
-        for m in meals:
-            if(food in m['groups']):
-                total_count += 1
-        for f in data[1]:
-            if(food in f): count += 1
-
-        print(food)
-        print(f"Total: {total_count}")
-        print(f"With symptom Total: {count}")
-
-
-        print(f"symptom has occured {data[2]} times")
-        print('groups:')
         print(group_rules.to_string())
     
     
@@ -145,7 +131,7 @@ def find_top_items(item_sets, all_items, symptom_name):
     items_df = pd.DataFrame(te_items, columns=te.columns_)
     freq_itemsets = fpgrowth(items_df, min_support=0.1, use_colnames=True)
 
-    top_items = get_items(all_items, convert_frozenset(freq_itemsets['itemsets'], symptom_name))
+    top_items = get_items(all_items, convert_frozenset(freq_itemsets['itemsets']))
 
     te_all_items = te.fit([*top_items, *item_sets]).transform([*top_items, *item_sets])
     all_items_df = pd.DataFrame(te_all_items, columns=te.columns_)
