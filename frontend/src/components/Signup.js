@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../store/authSlice";
+import { selectError } from "../store/authSlice";
 
 /**
   The Login component is used for Login
 **/
 const Signup = () => {
-  const { error } = useSelector((state) => state.auth);
+  const error = useSelector(selectError);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -21,6 +22,9 @@ const Signup = () => {
     await dispatch(
       signup({ username, password, email, name: fullName, birthdate })
     );
+  };
+
+  const redirect = () => {
     navigate("/profile");
   };
 
@@ -81,7 +85,9 @@ const Signup = () => {
           onChange={(e) => setBirthdate(e.target.value)}
         />
       </div>
-      <button type="submit">Signup</button>
+      <button type="submit" onSubmit={redirect}>
+        Create Account
+      </button>
       {error && <div> {error} </div>}
     </form>
   );
