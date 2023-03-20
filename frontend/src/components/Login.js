@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../store/authSlice";
-
+import { selectError } from "../store/authSlice";
 /**
   The Login component is used for Login
 **/
 const Login = () => {
-  const { error } = useSelector((state) => state.auth);
+  const error = useSelector(selectError);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
@@ -16,6 +16,9 @@ const Login = () => {
   const handleLoginSubmit = async (evt) => {
     evt.preventDefault();
     await dispatch(login({ username, password }));
+  };
+
+  const redirect = () => {
     navigate("/profile");
   };
 
@@ -43,7 +46,9 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button type="submit">Login</button>
+      <button type="submit" onSubmit={redirect}>
+        Login
+      </button>
       {error && <div> {error} </div>}
     </form>
   );
