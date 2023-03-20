@@ -1,21 +1,17 @@
 from flask_cors import CORS
 from flask import Flask
-import pprint
 import os
-
 from dotenv import load_dotenv, find_dotenv
-import os
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
-from api.auth import *
-from api.symptoms import *
-from api.foodroutes import *
-from api.foodgroups import *
-from api.userroutes import *
+# from api.home import *
 
 from api.auth import *
 from api.symptoms import *
+from api.userroutes import *
+from api.foodgroups import *
+from api.foodroutes import *
 
 cors = CORS(app)
 
