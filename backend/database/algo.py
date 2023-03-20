@@ -48,7 +48,7 @@ def find_correlations():
     pipeline = [
         {
             "$match": {
-                "username": "oellis"
+                "username": "brittany41"
             }
         },
         {
@@ -80,26 +80,28 @@ def find_correlations():
 
     # format the data
     for m in meals:
-        if(len(m['related_symptoms']) > 0):
-            symptoms = list(map(lambda s: s['symptom'], m['related_symptoms']))
-            
-            for s in symptoms:
-                if(not s in symptom_sets): symptom_sets[s] = [[], [], 0]
-                
-                symptom_sets[s][0].append([s, *m['foods']])
-                symptom_sets[s][1].append([s, *m['groups']])
-                symptom_sets[s][2] += 1
+        for s in m['related_symptoms']:
+            name = s['symptom']
+            if(not name in symptom_sets):
+                symptom_sets[name] = {'count': 0, 'groups': [], 'foods': []}
 
+            symptom_sets[name]['count'] += 1
+            symptom_sets[name]['groups'].append(m['groups'])
+            symptom_sets[name]['foods'].append(m['foods'])
+            
         food_sets.append(m['foods'])
         group_sets.append(m['groups'])
         
     
     # get top 5 symptoms in separated lists
-    top_symptoms = sorted(symptom_sets.items(), key=lambda x: -x[1][2])
-    top_symptoms = list(filter(lambda t: t[1][2] > 20, top_symptoms))
+
     
+    top_symptoms = list(map(lambda t: [t[0], t[1]['count']], sorted(symptom_sets.items(), key=lambda x: -x[1]['count'])))
+    print(top_symptoms)
+    top_symptoms = list(filter(lambda t: t[1] > 20, top_symptoms))[:5]
+
     if(len(top_symptoms) < 1): return 'Not enough data'
-    print(len(top_symptoms))
+
 
     for [name, data] in top_symptoms:
         food_rules = find_top_items(data[0], food_sets, name)

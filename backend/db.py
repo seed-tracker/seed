@@ -21,3 +21,4 @@ def get_db():
 # from db import get_db
 client = get_db()
 db = client.production
+test_db = client.test

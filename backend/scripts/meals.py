@@ -1,82 +1,11 @@
-'''
-File to create meals and attach them to users
 
-Basic approach:
-1. choose a user
-2. choose a main food group and two secondary food groups
-3. choose a main symptom and two secondary symptoms
-
-User Group #1
-Great data:
-    Seed 10ish months worth of data
-    2-5 meals per day
-    0-2 symptoms per day
-    Correlate the main food group to the main symptom, and the second, third groups to correlate more weakly
-    For each meal:
-        Add 1-4 foods
-        About 25% probability of the main food group being included
-        About 10% probability of the secondary ones
-    
-    For each symptom:
-        If the main food was eaten that day, 75% probability of symptom occuring within the next day and being severe
-        If the main or secondary foods were eaten, 40% probability of secondary symptoms occuring in the next 30 hours, 40% chance of mild main symptom
-
-User Group #2
-Good data:
-    Choose 4 main food groups, 2 main symptoms
-    Seed 7 months of data
-    0-4 meals per day
-    0-2 symptoms per day
-    10% chance of no meals logged
-    10% chance of no symptoms logged
-    Correlate main symptom about evenly to three food groups
-    For each meal:
-        1-4 foods
-        About 25% probability of each main food group being eaten
-        For each of the main groups added, probability of symptoms increases by 10% and become more severe within next 30 hours
-        Completely random chance of another symptom
-
-User Group #3
-Random data:
-    Seed 9 months of data
-    0-3 meals per day
-    0-2 symptoms per day
-    10-30% chance of no meals
-    10-30% chance of no symptoms
-    For each meal:
-        1-5 foods
-        Random probability of any food
-        Random probability and severity of any food
-
-User Group #5
-Bad data:
-    Seed 9 months of data
-    Choose 2 main symptoms and 3 main food groups
-    0-3 meals per day
-    0-2 symptoms per day
-    50% chance of no meals
-    50% chance of no symptoms
-    For each meal:
-        1-5 foods, 10% chance from main groups
-        Random chance of two main symptoms in next 30 hours
-        
-
-User Group #6
-Unchanging data:
-    Seed 9 months data
-    Choose 2 main symptoms and 2 main food groups
-    For each meal:
-        1-5 foods
-        75% chance of those being from the two main groups
-        With those groups, 10% increasing chance of symptoms and increasing severity     
-    
-'''
 from random import randint
+import pymongo
 import datetime
 import sys
 from bson import ObjectId
 sys.path.insert(0,"..")
-from db import db
+from db import db, test_db
 
 
 def fetch_data():
@@ -124,12 +53,12 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
     # choose 3 food groups, store the indexes
     main_groups = [randint(0, len(groups) - num_g)]
     for i in range(1, num_g):
-        main_groups.append(randint(main_groups[i - 1], len(groups) - num_g + i))
+        main_groups.append(randint(main_groups[i - 1] + 1, len(groups) - num_g + i))
 
     # choose 3 main symptoms, store the indexes
     main_symptoms = [randint(0, len(symptoms) - num_s)]
     for i in range(1, num_s):
-        main_symptoms.append(randint(main_symptoms[i - 1], len(symptoms) - num_s + i))
+        main_symptoms.append(randint(main_symptoms[i - 1] + 1, len(symptoms) - num_s + i))
 
     all_symptoms = []
     all_meals = []
@@ -160,9 +89,9 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
                     
                 # increase probability of symptom
                 if(groupIdx == main_groups[0]):
-                    symptom_prob += 1
+                    symptom_prob += 2
                 elif(groupIdx in main_groups):
-                    symptom_prob += 0.5
+                    symptom_prob += 1
                 
                 chosen_group = groups[groupIdx]['group']
                 possible_foods = groups[groupIdx]['foods']
@@ -180,7 +109,7 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
             hour = hour + randint(1, 3)
             if hour > 23: hour = 23
 
-        symptom_prob /= (num_meals + 1)/5
+        # symptom_prob /= (num_meals + 1)/2
 
         # probability of the symptom occuring
         if(randint(0, 10) <= symptom_prob):
@@ -200,34 +129,37 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
     if(len(all_meals) < 20 or len(all_symptoms) < 20):
         print('not enough symptoms or meals')
 
-    print(f'Seeding {len(all_meals)} meals and {len(all_symptoms)} symptoms')
+    print(f'Seeding {len(all_meals)} meals and {len(all_symptoms)} symptoms for {max_days} days!')
 
-    meals_cursor = db.meals.insert_many(all_meals)
-    meals = [m for m in db.meals.find()]
     all_symptoms.sort(key=lambda s: s['datetime'])
-    
-    
-    # when the first meal comes up for that given symptom, set that to the starting pointer
-    # starting from the pointer, find the first point when 
-    # go through until reaching a point where the time diff is too large
+    db.user_symptoms.insert_many(all_symptoms)
+    user_symptoms = [s for s in db.user_symptoms.find()]
+
+    all_meals.sort(key=lambda m: m['datetime'])
     pointer = 0
 
-    for s in all_symptoms:
+    for m in all_meals:
         i = pointer
-        time = s['datetime']
+        time = m['datetime']
 
-        while(i < len(meals) and not check_hour_dif(time, meals[i]['datetime'])):
+        # if the first symptom is already too far out, skip
+        if(check_hour_dif(user_symptoms[i]['datetime'], time) > 30): continue
+
+        # if the first symptom is before the current meal, go til finding a symptom with a time dif greater than 0
+        while(i < len(user_symptoms) and check_hour_dif(user_symptoms[i]['datetime'], time) < 0):
             i += 1
         
         pointer = i
 
-        while(i < len(meals)):
-            if(check_hour_dif(time, meals[i]['datetime'])):
-                s['meals'].append(meals[i]['_id'])
-                i += 1
-            else: break
+        # stop if you've reached the end
+        if(pointer >= len(user_symptoms)): break
 
-    db.user_symptoms.insert_many(all_symptoms)
+        # add any symptoms within the range
+        while(i < len(user_symptoms) and 0 <= check_hour_dif(user_symptoms[i]['datetime'], time) <= 30): 
+            m['related_symptoms'].append(user_symptoms[i]['_id'])
+            i += 1
+
+    db.meals.insert_many(all_meals)
 
     corrs = create_correlations(main_symptoms, main_groups, symptoms, groups, username)
     db.correlations.insert_many(corrs)
@@ -238,16 +170,17 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
 def create_user_symptom(idx, prob, hour, day, username, symptoms):
     hour = hour % 23
     date = get_date(day, hour)
-    severity = randint(prob - 2, prob + 2)
-    if severity > 10 or severity < 1: severity = prob
+    severity = randint(prob - 3, prob + 2)
+    if(severity > 10): severity = 10
+    if(severity < 1): severity = 1
 
-    return {'username': username, 'symptom': symptoms[idx]['name'], 'datetime': date, 'meals': [], 'severity': severity}
+    return {'username': username, 'symptom': symptoms[idx]['name'], 'datetime': date, 'severity': severity}
 
 
 def create_meal(foods, groups, hour, day, username):
     date = get_date(day, hour % 23)
 
-    return {'username': username, 'datetime': date, 'groups': groups, 'foods': foods}
+    return {'username': username, 'datetime': date, 'groups': groups, 'foods': foods, 'related_symptoms': []}
 
 
 def get_date(day, hour):
@@ -256,10 +189,7 @@ def get_date(day, hour):
 
 def check_hour_dif(a, b):
     diff = a - b
-    if 0 <= diff.total_seconds()/3600 <= 30:
-        return True
-
-    return False
+    return diff.total_seconds()/3600
 
 def create_stats(item):
     lift = randint(2,3)/2
@@ -285,7 +215,7 @@ def create_correlations(main_symptoms, main_groups, symptoms, groups, username):
         rand_food = groups[i]['foods'][randint(0, len(groups[i]['foods']) - 1)]
         if(not rand_food in top_foods):
             top_foods.append(rand_food)
-    
+
     for s in main_symptoms:
         all_corrs.append({
             'symptom': symptoms[s]['name'],
@@ -307,6 +237,10 @@ def run_seed():
 
         if(input('stop? y or n ') == 'y'): 
             return
+
+    if(input('Delete test data? y or n  ') == 'y'):
+        test_db.meals.delete_many({})
+        test_db.user_symptoms.delete_many({})
 
     
 
@@ -358,12 +292,13 @@ def run_seed():
                 randint(2,5),
                 randint(2,10),
                 randint(2, 6),
-                randint(5, 60),
-                randint(18, 70),
+                randint(25, 60),
+                randint(70, 100),
                 randint(0, 40))
 
     print('success!')
 
 if __name__ == '__main__':
+    # db.users.create_index([('username', pymongo.ASCENDING)], unique=True)
     run_seed()
     
