@@ -22,17 +22,10 @@
 # 10. remove previous correlations and insert new ones
 
 
-'''
-new algo:
-get all the user's meal, with associated symptoms
-create itemsets of foods and meals, including all the user's symptoms
-
-
-'''
-
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import fpgrowth, association_rules
 import pandas as pd
+from functools import reduce
 
 import sys
 sys.path.insert(0,"..")
@@ -48,7 +41,7 @@ def find_correlations():
     pipeline = [
         {
             "$match": {
-                "username": "blackchristopher"
+                "username": "oellis"
             }
         },
         {
@@ -76,70 +69,110 @@ def find_correlations():
 
     food_sets = []
     group_sets = []
-    symptom_sets = {}
+    symptom_set = {}
 
     # format the data
     for m in meals:
+        symptoms = []
         for s in m['related_symptoms']:
             name = s['symptom']
-            if(not name in symptom_sets):
-                symptom_sets[name] = {'count': 0, 'groups': [], 'foods': []}
+            symptoms.append(name)
+            if(not name in symptom_set):
+                symptom_set[name] = 0
 
-            symptom_sets[name]['count'] += 1
-            symptom_sets[name]['groups'].append([name, *m['groups']])
-            symptom_sets[name]['foods'].append([name, *m['foods']])
-            
-        food_sets.append(m['foods'])
-        group_sets.append(m['groups'])
-
+            symptom_set[name]+= 1
         
+        food_sets.append([*symptoms, *m['foods']])
+        group_sets.append([*symptoms, *m['groups']])
     
-    # get top 5 symptoms in separated lists
+    # get top 5 symptoms
+    top_symptoms = list(filter(lambda y: y[1] > 20, sorted(symptom_set.items(), key=lambda x: -x[1])))[:5]
+
+
 
     
-    top_symptoms = list(map(lambda t: {'symptom': t[0], 'count': t[1]['count'], 'foods': t[1]['foods'], 'groups': t[1]['groups']}, sorted(symptom_sets.items(), key=lambda x: -x[1]['count'])))[:5]
+    # top_symptoms = list(map(lambda t: {'symptom': t[0], 'count': t[1]['count'], 'foods': t[1]['foods'], 'groups': t[1]['groups']}, sorted(symptom_sets.items(), key=lambda x: -x[1]['count'])))[:5]
 
-    top_symptoms = (list(filter(lambda t: t['count'] > 20, top_symptoms)))
+    # top_symptoms = (list(filter(lambda t: t['count'] > 20, top_symptoms)))
 
     
     if(len(top_symptoms) < 1): return 'Not enough data'
 
 
+
+    symptom_list = [k for k in symptom_set.keys()]
+
     for sym in top_symptoms:
-        name = sym['symptom']
-        food_rules = find_top_items(sym['foods'], food_sets, name)
-        group_rules = find_top_items(sym['groups'], group_sets, name)
+        name = sym[0]
+        filters = list(filter(lambda i: not i == name, symptom_list))
+        food_rules = create_rules(food_sets, filters, name)
+        group_rules = create_rules(group_sets, filters, name)
 
-        print(food_rules.to_string())
-        print(group_rules.to_string())
+        print(food_rules)
+        print(group_rules)
+
+        print(find_data(name, group_rules, meals))
     
     
+def filter_symptoms(items, symptom_list):
+    return list(set(filter(lambda i: not i in symptom_list, items)))
+
+def create_rules(item_sets, filter_list, symptom_name):
+    te = TransactionEncoder()
+
+    filtered_items = list(map(lambda i: filter_symptoms(i, filter_list), item_sets))
+
+    te_items = te.fit(filtered_items).transform(filtered_items)
+    items_df = pd.DataFrame(te_items, columns=te.columns_)
+    freq_itemsets = fpgrowth(items_df, min_support=0.1, use_colnames=True)
+    rules = association_rules(freq_itemsets, metric="lift", min_threshold=0.9).sort_values(by=['lift'], ascending=False)
+
+    data = list(zip(convert_frozenset(rules['antecedents']), convert_frozenset(rules['consequents']), list(rules['lift'])))
+    
+    return list(map(lambda y: [y[0], y[2]], list(filter(lambda x: x[1] == symptom_name, data))))[:10]
 
 
+def find_data(symptom_name, item_list, meals):
+    data = {}
+    symptom_count = 0
+    avg_severity_sum = 0
+    for m in meals:
+        severity = None
+        for s in m['related_symptoms']:
+            if(s['symptom'] == symptom_name):
+                severity = s['severity']
+                avg_severity_sum += s['severity']
+                symptom_count += 1
+        for i in item_list:
+            key = i[0].replace(" ", "_")
+            if(i[0] in m['foods'] or i[0] in m['groups']):
+                if(not key in data): data[key] = {'total_count': 0, 'severity_avg': 0, 'overlap': 0, 'lift': i[1]}
+                data[key]['total_count'] += 1
+                if(severity):
+                    data[key]['severity_avg'] += severity
+                    data[key]['overlap'] += 1
 
+        print(avg_severity_sum, symptom_count)
+        if(symptom_count > 0): avg_severity_sum /= symptom_count
+
+    for i in item_list:
+        key = i[0].replace(" ", "_")
+        d = data[key]
+        d['severity_avg'] /= d['overlap']
+        d['overlap_percent'] = d['overlap']/symptom_count
+        d['score'] = d['lift'] * d['severity_avg']/avg_severity_sum
+
+    
+    return {'symptom': symptom_name, 'count': symptom_count, 'avg_severity': avg_severity_sum, 'data': data}
+
+                
 
 # convert frozenset, drop non-unique values and filter out the symptom values
 def convert_frozenset(fset, filter_val=None):
-    return set(filter(lambda i: not i == filter_val ,fset.apply(lambda x: list(x)[0]).astype("unicode").tolist()))
+    return list(filter(lambda i: not i == filter_val ,fset.apply(lambda x: list(x)[0]).astype("unicode").tolist()))
 
 def get_items(item_list, search):
     return list(filter(lambda i: bool(set(i) & search), item_list))
-
-def find_top_items(item_sets, all_items, symptom_name):
-    te = TransactionEncoder()
-    te_items = te.fit(item_sets).transform(item_sets)
-    items_df = pd.DataFrame(te_items, columns=te.columns_)
-    freq_itemsets = fpgrowth(items_df, min_support=0.1, use_colnames=True)
-
-    top_items = get_items(all_items, convert_frozenset(freq_itemsets['itemsets']))
-
-    te_all_items = te.fit([*top_items, *item_sets]).transform([*top_items, *item_sets])
-    all_items_df = pd.DataFrame(te_all_items, columns=te.columns_)
-    freq_all_itemsets = fpgrowth(all_items_df, min_support=0.1, use_colnames=True)
-    rules = association_rules(freq_all_itemsets, metric="lift", min_threshold=1.0).sort_values(by=['lift'], ascending=False)
-
-    return rules
-    
 
 if __name__ == '__main__':
     find_correlations()
