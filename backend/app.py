@@ -12,7 +12,7 @@ from api.auth import *
 from api.symptoms import *
 from api.foodroutes import *
 from api.foodgroups import *
-from api.home import *
+# from api.home import *
 from api.userroutes import *
 
 from api.auth import *
@@ -24,4 +24,4 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 cors = CORS(app)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=5000, debug=True)
