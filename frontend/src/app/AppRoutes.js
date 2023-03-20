@@ -5,6 +5,8 @@ import { me } from "../store/authSlice";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
 import Profile from "../components/Profile";
+import Entry from "../components/MealForm";
+import EditProfile from "../components/EditProfile";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
@@ -26,6 +28,8 @@ const AppRoutes = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/" />
+          <Route path="/user/addFood" element={<Entry />}></Route>
+          <Route path="/user/editProfile" element={<EditProfile />}></Route>
         </Routes>
       )}
     </main>
