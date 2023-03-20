@@ -20,6 +20,16 @@
 # 8. multiply the severity * lift
 # 9. create correlations from the avg time passed, severity, lift, score -- ranked by score, and ranking of most common symptoms, and username and symptom name
 # 10. remove previous correlations and insert new ones
+
+
+'''
+new algo:
+get all the user's meal, with associated symptoms
+create itemsets of foods and meals, including all the user's symptoms
+
+
+'''
+
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import fpgrowth, association_rules, apriori, fpmax
 import pandas as pd
@@ -33,138 +43,203 @@ def find_correlations():
     # use those to find all associated foods and food groups
     # unwind foods and food groups
     # do I want to do two different calculations: food groups and foods? probably
-   
     
+    # new way of doing this:
     pipeline = [
-        { "$match": {
-                "username": "hillandrew"
-            }
-        }, {
-            "$group": {
-                "_id": "$symptom",
-                "frequency": { "$sum": 1 },
-                "avg_severity": {"$avg": "$severity"},
-                "meal_dates": { "$push": {"meals": "$meals", "symptom_datetime": {"$toDate": "$datetime"}, "severity": "$severity"}}
-            }
-        },
-        { "$sort": { "frequency": -1 }
-        }, { "$limit": 5 },
-        { "$unwind": "$meal_dates" },
         {
-            "$project": {
-                "_id": 0,
-                "symptom_name": "$_id",
-                "avg_severity": 1,
-                "meal": "$meal_dates.meals",
-                "symptom_datetime": "$meal_dates.symptom_datetime",
-                "severity": "$meal_dates.severity",
-                "total_frequency": "$frequency"
+            "$match": {
+                "username": "oellis"
             }
         },
-        { "$unwind": "$meal" }, {
+        {
             "$lookup": {
-                "from": "meals",
-                "localField": "meal",
+                "from": "user_symptoms",
+                "localField": "related_symptoms",
                 "foreignField": "_id",
                 "pipeline": [
                     {
                         "$project": {
-                            "groups": 1,
-                            "foods": 1,
+                            "symptom": 1,
                             "datetime": 1,
+                            "severity": 1,
                             "_id": 0
                         }
                     }
+                  
                 ],
-                "as": "meal"
+                "as": "related_symptoms"
             }
-        }, 
-        { 
-            "$project": {
-                "symptom_name": 1,
-                "total_frequency": 1,
-                "avg_severity": 1,
-                "data": {
-                "severity": "$severity", 
-                "groups": {"$first": "$meal.groups"}, "foods": {"$first": "$meal.foods"},  "time_diff": {"$dateDiff": {
-                    "startDate": {
-                        "$toDate": {
-                            "$first": "$meal.datetime"}
-                    },
-                    "endDate": "$symptom_datetime",
-                    "unit": "hour"
-                },
-            }
-        }}},
-        {
-            "$group": {
-                "_id": {"name": "$symptom_name",
-                "frequency": "$total_frequency", "avg_severity": "$avg_severity"},
-                "data": {
-                    "$push": "$data"
-                }
-            }
-        }, { "$sort": { "_id.frequency": -1 }
-        }    
+        }
     ]
 
-    symptoms = [s for s in db.user_symptoms.aggregate(pipeline)]
+    meals = [m for m in db.meals.aggregate(pipeline)]
+
+    food_sets = []
+    group_sets = []
+    symptom_sets = {}
+
+    # format the data
+    for m in meals:
+        if(len(m['related_symptoms']) > 0):
+            symptoms = list(map(lambda s: s['symptom'], m['related_symptoms']))
+            
+            for s in symptoms:
+                if(not s in symptom_sets): symptom_sets[s] = [[], [], 0]
+                
+                symptom_sets[s][0].append([s, *m['foods']])
+                symptom_sets[s][1].append([s, *m['groups']])
+                symptom_sets[s][2] += 1
+
+        food_sets.append(m['foods'])
+        group_sets.append(m['groups'])
+        
+    
+    # get top 5 symptoms in separated lists
+    top_symptoms = sorted(symptom_sets.items(), key=lambda x: -x[1][2])
+    top_symptoms = list(filter(lambda t: t[1][2] > 20, top_symptoms))
+    
+    if(len(top_symptoms) < 1): return 'Not enough data'
+    print(len(top_symptoms))
+
+    for [name, data] in top_symptoms:
+        food_rules = find_top_items(data[0], food_sets, name)
+        group_rules = find_top_items(data[1], group_sets, name)
+        print('foods:')
+        print(food_rules.to_string())
+
+        total_count = 0
+        count = 0
+        food = 'Eggs'
+        for m in meals:
+            if(food in m['groups']):
+                total_count += 1
+        for f in data[1]:
+            if(food in f): count += 1
+
+        print(food)
+        print(f"Total: {total_count}")
+        print(f"With symptom Total: {count}")
 
 
-    '''
-    ideal schema for item sets:
-    groups:
-        [symptom, group], [symptom, group], etc.
-
-    foods:
-        [symptom, food], [symptom, food], etc.
-
-    '''
-
-    group_sets_data = []
-    food_sets_data = []
-    for s in [symptoms[2]]:
-        symptom_name = s['_id']['name']
-        for meal in s['data']:
-            details = [meal['severity'], meal['time_diff']]
-            group_sets_data.append([symptom_name, *meal['groups']])
-            food_sets_data.append([symptom_name, *meal['foods']])
-            # for group in meal['groups']:
-            #     group_sets_data.append([symptom_name, group])
-            # for food in meal['foods']:
-            #     food_sets_data.append([symptom_name, food])
-
-    group_sets = group_sets_data
-    food_sets = food_sets_data
+        print(f"symptom has occured {data[2]} times")
+        print('groups:')
+        print(group_rules.to_string())
+    
     
 
+
+
+
+# convert frozenset, drop non-unique values and filter out the symptom values
+def convert_frozenset(fset, filter_val=None):
+    return set(filter(lambda i: not i == filter_val ,fset.apply(lambda x: list(x)[0]).astype("unicode").tolist()))
+
+def get_items(item_list, search):
+    return list(filter(lambda i: bool(set(i) & search), item_list))
+
+def find_top_items(item_sets, all_items, symptom_name):
     te = TransactionEncoder()
-    te_groups = te.fit(group_sets).transform(group_sets)
-    groups_df = pd.DataFrame(te_groups, columns=te.columns_)
-    freq_groupsets = fpgrowth(groups_df, min_support=0.1, use_colnames=True)
+    te_items = te.fit(item_sets).transform(item_sets)
+    items_df = pd.DataFrame(te_items, columns=te.columns_)
+    freq_itemsets = fpgrowth(items_df, min_support=0.1, use_colnames=True)
 
-    
+    top_items = get_items(all_items, convert_frozenset(freq_itemsets['itemsets'], symptom_name))
 
-    group_rules = association_rules(freq_groupsets, metric="lift", min_threshold=0.1)
+    te_all_items = te.fit([*top_items, *item_sets]).transform([*top_items, *item_sets])
+    all_items_df = pd.DataFrame(te_all_items, columns=te.columns_)
+    freq_all_itemsets = fpgrowth(all_items_df, min_support=0.1, use_colnames=True)
+    rules = association_rules(freq_all_itemsets, metric="lift", min_threshold=1.0).sort_values(by=['lift'], ascending=False)
 
-
-    te = TransactionEncoder()
-    te_foods = te.fit(food_sets).transform(food_sets)
-    foods_df = pd.DataFrame(te_foods, columns=te.columns_)
-    freq_foodsets = fpgrowth(foods_df, min_support=0.1, use_colnames=True)
-
-    group_rules = association_rules(freq_groupsets, metric="support", min_threshold=0.2)
-    food_rules = association_rules(freq_foodsets, metric="confidence", min_threshold=0.8)
-
-    print(freq_groupsets)
-
-    print(group_rules.to_string())
-
-
-    
-
-
+    return rules
     
 
 if __name__ == '__main__':
     find_correlations()
+
+
+
+    # pipeline = [
+    #     { "$match": {
+    #             "username": "hillandrew"
+    #         }
+    #     }, {
+    #         "$group": {
+    #             "_id": "$symptom",
+    #             "frequency": { "$sum": 1 },
+    #             "avg_severity": {"$avg": "$severity"},
+    #             "meal_dates": { "$push": {"meals": "$meals", "symptom_datetime": {"$toDate": "$datetime"}, "severity": "$severity"}}
+    #         }
+    #     },
+    #     { "$sort": { "frequency": -1 }
+    #     }, { "$limit": 5 },
+    #     { "$unwind": "$meal_dates" },
+    #     {
+    #         "$project": {
+    #             "_id": 0,
+    #             "symptom_name": "$_id",
+    #             "avg_severity": 1,
+    #             "meal": "$meal_dates.meals",
+    #             "symptom_datetime": "$meal_dates.symptom_datetime",
+    #             "severity": "$meal_dates.severity",
+    #             "total_frequency": "$frequency"
+    #         }
+    #     },
+    #     { "$unwind": "$meal" }, {
+    #         "$lookup": {
+    #             "from": "meals",
+    #             "localField": "meal",
+    #             "foreignField": "_id",
+    #             "pipeline": [
+    #                 {
+    #                     "$project": {
+    #                         "groups": 1,
+    #                         "foods": 1,
+    #                         "datetime": 1,
+    #                         "_id": 0
+    #                     }
+    #                 }
+    #             ],
+    #             "as": "meal"
+    #         }
+    #     }, 
+    #     { 
+    #         "$project": {
+    #             "symptom_name": 1,
+    #             "total_frequency": 1,
+    #             "avg_severity": 1,
+    #             "data": {
+    #             "severity": "$severity", 
+    #             "groups": {"$first": "$meal.groups"}, "foods": {"$first": "$meal.foods"},  "time_diff": {"$dateDiff": {
+    #                 "startDate": {
+    #                     "$toDate": {
+    #                         "$first": "$meal.datetime"}
+    #                 },
+    #                 "endDate": "$symptom_datetime",
+    #                 "unit": "hour"
+    #             },
+    #         }
+    #     }}},
+    #     {
+    #         "$group": {
+    #             "_id": {"name": "$symptom_name",
+    #             "frequency": "$total_frequency", "avg_severity": "$avg_severity"},
+    #             "data": {
+    #                 "$push": "$data"
+    #             }
+    #         }
+    #     }, { "$sort": { "_id.frequency": -1 }
+    #     }    
+    # ]
+
+    # symptoms = [s for s in db.user_symptoms.aggregate(pipeline)]
+
+
+    # '''
+    # ideal schema for item sets:
+    # groups:
+    #     [symptom, group], [symptom, group], etc.
+
+    # foods:
+    #     [symptom, food], [symptom, food], etc.
+
+    # '''
