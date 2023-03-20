@@ -20,6 +20,9 @@
 # 8. multiply the severity * lift
 # 9. create correlations from the avg time passed, severity, lift, score -- ranked by score, and ranking of most common symptoms, and username and symptom name
 # 10. remove previous correlations and insert new ones
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import fpgrowth, association_rules, apriori, fpmax
+import pandas as pd
 
 import sys
 sys.path.insert(0,"..")
@@ -30,10 +33,11 @@ def find_correlations():
     # use those to find all associated foods and food groups
     # unwind foods and food groups
     # do I want to do two different calculations: food groups and foods? probably
-    #  
+   
+    
     pipeline = [
         { "$match": {
-                "username": "blackchristopher"
+                "username": "hillandrew"
             }
         }, {
             "$group": {
@@ -100,11 +104,67 @@ def find_correlations():
                     "$push": "$data"
                 }
             }
+        }, { "$sort": { "_id.frequency": -1 }
         }    
     ]
 
-    sym = [s for s in db.user_symptoms.aggregate(pipeline)]
-    print(sym[0]['_id'])
+    symptoms = [s for s in db.user_symptoms.aggregate(pipeline)]
+
+
+    '''
+    ideal schema for item sets:
+    groups:
+        [symptom, group], [symptom, group], etc.
+
+    foods:
+        [symptom, food], [symptom, food], etc.
+
+    '''
+
+    group_sets_data = []
+    food_sets_data = []
+    for s in [symptoms[2]]:
+        symptom_name = s['_id']['name']
+        for meal in s['data']:
+            details = [meal['severity'], meal['time_diff']]
+            group_sets_data.append([symptom_name, *meal['groups']])
+            food_sets_data.append([symptom_name, *meal['foods']])
+            # for group in meal['groups']:
+            #     group_sets_data.append([symptom_name, group])
+            # for food in meal['foods']:
+            #     food_sets_data.append([symptom_name, food])
+
+    group_sets = group_sets_data
+    food_sets = food_sets_data
+    
+
+    te = TransactionEncoder()
+    te_groups = te.fit(group_sets).transform(group_sets)
+    groups_df = pd.DataFrame(te_groups, columns=te.columns_)
+    freq_groupsets = fpgrowth(groups_df, min_support=0.1, use_colnames=True)
+
+    
+
+    group_rules = association_rules(freq_groupsets, metric="lift", min_threshold=0.1)
+
+
+    te = TransactionEncoder()
+    te_foods = te.fit(food_sets).transform(food_sets)
+    foods_df = pd.DataFrame(te_foods, columns=te.columns_)
+    freq_foodsets = fpgrowth(foods_df, min_support=0.1, use_colnames=True)
+
+    group_rules = association_rules(freq_groupsets, metric="support", min_threshold=0.2)
+    food_rules = association_rules(freq_foodsets, metric="confidence", min_threshold=0.8)
+
+    print(freq_groupsets)
+
+    print(group_rules.to_string())
+
+
+    
+
+
+    
 
 if __name__ == '__main__':
     find_correlations()
