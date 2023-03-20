@@ -10,7 +10,7 @@ import EditProfile from "../components/EditProfile";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => !!state.auth.me.username);
+  const isLoggedIn = useSelector((state) => !!state.auth.me._id);
 
   useEffect(() => {
     dispatch(me());
