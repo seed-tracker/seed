@@ -36,7 +36,7 @@ function EditProfile() {
           onChange={(event) => setPassword(event.target.value)}
         />
       </label>
-      <button type="submit">Register</button>
+      <button type="submit">Edit</button>
     </form>
   );
 }

@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const addEntry = createAsyncThunk("user/addFood", async (username, entry) => {
+export const addEntry = createAsyncThunk("user/addFood", async ({ username, entry }) => {
   try {
-      const { data } = await axios.post(`http://localhost:5000/${username}`, entry)
-      return data;
+    const { data } = await axios.post(`http://localhost:5000/user/${username}/addFood`, entry);
+    return data;
   } catch (err) {
     console.error(err);
   }
