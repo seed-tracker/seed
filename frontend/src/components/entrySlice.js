@@ -10,14 +10,20 @@ export const addEntry = createAsyncThunk("user/addFood", async ({ username, entr
   }
 });
 
-export const editProfile = createAsyncThunk("user/editProfile", async (username) => {
-  try {
-      const { data } = await axios.post(`http://localhost:5000/${username}`)
+export const editProfile = createAsyncThunk(
+  "user/editProfile",
+  async ({ username, name, email, password }) => {
+    try {
+      const { data } = await axios.put(
+        `http://localhost:5000/${username}/editProfile`,
+        { username, name, email, password }
+      );
       return data;
-  } catch (err) {
-    console.error(err);
+    } catch (err) {
+      console.error(err);
+    }
   }
-});
+);
 
 const entrySlice = createSlice({
   name: 'entry',
@@ -33,3 +39,5 @@ const entrySlice = createSlice({
 })
 
 export default entrySlice.reducer
+
+//do i need another slice here to store user state
