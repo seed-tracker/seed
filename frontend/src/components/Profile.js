@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { me } from "../store/authSlice";
+import Sidebar from "./Sidebar";
 
 /**
  * Placeholder component for the userprofile page
@@ -14,6 +15,7 @@ const Profile = () => {
 
   return (
     <main>
+      <Sidebar />
       <h2>PROFILE INFO WOULD GO HERE</h2>
     </main>
   );
