@@ -1,27 +1,3 @@
-# 1. grab all the user's symptom collections
-
-# {
-#     'symptom': <symptom1_name>,
-#       'severity': num,
-#     'foods': [...],
-#     'groups': [...]
-# }
-
-
-# 2. parse into dataframe with pymongoarrow
-
-# question: do I want to pass each food set and group set altogether OR do I want to pass 1 food/group and one symptom at a time? If I pass them all together, I need to parse out the grouping by food. So maybe pass the foods, groups one at a time
-# 3. pass the food sets and groups sets w/ associated symptoms into fpGrowth
-    # add min frequency to parse out symptoms that have barely shown up
-# 4. take the top 5 or so foods and groups for each symptom
-# 5. with each of those foods and groups, go through the symptoms, looking for the spots where the foods show up and averaging the severity (do this all foods, groups at a time, so you're not looping again and again) -- don't count foods twice
-# 6. at the same time, find the average time passed between each food and symptom
-# 7. divide the severity score by 10
-# 8. multiply the severity * lift
-# 9. create correlations from the avg time passed, severity, lift, score -- ranked by score, and ranking of most common symptoms, and username and symptom name
-# 10. remove previous correlations and insert new ones
-
-
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import fpgrowth, association_rules
 import pandas as pd
@@ -32,16 +8,12 @@ sys.path.insert(0,"..")
 from db import db
 
 def find_correlations():
-    # find top 10 or less symptoms
-    # use those to find all associated foods and food groups
-    # unwind foods and food groups
-    # do I want to do two different calculations: food groups and foods? probably
-    
-    # new way of doing this:
+    username = 'blackchristopher'
+    # query the meals, including symptoms
     pipeline = [
         {
             "$match": {
-                "username": "oellis"
+                "username": username
             }
         },
         {
@@ -55,10 +27,9 @@ def find_correlations():
                             "symptom": 1,
                             "datetime": 1,
                             "severity": 1,
-                            "_id": 0
+                            "_id": 1
                         }
                     }
-                  
                 ],
                 "as": "related_symptoms"
             }
@@ -66,201 +37,204 @@ def find_correlations():
     ]
 
     meals = [m for m in db.meals.aggregate(pipeline)]
+    
+    # get top 5 symptoms
+    s_pipeline = [
+        {
+            "$match": {
+                "username": username
+            }
+        },
+        {
+            "$group": {
+                "_id": "$symptom",
+                "count": {"$sum": 1},
+                "avg_severity": {"$avg": "$severity"}
+            }
+        }, 
+        {
+            "$project": {
+                "symptom": "$_id",
+                "count": 1,
+                "avg_severity": 1,
+                "_id": 0
+            }
+        }, {"$sort": {"count": -1}}
+    ]
 
+
+    #lookup via symptoms, see what meals have that symptom included
+
+    # find the count of each of those symptoms
+    symptom_counts = list(filter(lambda c: c['count'] >= 25, [s for s in db.user_symptoms.aggregate(s_pipeline)]))
+    print([s for s in db.user_symptoms.aggregate(s_pipeline)])
+
+    if(len(symptom_counts) < 1): return 'Not enough data'
+    symptom_list = [s['symptom'] for s in symptom_counts]
+
+
+    # create sets with foods and meals
     food_sets = []
     group_sets = []
-    symptom_set = {}
 
-    # format the data
+    # create item sets with foods and symptoms
     for m in meals:
         symptoms = []
         for s in m['related_symptoms']:
             name = s['symptom']
-            symptoms.append(name)
-            if(not name in symptom_set):
-                symptom_set[name] = 0
+            if(name in symptom_list):
+                symptoms.append(name)
 
-            symptom_set[name]+= 1
-        
         food_sets.append([*symptoms, *m['foods']])
         group_sets.append([*symptoms, *m['groups']])
-    
-    # get top 5 symptoms
-    top_symptoms = list(filter(lambda y: y[1] > 20, sorted(symptom_set.items(), key=lambda x: -x[1])))[:5]
 
 
 
-    
-    # top_symptoms = list(map(lambda t: {'symptom': t[0], 'count': t[1]['count'], 'foods': t[1]['foods'], 'groups': t[1]['groups']}, sorted(symptom_sets.items(), key=lambda x: -x[1]['count'])))[:5]
-
-    # top_symptoms = (list(filter(lambda t: t['count'] > 20, top_symptoms)))
-
-    
-    if(len(top_symptoms) < 1): return 'Not enough data'
-
-
-
-    symptom_list = [k for k in symptom_set.keys()]
-
-    for sym in top_symptoms:
-        name = sym[0]
+    # get data for each individual symptom
+    for name in symptom_list:
+        # create list to filter out other symptoms
         filters = list(filter(lambda i: not i == name, symptom_list))
+
+        # get food and group rules
         food_rules = create_rules(food_sets, filters, name)
         group_rules = create_rules(group_sets, filters, name)
 
-        print(food_rules)
-        print(group_rules)
+        # find data for the top foods and group
+        data = find_data(name, group_rules, meals, symptom_counts)
+        data = find_data(name, food_rules, meals, symptom_counts)
 
-        print(find_data(name, group_rules, meals))
-    
-    
+
+
 def filter_symptoms(items, symptom_list):
     return list(set(filter(lambda i: not i in symptom_list, items)))
 
+# get association rules
 def create_rules(item_sets, filter_list, symptom_name):
     te = TransactionEncoder()
 
+    # filter out the unrelated symptoms
     filtered_items = list(map(lambda i: filter_symptoms(i, filter_list), item_sets))
 
+    # run the data through fpgrowth and get association rules
     te_items = te.fit(filtered_items).transform(filtered_items)
     items_df = pd.DataFrame(te_items, columns=te.columns_)
     freq_itemsets = fpgrowth(items_df, min_support=0.1, use_colnames=True)
     rules = association_rules(freq_itemsets, metric="lift", min_threshold=0.9).sort_values(by=['lift'], ascending=False)
 
+    # get lift, consequents and antecedents
     data = list(zip(convert_frozenset(rules['antecedents']), convert_frozenset(rules['consequents']), list(rules['lift'])))
     
+    # return the top 10 (or less) symptoms data, filtering out the symptom
     return list(map(lambda y: [y[0], y[2]], list(filter(lambda x: x[1] == symptom_name, data))))[:10]
 
 
-def find_data(symptom_name, item_list, meals):
-    data = {}
+def find_data(symptom_name, item_list, meals, symptom_counts):
+    # get the symptom's data
+    avg_severity = 0
     symptom_count = 0
-    avg_severity_sum = 0
+    for s in symptom_counts:
+        if(s['symptom'] == symptom_name):
+            symptom_count = s['count']
+            avg_severity = round(s['avg_severity'], 2)
+
+
+    # loop through the meals to get data
+    data = {}
     for m in meals:
+
+        # get the average severity of the related symptoms (average out if there are multipe related instances)
         severity = None
+        count = 1
         for s in m['related_symptoms']:
-            if(s['symptom'] == symptom_name):
+            if(s['symptom'] == symptom_name):     
                 severity = s['severity']
-                avg_severity_sum += s['severity']
-                symptom_count += 1
+                count += 1
+
+        # get avg
+        if(severity): severity /= count
+
         for i in item_list:
-            key = i[0].replace(" ", "_")
+            # reformat
+            key = make_key(i[0])
+
+            # add data for the foods
             if(i[0] in m['foods'] or i[0] in m['groups']):
+                # add the data if not already added
                 if(not key in data): data[key] = {'total_count': 0, 'severity_avg': 0, 'overlap': 0, 'lift': i[1]}
+
+                # update the count and average
                 data[key]['total_count'] += 1
                 if(severity):
                     data[key]['severity_avg'] += severity
                     data[key]['overlap'] += 1
 
-        print(avg_severity_sum, symptom_count)
-        if(symptom_count > 0): avg_severity_sum /= symptom_count
-
+    # round and format the accumulated data, find the score
     for i in item_list:
-        key = i[0].replace(" ", "_")
+        key = make_key(i[0])
         d = data[key]
-        d['severity_avg'] /= d['overlap']
-        d['overlap_percent'] = d['overlap']/symptom_count
-        d['score'] = d['lift'] * d['severity_avg']/avg_severity_sum
+        d['severity_avg'] = round(d['severity_avg']/d['overlap'], 2)
+        d['overlap_percent'] = round(d['overlap']/d['total_count'], 2)
+        d['score'] = round(d['lift'] * d['overlap_percent'] * d['severity_avg']/avg_severity, 2)
+        d['lift'] = round(d['lift'])
 
+    # sort by score
+    data = sorted(data.items(), key=lambda x: -x[1]['score'])
+
+    # create and print a data frame to view the data in terminal
+    create_df(data)
     
-    return {'symptom': symptom_name, 'count': symptom_count, 'avg_severity': avg_severity_sum, 'data': data}
+    # return the data, formatted for mongodb
+    return {'symptom': symptom_name, 'count': symptom_count, 'avg_severity': avg_severity, 'data': data}
 
-                
+
+# fn to format keys
+def make_key(item):
+    return item.replace(" ", "_")
+
+def create_df(data):
+    # format the data
+    data_frame = []
+    for i in data:
+        data_frame.append([i[0], i[1]['total_count'], i[1]['overlap'], i[1]['lift'], i[1]['overlap_percent'], i[1]['severity_avg'], i[1]['score']])
+    
+    # create dataframe
+    df = pd.DataFrame(data_frame, columns=['name', 'count', 'overlap', 'lift', 'overlap percent', 'severity average', 'score'])
+
+    # print the data
+    print(df.to_string())
+
 
 # convert frozenset, drop non-unique values and filter out the symptom values
 def convert_frozenset(fset, filter_val=None):
     return list(filter(lambda i: not i == filter_val ,fset.apply(lambda x: list(x)[0]).astype("unicode").tolist()))
 
+
 def get_items(item_list, search):
     return list(filter(lambda i: bool(set(i) & search), item_list))
 
+
+# extraneous function to check my work -- will delete later
+def check_data(item_sets, symptom_name, symptom_keys):
+    filtered_items = list(map(lambda i: filter_symptoms(i, symptom_keys), item_sets))
+
+    item_count = {}
+
+    for i in filtered_items:
+        for item in i:
+            if(not item == symptom_name):
+                item = item.replace(" ", "_").replace('-','_')
+                if(not item in item_count):
+                    item_count[item] = {'total': 0, 'overlap': 0}
+
+                item_count[item]['total'] += 1
+
+                if(symptom_name in i):
+                    item_count[item]['overlap'] += 1
+    
+    sorted_list = list(filter(lambda y: y[1]['overlap'] > 5, sorted(item_count.items(), key=lambda x: -x[1]['overlap'])))[:5]
+
+    return sorted_list
+
+
 if __name__ == '__main__':
     find_correlations()
-
-
-
-    # pipeline = [
-    #     { "$match": {
-    #             "username": "hillandrew"
-    #         }
-    #     }, {
-    #         "$group": {
-    #             "_id": "$symptom",
-    #             "frequency": { "$sum": 1 },
-    #             "avg_severity": {"$avg": "$severity"},
-    #             "meal_dates": { "$push": {"meals": "$meals", "symptom_datetime": {"$toDate": "$datetime"}, "severity": "$severity"}}
-    #         }
-    #     },
-    #     { "$sort": { "frequency": -1 }
-    #     }, { "$limit": 5 },
-    #     { "$unwind": "$meal_dates" },
-    #     {
-    #         "$project": {
-    #             "_id": 0,
-    #             "symptom_name": "$_id",
-    #             "avg_severity": 1,
-    #             "meal": "$meal_dates.meals",
-    #             "symptom_datetime": "$meal_dates.symptom_datetime",
-    #             "severity": "$meal_dates.severity",
-    #             "total_frequency": "$frequency"
-    #         }
-    #     },
-    #     { "$unwind": "$meal" }, {
-    #         "$lookup": {
-    #             "from": "meals",
-    #             "localField": "meal",
-    #             "foreignField": "_id",
-    #             "pipeline": [
-    #                 {
-    #                     "$project": {
-    #                         "groups": 1,
-    #                         "foods": 1,
-    #                         "datetime": 1,
-    #                         "_id": 0
-    #                     }
-    #                 }
-    #             ],
-    #             "as": "meal"
-    #         }
-    #     }, 
-    #     { 
-    #         "$project": {
-    #             "symptom_name": 1,
-    #             "total_frequency": 1,
-    #             "avg_severity": 1,
-    #             "data": {
-    #             "severity": "$severity", 
-    #             "groups": {"$first": "$meal.groups"}, "foods": {"$first": "$meal.foods"},  "time_diff": {"$dateDiff": {
-    #                 "startDate": {
-    #                     "$toDate": {
-    #                         "$first": "$meal.datetime"}
-    #                 },
-    #                 "endDate": "$symptom_datetime",
-    #                 "unit": "hour"
-    #             },
-    #         }
-    #     }}},
-    #     {
-    #         "$group": {
-    #             "_id": {"name": "$symptom_name",
-    #             "frequency": "$total_frequency", "avg_severity": "$avg_severity"},
-    #             "data": {
-    #                 "$push": "$data"
-    #             }
-    #         }
-    #     }, { "$sort": { "_id.frequency": -1 }
-    #     }    
-    # ]
-
-    # symptoms = [s for s in db.user_symptoms.aggregate(pipeline)]
-
-
-    # '''
-    # ideal schema for item sets:
-    # groups:
-    #     [symptom, group], [symptom, group], etc.
-
-    # foods:
-    #     [symptom, food], [symptom, food], etc.
-
-    # '''
