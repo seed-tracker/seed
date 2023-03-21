@@ -51,11 +51,27 @@ def create_user_data(username, days, num_s, num_g, max_meals, food_flex, symptom
 def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals, food_flex, symptom_thresh, consistency):
 
     # choose 3 food groups, store the indexes
+    # ex. [8, 9, 12, 14, ...]
     main_groups = [randint(0, len(groups) - num_g)]
     for i in range(1, num_g):
         main_groups.append(randint(main_groups[i - 1] + 1, len(groups) - num_g + i))
 
+    # choose top foods for each of the groups
+    #[[food, food, ...], [food, food, ...], ...]
+    main_food_names = []
+    for idx in main_groups:
+        foods = [] 
+        group_foods = groups[idx]['foods']
+        for i in range(2):
+            foods.append(group_foods[randint(0, len(group_foods) - 1)])
+
+        main_food_names.append(foods)
+
+    print(username, main_food_names)
+
+
     # choose 3 main symptoms, store the indexes
+    # [1, 7, 9, 12, ..]
     main_symptoms = [randint(0, len(symptoms) - num_s)]
     for i in range(1, num_s):
         main_symptoms.append(randint(main_symptoms[i - 1] + 1, len(symptoms) - num_s + i))
@@ -67,7 +83,7 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
     for d in range(max_days):
         if(randint(0, 100) < consistency): continue
 
-        symptom_prob = 1  # probability of a symptom
+        symptom_prob = 0  # probability of a symptom
         hour = randint(5, 8)  # hour of first meal
         num_meals = randint(2, max_meals)  # num of meals that day
         
@@ -79,12 +95,16 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
             for f in range(randint(1, 5)):
                 # added probability that it's a food from the main group
                 groupIdx = None
+                foodIdx = None
 
                 if(randint(1, 100) <= food_flex):
                     groupIdx = main_groups[0]
+                    foodIdx = 0
                 elif(randint(1, 100) <= int(food_flex/3)):
-                    groupIdx = main_groups[randint(1, len(main_groups) - 1)]
+                    foodIdx = randint(1, len(main_groups) - 1)
+                    groupIdx = main_groups[foodIdx]
                 else:
+                    foodIdx = None
                     groupIdx = randint(0, len(groups) - 1)
                     
                 # increase probability of symptom
@@ -94,8 +114,13 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
                     symptom_prob += 1
                 
                 chosen_group = groups[groupIdx]['group']
-                possible_foods = groups[groupIdx]['foods']
-
+                
+                possible_foods = None
+                if(randint(0, 100) < 85 and foodIdx): 
+                    possible_foods = main_food_names[foodIdx]
+                else: 
+                    possible_foods = groups[groupIdx]['foods']
+                
                 chosen_food = possible_foods[randint(0, len(possible_foods) - 1)]
 
                 if chosen_food not in meal_foods:
@@ -248,8 +273,12 @@ def run_seed():
     if(path == 'n'):
         u = input('Specific user? y or n ')
         if(u == 'y'):
+            username = input('username?')
+            db.user_symptoms.delete_many({"username": username})
+            db.meals.delete_many({"username": username})
+
             answers = [
-                input('username?'),
+                username,
                 int(input('number of months?  ')) * 30,
                 int(input('number of symptoms?  ')),
                 int(input('number of food groups?  ')),
@@ -258,7 +287,8 @@ def run_seed():
                 int(input('symptom threshold? 1-100  ')),
                 int(input('consistency? 1-100  ')),
             ]
-            create_user_data(**answers)
+
+            create_user_data(*answers)
         
         else:
             num = int('number of users? ')
@@ -287,9 +317,9 @@ def run_seed():
         for i in range(num):
             create_user_data(
                 users[i]['username'],
-                randint(60, 500),
+                randint(80, 800),
                 randint(2,5),
-                randint(2,10),
+                randint(2,5),
                 randint(2, 6),
                 randint(5, 60),
                 randint(10, 80),
