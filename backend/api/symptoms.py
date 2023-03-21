@@ -31,15 +31,14 @@ def get_symptom_by_name(name):
 def add_user_symptom(username):
     try:
         data = request.get_json()
-        user_symptoms_collection = db.user_symptoms
         date = data['date']
         time = data['time']
+        symptom_time = datetime.strptime(date + ' ' + time, "%Y-%m-%d %H:%M")
         symptom = data['symptom']
         severity = data['severity']
-        user_symptoms_collection.insert_one({
+        db.user_symptoms.insert_one({
             "username": username,
-            "date": date,
-            "time": time,
+            "datetime": symptom_time,
             "symptom": symptom,
             "severity": severity,
         })
