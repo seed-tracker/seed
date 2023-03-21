@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import { editProfile } from "./entrySlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthUser } from "../store";
 
-function EditProfile({ username }) {
+function EditProfile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const dispatch = useDispatch();
-  
+
+  const user = useSelector(selectAuthUser);
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(editProfile({ username, name, email, password }));
+    dispatch(editProfile({ username: user.username, name, email, password }));
   };
-  
 
   return (
     <form onSubmit={handleSubmit}>
