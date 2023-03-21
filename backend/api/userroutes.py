@@ -188,14 +188,12 @@ def edit_profile(username):
         if request_data is None:
             return jsonify({'error': 'Invalid request body'}), 400
         hashedPassword = bcrypt.hashpw(request_data['password'].encode('utf-8'), salt)
-
         # Find the user by their username and update their information
-        updated_user = db.users.find_one_and_update({'username': username},{'password':hashedPassword.decode('utf-8')}, {'$set': request_data}, return_document=True)
-
-        return jsonify(updated_user)
+        updated_user = db.users.find_one_and_update({'username': username}, {'$set':{"password": hashedPassword.decode('utf-8'), 'name': request_data['name'],
+        'email': request_data['email']}}, return_document=True)
+        user_string = {key: str(updated_user[key]) for key in updated_user}
+        return user_string, 200
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
-
-
    
