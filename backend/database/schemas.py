@@ -7,7 +7,7 @@ from db import db
 users_validator = {
     "$jsonSchema": {
         "bsonType": "object",
-        "required": ["name", "username", "email", "password", "birthday"],
+        "required": ["name", "username", "email", "password", "birthdate"],
         "properties": {
             "name": {
                 "bsonType": "string",
@@ -20,6 +20,11 @@ users_validator = {
                 "minLength": 2
             },
             "password": {
+                "bsonType": "string",
+                "description": "required and must be a string",
+                "minLength": 5
+            },
+            "email": {
                 "bsonType": "string",
                 "description": "required and must be a string",
                 "minLength": 5
@@ -43,11 +48,11 @@ meals_validator = {
             },
             "groups": {
                 "bsonType": "array",
-                "description": "required and must be an array of group ids"
+                "description": "required and must be an array of group object ids from groups collection"
             },
             "foods": {
                 "bsonType": "array",
-                "description": "required and must be an array of food ids"
+                "description": "required and must be an array of food object ids from foods collection"
             }  
         }
     }
@@ -56,31 +61,23 @@ meals_validator = {
 correlations_validator = {
     "$jsonSchema": {
         "bsonType": "object",
-        "required": ["symptom_id", "symptom_name", "user_id", "top_foods", "top_groups"],
+        "required": [ "symptom_name", "username"],
         "properties": {
-            "symptom_id": {
-                "bsonType": "objectId",
-                "description": "id of related symptom. required",
-            },
             "symptom_name": {
                 "bsonType": "string",
                 "description": "name of symptom. required.",
             },
-            "user_id": {
-                "bsonType": "objectId",
-                "description": "id of user. required",
+            "username": {
+                "bsonType": "string",
+                "description": "object id of user. required",
             },
             "top_groups": {
                 "bsonType": "array",
-                "description": "required and must be an array of group ids",
+                "description": "Must be an array of group ids from groups collection with corresponding lift, severity, name and total score",
             },
             "top_foods": {
                 "bsonType": "array",
-                "description": "required and must be an array of food ids",
-                "items": {
-                    "bsonType": "object",
-                    "description": "at least one food with the name and id of the food"
-                }
+                "description": "Must be an array of food object ids from foods collection with corresponding lift, severity, name and total score"
             }  
         }
     }
@@ -115,9 +112,9 @@ foods_validator = {
                 "description": "name of the food based on USDA data, required and must be a string",
                 "minLength": 2
             },
-            "group_id": {
+            "groups": {
                 "bsonType": "array",
-                "description": "array of related food groups. Required. Can be only one group.",
+                "description": "array of related food groups with name and id. Required. Can be only one group.",
             }
         }
     }
@@ -126,16 +123,12 @@ foods_validator = {
 symptom_validator = {
     "$jsonSchema": {
         "bsonType": "object",
-        "required": ["name", "categories"],
+        "required": ["name"],
         "properties": {
             "name": {
                 "bsonType": "string",
                 "description": "name of the symptom, required and must be a string",
                 "minLength": 2
-            },
-            "categories": {
-                "bsonType": "array",
-                "description": "array of related categories. Required. Can be only one group."
             }
         }
     }
@@ -159,17 +152,13 @@ user_symptoms_validator = {
                 "bsonType": "objectId",
                 "description": "id of a specific symptom from the symptoms collection. required."
             },
-            "category": {
-                "bsonType": "array",
-                "description": "array of categories. required."
-            },
             "datetime": {
                 "bsonType": "date",
                 "description": "required and must be the time the symptom started"
             },
             "meals": {
                 "bsonType": "array",
-                "description": "array of related meal ids"
+                "description": "array of related meal object ids"
             }  
         }
     }
@@ -179,16 +168,19 @@ def create_schemas():
     try: 
         print('Adding schema validation...')
 
-        production.command("collMod", "users", validator=users_validator)
-        production.command("collMod", "meals", validator=meals_validator)
-        production.command("collMod", "correlations", validator=correlations_validator)
-        production.command("collMod", "groups", validator=foods_groups_validator)
-        production.command("collMod", "foods", validator=foods_validator)
-        production.command("collMod", "symptoms", validator=symptoms_validator)
-        production.command("collMod", "user_symptoms", validator=user_symptoms_validator)
+        db.command("collMod", "users", validator=users_validator)
+        db.command("collMod", "meals", validator=meals_validator)
+        db.command("collMod", "correlations", validator=correlations_validator)
+        db.command("collMod", "groups", validator=foods_groups_validator)
+        db.command("collMod", "foods", validator=foods_validator)
+        db.command("collMod", "symptoms", validator=symptoms_validator)
+        db.command("collMod", "user_symptoms", validator=user_symptoms_validator)
 
         print('Success!')
 
     except Exception as e:
         print('Something went wrong:', e)
 
+
+if __name__ == "__main__":
+  create_schemas()
