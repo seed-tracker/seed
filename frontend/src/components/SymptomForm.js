@@ -1,9 +1,23 @@
 import React, {useState} from "react"
+import {useDispatch, useSelector} from "react-redux"
+import { me } from "../store/authSlice"
 
 const SymptomForm = () => {
   const [entryName, setEntryName] = useState("")
   const [date, setDate] = useState("")
   const [time, setTime] = useState("")
+  const [severity, setSeverity] = useState("")
+  const username = useSelector((state) => state.auth.me.username)
+  // console.log(username);
+
+  console.log(me())
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(me())
+  })
+
 
   const handleSymptomChange = (event) => {
     console.log(event.target.value);
@@ -50,6 +64,10 @@ const SymptomForm = () => {
           ))}
         </select>
       </div>
+      <label htmlFor="time">
+        Severity:
+        <input type="range" min="0" max="10" value={severity} onChange={(event) => setSeverity(console.log(event.target.value))}/>
+      </label>
       <button type="submit">Add Entry</button>
     </form>
   )

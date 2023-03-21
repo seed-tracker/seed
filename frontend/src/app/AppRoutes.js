@@ -5,11 +5,8 @@ import { me } from "../store/authSlice";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
 import Profile from "../components/Profile";
-<<<<<<< HEAD
-import SymptomForm from "../components/SymptomForm";
-=======
 import Home from "../components/Home";
->>>>>>> 2b54fdc675909e2716b675a052a689dd3c77cf0b
+import SymptomForm from "../components/symptoms/SymptomForm";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
@@ -17,19 +14,15 @@ const AppRoutes = () => {
 
   useEffect(() => {
     dispatch(me());
-  }, []);
+  }, [dispatch]);
 
   return (
     <main>
       {isLoggedIn ? (
         <Routes>
           <Route path="/profile" element={<Profile />} />
-<<<<<<< HEAD
-          <Route path="/entry/add/symptom" element={<SymptomForm />} />
-          <Route path="/*" />
-=======
+          <Route path="/add/symptom" element={<SymptomForm />} />
           <Route path="/*" element={<Home />} />
->>>>>>> 2b54fdc675909e2716b675a052a689dd3c77cf0b
         </Routes>
       ) : (
         <Routes>

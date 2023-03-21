@@ -20,3 +20,10 @@ def get_db():
 # to get db instance globally
 # from db import get_db
 db = get_db()
+
+
+# testing purposes only
+def get_test_db():
+    client = MongoClient(os.environ.get('MONGO_URI'))
+    return client.test
+test_db = get_test_db()
