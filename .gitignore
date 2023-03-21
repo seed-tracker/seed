@@ -5,7 +5,5 @@ env
 .vscode
 *.pyc
 **/__pycache__
-<<<<<<< HEAD
 **/seed/
-=======
->>>>>>> f380080d866c3ab8143f3c5c0f94a8dbf601e20f
+/venv
