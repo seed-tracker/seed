@@ -13,6 +13,7 @@ from bson import ObjectId
 #     else:
 #         return "No foods found", 404
 
+
 @app.route('/foods', methods=['GET'])
 def get_foods():
     foods = db.foods.find()
@@ -28,6 +29,8 @@ def get_foods():
     return response, status_code
 
 # get a single food item
+
+
 @app.route('/foods/<string:id>', methods=['GET'])
 def get_food_by_id(id):
     food = db.foods.find_one(ObjectId(id))
@@ -36,4 +39,3 @@ def get_food_by_id(id):
         return food_string, 200
     else:
         return "Food not found", 404
-

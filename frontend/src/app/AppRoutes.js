@@ -5,6 +5,7 @@ import { me } from "../store/authSlice";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
 import Profile from "../components/Profile";
+import Home from "../components/Home";
 import Entry from "../components/MealForm";
 import EditProfile from "../components/EditProfile";
 
@@ -14,14 +15,14 @@ const AppRoutes = () => {
 
   useEffect(() => {
     dispatch(me());
-  }, [dispatch]);
+  }, []);
 
   return (
     <main>
       {isLoggedIn ? (
         <Routes>
           <Route path="/profile" element={<Profile />} />
-          <Route path="/*" />
+          <Route path="/*" element={<Home />} />
           <Route path="/user/addFood" element={<Entry />}></Route>
           <Route path="/user/editProfile" element={<EditProfile />}></Route>
         </Routes>
@@ -29,7 +30,7 @@ const AppRoutes = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/" />
+          <Route path="/*" element={<Home />} />
         </Routes>
       )}
     </main>
