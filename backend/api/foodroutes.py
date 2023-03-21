@@ -16,6 +16,8 @@ def get_foods():
     else:
         return "No foods found", 404
 
+ 
+
 # get a single food item
 @app.route('/foods/<string:id>', methods=['GET'])
 def get_food_by_id(id):

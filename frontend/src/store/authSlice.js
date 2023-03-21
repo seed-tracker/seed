@@ -8,7 +8,7 @@ const TOKEN = "token";
  * @returns authentication confirmation
  * @catches error if database request goes wrong
  */
-export const me = createAsyncThunk("auth/me", async () => {
+export const me = createAsyncThunk("auth/me", async (thunkAPI) => {
   const token = window.localStorage.getItem(TOKEN);
   try {
     if (token) {
@@ -22,7 +22,11 @@ export const me = createAsyncThunk("auth/me", async () => {
       return {};
     }
   } catch (err) {
-    console.error(err);
+    if (err.response.data) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    } else {
+      return "There was an issue with your request.";
+    }
   }
 });
 
@@ -32,19 +36,25 @@ export const me = createAsyncThunk("auth/me", async () => {
  * creates a token in localstorage and receives user info on the frontend
  * @catches error if database request goes wrong
  */
-export const login = createAsyncThunk("auth/login", async (userInfo) => {
-  try {
-    const { data } = await axios.post(
-      "http://localhost:5000/auth/login",
-      userInfo
-    );
-    window.localStorage.setItem(TOKEN, data.token);
-    me();
-    return data;
-  } catch (err) {
-    console.error(err);
+export const login = createAsyncThunk(
+  "auth/login",
+  async (userInfo, thunkAPI) => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/auth/login",
+        userInfo
+      );
+      window.localStorage.setItem(TOKEN, data.token);
+      thunkAPI.dispatch(me());
+    } catch (err) {
+      if (err.response.data) {
+        return thunkAPI.rejectWithValue(err.response.data);
+      } else {
+        return "There was an issue with your request.";
+      }
+    }
   }
-});
+);
 
 /**
  * async thunk that registers a user through an AJAX request
@@ -52,19 +62,25 @@ export const login = createAsyncThunk("auth/login", async (userInfo) => {
  * creates a token in localstorage and receives user info on the frontend
  * @catches error if database request goes wrong
  */
-export const signup = createAsyncThunk("auth/signup", async (userInfo) => {
-  try {
-    const { data } = await axios.post(
-      "http://localhost:5000/auth/register",
-      userInfo
-    );
-    window.localStorage.setItem(TOKEN, data.token);
-    me();
-    return data;
-  } catch (err) {
-    console.error(err);
+export const signup = createAsyncThunk(
+  "auth/signup",
+  async (userInfo, thunkAPI) => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/auth/register",
+        userInfo
+      );
+      window.localStorage.setItem(TOKEN, data.token);
+      thunkAPI.dispatch(me());
+    } catch (err) {
+      if (err.response.data) {
+        return thunkAPI.rejectWithValue(err.response.data);
+      } else {
+        return "There was an issue with your request.";
+      }
+    }
   }
-});
+);
 
 /**
  * authentication slice
@@ -81,21 +97,22 @@ export const authSlice = createSlice({
   reducers: {
     logout(state, action) {
       window.localStorage.removeItem(TOKEN);
-      state = {
-        me: {},
-        error: null,
-      };
+      state.me = {};
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(me.fulfilled, (state, { payload }) => {
-      state.me = payload;
+    builder.addCase(me.fulfilled, (state, action) => {
+      state.me = action.payload;
     });
-    builder.addCase(login.rejected, (state, { payload }) => {
-      state.error = payload;
+    builder.addCase(me.rejected, (state, action) => {
+      state.error = action.error;
     });
-    builder.addCase(signup.rejected, (state, { payload }) => {
-      state.error = payload;
+    builder.addCase(login.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+    builder.addCase(signup.rejected, (state, action) => {
+      state.error = action.payload;
     });
   },
 });
@@ -104,6 +121,14 @@ export const authSlice = createSlice({
  * logout reducer is exported to be useable on the frontend
  */
 export const { logout } = authSlice.actions;
+
+/**
+ * selector function that allows us to access state by dispatching an action to the store
+ * @param {object} state object
+ * @returns the user object and error stored in state
+ */
+export const selectAuthUser = (state) => state.auth.me;
+export const selectError = (state) => state.auth.error;
 
 /*
 exporting the authSlice

@@ -1,7 +1,9 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { logout } from "../store/authSlice";
+import { me } from "../store/authSlice";
 
 /**
  * Component for the navbar
@@ -10,19 +12,33 @@ import { logout } from "../store/authSlice";
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => !!state.auth.me._id);
+
+  useEffect(() => {
+    dispatch(me());
+  }, []);
 
   const logoutAndRedirectHome = () => {
     dispatch(logout());
     navigate("/");
   };
+
   return (
     <nav>
-      <Link to="/profile">Profile</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/signup">Sign Up</Link>{" "}
-      <button type="button" onClick={logoutAndRedirectHome}>
-        Logout
-      </button>
+      <h1>SEED</h1>
+      {isLoggedIn ? (
+        <div>
+          <Link to="/profile">My Profile</Link>
+          <button type="button" onClick={logoutAndRedirectHome}>
+            Logout
+          </button>
+        </div>
+      ) : (
+        <div>
+          <Link to="/login">Login</Link>
+          <Link to="/signup">Sign Up</Link>
+        </div>
+      )}
     </nav>
   );
 };

@@ -4,6 +4,7 @@ from db import db
 from flask import Flask
 from app import app
 from db import db
+from flask import jsonify
 
 #get all symptoms
 @app.route('/symptoms', methods=['GET'])
