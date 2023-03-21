@@ -49,7 +49,7 @@ def add_user_symptom(username):
         time = data['time']
         symptom = data['symptom']
         severity = data['severity']
-        add_symptom = db.user_symptoms_collection.insert_one({
+        user_symptoms_collection.insert_one({
             "username": username,
             "date": date,
             "time": time,
@@ -59,36 +59,3 @@ def add_user_symptom(username):
         return "User's symptom added succesfully", 201
     except Exception as e:
         return "Failed to add User's symptom", 404
-        # return data
-        # data = request.json
-        # print(data)
-        # user_symptoms_collection = db.user_symptoms
-        # these keys are required when posting raw json in Postman
-        # required_keys = ["username", "symptom", "severity"]
-        # for key in required_keys:
-        #     if key not in data:
-        #         return f"Missing {key} in request data", 400
-        # if not data.get("meals"):
-        #     return "Meals cannot be empty", 400
-        # user_symptoms_collection.insert_one({
-        #     "username": username,
-        #     "symptom": data.get("symptom"),
-        #     "severity": data.get("severity"),
-        #     # "datetime": symptom_datetime,
-        #     # "datetime": datetime.strptime(data.get("datetime"), "%Y-%m-%d %H:%M:%S"),
-        #     # "meals": data.get("meals"),
-        # })
-        # return "User's symptom added succesfully", 201
-
-# data = request.json
-# return data ???
-# @app.route(), methods = ['POST']
-# def add_user_symptoms():
-    #  if request.method=='POST':
-        # username = request.form['username']
-        # symptom = request.form['symptom']
-        # meals = request.form['meals']
-        # severity = request.form['severity']
-        # .insert_one({'content': content, 'degree': degree})
-        # return redirect(url_for('index'))
-    # return request.form

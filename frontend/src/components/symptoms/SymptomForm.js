@@ -4,7 +4,6 @@ import { me } from "../../store/authSlice"
 import { addSymptomEntry } from "./symptomSlice"
 
 const SymptomForm = () => {
-  // const [entryName, setEntryName] = useState("")
   const [date, setDate] = useState("")
   const [time, setTime] = useState("")
   const [symptom, setSymptom] = useState("")
@@ -25,13 +24,6 @@ const SymptomForm = () => {
       "symptom": symptom,
       "severity": severity,
     }))
-    console.log({
-      "username": user.username,
-      "date": date,
-      "time": time,
-      "symptom": symptom,
-      "severity": severity,
-    }, user.username);
   }
 
   useEffect(() => {
