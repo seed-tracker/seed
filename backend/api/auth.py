@@ -2,7 +2,7 @@ from flask import Flask, request
 from app import app
 from db import db
 import bcrypt
-# import jwt
+import jwt
 import os
 from datetime import datetime
 salt = bcrypt.gensalt(5)
