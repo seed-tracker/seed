@@ -7,7 +7,7 @@
 # from datetime import date
 # from flask_pymongo import PyMongo
 
-# #get all users  
+# #get all users
 # # @app.route('/users', methods=['GET'])
 # # def get_users():
 # #     users = db.users.find()
@@ -28,7 +28,7 @@
 #         return {"data": user_list}, 200
 #     else:
 #         return "No users found", 404
-    
+
 #     #gets a single user
 # @app.route('/users/<string:username>', methods=['GET'])
 # def get_user(username):
@@ -38,7 +38,7 @@
 #         return {"data": username}, 200
 #     else:
 #         return "User not found", 404
-    
+
 #     #gets a single user's meals
 # @app.route('/meals/<string:username>', methods=['GET'])
 # def get_user_meals(username):
@@ -49,7 +49,7 @@
 #         return jsonify(meals), 200
 #     else:
 #         return "No meals found for user {}".format(username), 404
-    
+
 # #get each single user's symptoms
 # @app.route('/users/<string:username>/symptoms', methods = ['GET'])
 # def get_user_symptoms(username):
@@ -62,7 +62,7 @@
 #         return {"data": user_symptoms_list}, 200
 #     else:
 #         return "No user symptoms found", 404
-    
+
 #     #post route for adding a meal to the user's table
 # @app.route("/user/<string:username>/addFood", methods=["POST"])
 # def add_entry(username):
@@ -98,7 +98,7 @@ from flask_pymongo import PyMongo
 import bcrypt
 salt = bcrypt.gensalt(5)
 
-#get all users  
+#get all users
 # @app.route('/users', methods=['GET'])
 # def get_users():
 #     users = db.users.find()
@@ -119,7 +119,7 @@ def get_users():
         return {"data": user_list}, 200
     else:
         return "No users found", 404
-    
+
     #gets a single user
 @app.route('/users/<string:username>', methods=['GET'])
 def get_user(username):
@@ -129,7 +129,7 @@ def get_user(username):
         return {"data": username}, 200
     else:
         return "User not found", 404
-    
+
     #gets a single user's meals
 @app.route('/meals/<string:username>', methods=['GET'])
 def get_user_meals(username):
@@ -140,7 +140,7 @@ def get_user_meals(username):
         return jsonify(meals), 200
     else:
         return "No meals found for user {}".format(username), 404
-    
+
 #get each single user's symptoms
 @app.route('/users/<string:username>/symptoms', methods = ['GET'])
 def get_user_symptoms(username):
@@ -153,7 +153,7 @@ def get_user_symptoms(username):
         return {"data": user_symptoms_list}, 200
     else:
         return "No user symptoms found", 404
-    
+
     #post route for adding a meal to the user's table
 @app.route("/user/<string:username>/addFood", methods=["POST"])
 def add_entry(username):
@@ -175,7 +175,7 @@ def add_entry(username):
 
 #         # Find the user by their username and update their information
 #         db.users.update_one({'username': username}, {'$set': request_data})
-        
+
 #         return jsonify({'success': True})
 #     except Exception as e:
 #         print(e)
@@ -196,4 +196,22 @@ def edit_profile(username):
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
-   
+
+
+# get route for correlations, single user
+@app.route('/<string:username>/correlations', methods=['GET'])
+def get_user_correlations(username):
+    try:
+        data = request.get_json()
+        correlations = db.correlations.find({"username": username})
+        correlations_list = []
+        for correlation in correlations:
+            correlation["_id"] = str(correlation["_id"])
+            correlations_list.append({key: str(correlation[key]) for key in correlation})
+
+        if correlations_list:
+            return {"data": correlations_list}, 200
+        else:
+            return "No correlations found", 404
+    except Exception as e:
+        return "Error", 500
