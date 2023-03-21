@@ -175,7 +175,7 @@ def find_data(symptom_name, item_list, meals, symptom_counts):
         d = data[key]
         d['severity_avg'] = round(d['severity_avg']/d['overlap'], 2)
         d['overlap_percent'] = round(d['overlap']/d['total_count'], 2)
-        d['score'] = round(d['lift'] * d['overlap_percent'] * d['severity_avg']/avg_severity, 2)
+        d['score'] = round(d['lift'] * d['severity_avg']/avg_severity, 2)
         d['lift'] = round(d['lift'], 3)
 
     # sort by score
