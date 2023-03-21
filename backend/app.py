@@ -5,7 +5,11 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
-# from api.home import *
+from api.userroutes import *
+from api.foodgroups import *
+from api.foodroutes import *
+from api.symptoms import *
+from api.auth import *
 
 from api.auth import *
 from api.symptoms import *
