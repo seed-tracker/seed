@@ -7,8 +7,10 @@ import sys
 sys.path.insert(0,"..")
 from db import db
 
-def find_correlations():
-    username = 'blackchristopher'
+
+
+def find_correlations(username):
+
     # query the meals, including symptoms
     pipeline = [
         {
@@ -63,13 +65,12 @@ def find_correlations():
     ]
 
 
-    #lookup via symptoms, see what meals have that symptom included
-
     # find the count of each of those symptoms
     symptom_counts = list(filter(lambda c: c['count'] >= 25, [s for s in db.user_symptoms.aggregate(s_pipeline)]))
-    print([s for s in db.user_symptoms.aggregate(s_pipeline)])
 
+    # stop if there's not enough data
     if(len(symptom_counts) < 1): return 'Not enough data'
+
     symptom_list = [s['symptom'] for s in symptom_counts]
 
 
@@ -88,8 +89,6 @@ def find_correlations():
         food_sets.append([*symptoms, *m['foods']])
         group_sets.append([*symptoms, *m['groups']])
 
-
-
     # get data for each individual symptom
     for name in symptom_list:
         # create list to filter out other symptoms
@@ -100,8 +99,10 @@ def find_correlations():
         group_rules = create_rules(group_sets, filters, name)
 
         # find data for the top foods and group
-        data = find_data(name, group_rules, meals, symptom_counts)
-        data = find_data(name, food_rules, meals, symptom_counts)
+        data_groups = find_data(name, group_rules, meals, symptom_counts)
+        data_foods = find_data(name, food_rules, meals, symptom_counts)
+
+        # to do: format and push data to correlations collection
 
 
 
@@ -142,7 +143,7 @@ def find_data(symptom_name, item_list, meals, symptom_counts):
     data = {}
     for m in meals:
 
-        # get the average severity of the related symptoms (average out if there are multipe related instances)
+        # get the average severity of the related symptoms (average out if there are multipe related instances), keep as none if the symptom isn't found
         severity = None
         count = 1
         for s in m['related_symptoms']:
@@ -175,7 +176,7 @@ def find_data(symptom_name, item_list, meals, symptom_counts):
         d['severity_avg'] = round(d['severity_avg']/d['overlap'], 2)
         d['overlap_percent'] = round(d['overlap']/d['total_count'], 2)
         d['score'] = round(d['lift'] * d['overlap_percent'] * d['severity_avg']/avg_severity, 2)
-        d['lift'] = round(d['lift'])
+        d['lift'] = round(d['lift'], 3)
 
     # sort by score
     data = sorted(data.items(), key=lambda x: -x[1]['score'])
@@ -191,19 +192,6 @@ def find_data(symptom_name, item_list, meals, symptom_counts):
 def make_key(item):
     return item.replace(" ", "_")
 
-def create_df(data):
-    # format the data
-    data_frame = []
-    for i in data:
-        data_frame.append([i[0], i[1]['total_count'], i[1]['overlap'], i[1]['lift'], i[1]['overlap_percent'], i[1]['severity_avg'], i[1]['score']])
-    
-    # create dataframe
-    df = pd.DataFrame(data_frame, columns=['name', 'count', 'overlap', 'lift', 'overlap percent', 'severity average', 'score'])
-
-    # print the data
-    print(df.to_string())
-
-
 # convert frozenset, drop non-unique values and filter out the symptom values
 def convert_frozenset(fset, filter_val=None):
     return list(filter(lambda i: not i == filter_val ,fset.apply(lambda x: list(x)[0]).astype("unicode").tolist()))
@@ -212,6 +200,21 @@ def convert_frozenset(fset, filter_val=None):
 def get_items(item_list, search):
     return list(filter(lambda i: bool(set(i) & search), item_list))
 
+
+## THESE WILL BE DELETED:
+
+# just for showing the data in terminal -- can delete later
+def create_df(data):
+    # format the data
+    data_frame = []
+    for i in data:
+        data_frame.append([i[0], i[1]['total_count'], i[1]['lift'], i[1]['overlap_percent'], i[1]['severity_avg'], i[1]['score']])
+    
+    # create dataframe
+    df = pd.DataFrame(data_frame, columns=['name', 'count', 'lift', 'overlap percent', 'severity average', 'score'])
+
+    # print the data
+    print(df.to_string())
 
 # extraneous function to check my work -- will delete later
 def check_data(item_sets, symptom_name, symptom_keys):
@@ -237,4 +240,4 @@ def check_data(item_sets, symptom_name, symptom_keys):
 
 
 if __name__ == '__main__':
-    find_correlations()
+    find_correlations('nortoncassandra')
