@@ -66,12 +66,13 @@ def find_correlations(username):
 
 
     # find the count of each of those symptoms
-    symptom_counts = list(filter(lambda c: c['count'] >= 25, [s for s in db.user_symptoms.aggregate(s_pipeline)]))
-
+    symptom_counts = list(filter(lambda c: c['count'] >= 15, [s for s in db.user_symptoms.aggregate(s_pipeline)]))
     # stop if there's not enough data
     if(len(symptom_counts) < 1): return 'Not enough data'
 
     symptom_list = [s['symptom'] for s in symptom_counts]
+
+    print(symptom_counts)
 
 
     # create sets with foods and meals
@@ -85,9 +86,10 @@ def find_correlations(username):
             name = s['symptom']
             if(name in symptom_list):
                 symptoms.append(name)
-
+        
         food_sets.append([*symptoms, *m['foods']])
         group_sets.append([*symptoms, *m['groups']])
+
 
     # get data for each individual symptom
     for name in symptom_list:
@@ -180,7 +182,7 @@ def find_data(symptom_name, item_list, meals, symptom_counts):
 
     # sort by score
     data = sorted(data.items(), key=lambda x: -x[1]['score'])
-
+    print(symptom_name)
     # create and print a data frame to view the data in terminal
     create_df(data)
     
@@ -240,4 +242,4 @@ def check_data(item_sets, symptom_name, symptom_keys):
 
 
 if __name__ == '__main__':
-    find_correlations('nortoncassandra')
+    find_correlations(input('Username? '))
