@@ -26,18 +26,6 @@ def get_symptom_by_name(name):
     else:
         return "Symptom not found", 404
 
-#get production.user_symptoms
-@app.route('/user/<string:username>/symptoms/', methods = ['GET'])
-def get_user_symptoms(username):
-    user_symptoms = db.user_symptoms.find({"username": username})
-    user_symptoms_list = []
-    for symptom in user_symptoms:
-        user_symptoms_list.append({key: str(symptom[key]) for key in symptom})
-    if user_symptoms_list:
-        return {"data": user_symptoms_list}, 200
-    else:
-        return "No user symptoms found", 404
-
 # post a symptom in production.user_symptoms
 @app.route('/user/<string:username>/symptoms/', methods=['POST'])
 def add_user_symptom(username):
