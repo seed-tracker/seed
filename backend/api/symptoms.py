@@ -1,7 +1,7 @@
 from flask import Flask, request
 from app import app
 from db import db
-from db import test_db
+from flask import jsonify
 from datetime import datetime
 
 #get all symptoms
@@ -30,7 +30,6 @@ def get_symptom_by_name(name):
 @app.route('/user/<string:username>/symptoms/', methods = ['GET'])
 def get_user_symptoms(username):
     user_symptoms = db.user_symptoms.find({"username": username})
-    # return {"data": user_symptoms}
     user_symptoms_list = []
     for symptom in user_symptoms:
         user_symptoms_list.append({key: str(symptom[key]) for key in symptom})
