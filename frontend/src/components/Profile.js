@@ -10,9 +10,13 @@ const Profile = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(me());
-  }, [dispatch]);
+  }, []);
 
-  return <main>Profile</main>;
+  return (
+    <main>
+      <h2>PROFILE INFO WOULD GO HERE</h2>
+    </main>
+  );
 };
 
 export default Profile;
