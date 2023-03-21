@@ -114,8 +114,7 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
         # probability of the symptom occuring
         if(randint(0, 10) <= symptom_prob):
 
-            if(randint(0, 100) <= symptom_thresh):
-                all_symptoms.append(create_user_symptom(main_symptoms[0], int(symptom_prob), hour + randint(-3, 3), d + 1, username, symptoms))
+            all_symptoms.append(create_user_symptom(main_symptoms[0], int(symptom_prob), hour + randint(-3, 3), d + 1, username, symptoms))
             
             if(randint(0, 100) <= int(symptom_thresh/2)):
                 all_symptoms.append(create_user_symptom(main_symptoms[randint(1, len(main_symptoms) - 1)], int(symptom_prob), hour + randint(-3, 3), d + 1, username, symptoms))
@@ -133,7 +132,7 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
 
     all_symptoms.sort(key=lambda s: s['datetime'])
     db.user_symptoms.insert_many(all_symptoms)
-    user_symptoms = [s for s in db.user_symptoms.find()]
+    user_symptoms = [s for s in db.user_symptoms.find({"username": username})]
 
     all_meals.sort(key=lambda m: m['datetime'])
     pointer = 0
@@ -288,13 +287,13 @@ def run_seed():
         for i in range(num):
             create_user_data(
                 users[i]['username'],
-                randint(60, 450),
+                randint(60, 500),
                 randint(2,5),
                 randint(2,10),
                 randint(2, 6),
-                randint(25, 60),
-                randint(70, 100),
-                randint(0, 40))
+                randint(5, 60),
+                randint(10, 80),
+                randint(0, 68))
 
     print('success!')
 
