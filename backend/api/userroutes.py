@@ -4,7 +4,8 @@ from db import db
 from flask import request
 from flask import jsonify
 from pymongo import MongoClient
-
+from datetime import date
+from flask_pymongo import PyMongo
 
 #get all users  
 # @app.route('/users', methods=['GET'])
@@ -27,7 +28,6 @@ def get_users():
         return {"data": user_list}, 200
     else:
         return "No users found", 404
-    
     
     #gets a single user
 @app.route('/users/<string:username>', methods=['GET'])
@@ -62,3 +62,30 @@ def get_user_symptoms(username):
         return {"data": user_symptoms_list}, 200
     else:
         return "No user symptoms found", 404
+    
+    #post route for adding a meal to the user's table
+@app.route("/user/<string:username>/addFood", methods=["POST"])
+def add_entry(username):
+    date = request.json.get("date")
+    time = request.json.get("time")
+    food_group = request.json.get("foodGroup")
+    food_items = request.json.get("foodItems")
+    entry = {"username": username, "date": date, "time": time, "food_group": food_group, "food_items": food_items}
+    db.meals.insert_one(entry)
+    return jsonify({"message": "Entry added successfully!"}), 201
+
+#post route for editing a single user's profile
+@app.route('/<username>', methods=['PUT'])
+def edit_profile(username):
+    try:
+        request_data = request.get_json()
+        if request_data is None or 'username' not in request_data:
+            return jsonify({'error': 'Invalid request body'}), 400
+        username = request_data['username']
+        return jsonify({'success': True})
+    except Exception as e:
+        print(e)
+        return jsonify({'error': str(e)}), 500
+
+
+   
