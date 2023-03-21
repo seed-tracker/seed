@@ -8,7 +8,7 @@ const TOKEN = "token";
  * @returns authentication confirmation
  * @catches error if database request goes wrong
  */
-export const me = createAsyncThunk("auth/me", async () => {
+export const me = createAsyncThunk("auth/me", async (thunkAPI) => {
   const token = window.localStorage.getItem(TOKEN);
   try {
     if (token) {

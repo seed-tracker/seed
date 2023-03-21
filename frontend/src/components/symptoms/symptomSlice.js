@@ -3,9 +3,9 @@ import axios from "axios";
 
 export const addSymptomEntry = createAsyncThunk(
   "post symptom entry",
-  async (symptomEntry, username) => {
+  async (symptomEntry) => {
     try {
-      const { data } = await axios.post(`http://localhost:5000/user/${username}/symptoms`, symptomEntry);
+      const { data } = await axios.post(`http://localhost:5000/user/${symptomEntry.username}/symptoms/`, symptomEntry);
       return data;
     } catch (err) {
       console.log(err);

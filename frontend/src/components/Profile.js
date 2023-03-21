@@ -10,7 +10,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(me());
-  }, []);
+  }, [dispatch]);
 
   return (
     <main>

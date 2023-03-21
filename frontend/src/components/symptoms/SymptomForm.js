@@ -24,7 +24,7 @@ const SymptomForm = () => {
       "time": time,
       "symptom": symptom,
       "severity": severity,
-    }, user.username))
+    }))
     console.log({
       "username": user.username,
       "date": date,

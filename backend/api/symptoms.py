@@ -43,13 +43,13 @@ def get_user_symptoms(username):
 @app.route('/user/<string:username>/symptoms/', methods=['POST'])
 def add_user_symptom(username):
     try:
-        data = request.form
+        data = request.get_json()
         user_symptoms_collection = db.user_symptoms
         date = data['date']
         time = data['time']
         symptom = data['symptom']
         severity = data['severity']
-        db.user_symptoms_collection.insert_one({
+        add_symptom = db.user_symptoms_collection.insert_one({
             "username": username,
             "date": date,
             "time": time,
