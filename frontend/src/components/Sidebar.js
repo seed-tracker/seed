@@ -9,9 +9,10 @@ const Sidebar = () => {
   return (
     <aside>
       <Link to="/user/editProfile">Edit Profile</Link>
-      <Link to="/user/entries">All Entries</Link>
       <Link to="/add/symptom">Add Symptom Entry</Link>
       <Link to="/user/addFood">Add Food Entry</Link>
+      <Link to="/user/symptomEntries">Past Symptom Entries</Link>
+      <Link to="/user/mealEntries">Past Meal Entries</Link>
     </aside>
   );
 };

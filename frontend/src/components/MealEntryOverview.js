@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { selectAuthUser } from "../store";
 import Sidebar from "./Sidebar";
 
-function EntryOverview() {
+function MealEntryOverview() {
   const [meals, setMeals] = useState([]);
   const [symptoms, setSymptoms] = useState([]);
   const [entries, setEntires] = useState([]);
@@ -51,4 +51,4 @@ function EntryOverview() {
   );
 }
 
-export default EntryOverview;
+export default MealEntryOverview;

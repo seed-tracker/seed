@@ -42,7 +42,7 @@ export const fetchAllSymptomEntries = createAsyncThunk(
 );
 
 const allEntriesSlice = createSlice({
-  name: "entry",
+  name: "allEntries",
   initialState: {
     mealEntries: {
       mealCount: 0,
@@ -64,5 +64,8 @@ const allEntriesSlice = createSlice({
     });
   },
 });
+
+export const selectAllMeals = (state) => state.allEntries.mealEntries;
+export const selectAllSymptoms = (state) => state.allEntries.symptomEntries;
 
 export default allEntriesSlice.reducer;
