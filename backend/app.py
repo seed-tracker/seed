@@ -16,6 +16,7 @@ from api.foodroutes import *
 from api.symptoms import *
 from api.user_symptoms import *
 from api.auth import *
+from api.meals import *
 from api.auth_middleware import *
 
 # to protect the app
