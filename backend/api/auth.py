@@ -1,3 +1,4 @@
+from api.auth_middleware import require_token
 from flask import Flask, request
 from app import app
 from db import db
@@ -5,6 +6,7 @@ import bcrypt
 import jwt
 import os
 from datetime import datetime
+
 salt = bcrypt.gensalt(5)
 secret = os.environ.get('JWT_SECRET')
 
@@ -44,20 +46,17 @@ def register():
 
 
 @app.route('/auth/me', methods=['GET'])
-def authenticate():
-
-    if request.headers['Authorization'] is not None:
-      token = request.headers['Authorization']
-      userObj = jwt.decode(token, secret,  algorithms="HS256")
-      username = userObj['username']
-      user = db.users.find_one({"username": username})
-      if user:
-        user_string = {key: str(user[key]) for key in user}
-        return user_string, 200
-      else:
-        return 'no access', 401
-    else:
-      return 'Authentication Token is missing!', 401
+@require_token
+def authenticate(user):
+    try:
+      user['_id'] = str(user['_id'])
+      user.pop('password')
+      return user, 200
+    except:
+      return {
+        "data": None,
+        "error": "Error authenticating user"
+      }, 401
 
 
 

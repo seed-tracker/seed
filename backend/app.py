@@ -14,6 +14,7 @@ from api.foodgroups import *
 from api.foodroutes import *
 from api.symptoms import *
 from api.auth import *
+from api.auth_middleware import *
 
 # to protect the app
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
