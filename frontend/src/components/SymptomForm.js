@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import { addSymptomEntry } from "../store/symptomSlice";
@@ -14,6 +15,7 @@ const SymptomForm = () => {
   console.log(user.username);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSymptomSubmit = async (event) => {
     event.preventDefault();
@@ -26,6 +28,7 @@ const SymptomForm = () => {
         severity: severity,
       })
     );
+    navigate("/profile");
   };
 
   useEffect(() => {
