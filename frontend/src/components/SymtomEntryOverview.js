@@ -27,7 +27,6 @@ function SymptomEntryOverview() {
     <main>
       <Sidebar />
       <h1>Past Symptom Entries</h1>
-      {console.log(symptoms)}
       <ul>
         {symptoms && symptoms.length
           ? symptoms.map((symptom) => {
@@ -41,13 +40,13 @@ function SymptomEntryOverview() {
                   </p>
                   <p>{symptom.symptom}</p>
                   <p>Severity: {symptom.severity}</p>
-                  <button>Edit</button>
                   <button>Delete</button>
                 </li>
               );
             })
-          : "No entries to display"}
+          : "No symptom entries to display"}
       </ul>
+      Pagination still needs to be implemented
     </main>
   );
 }

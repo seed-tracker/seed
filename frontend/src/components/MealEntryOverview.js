@@ -1,52 +1,51 @@
-import React, { useState } from "react";
-import { editProfile } from "../store/entrySlice";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
-import { selectAuthUser } from "../store";
 import Sidebar from "./Sidebar";
+import { fetchAllMealEntries, selectAllMeals } from "../store/allEntriesSlice";
+import { v4 as uuidv4 } from "uuid";
 
 function MealEntryOverview() {
   const [meals, setMeals] = useState([]);
-  const [symptoms, setSymptoms] = useState([]);
-  const [entries, setEntires] = useState([]);
+  const [count, setCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const mealEntries = useSelector(selectAllMeals);
+  const dispatch = useDispatch();
 
-  // const dispatch = useDispatch();
-  const user = useSelector(selectAuthUser);
+  useEffect(() => {
+    dispatch(fetchAllMealEntries(page));
+  }, [dispatch, page]);
 
-  const handleEntryDelete = (entry) => {
-    if (entry.type === "meal") {
-      // dispatch action to delete meal
-    } else {
-      // dispatch action to delete symptom
-    }
-  };
+  useEffect(() => {
+    setCount(mealEntries.mealCount);
+    setMeals(mealEntries.meals);
+  }, [mealEntries]);
 
   return (
     <main>
       <Sidebar />
-      <h1>Past Entries</h1>
+      <h1>Past Meal Entries</h1>
+      {console.log(meals)}
       <ul>
-        {entries && entries.length
-          ? entries.map((entry) => {
+        {meals && meals.length
+          ? meals.map((meal) => {
               return (
-                <li>
+                <li key={uuidv4()}>
                   <p>
-                    {entry.date || "date"} <span>{entry.name || "name"}</span>
+                    {new Date(meal.datetime).toLocaleString("en-US", {
+                      dateStyle: "full",
+                      timeStyle: "long",
+                    })}
                   </p>
-                  <Link to="/user/entry">
-                    <button>View</button>
-                  </Link>
-                  <Link to="/user/entry/edit">
-                    <button>Edit</button>
-                  </Link>
-                  <button onClick={() => handleEntryDelete(entry)}>
-                    Delete
-                  </button>
+                  <p>{meal.entry_name}</p>
+                  <p>Food Groups: {meal.groups?.join(", ")}</p>
+                  <p>Foods: {meal.foods?.join(", ")}</p>
+                  <button>Delete</button>
                 </li>
               );
             })
           : "No entries to display"}
       </ul>
+      Pagination still needs to be implemented
     </main>
   );
 }
