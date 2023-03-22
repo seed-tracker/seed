@@ -199,18 +199,16 @@ def edit_profile(username):
 
 
 # get route for correlations, single user
-@app.route('/<string:username>/correlations', methods=['GET'])
+@app.route('/<string:username>/correlations/', methods=['GET'])
 def get_user_correlations(username):
     try:
-        data = request.get_json()
         correlations = db.correlations.find({"username": username})
         correlations_list = []
         for correlation in correlations:
             correlation["_id"] = str(correlation["_id"])
-            correlations_list.append({key: str(correlation[key]) for key in correlation})
-
+            correlations_list.append({key: correlation[key] for key in correlation})
         if correlations_list:
-            return {"data": correlations_list}, 200
+            return correlations_list, 200
         else:
             return "No correlations found", 404
     except Exception as e:
