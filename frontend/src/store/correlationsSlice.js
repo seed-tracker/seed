@@ -9,3 +9,22 @@ export const fetchUserCorrelations = createAsyncThunk("get user's correlations",
     console.log(err);
   }
 })
+
+export const correlationsSlice = createSlice({
+  name: "correlations",
+  initialState: {},
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUserCorrelations.fulfilled, (state, action) => {
+        return action.payload;
+      })
+      .addCase(fetchUserCorrelations.rejected, (state, action) => {
+        state.error = action.error;
+      })
+  }
+})
+
+export const selectUserCorrelations = (state) => state.correlations
+
+export default correlationsSlice.reducer
