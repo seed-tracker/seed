@@ -8,6 +8,7 @@ from flask_pymongo import PyMongo
 import bcrypt
 salt = bcrypt.gensalt(5)
 
+
 # gets users without password displayed on browser
 @app.route('/users', methods=['GET'])
 def get_users():
@@ -156,4 +157,18 @@ def edit_profile(user):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
+# get route for correlations, single user
+@app.route('/<string:username>/correlations/', methods=['GET'])
+def get_user_correlations(username):
+    try:
+        correlations = db.correlations.find({"username": username})
+        correlations_list = []
+        for correlation in correlations:
+            correlation["_id"] = str(correlation["_id"])
+            correlations_list.append({key: correlation[key] for key in correlation})
+        if correlations_list:
+            return correlations_list, 200
+        else:
+            return "No correlations found", 404
+    except Exception as e:
+        return "Error", 500

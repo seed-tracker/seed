@@ -24,7 +24,6 @@ function MealEntryOverview() {
     <main>
       <Sidebar />
       <h1>Past Meal Entries</h1>
-      {console.log(meals)}
       <ul>
         {meals && meals.length
           ? meals.map((meal) => {
