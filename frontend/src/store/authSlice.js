@@ -44,8 +44,10 @@ export const login = createAsyncThunk(
         "http://localhost:5000/auth/login",
         userInfo
       );
+      console.log(data)
       window.localStorage.setItem(TOKEN, data.token);
       thunkAPI.dispatch(me());
+
     } catch (err) {
       if (err.response.data) {
         return thunkAPI.rejectWithValue(err.response.data);
