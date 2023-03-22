@@ -9,36 +9,7 @@ from db import db, test_db
 
 def find_correlations(username):
     print(f'Seeding for {username}')
-    # pipeline_best_users = [
-    #     {
-    #         "$group": {
-    #             "_id": "$username",
-    #             "count": {"$sum": 1}
-    #         }
-    #     }, {"$sort": {"count": -1}}, {"$limit": 20}
-    # ]
-
-    # print([u for u in db.user_symptoms.aggregate(pipeline_best_users)])
-
-    # pipeline_best_corrs = [
-    #     {
-    #         "$group": {
-    #             "_id": "$username",
-    #             "corrs": { "$push": {"$"}}
-    #         }
-    #     }, {
-    #         "$project": {
-    #             "username": "$id",
-    #             "count": { "$add": ["$count_groups", "$count_foods"]}
-    #         }
-            
-    #         },{"$sort": "$count"}, {"$limit": 20}
-    # ]
-
-    # print(s for s in db.correlations.aggregate(pipeline_best_corrs))
-
-    # return
- 
+    
     # query the meals, including symptoms
     pipeline = [
         {
@@ -66,10 +37,10 @@ def find_correlations(username):
         }
     ]
 
-    # get meals
+    # get meals for a given user
     meals = [meal for meal in db.meals.aggregate(pipeline)]
     
-    # get top 5 symptoms
+    # get top 5 symptoms for a given user
     symptom_pipeline = [
         {
             "$match": {
@@ -125,7 +96,7 @@ def find_correlations(username):
         group_sets.append([*symptoms, *meal['groups']])
 
 
-    # holds correlation objects that will go into mongoDB
+    # holds correlation dictionaries that will go into mongoDB
     correlations = []
 
     # get data for each individual symptom
@@ -139,6 +110,7 @@ def find_correlations(username):
         food_rules = create_rules(food_sets, filters, name)
         group_rules = create_rules(group_sets, filters, name)
 
+        # round the symptom's avg severity to 2 decimal points
         avg_severity = round(symptom['avg_severity'], 2)
 
         # find data for the top foods and group
@@ -146,10 +118,12 @@ def find_correlations(username):
         food_data = find_data(name, food_rules, meals)
         group_data = find_data(name, group_rules, meals)
 
+        # make sure there's enough data
         if(not food_data and not group_data):
             print('Insufficient data')
             continue
-
+        
+        # add correlations to the list
         correlations.append({
             'symptom': name,
             'username': username,
@@ -160,19 +134,20 @@ def find_correlations(username):
         })
     
     if(len(correlations) > 0):
+        # commented out for testing purposes
         # db.correlations.insert_many(correlations)
         return
     else:
         print('Insufficient correlations data')
         return
 
-    
 
 # filters out unrelated symptoms
 def filter_symptoms(items, symptom_list):
     return list(set(filter(lambda item: not item in symptom_list, items)))
 
-# get association rules
+
+# get association rules/frequent item sets
 def create_rules(item_sets, filter_list, symptom_name):
     te = TransactionEncoder()
 
@@ -180,7 +155,7 @@ def create_rules(item_sets, filter_list, symptom_name):
     filtered_items = list(map(lambda i: filter_symptoms(i, filter_list), item_sets))
 
     # fn to check data - will delete
-    print(check_data(filtered_items, symptom_name, 70))
+    # print(check_data(filtered_items, symptom_name, 70))
 
     # run the data through fpgrowth and get association rules
     te_items = te.fit(filtered_items).transform(filtered_items)
@@ -199,31 +174,34 @@ def create_rules(item_sets, filter_list, symptom_name):
     return list(map(lambda row: [row[0], row[2]], list(filter(lambda col: col[1] == symptom_name, data))))[:10]
 
 
+# function to find necessary data about correlated items
+# item list = list of correlated items
 def find_data(symptom_name, item_list, meals):
 
     # loop through the meals to get data
     data = {}
-    for m in meals:
+    for meal in meals:
 
         # get the average severity of the specified symptom (average out if there are multipe instances of it in a single item set), keep as none if the symptom isn't found
         severity = 0
         count = 0
-        for s in m['related_symptoms']:
+        for s in meal['related_symptoms']:
             if(s['symptom'] == symptom_name):     
                 severity += s['severity']
                 count += 1
 
-        # get avg
+        # get avg severity of the symptom, accounting for the possibility of multiple of that symptom being included in the item set
         if(severity): severity /= count
 
-        for i in item_list:
+        # loop through correlated items
+        for item in item_list:
             # reformat
-            key = make_key(i[0])
+            key = make_key(item[0])
 
-            # add data for the foods
-            if(i[0] in m['foods'] or i[0] in m['groups']):
+            # see if the correlated item is in the foods list
+            if(item[0] in meal['foods'] or item[0] in meal['groups']):
                 # add the data if not already added
-                if(not key in data): data[key] = {'total_count': 0, 'severity_avg': 0, 'overlap': 0, 'lift': i[1]}
+                if(not key in data): data[key] = {'total_count': 0, 'severity_avg': 0, 'overlap': 0, 'lift': item[1]}
 
                 # update the count and average
                 data[key]['total_count'] += 1
@@ -232,8 +210,9 @@ def find_data(symptom_name, item_list, meals):
                     data[key]['overlap'] += 1
 
     # round and format the accumulated data, find the score
-    for i in item_list:
-        key = make_key(i[0])
+    for item in item_list:
+        key = make_key(item[0])
+        # d = data dictionary for that item
         d = data[key]
         d['severity_avg'] = round(d['severity_avg']/d['overlap'], 2)
         d['lift'] = round(d['lift'], 3)
@@ -262,6 +241,7 @@ def find_data(symptom_name, item_list, meals):
 def make_key(item):
     return item.replace(" ", "_")
 
+# function to unformat keys
 def un_key(item):
     return item.replace("_", " ")
 
@@ -272,6 +252,7 @@ def convert_frozenset(fset, filter_val=None):
 
 def get_items(item_list, search):
     return list(filter(lambda i: bool(set(i) & search), item_list))
+
 
 
 ## THESE WILL BE DELETED EVENTUALLY:
@@ -289,10 +270,9 @@ def create_df(data):
     # print the data
     print(df.to_string())
 
+
 # extraneous function to check my work -- will delete later
 def check_data(item_sets, symptom_name, min_threshold):
-    # filtered_items = list(map(lambda i: filter_symptoms(i, list(filter(lambda s: not s == symptom_name, symptom_keys))), item_sets))
-
     item_count = {}
 
     for i in item_sets:
@@ -324,6 +304,22 @@ if __name__ == '__main__':
     else: find_correlations(input('Username? '))
 
 
+# WILL DELETE
+# THESE ARE SOME OF THE USERS WITH THE BEST DATA:
+
     # top users:
+    # helloagain2, wanyi, deawdewd, lucy, graceshopper, harperamanda, michael99, donaldsonrobert, campbellfrances, ysullivan, oellis, churchmichael, yolanda56, kyoung, johnsonjesse, alexanderwilliams, gchen, ...
     # 
     # [{'_id': 'annettejohnson', 'count': 1018}, {'_id': 'cruzsean', 'count': 981}, {'_id': 'amanda59', 'count': 832}, {'_id': 'kschneider', 'count': 783}, {'_id': 'victoria13', 'count': 748}, {'_id': 'michael99', 'count': 682}, {'_id': 'graceshopper', 'count': 682}, {'_id': 'johnsonjesse', 'count': 678}, {'_id': 'helloagain', 'count': 669}, {'_id': 'wanyi', 'count': 592}, {'_id': 'deawdewd', 'count': 541}, {'_id': 'yolanda56', 'count': 515}, {'_id': 'churchmichael', 'count': 510}, {'_id': 'gchen', 'count': 503}, {'_id': 'nicole34', 'count': 497}, {'_id': 'harperamanda', 'count': 489}, {'_id': 'lucy', 'count': 468}, {'_id': 'thompsonshelby', 'count': 413}, {'_id': 'judybooty', 'count': 405}, {'_id': 'warrenkelly', 'count': 402}]
+
+# WILL DELETE - PIPELINE TO FIND USERS WITH SUFFICIENT SYMPTOM COUNTS
+    # pipeline_best_users = [
+    #     {
+    #         "$group": {
+    #             "_id": "$username",
+    #             "count": {"$sum": 1}
+    #         }
+    #     }, {"$sort": {"count": -1}}, {"$limit": 20}
+    # ]
+
+    # print([u for u in db.user_symptoms.aggregate(pipeline_best_users)])
