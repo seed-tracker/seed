@@ -14,7 +14,7 @@ export const fetchUserCorrelations = createAsyncThunk("get user's correlations",
 
 export const correlationsSlice = createSlice({
   name: "correlations",
-  initialState: {},
+  initialState: [],
   reducers: {},
   extraReducers: (builder) => {
     builder
