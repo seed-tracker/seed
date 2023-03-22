@@ -2,7 +2,7 @@ from flask import Flask, request
 from app import app
 from db import db
 from flask import jsonify
-from datetime import datetime
+from datetime import datetime, timedelta
 
 #get all symptoms
 @app.route('/symptoms/', methods=['GET'])
@@ -31,18 +31,21 @@ def get_symptom_by_name(name):
 def add_user_symptom(username):
     try:
         data = request.get_json()
-        user_symptoms_collection = db.user_symptoms
         date = data['date']
         time = data['time']
+        symptom_time = datetime.strptime(date + ' ' + time, "%Y-%m-%d %H:%M")
         symptom = data['symptom']
         severity = data['severity']
-        user_symptoms_collection.insert_one({
+        new_symptom = db.user_symptoms.insert_one({
             "username": username,
-            "date": date,
-            "time": time,
+            "datetime": symptom_time,
             "symptom": symptom,
             "severity": severity,
         })
+        timelimit = symptom_time - timedelta(hours=30)
+        meals = db.meals.find( {"username": username, "datetime": {"$gte": timelimit,  "$lte": symptom_time}})
+        for meal in meals:
+            db.meals.find_one_and_update({"_id": meal["_id"]}, {"$push": { "related_symptoms": new_symptom.inserted_id } }, return_document=True)
         return "User's symptom added succesfully", 201
     except Exception as e:
         return "Failed to add User's symptom", 404

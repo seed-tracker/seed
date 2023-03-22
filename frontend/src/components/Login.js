@@ -31,6 +31,7 @@ const Login = () => {
         <input
           name="username"
           type="text"
+          required
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
@@ -42,6 +43,7 @@ const Login = () => {
         <input
           name="password"
           type="password"
+          required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
