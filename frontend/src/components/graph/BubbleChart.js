@@ -19,25 +19,12 @@ const BubbleChart = () => {
     // graphSection.append("g")
   }, [dispatch])
 
-  data.forEach((obj) => console.log(obj))
 
-  // data.forEach((obj) => {
-  //   // Object.keys(obj).forEach(key => {
-  //   //   if (!keys.includes(key)) {
-  //   //     keys.push(key);
-  //   //   }
-  //   // });
-  //   console.log(obj);
-  // });
-  // for (const obj of data) {
-  //   console.log("OBJECT", obj);
-  // }
   // for (const key in data) {
   //   for (const value of key) {
   //     console.log(value);
   //   }
   // }
-  // // console.log(typeof data);
   // console.log(data);
   // let values = Object.values(data)
   // console.log("VALUE", values);
@@ -45,17 +32,27 @@ const BubbleChart = () => {
   // const getUKeys = (data) => {
   //   // console.log("DATA", data)
   //   return data
-  //   // let keys = [];
-  //   // data.forEach(obj => {
-  //   //   Object.keys(obj).forEach(key => {
-  //   //     if (!keys.includes(key)) {
-  //   //       keys.push(key);
-  //   //     }
-  //   //   });
-  //   // });
-  //   // console.log(keys)
-  //   // return keys;
-  // }
+
+  data.forEach(obj => {
+    let keys = [];
+    Object.entries(obj).forEach(([key, value]) => {
+      if (!keys.includes(key)) {
+        keys.push(key);
+      }
+      console.log(key, value);
+    });
+    console.log(keys);
+  });
+  data.forEach((obj) => {
+    obj['top_foods'].forEach((ele) => {
+      console.log("FOODS", ele);
+    })
+    obj['top_groups'].forEach((ele) => {
+      console.log("GROUPS", ele);
+    })
+  });
+   
+  
   // console.log("GETUKEYS", getUKeys);
 
   // const svg = d3.create("svg").attr("width", 932).attr("height", 932).style("display", "block").style("margin", "0 auto").style("background", "cornflowerblue").style("cursor", "pointer")
