@@ -43,10 +43,10 @@ const BubbleChart = () => {
   // graphSection.append("svg")
 
   const svg = d3.select("svg")
-    svg.append("g")
+  svg.append("g")
 
   return (
-    <svg width="932" height="932" style={{ display: "block", background: "cornflowerblue" }}></svg>
+    <svg id="graph"></svg>
   )
 }
 
