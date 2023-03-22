@@ -41,7 +41,7 @@ def fetch_data():
     return [groups, symptoms]
 
 
-# function to set up the generate_data function
+# set up the generate_data function
 # takes in values from the run_seed function
 # days = number of days to seed, num_symptoms = # of symptoms to include, num_groups = # of main groups and trigger groups, max_meals = max meals user records in a day, food_flex = 1-100, how flexible user is about their food (aka how much they eat from their main groups vs all other groups), symptom_thresh = 1-100, probability of a symptom, consistency = 1-100, how often user skips days of recording
 def create_user_data(username, days, num_symptoms, num_groups, max_meals, food_flex, symptom_thresh, consistency):
@@ -203,7 +203,7 @@ def generate_data(username, groups, symptoms, max_days, num_s, num_g, max_meals,
 
 
 
-# function to format and create a user's symptom
+# format and create a user's symptom
 def create_user_symptom(idx, prob, hour, day, username, symptoms):
     hour = hour % 23
     date = get_date(day, hour)
@@ -213,17 +213,17 @@ def create_user_symptom(idx, prob, hour, day, username, symptoms):
 
     return {'username': username, 'symptom': symptoms[idx]['name'], 'datetime': date, 'severity': severity}
 
-# function to create a meal document
+# create a meal document
 def create_meal(foods, groups, hour, day, username):
     date = get_date(day, hour % 23)
 
     return {'username': username, 'datetime': date, 'groups': groups, 'foods': foods, 'related_symptoms': []}
 
-# function to get the date based on the number of days passed
+#  get the date based on the number of days passed
 def get_date(day, hour):
     return datetime.datetime(2022, 1, 1, hour, 0) + datetime.timedelta(day)
 
-# function to check the hour difference between 2 times
+#  check the hour difference between 2 times
 def check_hour_dif(a, b):
     diff = a - b
     return diff.total_seconds()/3600
