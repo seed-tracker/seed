@@ -6,8 +6,8 @@ import { me } from "../store/authSlice";
 function Entry() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [foodGroup, setFoodGroup] = useState(''); 
-  const [foodItems, setFoodItems] = useState('');
+  const [foodGroup, setFoodGroup] = useState([]); 
+  const [foodItems, setFoodItems] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -46,9 +46,11 @@ function Entry() {
         entry: {
           date,
           time,
+          // make sure to push the foodGroups & foodItems into the array state
           foodGroup,
           foodItems,
-        },
+        }, 
+        // entryName
       }));
   
       console.log({
