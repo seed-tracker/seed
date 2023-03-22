@@ -16,7 +16,7 @@ const Navbar = () => {
 
   useEffect(() => {
     dispatch(me());
-  }, []);
+  }, [dispatch]);
 
   const logoutAndRedirectHome = () => {
     dispatch(logout());
