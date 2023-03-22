@@ -6,19 +6,18 @@ import os
 from flask_pymongo import PyMongo
 
 app = Flask(__name__)
+cors = CORS(app)
 
-from api.auth import *
+
 from api.userroutes import *
 from api.foodgroups import *
 from api.foodroutes import *
 from api.symptoms import *
-
-cors = CORS(app)
+from api.auth import *
+from api.auth_middleware import *
 
 # to protect the app
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
-
-cors = CORS(app)
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

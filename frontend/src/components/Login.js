@@ -31,6 +31,7 @@ const Login = () => {
         <input
           name="username"
           type="text"
+          required
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
@@ -42,6 +43,7 @@ const Login = () => {
         <input
           name="password"
           type="password"
+          required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -49,7 +51,7 @@ const Login = () => {
       <button type="submit" onSubmit={redirect}>
         Login
       </button>
-      {error && <div> {error} </div>}
+      {error && <div> {error.toString()} </div>}
     </form>
   );
 };
