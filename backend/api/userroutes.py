@@ -1,8 +1,6 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from app import app
 from db import db
-from flask import request
-from flask import jsonify
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 from api.auth_middleware import require_token
@@ -54,8 +52,8 @@ def get_user_meals(user):
                 '$match': {'username': username}
             },
             {'$project': { '_id': 0, 'related_symptoms': 0 }},
-            {'$sort': {'datetime': -1}}, 
-            {'$skip': offset}, 
+            {'$sort': {'datetime': -1}},
+            {'$skip': offset},
             {'$limit': 20}
         ])]
 
@@ -90,8 +88,8 @@ def get_user_symptoms(user):
                 '$match': {'username': username}
             },
             {'$project': { '_id': 0 }},
-            {'$sort': {'datetime': -1}}, 
-            {'$skip': offset}, 
+            {'$sort': {'datetime': -1}},
+            {'$skip': offset},
             {'$limit': 20}
         ])]
 
@@ -114,7 +112,7 @@ def add_entry(user):
         date = request.json.get("date")
         time = request.json.get("time")
 
-        if(not time): 
+        if(not time):
             time = datetime.now().time().strftime("%H:%M")
         if(not date):
             date = datetime.now().date().strftime("%Y-%m-%d")
