@@ -36,23 +36,24 @@ const symptom = datas.map((obj) => obj.symptom);
 const count = datas.map((obj) => obj.count);
 
 const top_foods = datas.flatMap((obj) => obj.top_foods);
-console.log(top_foods)
+console.log(top_foods);
 
 const top_groups = datas.flatMap((obj) => obj.top_groups);
+console.log(top_groups);
 
-  useEffect(() => {
-    dispatch(fetchUserCorrelations())
-    // const graphSection = d3.select("#graph svg")
-    // graphSection.append("g")
-  }, [dispatch])
+useEffect(() => {
+  dispatch(fetchUserCorrelations())
+  // const graphSection = d3.select("#graph svg")
+  // graphSection.append("g")
+}, [dispatch])
 
  //useRef to reference and manipulate the SVG element
   // const svgRef = React.useRef(null);
 
-  useEffect(() => {
-    const svg = d3.select("#graph");
- 
- 
+useEffect(() => {
+  const svg = d3.select("#graph");
+
+
   //this would change the radius of the circle
   // const countScale = d3.scaleLinear()
   // .domain([0, d3.max(data, d => d.count)])
@@ -66,7 +67,7 @@ const top_groups = datas.flatMap((obj) => obj.top_groups);
   .attr("fill", (d)=>d.lift>1.01 ? "red":"green")
   .attr("stroke", "white")
   .attr("stroke-width", 2);
-  })
+})
 
 
 //select,data,join is combo rather than enter, append b/c if you use enter you have to manually update when data changes
@@ -79,7 +80,7 @@ const top_groups = datas.flatMap((obj) => obj.top_groups);
   const svg = d3.select("svg")
   svg.append("g")
 
-  
+
 
   return (
     <svg id="graph"></svg>
