@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { me } from "../store/authSlice";
+import BubbleChart from "./graph/BubbleChart";
 
 /**
  * Placeholder component for the userprofile page
@@ -15,6 +16,7 @@ const Profile = () => {
   return (
     <main>
       <h2>PROFILE INFO WOULD GO HERE</h2>
+      <BubbleChart />
     </main>
   );
 };

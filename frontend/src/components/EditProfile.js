@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { editProfile } from "./entrySlice";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAuthUser } from "../store";
+import { selectAuthUser } from "../store/authSlice";
 
 function EditProfile() {
   const [name, setName] = useState("");
