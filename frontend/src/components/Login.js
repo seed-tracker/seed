@@ -51,7 +51,7 @@ const Login = () => {
       <button type="submit" onSubmit={redirect}>
         Login
       </button>
-      {error && <div> {error} </div>}
+      {error && <div> {error.toString()} </div>}
     </form>
   );
 };

@@ -3,6 +3,7 @@ from app import app
 from db import db
 from flask import jsonify
 from datetime import datetime, timedelta
+from api.auth_middleware import require_token
 
 #get all symptoms
 @app.route('/symptoms/', methods=['GET'])
@@ -27,12 +28,20 @@ def get_symptom_by_name(name):
         return "Symptom not found", 404
 
 # post a symptom in production.user_symptoms
-@app.route('/user/<string:username>/symptoms/', methods=['POST'])
-def add_user_symptom(username):
+@app.route('/user/symptoms/', methods=['POST'])
+@require_token
+def add_user_symptom(user):
     try:
+        username = user['username']
+        print('adding symptom for ', username)
         data = request.get_json()
         date = data['date']
         time = data['time']
+        if(not time): 
+            time = datetime.now().time().strftime("%H:%M")
+        if(not date):
+            date = datetime.now().date().strftime("%Y-%m-%d")
+            
         symptom_time = datetime.strptime(date + ' ' + time, "%Y-%m-%d %H:%M")
         symptom = data['symptom']
         severity = data['severity']
@@ -48,4 +57,5 @@ def add_user_symptom(username):
             db.meals.find_one_and_update({"_id": meal["_id"]}, {"$addToSet": { "related_symptoms": new_symptom.inserted_id } }, return_document=True)
         return "User's symptom added succesfully", 201
     except Exception as e:
+        print(str(e))
         return "Failed to add User's symptom", 404

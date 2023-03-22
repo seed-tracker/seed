@@ -98,7 +98,7 @@ const Signup = () => {
       <button type="submit" onSubmit={redirect}>
         Create Account
       </button>
-      {error && <div> {error} </div>}
+      {error && <div> {error.toString()} </div>}
     </form>
   );
 };
