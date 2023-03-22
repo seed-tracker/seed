@@ -11,7 +11,7 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(me());
-  }, []);
+  }, [dispatch]);
 
   return (
     <main>

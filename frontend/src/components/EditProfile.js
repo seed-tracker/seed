@@ -1,13 +1,19 @@
 import React, { useState } from "react";
+import { editProfile } from "./entrySlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthUser } from "../store";
 
 function EditProfile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  const user = useSelector(selectAuthUser);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log({ name, email, password });
+    dispatch(editProfile({ username: user.username, name, email, password }));
   };
 
   return (
@@ -36,7 +42,7 @@ function EditProfile() {
           onChange={(event) => setPassword(event.target.value)}
         />
       </label>
-      <button type="submit">Edit</button>
+      <button type="submit">Save</button>
     </form>
   );
 }
