@@ -2,8 +2,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const addEntry = createAsyncThunk("user/addFood", async ({ username, entry }) => {
+  const token = window.localStorage.getItem("token");
   try {
-    const { data } = await axios.post(`http://localhost:5000/user/${username}/addFood`, entry);
+    const { data } = await axios.post(`http://localhost:5000/user/addMeal`, entry,
+    {
+      headers: {
+        authorization: token,
+    }});
     return data;
   } catch (err) {
     console.error(err);
@@ -13,10 +18,15 @@ export const addEntry = createAsyncThunk("user/addFood", async ({ username, entr
 export const editProfile = createAsyncThunk(
   "user/editProfile",
   async ({ username, name, email, password }) => {
+    const token = window.localStorage.getItem("token");
     try {
       const { data } = await axios.put(
-        `http://localhost:5000/${username}/editProfile`,
-        { username, name, email, password }
+        `http://localhost:5000/user/editProfile`,
+        { username, name, email, password },
+        {
+          headers: {
+            authorization: token,
+        }}
       );
       return data;
     } catch (err) {

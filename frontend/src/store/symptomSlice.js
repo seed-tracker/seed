@@ -4,8 +4,13 @@ import axios from "axios";
 export const addSymptomEntry = createAsyncThunk(
   "post symptom entry",
   async (symptomEntry) => {
+    const token = window.localStorage.getItem('token');
     try {
-      const { data } = await axios.post(`http://localhost:5000/user/${symptomEntry.username}/symptoms/`, symptomEntry);
+      const { data } = await axios.post(`http://localhost:5000/user/symptoms/`, symptomEntry, {
+        headers: {
+          authorization: token,
+        } 
+      });
       return data;
     } catch (err) {
       console.log(err);

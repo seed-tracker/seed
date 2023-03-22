@@ -37,6 +37,7 @@ const Signup = () => {
         <input
           name="username"
           type="text"
+          required
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
@@ -48,6 +49,7 @@ const Signup = () => {
         <input
           name="password"
           type="password"
+          required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -59,6 +61,7 @@ const Signup = () => {
         <input
           name="email"
           type="email"
+          required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -70,6 +73,7 @@ const Signup = () => {
         <input
           name="fullName"
           type="text"
+          required
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
         />
@@ -88,7 +92,7 @@ const Signup = () => {
       <button type="submit" onSubmit={redirect}>
         Create Account
       </button>
-      {error && <div> {error} </div>}
+      {error && <div> {error.toString()} </div>}
     </form>
   );
 };

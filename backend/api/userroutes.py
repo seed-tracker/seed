@@ -1,116 +1,17 @@
-# from flask import Flask
-# from app import app
-# from db import db
-# from flask import request
-# from flask import jsonify
-# from pymongo import MongoClient
-# from datetime import date
-# from flask_pymongo import PyMongo
-
-# #get all users
-# # @app.route('/users', methods=['GET'])
-# # def get_users():
-# #     users = db.users.find()
-# #     user_list = []
-# #     for user in users:
-# #         user_list.append({key: str(user[key]) for key in user})
-# #     if user_list:
-# #        return {"data": user_list}, 200
-# #     else:
-# #         return "No users found", 404
-
-# #gets users without password displayed on browser
-# @app.route('/users', methods=['GET'])
-# def get_users():
-#     users = db.users.find({}, {'password': 0})
-#     user_list = [{key: str(user[key]) for key in user if key != 'password'} for user in users]
-#     if user_list:
-#         return {"data": user_list}, 200
-#     else:
-#         return "No users found", 404
-
-#     #gets a single user
-# @app.route('/users/<string:username>', methods=['GET'])
-# def get_user(username):
-#     user = db.users.find_one({'username': username})
-#     if user:
-#         user['username'] = str(user['username'])
-#         return {"data": username}, 200
-#     else:
-#         return "User not found", 404
-
-#     #gets a single user's meals
-# @app.route('/meals/<string:username>', methods=['GET'])
-# def get_user_meals(username):
-#     meals = list(db.meals.find({'username': username}))
-#     if meals:
-#         for meal in meals:
-#             meal['_id'] = str(meal['_id'])
-#         return jsonify(meals), 200
-#     else:
-#         return "No meals found for user {}".format(username), 404
-
-# #get each single user's symptoms
-# @app.route('/users/<string:username>/symptoms', methods = ['GET'])
-# def get_user_symptoms(username):
-#     user_symptoms = db.user_symptoms.find({"username": username})
-#     # return {"data": user_symptoms}
-#     user_symptoms_list = []
-#     for symptom in user_symptoms:
-#         user_symptoms_list.append({key: str(symptom[key]) for key in symptom})
-#     if user_symptoms_list:
-#         return {"data": user_symptoms_list}, 200
-#     else:
-#         return "No user symptoms found", 404
-
-#     #post route for adding a meal to the user's table
-# @app.route("/user/<string:username>/addFood", methods=["POST"])
-# def add_entry(username):
-#     date = request.json.get("date")
-#     time = request.json.get("time")
-#     food_group = request.json.get("foodGroup")
-#     food_items = request.json.get("foodItems")
-#     entry = {"username": username, "date": date, "time": time, "food_group": food_group, "food_items": food_items}
-#     db.meals.insert_one(entry)
-#     return jsonify({"message": "Entry added successfully!"}), 201
-
-# #post route for editing a single user's profile
-# @app.route('/<username>', methods=['PUT'])
-# def edit_profile(username):
-#     try:
-#         request_data = request.get_json()
-#         if request_data is None or 'username' not in request_data:
-#             return jsonify({'error': 'Invalid request body'}), 400
-#         username = request_data['username']
-#         return jsonify({'success': True})
-#     except Exception as e:
-#         print(e)
-#         return jsonify({'error': str(e)}), 500
-
 from flask import Flask
 from app import app
 from db import db
 from flask import request
 from flask import jsonify
 from pymongo import MongoClient
-from datetime import date
+from datetime import datetime, timedelta
+from api.auth_middleware import require_token
 from flask_pymongo import PyMongo
 import bcrypt
 salt = bcrypt.gensalt(5)
 
-#get all users
-# @app.route('/users', methods=['GET'])
-# def get_users():
-#     users = db.users.find()
-#     user_list = []
-#     for user in users:
-#         user_list.append({key: str(user[key]) for key in user})
-#     if user_list:
-#        return {"data": user_list}, 200
-#     else:
-#         return "No users found", 404
 
-#gets users without password displayed on browser
+# gets users without password displayed on browser
 @app.route('/users', methods=['GET'])
 def get_users():
     users = db.users.find({}, {'password': 0})
@@ -120,9 +21,11 @@ def get_users():
     else:
         return "No users found", 404
 
-    #gets a single user
-@app.route('/users/<string:username>', methods=['GET'])
-def get_user(username):
+# gets a single user
+@app.route('/users/single', methods=['GET'])
+@require_token
+def get_user(user):
+    username = user['username']
     user = db.users.find_one({'username': username})
     if user:
         user['username'] = str(user['username'])
@@ -130,31 +33,7 @@ def get_user(username):
     else:
         return "User not found", 404
 
-    #gets a single user's meals
-@app.route('/meals/<string:username>', methods=['GET'])
-def get_user_meals(username):
-    meals = list(db.meals.find({'username': username}))
-    if meals:
-        for meal in meals:
-            meal['_id'] = str(meal['_id'])
-        return jsonify(meals), 200
-    else:
-        return "No meals found for user {}".format(username), 404
-
-#get each single user's symptoms
-@app.route('/users/<string:username>/symptoms', methods = ['GET'])
-def get_user_symptoms(username):
-    user_symptoms = db.user_symptoms.find({"username": username})
-    # return {"data": user_symptoms}
-    user_symptoms_list = []
-    for symptom in user_symptoms:
-        user_symptoms_list.append({key: str(symptom[key]) for key in symptom})
-    if user_symptoms_list:
-        return {"data": user_symptoms_list}, 200
-    else:
-        return "No user symptoms found", 404
-
-    #post route for adding a meal to the user's table
+#post route for adding a meal to the user's table
 @app.route("/user/<string:username>/addFood", methods=["POST"])
 def add_entry(username):
     date = request.json.get("date")
@@ -165,25 +44,83 @@ def add_entry(username):
     db.meals.insert_one(entry)
     return jsonify({"message": "Entry added successfully!"}), 201
 
-#post route for editing a single user's profile
-# @app.route('/<username>/editProfile', methods=['PUT'])
-# def edit_profile(username):
-#     try:
-#         request_data = request.get_json()
-#         if request_data is None:
-#             return jsonify({'error': 'Invalid request body'}), 400
-
-#         # Find the user by their username and update their information
-#         db.users.update_one({'username': username}, {'$set': request_data})
-
-#         return jsonify({'success': True})
-#     except Exception as e:
-#         print(e)
-#         return jsonify({'error': str(e)}), 500
-
-@app.route('/<username>/editProfile', methods=['PUT'])
-def edit_profile(username):
+# gets each single user's symptoms, paginated
+@app.route('/symptoms/user', methods = ['GET'])
+@require_token
+def get_user_symptoms(user):
     try:
+        username = user['username']
+
+        page = int(request.args.get("page"))
+        if(not page): page = 1
+
+        offset = (page - 1) * 20
+
+        total_symptoms = db.user_symptoms.count_documents({'username': username})
+
+        if(offset > total_symptoms):
+            offset = total_symptoms - 20
+
+        symptoms = [symptom for symptom in db.user_symptoms.aggregate([
+            {
+                '$match': {'username': username}
+            },
+            {'$project': { '_id': 0 }},
+            {'$sort': {'datetime': -1}}, 
+            {'$skip': offset}, 
+            {'$limit': 20}
+        ])]
+
+        if symptoms:
+            return {'count': total_symptoms, 'symptoms': symptoms}, 200
+        else:
+            return f'No meals found for user {username}', 500
+
+    except Exception as e:
+        print('Error! ', str(e))
+        return 'Error fetching meals', 500
+
+# post route for adding a meal to the user's collection
+@app.route("/user/addMeal", methods=["POST"])
+@require_token
+def add_entry(user):
+    try:
+        username = user['username']
+        entry_name = request.json.get("entry_name")
+        date = request.json.get("date")
+        time = request.json.get("time")
+
+        if(not time): 
+            time = datetime.now().time().strftime("%H:%M")
+        if(not date):
+            date = datetime.now().date().strftime("%Y-%m-%d")
+
+        meal_time = datetime.strptime(date + ' ' + time, "%Y-%m-%d %H:%M")
+
+        food_group = request.json.get("foodGroup")
+        food_items = request.json.get("foodItems")
+        timelimit = meal_time + timedelta(hours=30)
+
+        symptoms = db.user_symptoms.find( {"username": username, "datetime": {"$gte": meal_time,  "$lte": timelimit}})
+
+        symptom_list = []
+        for symptom in symptoms:
+            symptom_list.append(symptom["_id"])
+
+        entry = {"entry_name": entry_name, "username": username, "datetime": meal_time, "groups": [food_group], "foods": [food_items], "related_symptoms": symptom_list}
+
+        db.meals.insert_one(entry)
+
+        return jsonify({"message": "Entry added successfully!"}), 201
+    except Exception as e:
+        print("Error! ", str(e))
+        return "Error adding meal", 401
+
+@app.route('/user/editProfile', methods=['PUT'])
+@require_token
+def edit_profile(user):
+    try:
+        username = user['username']
         request_data = request.get_json()
         if request_data is None:
             return jsonify({'error': 'Invalid request body'}), 400
@@ -191,12 +128,11 @@ def edit_profile(username):
         # Find the user by their username and update their information
         updated_user = db.users.find_one_and_update({'username': username}, {'$set':{"password": hashedPassword.decode('utf-8'), 'name': request_data['name'],
         'email': request_data['email']}}, return_document=True)
+
         user_string = {key: str(updated_user[key]) for key in updated_user}
         return user_string, 200
     except Exception as e:
-        print(e)
         return jsonify({'error': str(e)}), 500
-
 
 # get route for correlations, single user
 @app.route('/<string:username>/correlations/', methods=['GET'])
