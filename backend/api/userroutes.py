@@ -56,12 +56,13 @@ def get_user_symptoms(username):
     #post route for adding a meal to the user's table
 @app.route("/user/<string:username>/addFood", methods=["POST"])
 def add_entry(username):
+    entry_name = request.json.get("entry_name")
     date = request.json.get("date")
     time = request.json.get("time")
     meal_time = datetime.strptime(date + ' ' + time, "%Y-%m-%d %H:%M")
     food_group = request.json.get("foodGroup")
     food_items = request.json.get("foodItems")
-    entry = {"username": username, "datetime": meal_time, "food_group": food_group, "food_items": food_items}
+    entry = {"entry_name": entry_name, "username": username, "datetime": meal_time, "groups": food_group, "foods": food_items}
     db.meals.insert_one(entry)
     return jsonify({"message": "Entry added successfully!"}), 201
 
