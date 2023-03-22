@@ -45,7 +45,7 @@ def add_user_symptom(username):
         timelimit = symptom_time - timedelta(hours=30)
         meals = db.meals.find( {"username": username, "datetime": {"$gte": timelimit,  "$lte": symptom_time}})
         for meal in meals:
-            db.meals.find_one_and_update({"_id": meal["_id"]}, {"$push": { "related_symptoms": new_symptom.inserted_id } }, return_document=True)
+            db.meals.find_one_and_update({"_id": meal["_id"]}, {"$addToSet": { "related_symptoms": new_symptom.inserted_id } }, return_document=True)
         return "User's symptom added succesfully", 201
     except Exception as e:
         return "Failed to add User's symptom", 404

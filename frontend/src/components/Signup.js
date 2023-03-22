@@ -31,63 +31,69 @@ const Signup = () => {
   return (
     <form onSubmit={handleRegisterSubmit}>
       <div>
-        <label htmlFor="username">
+        <label>
           <small>Username</small>
+          <input
+            name="username"
+            type="text"
+            required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
         </label>
-        <input
-          name="username"
-          type="text"
-          required
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
       </div>
       <div>
-        <label htmlFor="password">
-          <small>Password</small>
+        <label>
+          <small>
+            Password <br />8 characters <br />
+            at least 1 number <br />1 uppercase character <br />1 special
+            character !@#$%^&*()
+          </small>
+
+          <input
+            name="password"
+            type="password"
+            pattern="^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*()]).{8,}$"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </label>
-        <input
-          name="password"
-          type="password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
       </div>
       <div>
-        <label htmlFor="email">
+        <label>
           <small>Email</small>
+          <input
+            name="email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </label>
-        <input
-          name="email"
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
       </div>
       <div>
-        <label htmlFor="fullName">
+        <label>
           <small>Full Name</small>
+          <input
+            name="fullName"
+            type="text"
+            required
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+          />
         </label>
-        <input
-          name="fullName"
-          type="text"
-          required
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-        />
       </div>
       <div>
-        <label htmlFor="birthdate">
+        <label>
           <small>Birthdate</small>
+          <input
+            name="birthdate"
+            type="date"
+            value={birthdate}
+            onChange={(e) => setBirthdate(e.target.value)}
+          />
         </label>
-        <input
-          name="birthdate"
-          type="date"
-          value={birthdate}
-          onChange={(e) => setBirthdate(e.target.value)}
-        />
       </div>
       <button type="submit" onSubmit={redirect}>
         Create Account
