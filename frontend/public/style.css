@@ -6,3 +6,11 @@ body {
   position: relative;
   min-height: 100vh;
 }
+
+#graph {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  background: cornflowerblue;
+  cursor: pointer;
+}

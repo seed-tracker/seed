@@ -12,57 +12,41 @@ const BubbleChart = () => {
   useEffect(() => {
     dispatch(fetchUserCorrelations())
 
-    // const keys = getUKeys(data);
-    // console.log("KEYS",keys);
-
     // const graphSection = d3.select("#graph svg")
     // graphSection.append("g")
   }, [dispatch])
 
+  const symptom = data.forEach((obj) => {
+    return obj.symptom
+  })
 
-  // for (const key in data) {
-  //   for (const value of key) {
-  //     console.log(value);
-  //   }
-  // }
-  // console.log(data);
-  // let values = Object.values(data)
-  // console.log("VALUE", values);
+  const count = data.forEach((obj) => {
+    return obj.count
+  })
 
-  // const getUKeys = (data) => {
-  //   // console.log("DATA", data)
-  //   return data
-
-  data.forEach(obj => {
-    let keys = [];
-    Object.entries(obj).forEach(([key, value]) => {
-      if (!keys.includes(key)) {
-        keys.push(key);
-      }
-      console.log(key, value);
-    });
-    console.log(keys);
-  });
-  data.forEach((obj) => {
-    obj['top_foods'].forEach((ele) => {
-      console.log("FOODS", ele);
+  // access key in arr with item.lift, etc
+  const top_foods = data.forEach((obj) => {
+    obj['top_foods'].forEach((item) => {
+      console.log("FOODS", item);
+      return item
     })
-    obj['top_groups'].forEach((ele) => {
-      console.log("GROUPS", ele);
+  })
+
+  // access key in arr with item.avg_severity, etc
+  const top_groups = data.forEach((obj) => {
+    obj['top_groups'].forEach((item) => {
+      return item
     })
-  });
-   
-  
-  // console.log("GETUKEYS", getUKeys);
+  })
 
   // const svg = d3.create("svg").attr("width", 932).attr("height", 932).style("display", "block").style("margin", "0 auto").style("background", "cornflowerblue").style("cursor", "pointer")
   // graphSection.append("svg")
 
   const svg = d3.select("svg")
-    svg.append("g")
+  svg.append("g")
 
   return (
-    <svg width="932" height="932" style={{ display: "block", background: "cornflowerblue" }}></svg>
+    <svg id="graph"></svg>
   )
 }
 
