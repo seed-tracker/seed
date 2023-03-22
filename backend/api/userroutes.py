@@ -10,6 +10,7 @@ from flask_pymongo import PyMongo
 import bcrypt
 salt = bcrypt.gensalt(5)
 
+
 # gets users without password displayed on browser
 @app.route('/users', methods=['GET'])
 def get_users():
@@ -32,41 +33,16 @@ def get_user(user):
     else:
         return "User not found", 404
 
-# gets a single user's meals, paginated
-@app.route('/meals/user', methods=['GET'])
-@require_token
-def get_user_meals(user):
-    try:
-        username = user['username']
-
-        page = int(request.args.get("page"))
-        if(not page): page = 1
-
-        offset = (page - 1) * 20
-
-        total_meals = db.meals.count_documents({'username': username})
-
-        if(offset > total_meals):
-            offset = total_meals - 20
-
-        meals = [meal for meal in db.meals.aggregate([
-            {
-                '$match': {'username': username}
-            },
-            {'$project': { '_id': 0, 'related_symptoms': 0 }},
-            {'$sort': {'datetime': -1}}, 
-            {'$skip': offset}, 
-            {'$limit': 20}
-        ])]
-
-        if meals:
-            return {'count': total_meals, 'meals': meals}, 200
-        else:
-            return f'No meals found for user {username}', 500
-
-    except Exception as e:
-        print('Error! ', str(e))
-        return 'Error fetching meals', 500
+#post route for adding a meal to the user's table
+@app.route("/user/<string:username>/addFood", methods=["POST"])
+def add_entry(username):
+    date = request.json.get("date")
+    time = request.json.get("time")
+    food_group = request.json.get("foodGroup")
+    food_items = request.json.get("foodItems")
+    entry = {"username": username, "date": date, "time": time, "food_group": food_group, "food_items": food_items}
+    db.meals.insert_one(entry)
+    return jsonify({"message": "Entry added successfully!"}), 201
 
 # gets each single user's symptoms, paginated
 @app.route('/symptoms/user', methods = ['GET'])
@@ -158,4 +134,18 @@ def edit_profile(user):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
+# get route for correlations, single user
+@app.route('/<string:username>/correlations/', methods=['GET'])
+def get_user_correlations(username):
+    try:
+        correlations = db.correlations.find({"username": username})
+        correlations_list = []
+        for correlation in correlations:
+            correlation["_id"] = str(correlation["_id"])
+            correlations_list.append({key: correlation[key] for key in correlation})
+        if correlations_list:
+            return correlations_list, 200
+        else:
+            return "No correlations found", 404
+    except Exception as e:
+        return "Error", 500
