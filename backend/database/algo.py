@@ -8,7 +8,7 @@ sys.path.insert(0,"..")
 from db import db, test_db
 
 def find_correlations(username):
-
+    print(f'Seeding for {username}')
     # pipeline_best_users = [
     #     {
     #         "$group": {
@@ -19,6 +19,25 @@ def find_correlations(username):
     # ]
 
     # print([u for u in db.user_symptoms.aggregate(pipeline_best_users)])
+
+    # pipeline_best_corrs = [
+    #     {
+    #         "$group": {
+    #             "_id": "$username",
+    #             "corrs": { "$push": {"$"}}
+    #         }
+    #     }, {
+    #         "$project": {
+    #             "username": "$id",
+    #             "count": { "$add": ["$count_groups", "$count_foods"]}
+    #         }
+            
+    #         },{"$sort": "$count"}, {"$limit": 20}
+    # ]
+
+    # print(s for s in db.correlations.aggregate(pipeline_best_corrs))
+
+    # return
  
     # query the meals, including symptoms
     pipeline = [
@@ -139,8 +158,13 @@ def find_correlations(username):
             'top_foods': food_data,
             'top_groups': group_data
         })
-
-    db.correlations.insert_many(correlations)
+    
+    if(len(correlations) > 0):
+        # db.correlations.insert_many(correlations)
+        return
+    else:
+        print('Insufficient correlations data')
+        return
 
     
 
@@ -156,12 +180,15 @@ def create_rules(item_sets, filter_list, symptom_name):
     filtered_items = list(map(lambda i: filter_symptoms(i, filter_list), item_sets))
 
     # fn to check data - will delete
-    # print(check_data(filtered_items, symptom_name, 70))
+    print(check_data(filtered_items, symptom_name, 70))
 
     # run the data through fpgrowth and get association rules
     te_items = te.fit(filtered_items).transform(filtered_items)
     items_df = pd.DataFrame(te_items, columns=te.columns_)
     freq_itemsets = fpgrowth(items_df, min_support=0.1, use_colnames=True)
+    if(len(freq_itemsets) < 1):
+        print('Not enough freq_itemsets')
+        return
     rules = association_rules(freq_itemsets, metric="lift", min_threshold=1.0).sort_values(by=['lift'], ascending=False)
 
     # get lift, consequents and antecedents
@@ -286,12 +313,17 @@ def check_data(item_sets, symptom_name, min_threshold):
 
 
 if __name__ == '__main__':
-    # find_correlations(input('Username? '))
-    users = [u for u in db.users.find()]
-    for u in users:
-        find_correlations(u['username'])
+    if(input('Delete data? y or n  ') == 'y'):
+        db.correlations.delete_many({})
+
+    if(input('All? y or n: ') == 'y'):
+        users = db.users.find({})
+        for user in users:
+            find_correlations(user['username'])
+
+    else: find_correlations(input('Username? '))
 
 
     # top users:
-    # lucy, hillandrew, nicole34, cruzsean, harperamanda, iweiss
-    # [{'_id': 'helloagain2', 'count': 530}, {'_id': 'michael99', 'count': 520}, {'_id': 'hillandrew', 'count': 492}, {'_id': 'lucy', 'count': 427}, {'_id': 'annettejohnson', 'count': 409}, {'_id': 'brittany41', 'count': 407}, {'_id': 'judybooty', 'count': 401}, {'_id': 'kyoung', 'count': 333}, {'_id': 'cruzsean', 'count': 318}, {'_id': 'maria14', 'count': 308}, {'_id': 'harperamanda', 'count': 296}, {'_id': 'amanda59', 'count': 289}, {'_id': 'yvette98', 'count': 285}, {'_id': 'nicole34', 'count': 285}, {'_id': 'campbellfrances', 'count': 278}, {'_id': 'donaldsonrobert', 'count': 271}, {'_id': 'iweiss', 'count': 259}, {'_id': 'thomaswong', 'count': 246}, {'_id': 'helloagain', 'count': 241}, {'_id': 'deawdewd', 'count': 233}]
+    # 
+    # [{'_id': 'annettejohnson', 'count': 1018}, {'_id': 'cruzsean', 'count': 981}, {'_id': 'amanda59', 'count': 832}, {'_id': 'kschneider', 'count': 783}, {'_id': 'victoria13', 'count': 748}, {'_id': 'michael99', 'count': 682}, {'_id': 'graceshopper', 'count': 682}, {'_id': 'johnsonjesse', 'count': 678}, {'_id': 'helloagain', 'count': 669}, {'_id': 'wanyi', 'count': 592}, {'_id': 'deawdewd', 'count': 541}, {'_id': 'yolanda56', 'count': 515}, {'_id': 'churchmichael', 'count': 510}, {'_id': 'gchen', 'count': 503}, {'_id': 'nicole34', 'count': 497}, {'_id': 'harperamanda', 'count': 489}, {'_id': 'lucy', 'count': 468}, {'_id': 'thompsonshelby', 'count': 413}, {'_id': 'judybooty', 'count': 405}, {'_id': 'warrenkelly', 'count': 402}]
