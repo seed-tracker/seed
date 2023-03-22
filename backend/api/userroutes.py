@@ -4,7 +4,7 @@ from db import db
 from flask import request
 from flask import jsonify
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_pymongo import PyMongo
 import bcrypt
 salt = bcrypt.gensalt(5)
@@ -62,7 +62,12 @@ def add_entry(username):
     meal_time = datetime.strptime(date + ' ' + time, "%Y-%m-%d %H:%M")
     food_group = request.json.get("foodGroup")
     food_items = request.json.get("foodItems")
-    entry = {"entry_name": entry_name, "username": username, "datetime": meal_time, "groups": food_group, "foods": food_items}
+    timelimit = meal_time + timedelta(hours=30)
+    symptoms = db.user_symptoms.find( {"username": username, "datetime": {"$gte": meal_time,  "$lte": timelimit}})
+    symptom_list = []
+    for symptom in symptoms:
+        symptom_list.append(symptom["_id"])
+    entry = {"entry_name": entry_name, "username": username, "datetime": meal_time, "groups": food_group, "foods": food_items, "related_symptoms": symptom_list}
     db.meals.insert_one(entry)
     return jsonify({"message": "Entry added successfully!"}), 201
 
@@ -81,3 +86,5 @@ def edit_profile(username):
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
+
+
