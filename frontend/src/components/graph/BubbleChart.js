@@ -12,23 +12,44 @@ const BubbleChart = () => {
   useEffect(() => {
     dispatch(fetchUserCorrelations())
 
-    // const keys = getUKeys(data);
-    // console.log("KEYS",keys);
-
     // const graphSection = d3.select("#graph svg")
     // graphSection.append("g")
   }, [dispatch])
 
-  data.forEach((obj) => console.log(obj))
+  const symptom = data.forEach((obj) => {
+    console.log("OBJ SYMP", obj.symptom);
+    return obj.symptom
+  })
 
-  // data.forEach((obj) => {
-  //   // Object.keys(obj).forEach(key => {
-  //   //   if (!keys.includes(key)) {
-  //   //     keys.push(key);
-  //   //   }
-  //   // });
-  //   console.log(obj);
-  // });
+  const count = data.forEach((obj) => {
+    console.log("OBJ COUNT", obj.count);
+    return obj.count
+  })
+
+  // access key in arr with item.lift, etc
+  const top_foods = data.forEach((obj) => {
+    obj['top_foods'].forEach((item) => {
+      console.log("FOODS", item);
+      // console.log(item.lift);
+      return item
+    })
+  })
+
+  // access key in arr with item.avg_severity, etc
+  const top_groups = data.forEach((obj) => {
+    obj['top_groups'].forEach((item) => {
+      console.log("GROUPS", item)
+      return item
+    })
+  })
+
+   // Object.keys(obj).forEach(key => {
+    //   if (!keys.includes(key)) {
+    //     keys.push(key);
+    //   }
+    // });
+    // console.log("OBJ", obj);
+
   // for (const obj of data) {
   //   console.log("OBJECT", obj);
   // }
