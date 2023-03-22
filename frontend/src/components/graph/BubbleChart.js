@@ -17,12 +17,10 @@ const BubbleChart = () => {
   }, [dispatch])
 
   const symptom = data.forEach((obj) => {
-    console.log("OBJ SYMP", obj.symptom);
     return obj.symptom
   })
 
   const count = data.forEach((obj) => {
-    console.log("OBJ COUNT", obj.count);
     return obj.count
   })
 
@@ -30,7 +28,6 @@ const BubbleChart = () => {
   const top_foods = data.forEach((obj) => {
     obj['top_foods'].forEach((item) => {
       console.log("FOODS", item);
-      // console.log(item.lift);
       return item
     })
   })
@@ -38,46 +35,9 @@ const BubbleChart = () => {
   // access key in arr with item.avg_severity, etc
   const top_groups = data.forEach((obj) => {
     obj['top_groups'].forEach((item) => {
-      console.log("GROUPS", item)
       return item
     })
   })
-
-   // Object.keys(obj).forEach(key => {
-    //   if (!keys.includes(key)) {
-    //     keys.push(key);
-    //   }
-    // });
-    // console.log("OBJ", obj);
-
-  // for (const obj of data) {
-  //   console.log("OBJECT", obj);
-  // }
-  // for (const key in data) {
-  //   for (const value of key) {
-  //     console.log(value);
-  //   }
-  // }
-  // // console.log(typeof data);
-  // console.log(data);
-  // let values = Object.values(data)
-  // console.log("VALUE", values);
-
-  // const getUKeys = (data) => {
-  //   // console.log("DATA", data)
-  //   return data
-  //   // let keys = [];
-  //   // data.forEach(obj => {
-  //   //   Object.keys(obj).forEach(key => {
-  //   //     if (!keys.includes(key)) {
-  //   //       keys.push(key);
-  //   //     }
-  //   //   });
-  //   // });
-  //   // console.log(keys)
-  //   // return keys;
-  // }
-  // console.log("GETUKEYS", getUKeys);
 
   // const svg = d3.create("svg").attr("width", 932).attr("height", 932).style("display", "block").style("margin", "0 auto").style("background", "cornflowerblue").style("cursor", "pointer")
   // graphSection.append("svg")
