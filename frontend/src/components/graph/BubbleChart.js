@@ -27,7 +27,6 @@ const BubbleChart = () => {
   // access key in arr with item.lift, etc
   const top_foods = data.forEach((obj) => {
     obj['top_foods'].forEach((item) => {
-      console.log("FOODS", item);
       return item
     })
   })
