@@ -10,9 +10,17 @@ const BubbleChart = () => {
 
   useEffect(() => {
     dispatch(fetchUserCorrelations(user.username))
-  })
 
-  return <div>Bubble Chart</div>
+    const graphSection = d3.select("svg")
+    graphSection.append("g")
+
+  }, [dispatch])
+
+
+  return <div id="graph">
+      <h1>Bubble Chart</h1>
+      <svg></svg>
+    </div>
 }
 
 export default BubbleChart
