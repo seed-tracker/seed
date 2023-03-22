@@ -33,17 +33,6 @@ def get_user(user):
     else:
         return "User not found", 404
 
-#post route for adding a meal to the user's table
-@app.route("/user/<string:username>/addFood", methods=["POST"])
-def add_entry(username):
-    date = request.json.get("date")
-    time = request.json.get("time")
-    food_group = request.json.get("foodGroup")
-    food_items = request.json.get("foodItems")
-    entry = {"username": username, "date": date, "time": time, "food_group": food_group, "food_items": food_items}
-    db.meals.insert_one(entry)
-    return jsonify({"message": "Entry added successfully!"}), 201
-
 # gets each single user's symptoms, paginated
 @app.route('/symptoms/user', methods = ['GET'])
 @require_token
@@ -66,8 +55,8 @@ def get_user_symptoms(user):
                 '$match': {'username': username}
             },
             {'$project': { '_id': 0 }},
-            {'$sort': {'datetime': -1}}, 
-            {'$skip': offset}, 
+            {'$sort': {'datetime': -1}},
+            {'$skip': offset},
             {'$limit': 20}
         ])]
 
@@ -90,7 +79,7 @@ def add_entry(user):
         date = request.json.get("date")
         time = request.json.get("time")
 
-        if(not time): 
+        if(not time):
             time = datetime.now().time().strftime("%H:%M")
         if(not date):
             date = datetime.now().date().strftime("%Y-%m-%d")
@@ -116,6 +105,7 @@ def add_entry(user):
         print("Error! ", str(e))
         return "Error adding meal", 401
 
+# put route for updating user's profile
 @app.route('/user/editProfile', methods=['PUT'])
 @require_token
 def edit_profile(user):
@@ -134,7 +124,7 @@ def edit_profile(user):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# get route for correlations, single user
+# get route for single user's correlations
 @app.route('/<string:username>/correlations/', methods=['GET'])
 def get_user_correlations(username):
     try:

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { editProfile } from "../store/entrySlice";
 import { selectAuthUser } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
-import { selectAuthUser } from "../store";
+import { useSelector, useDispatch } from "react-redux";
 import Sidebar from "./Sidebar";
 
 function EditProfile() {
