@@ -9,7 +9,9 @@ foods = Blueprint("foods", __name__)
 @foods.route("/", methods=["GET"])
 def get_foods():
     try:
-        foods = [{key: str(food[key]) for key in food} for food in db.foods.find()]
+        foods = [food for food in db.foods.find()]
+        for f in foods:
+            f["_id"] = str(f["_id"])
 
         if foods:
             return foods, 200
