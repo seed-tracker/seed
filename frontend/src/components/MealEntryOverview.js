@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import Sidebar from "./Sidebar";
 import { fetchAllMealEntries, selectAllMeals } from "../store/allEntriesSlice";
 import { v4 as uuidv4 } from "uuid";
@@ -10,15 +11,30 @@ function MealEntryOverview() {
   const [page, setPage] = useState(1);
   const mealEntries = useSelector(selectAllMeals);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const maxPages = Math.ceil(count / 20);
 
   useEffect(() => {
     dispatch(fetchAllMealEntries(page));
+    navigate(`/user/mealEntries?page=${page}`);
   }, [dispatch, page]);
 
   useEffect(() => {
     setCount(mealEntries.mealCount);
     setMeals(mealEntries.meals);
   }, [mealEntries]);
+
+  const handlePageChange = (event) => {
+    if (event.target.value === "previous") {
+      const newPage = page - 1;
+      setPage(newPage);
+      navigate(`/user/mealEntries?page=${newPage}`);
+    } else if (event.target.value === "next") {
+      const newPage = page + 1;
+      setPage(newPage);
+      navigate(`/user/mealEntries?page=${newPage}`);
+    }
+  };
 
   return (
     <main>
@@ -44,7 +60,22 @@ function MealEntryOverview() {
             })
           : "No entries to display"}
       </ul>
-      Pagination still needs to be implemented
+      <div>
+        {page > 1 && (
+          <button
+            value="previous"
+            onClick={(e) => handlePageChange(e, "previous")}
+          >
+            {`<<`}
+          </button>
+        )}
+        <p>{page}</p>
+        {page < maxPages && (
+          <button value="next" onClick={(e) => handlePageChange(e, "next")}>
+            {`>>`}
+          </button>
+        )}
+      </div>
     </main>
   );
 }

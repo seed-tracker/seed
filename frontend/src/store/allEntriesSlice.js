@@ -1,19 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import apiClient from "../config";
 
 export const fetchAllMealEntries = createAsyncThunk(
   "user/fetchMeals",
   async (page) => {
-    const token = window.localStorage.getItem("token");
     try {
-      const { data } = await axios.get(
-        `http://localhost:5000/meals/user?page=${page}`,
-        {
-          headers: {
-            authorization: token,
-          },
-        }
-      );
+      const { data } = await apiClient.get(`meals/user?page=${page}`);
       return data;
     } catch (err) {
       console.error(err);
@@ -24,16 +16,8 @@ export const fetchAllMealEntries = createAsyncThunk(
 export const fetchAllSymptomEntries = createAsyncThunk(
   "user/fetchSymptoms",
   async (page) => {
-    const token = window.localStorage.getItem("token");
     try {
-      const { data } = await axios.get(
-        `http://localhost:5000/symptoms/user?page=${page}`,
-        {
-          headers: {
-            authorization: token,
-          },
-        }
-      );
+      const { data } = await apiClient.get(`user/symptoms?page=${page}`);
       return data;
     } catch (err) {
       console.error(err);

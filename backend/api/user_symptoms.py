@@ -66,7 +66,7 @@ def add_user_symptom(user):
 
 
 # gets each single user's symptoms, paginated
-@user_symptoms.route("/", methods=["GET"])
+@user_symptoms.route("", methods=["GET"])
 @require_token
 def get_user_symptoms(user):
     try:

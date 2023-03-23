@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import Sidebar from "./Sidebar";
 import {
   fetchAllSymptomEntries,
@@ -13,15 +14,30 @@ function SymptomEntryOverview() {
   const [page, setPage] = useState(1);
   const symptomEntries = useSelector(selectAllSymptoms);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const maxPages = Math.ceil(count / 20);
 
   useEffect(() => {
     dispatch(fetchAllSymptomEntries(page));
+    navigate(`/user/symptomEntries?page=${page}`);
   }, [dispatch, page]);
 
   useEffect(() => {
     setCount(symptomEntries.symptomCount);
     setSymptoms(symptomEntries.symptoms);
   }, [symptomEntries]);
+
+  const handlePageChange = (event) => {
+    if (event.target.value === "previous") {
+      const newPage = page - 1;
+      setPage(newPage);
+      navigate(`/user/symptomEntries?page=${newPage}`);
+    } else if (event.target.value === "next") {
+      const newPage = page + 1;
+      setPage(newPage);
+      navigate(`/user/symptomEntries?page=${newPage}`);
+    }
+  };
 
   return (
     <main>
@@ -46,7 +62,22 @@ function SymptomEntryOverview() {
             })
           : "No symptom entries to display"}
       </ul>
-      Pagination still needs to be implemented
+      <div>
+        {page > 1 && (
+          <button
+            value="previous"
+            onClick={(e) => handlePageChange(e, "previous")}
+          >
+            {`<<`}
+          </button>
+        )}
+        <p>{page}</p>
+        {page < maxPages && (
+          <button value="next" onClick={(e) => handlePageChange(e, "next")}>
+            {`>>`}
+          </button>
+        )}
+      </div>
     </main>
   );
 }
