@@ -18,6 +18,7 @@ def get_user_foods(user):
         days = request.args.get("days")
         days = int(days) if days else 60
 
+        # find the date of the user's last entry (and counting backwards from there, for seeding reasons)
         max_time = [
             m
             for m in db.meals.aggregate(
@@ -66,6 +67,9 @@ def get_user_foods(user):
 
             return [meal for meal in db.meals.aggregate(pipeline)]
 
+        # count = count of number of times that symptom has occured in the given time period
+        # avg_severity = avg severity of all of those times in the time period
+        # min_severity = min of all those time, max_severity = max of all those times
         symptom_pipeline = [
             {"$match": {"username": username, "datetime": {"$gte": min_time}}},
             {
@@ -94,6 +98,7 @@ def get_user_foods(user):
             {"username": username, "datetime": {"$gte": min_time}}
         )
 
+        # counted_meals = number of meals counted within the given period
         result = {
             "username": username,
             "days": days,
