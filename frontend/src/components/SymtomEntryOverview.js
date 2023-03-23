@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import {
   fetchAllSymptomEntries,
@@ -11,11 +12,15 @@ import { v4 as uuidv4 } from "uuid";
 function SymptomEntryOverview() {
   const [symptoms, setSymptoms] = useState([]);
   const [count, setCount] = useState(0);
-  const [page, setPage] = useState(1);
   const symptomEntries = useSelector(selectAllSymptoms);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const maxPages = Math.ceil(count / 20);
+
+  const [searchParams] = useSearchParams();
+  let { page } = Object.fromEntries([...searchParams]);
+  page = Number(page);
+  if (!page || isNaN(page)) page = 1;
 
   useEffect(() => {
     dispatch(fetchAllSymptomEntries(page));
@@ -29,13 +34,11 @@ function SymptomEntryOverview() {
 
   const handlePageChange = (event) => {
     if (event.target.value === "previous") {
-      const newPage = page - 1;
-      setPage(newPage);
-      navigate(`/user/symptomEntries?page=${newPage}`);
+      page -= 1;
+      navigate(`/user/symptomEntries?page=${page}`);
     } else if (event.target.value === "next") {
-      const newPage = page + 1;
-      setPage(newPage);
-      navigate(`/user/symptomEntries?page=${newPage}`);
+      page += 1;
+      navigate(`/user/symptomEntries?page=${page}`);
     }
   };
 
