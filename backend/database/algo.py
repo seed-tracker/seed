@@ -6,7 +6,7 @@ from functools import reduce
 import sys
 
 sys.path.insert(0, "..")
-from db import db, test_db
+from db import db
 
 # This file holds all the logic for the algorithm that analyzes' user's data to find correlations between foods and symptoms.
 # It works by finding the user's most common symptoms, accumulating those symptoms and all of the user's meals into itemsets, and then running those through fpGrowth to find association rules between foods and symptoms
