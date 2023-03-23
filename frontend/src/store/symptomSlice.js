@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import apiClient from "../config";
 
 export const fetchAllSymptoms = createAsyncThunk(
   "get/allSymptoms",
@@ -14,21 +14,16 @@ export const fetchAllSymptoms = createAsyncThunk(
 )
 
 export const addSymptomEntry = createAsyncThunk(
-  "post symptom entry",
+  "symptom/add",
   async (symptomEntry) => {
-    const token = window.localStorage.getItem('token');
     try {
-      const { data } = await axios.post(`http://localhost:5000/user/symptoms/`, symptomEntry, {
-        headers: {
-          authorization: token,
-        }
-      });
+      const { data } = await apiClient.post(`user/symptoms/`, symptomEntry);
       return data;
     } catch (err) {
       console.log(err);
     }
   }
-)
+);
 
 export const symptomSlice = createSlice({
   name: "symptoms",
@@ -37,15 +32,12 @@ export const symptomSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(addSymptomEntry.fulfilled, (state, action) => {
       state.push(action.payload);
-    })
-    .addCase(fetchAllSymptoms.fulfilled, (state, action) => {
-      return action.payload;
-    })
-  }
-})
+    });
+  },
+});
 
 export const selectSymptoms = (state) => {
-  return state.symptoms
-}
+  return state.symptoms;
+};
 
-export default symptomSlice.reducer
+export default symptomSlice.reducer;

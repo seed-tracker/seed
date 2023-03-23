@@ -8,7 +8,12 @@ import correlationsSlice from "./correlationsSlice";
 // import created slices
 
 const store = configureStore({
-  reducer: { auth: authSlice, entry: entrySlice, symptoms: symptomSlice, correlations: correlationsSlice },
+  reducer: {
+    auth: authSlice,
+    entry: entrySlice,
+    symptoms: symptomSlice,
+    correlations: correlationsSlice,
+  },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });
 

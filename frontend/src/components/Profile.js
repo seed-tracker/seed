@@ -15,13 +15,13 @@ const Profile = () => {
   }, [dispatch]);
 
   return (
-    <main>
-      <Sidebar />
-      <h2>PROFILE INFO WOULD GO HERE</h2>
-      <section>
+    <section>
+      <main>
+        <Sidebar />
+        <h2>PROFILE INFO WOULD GO HERE</h2>
         <BubbleChart />
-      </section>
-    </main>
+      </main>
+    </section>
   );
 };
 

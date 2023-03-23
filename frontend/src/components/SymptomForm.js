@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import { addSymptomEntry } from "../store/symptomSlice";
 import Sidebar from "./Sidebar";
+import apiClient from "../config";
 
 const SymptomForm = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [symptom, setSymptom] = useState("");
   const [severity, setSeverity] = useState("");
+  const [symptoms, setSymptoms] = useState(null);
 
   const user = useSelector((state) => state.auth.me);
   console.log(user.username);
@@ -35,18 +37,20 @@ const SymptomForm = () => {
     dispatch(me());
   }, [dispatch]);
 
-  const symptoms = [
-    "Fatigue",
-    "Dizziness",
-    "Constipation",
-    "Nausea",
-    "Swelling",
-    "Itchiness",
-    "Abdominal Pain",
-    "Indigestion",
-    "Headache",
-    "Dermatitis",
-  ];
+  useEffect(() => {
+    fetchSymptoms();
+  }, []);
+
+  const fetchSymptoms = async () => {
+    try {
+      const { data } = await apiClient.get("symptoms/");
+      if (data) {
+        setSymptoms(data.map((sym) => sym["name"]));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <main>
@@ -75,11 +79,13 @@ const SymptomForm = () => {
             value={symptom}
             onChange={(event) => setSymptom(event.target.value)}
           >
-            {symptoms.map((symptom) => (
-              <option key={symptom} value={symptom}>
-                {symptom}
-              </option>
-            ))}
+            {symptoms &&
+              symptoms.length &&
+              symptoms.map((symptom) => (
+                <option key={symptom} value={symptom}>
+                  {symptom}
+                </option>
+              ))}
           </select>
         </div>
         <label htmlFor="severity">
