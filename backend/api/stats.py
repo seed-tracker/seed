@@ -3,11 +3,13 @@ from db import db
 from flask import request, jsonify
 from datetime import datetime, timedelta
 from api.auth_middleware import require_token
+from dateutil.relativedelta import relativedelta
 
 stats = Blueprint("stats", __name__)
 
 
 # /stats?days=numberorall
+# get a users most eaten foods and food groups and symptoms over a certain number of days
 @stats.route("", methods=["GET"])
 @require_token
 def get_user_foods(user):
@@ -18,26 +20,12 @@ def get_user_foods(user):
 
         days = request.args.get("days")
 
-        # if the days query is days=all, show all data
+        # if the days query is days=all, show all data (unless users have input data pre-1900...)
         if days == "all":
             min_time = datetime(1900, 1, 1)
         else:
             days = int(days) if days else 60
-
-            # find the date of the user's last entry (and counting backwards from there, for seeding reasons)
-            max_time = [
-                m
-                for m in db.meals.aggregate(
-                    [
-                        {"$match": {"username": username}},
-                        {"$sort": {"datetime": -1}},
-                        {"$project": {"datetime": 1}},
-                        {"$limit": 1},
-                    ]
-                )
-            ][0]["datetime"]
-
-            min_time = max_time - timedelta(days=days)
+            min_time = get_last_date(username) - timedelta(days=days)
 
         def get_food_data(type):
             pipeline = [
@@ -122,3 +110,101 @@ def get_user_foods(user):
             "error": "Error fetching user's stats",
             "data": None,
         }, 500
+
+
+# /stats/monthly?months=# (default = 12)
+# get a user's monthly symptom count
+@stats.route("/monthly", methods=["GET"])
+@require_token
+def get_monthly_data(user):
+    try:
+        username = user["username"]
+
+        months = request.args.get("months")
+        months = int(months) if months else 12
+
+        min_date = get_last_date(username) - relativedelta(months=months)
+        delta = relativedelta(get_last_date(username), datetime.now())
+
+        pipeline = [
+            {"$match": {"username": username, "datetime": {"$gte": min_date}}},
+            {
+                "$project": {
+                    "username": 1,
+                    "symptom": 1,
+                    "date": {
+                        "$dateSubtract": {
+                            "startDate": {"$toDate": "$datetime"},
+                            "unit": "month",
+                            "amount": delta.months,
+                        }
+                    },
+                }
+            },
+            {
+                "$group": {
+                    "_id": {
+                        "symptom": "$symptom",
+                        "month": {"$month": "$date"},
+                        "year": {"$year": "$date"},
+                    },
+                    "count": {"$sum": 1},
+                }
+            },
+            {
+                "$project": {
+                    "symptom": "$_id.symptom",
+                    "month": "$_id.month",
+                    "year": "$_id.year",
+                    "count": 1,
+                }
+            },
+            {"$sort": {"year": 1, "month": 1}},
+            {
+                "$group": {
+                    "_id": "$_id.symptom",
+                    "months": {
+                        "$push": {
+                            "month": "$_id.month",
+                            "year": "$_id.year",
+                            "count": "$count",
+                        }
+                    },
+                }
+            },
+            {"$project": {"symptom": "$_id", "months": 1, "_id": 0}}
+        ]
+
+        # returns data formatted monthly, from current date backwards x number of months
+        return (
+            jsonify(
+                {
+                    "num_months": months,
+                    "username": username,
+                    "data": [sym for sym in db.user_symptoms.aggregate(pipeline)],
+                }
+            ),
+            200,
+        )
+
+    except Exception as e:
+        return {
+            "message": str(e),
+            "error": "Error fetching user's monthly data",
+            "data": None,
+        }, 500
+
+
+def get_last_date(username):
+    # find the date of the user's last entry
+    return [
+        m
+        for m in db.meals.aggregate(
+            [
+                {"$match": {"username": username}},
+                {"$sort": {"datetime": -1}},
+                {"$project": {"datetime": 1}},
+                {"$limit": 1},
+            ]
+        )
+    ][0]["datetime"]
