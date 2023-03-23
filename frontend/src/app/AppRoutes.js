@@ -9,6 +9,8 @@ import Home from "../components/Home";
 import SymptomForm from "../components/SymptomForm";
 import Entry from "../components/MealForm";
 import EditProfile from "../components/EditProfile";
+import MealEntryOverview from "../components/MealEntryOverview";
+import SymptomEntryOverview from "../components/SymtomEntryOverview";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
@@ -25,7 +27,12 @@ const AppRoutes = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/add/symptom" element={<SymptomForm />} />
           <Route path="/user/addFood" element={<Entry />}></Route>
-          <Route path="/user/editProfile" element={<EditProfile />}></Route>
+          <Route path="/user/edit-profile" element={<EditProfile />}></Route>
+          <Route path="/user/meal-entries" element={<MealEntryOverview />} />
+          <Route
+            path="/user/symptom-entries"
+            element={<SymptomEntryOverview />}
+          />
           <Route path="/*" element={<Home />} />
         </Routes>
       ) : (
