@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
+import apiClient from "../config";
 const TOKEN = "token";
 /**
  * async thunk that authorizes a user through an AJAX request
@@ -12,11 +11,7 @@ export const me = createAsyncThunk("auth/me", async (thunkAPI) => {
   const token = window.localStorage.getItem(TOKEN);
   try {
     if (token) {
-      const { data } = await axios.get("http://localhost:5000/auth/me", {
-        headers: {
-          authorization: token,
-        },
-      });
+      const { data } = await apiClient.get("auth/me");
       return data;
     } else {
       return {};
@@ -40,14 +35,10 @@ export const login = createAsyncThunk(
   "auth/login",
   async (userInfo, thunkAPI) => {
     try {
-      const { data } = await axios.post(
-        "http://localhost:5000/auth/login",
-        userInfo
-      );
-      console.log(data)
+      const { data } = await apiClient.post("auth/login", userInfo);
+      console.log(data);
       window.localStorage.setItem(TOKEN, data.token);
       thunkAPI.dispatch(me());
-
     } catch (err) {
       if (err.response.data) {
         return thunkAPI.rejectWithValue(err.response.data);
@@ -68,10 +59,7 @@ export const signup = createAsyncThunk(
   "auth/signup",
   async (userInfo, thunkAPI) => {
     try {
-      const { data } = await axios.post(
-        "http://localhost:5000/auth/register",
-        userInfo
-      );
+      const { data } = await apiClient.post("auth/register", userInfo);
       window.localStorage.setItem(TOKEN, data.token);
       thunkAPI.dispatch(me());
     } catch (err) {

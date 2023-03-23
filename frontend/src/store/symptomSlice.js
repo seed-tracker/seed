@@ -1,20 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import apiClient from "../config";
 
 export const addSymptomEntry = createAsyncThunk(
   "symptom/add",
   async (symptomEntry) => {
-    const token = window.localStorage.getItem("token");
     try {
-      const { data } = await axios.post(
-        `http://localhost:5000/user/symptoms/`,
-        symptomEntry,
-        {
-          headers: {
-            authorization: token,
-          },
-        }
-      );
+      const { data } = await apiClient.post(`user/symptoms/`, symptomEntry);
       return data;
     } catch (err) {
       console.log(err);
