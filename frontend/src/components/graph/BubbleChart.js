@@ -43,17 +43,30 @@ useEffect(() => {
 
 useEffect(() => {
   const svg = d3.select("#graph");
+  const svgWidth = parseInt(svg.style("width"), 10);
+  const svgHeight = parseInt(svg.style("height"), 10);
+  const centerX = svgWidth / 2;
+  const centerY = svgHeight / 2;
+
+  const simulation = d3.forceSimulation(userSymptoms.map((d, i) => ({ id: i, symptom: d })))
+    .force("center", d3.forceCenter(centerX, centerY))
+    .force("collision", d3.forceCollide().radius(100))
+    .on("tick", () => {
+      circles.attr("cx", d => d.x)
+             .attr("cy", d => d.y);
+    });
+
 
   const circles = svg.selectAll("circle")
-  .data(userSymptoms)
-  .join("circle")
-  .attr("cx", (d, i) => i * 100 + 50)
-  .attr("cy", 50)
-  .attr("r", 20)
-  .attr("fill", d => symptomColors[d])
-  .attr("stroke", "white")
-  .attr("stroke-width", 2)
-});
+    .data(simulation.nodes())
+    .join("circle")
+    .attr("r", 20)
+   
+    
+    .attr("fill", d => symptomColors[d.symptom])
+    .attr("stroke", "white")
+    .attr("stroke-width", 2);
+}, [symptoms, userSymptoms, symptomColors]);
 
   const colors = ['#ffcc00', '#ff6666', '#cc0066', '#66cccc', '#f688bb', '#65587f', '#baf1a1', '#333333', '#75b79e',
     '#66cccc', '#9de3d0', '#f1935c', '#0c7b93', '#eab0d9', '#baf1a1', '#9399ff','#06AED5', '#086788', '#F0C808', '#DD1C1A']
@@ -68,8 +81,3 @@ useEffect(() => {
 }
 
 export default BubbleChart
-
-//food group = color
-//lift = size
-//severity = gradient
-//food = bubble
