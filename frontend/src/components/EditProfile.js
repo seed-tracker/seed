@@ -4,6 +4,7 @@ import { editProfile } from "../store/entrySlice";
 import { selectAuthUser } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import { useDispatch, useSelector } from "react-redux";
 
 function EditProfile() {
   const [name, setName] = useState("");
