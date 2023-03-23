@@ -8,11 +8,11 @@ import { Link } from "react-router-dom";
 const Sidebar = () => {
   return (
     <aside>
-      <Link to="/user/editProfile">Edit Profile</Link>
+      <Link to="/user/edit-profile">Edit Profile</Link>
       <Link to="/add/symptom">Add Symptom Entry</Link>
       <Link to="/user/addFood">Add Food Entry</Link>
-      <Link to="/user/symptomEntries">Past Symptom Entries</Link>
-      <Link to="/user/mealEntries">Past Meal Entries</Link>
+      <Link to="/user/symptom-entries">Past Symptom Entries</Link>
+      <Link to="/user/meal-entries">Past Meal Entries</Link>
     </aside>
   );
 };

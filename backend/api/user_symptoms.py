@@ -1,10 +1,25 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from db import db
-from flask import jsonify
 from datetime import datetime, timedelta
-from api.auth_middleware import require_token
+from api.auth_middleware import require_token, require_token_delete
+from bson.objectid import ObjectId
 
 user_symptoms = Blueprint("user_symptoms", __name__)
+
+
+# delete a symptom in production.user_symptoms
+@user_symptoms.route("/delete/<string:symptomId>", methods=["DELETE"])
+@require_token_delete
+def delete_user_symptom(user, symptomId):
+    try:
+        db.user_symptoms.delete_one({"_id": ObjectId(symptomId)})
+        return "User's symptom deleted successfully", 200
+    except Exception as e:
+        return {
+            "message": str(e),
+            "error": "Error deleting user's symptom",
+            "data": None,
+        }, 500
 
 
 # post a symptom in production.user_symptoms
@@ -65,6 +80,7 @@ def add_user_symptom(user):
         }, 500
 
 
+
 # gets each single user's symptoms, paginated
 @user_symptoms.route("", methods=["GET"])
 @require_token
@@ -91,7 +107,7 @@ def get_user_symptoms(user):
             for symptom in db.user_symptoms.aggregate(
                 [
                     {"$match": {"username": username}},
-                    {"$project": {"_id": 0}},
+                    {"$project": {"_id": {"$toString": "$_id"}, "datetime": 1, "severity": 1, "symptom": 1}},
                     {"$sort": {"datetime": -1}},
                     {"$skip": offset},
                     {"$limit": 20},

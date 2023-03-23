@@ -6,6 +6,7 @@ import Sidebar from "./Sidebar";
 import {
   fetchAllSymptomEntries,
   selectAllSymptoms,
+  deleteSymptomEntry,
 } from "../store/allEntriesSlice";
 import { v4 as uuidv4 } from "uuid";
 
@@ -24,7 +25,7 @@ function SymptomEntryOverview() {
 
   useEffect(() => {
     dispatch(fetchAllSymptomEntries(page));
-    navigate(`/user/symptomEntries?page=${page}`);
+    navigate(`/user/symptom-entries?page=${page}`);
   }, [dispatch, page]);
 
   useEffect(() => {
@@ -35,11 +36,16 @@ function SymptomEntryOverview() {
   const handlePageChange = (event) => {
     if (event.target.value === "previous") {
       page -= 1;
-      navigate(`/user/symptomEntries?page=${page}`);
+      navigate(`/user/symptom-entries?page=${page}`);
     } else if (event.target.value === "next") {
       page += 1;
-      navigate(`/user/symptomEntries?page=${page}`);
+      navigate(`/user/symptom-entries?page=${page}`);
     }
+  };
+
+  const handleEntryDelete = async (id) => {
+    await dispatch(deleteSymptomEntry(id));
+    await dispatch(fetchAllSymptomEntries(page));
   };
 
   return (
@@ -59,7 +65,9 @@ function SymptomEntryOverview() {
                   </p>
                   <p>{symptom.symptom}</p>
                   <p>Severity: {symptom.severity}</p>
-                  <button>Delete</button>
+                  <button onClick={() => handleEntryDelete(symptom._id)}>
+                    Delete
+                  </button>
                 </li>
               );
             })

@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { fetchAllMealEntries, selectAllMeals } from "../store/allEntriesSlice";
+import {
+  fetchAllMealEntries,
+  selectAllMeals,
+  deleteMealEntry,
+} from "../store/allEntriesSlice";
 import { v4 as uuidv4 } from "uuid";
 
 function MealEntryOverview() {
@@ -21,7 +25,7 @@ function MealEntryOverview() {
 
   useEffect(() => {
     dispatch(fetchAllMealEntries(page));
-    navigate(`/user/mealEntries?page=${page}`);
+    navigate(`/user/meal-entries?page=${page}`);
   }, [dispatch, page]);
 
   useEffect(() => {
@@ -32,11 +36,16 @@ function MealEntryOverview() {
   const handlePageChange = (event) => {
     if (event.target.value === "previous") {
       page -= 1;
-      navigate(`/user/mealEntries?page=${page}`);
+      navigate(`/user/meal-entries?page=${page}`);
     } else if (event.target.value === "next") {
       page += 1;
-      navigate(`/user/mealEntries?page=${page}`);
+      navigate(`/user/meal-entries?page=${page}`);
     }
+  };
+
+  const handleEntryDelete = async (id) => {
+    await dispatch(deleteMealEntry(id));
+    await dispatch(fetchAllMealEntries(page));
   };
 
   return (
@@ -57,7 +66,9 @@ function MealEntryOverview() {
                   <p>{meal.entry_name}</p>
                   <p>Food Groups: {meal.groups?.join(", ")}</p>
                   <p>Foods: {meal.foods?.join(", ")}</p>
-                  <button>Delete</button>
+                  <button onClick={() => handleEntryDelete(meal._id)}>
+                    Delete
+                  </button>
                 </li>
               );
             })

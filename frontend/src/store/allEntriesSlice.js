@@ -25,6 +25,43 @@ export const fetchAllSymptomEntries = createAsyncThunk(
   }
 );
 
+export const deleteSymptomEntry = createAsyncThunk(
+  "user/deleteSymptom",
+  async (symptomId) => {
+    try {
+      const token = window.localStorage.getItem("token");
+      const { data } = await apiClient.delete(
+        `user/symptoms/delete/${symptomId}`,
+        {
+          data: {
+            authorization: token,
+          },
+        }
+      );
+      return data;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+);
+
+export const deleteMealEntry = createAsyncThunk(
+  "user/deleteMeal",
+  async (mealId) => {
+    try {
+      const token = window.localStorage.getItem("token");
+      const { data } = await apiClient.delete(`meals/user/delete/${mealId}`, {
+        data: {
+          authorization: token,
+        },
+      });
+      return data;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+);
+
 const allEntriesSlice = createSlice({
   name: "allEntries",
   initialState: {

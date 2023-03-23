@@ -27,10 +27,10 @@ const AppRoutes = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/add/symptom" element={<SymptomForm />} />
           <Route path="/user/addFood" element={<Entry />}></Route>
-          <Route path="/user/editProfile" element={<EditProfile />}></Route>
-          <Route path="/user/mealEntries" element={<MealEntryOverview />} />
+          <Route path="/user/edit-profile" element={<EditProfile />}></Route>
+          <Route path="/user/meal-entries" element={<MealEntryOverview />} />
           <Route
-            path="/user/symptomEntries"
+            path="/user/symptom-entries"
             element={<SymptomEntryOverview />}
           />
           <Route path="/*" element={<Home />} />
