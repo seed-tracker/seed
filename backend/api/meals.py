@@ -1,12 +1,14 @@
-from flask import Flask
-from app import app
+from flask import Blueprint
 from db import db
 from flask import request, jsonify
 from datetime import datetime, timedelta
 from api.auth_middleware import require_token
 
+meals = Blueprint("meals", __name__)
+
+
 # gets a single user's meals, paginated
-@app.route("/meals/user", methods=["GET"])
+@meals.route("/user", methods=["GET"])
 @require_token
 def get_user_meals(user):
     try:
@@ -49,7 +51,7 @@ def get_user_meals(user):
 
 
 # post route for adding a meal to the user's collection
-@app.route("/user/addMeal", methods=["POST"])
+@meals.route("/addMeal", methods=["POST"])
 @require_token
 def add_entry(user):
     try:

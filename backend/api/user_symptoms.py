@@ -1,13 +1,14 @@
-from flask import Flask, request
-from app import app
+from flask import Blueprint, request
 from db import db
 from flask import jsonify
 from datetime import datetime, timedelta
 from api.auth_middleware import require_token
 
+user_symptoms = Blueprint("user_symptoms", __name__)
+
 
 # post a symptom in production.user_symptoms
-@app.route("/user/symptoms/", methods=["POST"])
+@user_symptoms.route("/", methods=["POST"])
 @require_token
 def add_user_symptom(user):
     try:
@@ -25,6 +26,11 @@ def add_user_symptom(user):
         symptom_time = datetime.strptime(date + " " + time, "%Y-%m-%d %H:%M")
         symptom = data["symptom"]
         severity = data["severity"]
+
+        if not symptom:
+            return "Symptom name required", 400
+        if not severity:
+            return "Severity level required", 400
 
         new_symptom = db.user_symptoms.insert_one(
             {
@@ -60,14 +66,17 @@ def add_user_symptom(user):
 
 
 # gets each single user's symptoms, paginated
-@app.route("/symptoms/user", methods=["GET"])
+@user_symptoms.route("/", methods=["GET"])
 @require_token
 def get_user_symptoms(user):
     try:
         username = user["username"]
 
-        page = int(request.args.get("page"))
-        if not page:
+        page = request.args.get("page")
+
+        if page:
+            page = int(page)
+        else:
             page = 1
 
         offset = (page - 1) * 20

@@ -1,6 +1,5 @@
 from api.auth_middleware import require_token
-from flask import Flask, request
-from app import app
+from flask import Flask, request, Blueprint
 from db import db
 import bcrypt
 import jwt
@@ -10,8 +9,10 @@ from datetime import datetime
 salt = bcrypt.gensalt(5)
 secret = os.environ.get("JWT_SECRET")
 
+auth = Blueprint("auth", __name__)
 
-@app.route("/auth/login", methods=["POST"])
+
+@auth.route("/login", methods=["POST"])
 def login():
     try:
         req_data = request.get_json()
@@ -35,7 +36,7 @@ def login():
         return {"message": str(e), "error": "Authentication failed", "data": None}, 500
 
 
-@app.route("/auth/register", methods=["POST"])
+@auth.route("/register", methods=["POST"])
 def register():
     try:
         req_data = request.get_json()
@@ -79,7 +80,7 @@ def register():
         return {"message": str(e), "error": "Registration failed", "data": None}, 500
 
 
-@app.route("/auth/me", methods=["GET"])
+@auth.route("/me", methods=["GET"])
 @require_token
 def authenticate(user):
     try:

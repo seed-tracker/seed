@@ -1,23 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../config";
 
-export const addEntry = createAsyncThunk(
-  "user/addFood",
-  async ({ username, entry }) => {
-    try {
-      const { data } = await apiClient.post("user/addMeal", entry);
-      return data;
-    } catch (err) {
-      console.error(err);
-    }
+export const addEntry = createAsyncThunk("user/addFood", async ({ entry }) => {
+  try {
+    const { data } = await apiClient.post("meals/addMeal", entry);
+    return data;
+  } catch (err) {
+    console.error(err);
   }
-);
+});
 
 export const editProfile = createAsyncThunk(
   "user/editProfile",
   async ({ username, name, email, password }) => {
     try {
-      const { data } = await apiClient.put("user/editProfile", {
+      const { data } = await apiClient.put("users/editProfile", {
         username,
         name,
         email,

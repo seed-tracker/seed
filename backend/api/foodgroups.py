@@ -1,10 +1,11 @@
-from flask import Flask
-from app import app
+from flask import Blueprint
 from db import db
+
+groups = Blueprint("groups", __name__)
 
 
 # serves all food groups
-@app.route("/groups", methods=["GET"])
+@groups.route("/", methods=["GET"])
 def get_food_groups():
     try:
         groups = db.groups.find()
@@ -22,7 +23,7 @@ def get_food_groups():
 
 
 # serves a single food group
-@app.route("/groups/<string:name>", methods=["GET"])
+@groups.route("/<string:name>", methods=["GET"])
 def get_food_group(name):
     try:
         group = db.groups.find_one({"name": name})

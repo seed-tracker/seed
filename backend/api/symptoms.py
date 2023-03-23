@@ -1,11 +1,13 @@
-from flask import Flask, request
-from app import app
+from flask import Blueprint
 from db import db
 from flask import jsonify
 
 
+symptoms = Blueprint("symptoms", __name__)
+
+
 # get all symptoms
-@app.route("/symptoms/", methods=["GET"])
+@symptoms.route("/", methods=["GET"])
 def get_symptoms():
     try:
         symptoms = db.symptoms.find()
@@ -28,7 +30,7 @@ def get_symptoms():
 
 
 # get a single symptom
-@app.route("/symptoms/<string:name>/", methods=["GET"])
+@symptoms.route("/<string:name>", methods=["GET"])
 def get_symptom_by_name(name):
     try:
         symptom = db.symptoms.find_one({"name": name})

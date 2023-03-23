@@ -41,10 +41,19 @@ def fetch_data():
     return [groups, symptoms]
 
 
-# set up the generate_data function
-# takes in values from the run_seed function
-# days = number of days to seed, num_symptoms = # of symptoms to include, num_groups = # of main groups and trigger groups, max_meals = max meals user records in a day, food_flex = 1-100, how flexible user is about their food (aka how much they eat from their main groups vs all other groups), symptom_thresh = 1-100, probability of a symptom, consistency = 1-100, how often user skips days of recording
 def create_user_data(username, days, num_symptoms, num_groups, max_meals, food_flex, symptom_thresh, consistency):
+    """ Seed the database with meals and symptoms for any or all users by running generate_data
+
+    days = number of days to seed 
+    num_symptoms = # of symptoms to include
+    num_groups = # of main groups and trigger groups 
+    max_meals = max meals user records in a day 
+    food_flex = 1-100, how flexible user is about their food (aka how much they eat from their main groups vs all other groups) 
+    symptom_thresh = 1-100, probability of a symptom, 
+    consistency = 1-100, how often user skips days of recording
+    """
+
+
     [groups_cursor, symptoms_cursor] = fetch_data()
 
     # create lists from the groups and symptoms

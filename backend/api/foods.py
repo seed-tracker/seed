@@ -1,11 +1,12 @@
-from flask import Flask, jsonify
+from flask import Blueprint
 from db import db
-from app import app
 from bson import ObjectId
+
+foods = Blueprint("foods", __name__)
 
 
 # get all foods
-@app.route("/foods", methods=["GET"])
+@foods.route("/", methods=["GET"])
 def get_foods():
     try:
         foods = [{key: str(food[key]) for key in food} for food in db.foods.find()]
@@ -24,7 +25,7 @@ def get_foods():
 
 
 # get a single food item
-@app.route("/foods/<string:id>", methods=["GET"])
+@foods.route("/<string:id>", methods=["GET"])
 def get_food_by_id(id):
     try:
         food = db.foods.find_one(ObjectId(id))

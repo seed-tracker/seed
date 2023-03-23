@@ -1,5 +1,4 @@
-from flask import Flask
-from app import app
+from flask import Blueprint
 from db import db
 from flask import request, jsonify
 from pymongo import MongoClient
@@ -10,9 +9,11 @@ import bcrypt
 
 salt = bcrypt.gensalt(5)
 
+users = Blueprint("users", __name__)
+
 
 # gets users without password displayed on browser
-@app.route("/users", methods=["GET"])
+@users.route("/", methods=["GET"])
 def get_users():
     users = db.users.find({}, {"password": 0})
     user_list = [
@@ -25,7 +26,7 @@ def get_users():
 
 
 # gets a single user
-@app.route("/users/single", methods=["GET"])
+@users.route("/single", methods=["GET"])
 @require_token
 def get_user(user):
     username = user["username"]
@@ -37,7 +38,7 @@ def get_user(user):
         return "User not found", 404
 
 
-@app.route("/user/editProfile", methods=["PUT"])
+@users.route("/editProfile", methods=["PUT"])
 @require_token
 def edit_profile(user):
     try:
