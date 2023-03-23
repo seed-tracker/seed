@@ -52,7 +52,7 @@ def add_user_symptom(user):
         for meal in meals:
             db.meals.find_one_and_update(
                 {"_id": meal["_id"]},
-                {"$push": {"related_symptoms": new_symptom.inserted_id}},
+                {"$addToSet": {"related_symptoms": new_symptom.inserted_id}},
                 return_document=True,
             )
 
