@@ -11,9 +11,9 @@ def get_symptoms():
     symptoms = db.symptoms.find()
     symptoms_list = []
     for symptom in symptoms:
-        symptoms_list.append({key: str(symptom[key]) for key in symptom})
+        symptoms_list.append({key: str(symptom[key]) for key in symptom if key != '_id' })
     if symptoms_list:
-        return {"data": symptoms_list}, 200
+        return symptoms_list, 200
     else:
         return "No symptoms found", 404
 
@@ -37,11 +37,11 @@ def add_user_symptom(user):
         data = request.get_json()
         date = data['date']
         time = data['time']
-        if(not time): 
+        if(not time):
             time = datetime.now().time().strftime("%H:%M")
         if(not date):
             date = datetime.now().date().strftime("%Y-%m-%d")
-            
+
         symptom_time = datetime.strptime(date + ' ' + time, "%Y-%m-%d %H:%M")
         symptom = data['symptom']
         severity = data['severity']
