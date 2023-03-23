@@ -7,7 +7,8 @@ from api.auth_middleware import require_token
 stats = Blueprint("stats", __name__)
 
 
-@stats.route("/", methods=["GET"])
+# /stats?days=numberorall
+@stats.route("", methods=["GET"])
 @require_token
 def get_user_foods(user):
     try:
@@ -16,22 +17,27 @@ def get_user_foods(user):
             return "Not authorized", 401
 
         days = request.args.get("days")
-        days = int(days) if days else 60
 
-        # find the date of the user's last entry (and counting backwards from there, for seeding reasons)
-        max_time = [
-            m
-            for m in db.meals.aggregate(
-                [
-                    {"$match": {"username": username}},
-                    {"$sort": {"datetime": -1}},
-                    {"$project": {"datetime": 1}},
-                    {"$limit": 1},
-                ]
-            )
-        ][0]["datetime"]
+        # if the days query is days=all, show all data
+        if days == "all":
+            min_time = datetime(1900, 1, 1)
+        else:
+            days = int(days) if days else 60
 
-        min_time = max_time - timedelta(days=days)
+            # find the date of the user's last entry (and counting backwards from there, for seeding reasons)
+            max_time = [
+                m
+                for m in db.meals.aggregate(
+                    [
+                        {"$match": {"username": username}},
+                        {"$sort": {"datetime": -1}},
+                        {"$project": {"datetime": 1}},
+                        {"$limit": 1},
+                    ]
+                )
+            ][0]["datetime"]
+
+            min_time = max_time - timedelta(days=days)
 
         def get_food_data(type):
             pipeline = [
