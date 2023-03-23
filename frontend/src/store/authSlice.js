@@ -36,7 +36,6 @@ export const login = createAsyncThunk(
   async (userInfo, thunkAPI) => {
     try {
       const { data } = await apiClient.post("auth/login", userInfo);
-      console.log(data);
       window.localStorage.setItem(TOKEN, data.token);
       thunkAPI.dispatch(me());
     } catch (err) {

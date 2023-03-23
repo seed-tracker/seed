@@ -15,7 +15,6 @@ const SymptomForm = () => {
   const [symptoms, setSymptoms] = useState(null);
 
   const user = useSelector((state) => state.auth.me);
-  console.log(user.username);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
