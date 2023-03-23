@@ -3,7 +3,7 @@ import apiClient from "../config";
 
 export const addEntry = createAsyncThunk("user/addFood", async ({ entry }) => {
   try {
-    const { data } = await apiClient.post("meals/addMeal", entry);
+    const { data } = await apiClient.post("users/addMeal", entry);
     return data;
   } catch (err) {
     console.error(err);

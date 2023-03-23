@@ -6,7 +6,7 @@ load_dotenv(find_dotenv())
 import os
 from flask_pymongo import PyMongo
 
-from api.users import users
+from api.userroutes import users
 from api.foodgroups import groups
 from api.foods import foods
 from api.symptoms import symptoms
