@@ -22,6 +22,7 @@ def login():
             password_checked = bcrypt.checkpw(
                 req_data["password"].encode("utf-8"), user["password"].encode("utf-8")
             )
+
             if password_checked:
                 return {
                     "token": jwt.encode(

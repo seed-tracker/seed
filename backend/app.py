@@ -13,6 +13,7 @@ from api.symptoms import symptoms
 from api.user_symptoms import user_symptoms
 from api.auth import auth
 from api.meals import meals
+from api.stats import stats
 
 app = Flask(__name__)
 
@@ -23,6 +24,7 @@ app.register_blueprint(symptoms, url_prefix="/symptoms")
 app.register_blueprint(meals, url_prefix="/meals")
 app.register_blueprint(user_symptoms, url_prefix="/user/symptoms")
 app.register_blueprint(users, url_prefix="/users")
+app.register_blueprint(stats, url_prefix="/stats")
 
 cors = CORS(app)
 

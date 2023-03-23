@@ -1,7 +1,5 @@
-from flask import Blueprint
-from flask import request, jsonify
+from flask import Blueprint, request, jsonify
 from db import db
-from pymongo import MongoClient
 from datetime import datetime, timedelta
 from api.auth_middleware import require_token
 import bcrypt
