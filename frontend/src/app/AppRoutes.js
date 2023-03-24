@@ -26,7 +26,7 @@ const AppRoutes = () => {
         <Routes>
           <Route path="/profile" element={<Profile />} />
           <Route path="/add/symptom" element={<SymptomForm />} />
-          <Route path="/user/addFood" element={<Entry />}></Route>
+          <Route path="/user/addFood" element={<MealForm />}></Route>
           <Route path="/user/edit-profile" element={<EditProfile />}></Route>
           <Route path="/user/meal-entries" element={<MealEntryOverview />} />
           <Route

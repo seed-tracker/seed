@@ -169,7 +169,7 @@ function MealForm() {
           </label>
           <label>
             Food:
-            <Autocomplete value={foodItems} onChange={handleFoodItems} />
+            <Autocomplete value={currentFood} onChange={handleFoodItems} />
           </label>
 
           <button onClick={addFood}>Add Food</button>
