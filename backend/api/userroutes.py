@@ -82,7 +82,7 @@ def get_user_symptoms(user):
 def add_entry(user):
     try:
         username = user["username"]
-        entry_name = request.json.get("entry_name")
+        entry_name = request.json.get("entry_name") or "Breakfast"
         date = request.json.get("date")
         time = request.json.get("time")
 
@@ -93,8 +93,8 @@ def add_entry(user):
 
         meal_time = datetime.strptime(date + " " + time, "%Y-%m-%d %H:%M")
 
-        food_group = request.json.get("foodGroup")
-        food_items = request.json.get("foodItems")
+        groups = request.json.get("groups")
+        foods = request.json.get("foods")
         timelimit = meal_time + timedelta(hours=30)
 
         symptoms = db.user_symptoms.find(
@@ -109,8 +109,8 @@ def add_entry(user):
             "entry_name": entry_name,
             "username": username,
             "datetime": meal_time,
-            "groups": [food_group],
-            "foods": [food_items],
+            "groups": groups,
+            "foods": foods,
             "related_symptoms": symptom_list,
         }
 

@@ -15,6 +15,7 @@ const store = configureStore({
     correlations: correlationsSlice,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  devTools: true,
 });
 
 export default store;

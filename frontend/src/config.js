@@ -2,7 +2,7 @@ import axios from "axios";
 
 const token = window.localStorage.getItem("token");
 
-const client = axios.create({
+const apiClient = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
   timeout: 1000,
   headers: {
@@ -10,4 +10,4 @@ const client = axios.create({
   },
 });
 
-export default client;
+export default apiClient;
