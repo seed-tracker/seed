@@ -11,6 +11,10 @@ body {
   width: 100vw;
   height: 100vh;
   display: block;
-  background: cornflowerblue;
+  background: rgb(237, 241, 249);
   cursor: pointer;
+}
+
+text {
+  z-index: 1;
 }
