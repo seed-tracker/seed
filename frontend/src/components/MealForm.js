@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import Sidebar from "./Sidebar";
+import Autocomplete from './Autocomplete';
 import apiClient from "../config";
 
 function MealForm() {
@@ -97,8 +98,6 @@ function MealForm() {
         groups,
         entry_name: entryName,
       });
-
-      //navigate somewhere
     } catch (error) {
       console.error(error);
     }
@@ -170,7 +169,7 @@ function MealForm() {
           </label>
           <label>
             Food:
-            <input type="text" value={currentFood} onChange={handleFoodItems} />
+            <Autocomplete value={foodItems} onChange={handleFoodItems} />
           </label>
 
           <button onClick={addFood}>Add Food</button>
