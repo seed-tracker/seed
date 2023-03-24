@@ -27,6 +27,18 @@ export const editProfile = createAsyncThunk(
   }
 );
 
+// Thunk to to foods route for autocomplete React component
+export const autocompleteFood = createAsyncThunk("foods/autocomplete",
+async (query) => {
+  try{
+    // console.log(query)
+    const {data} = await apiClient.get(`foods/autocomplete?query=${query}`);
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 const entrySlice = createSlice({
   name: "entry",
   initialState: {},
@@ -35,6 +47,9 @@ const entrySlice = createSlice({
       return action.payload;
     });
     builder.addCase(editProfile.fulfilled, (state, action) => {
+      return action.payload;
+    });
+    builder.addCase(autocompleteFood.fulfilled, (state, action) => {
       return action.payload;
     });
   },

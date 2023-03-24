@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { addEntry } from "../store/entrySlice";
 import { me } from "../store/authSlice";
 import Sidebar from "./Sidebar";
+import Autocomplete from './Autocomplete';
 
 function Entry() {
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [foodGroup, setFoodGroup] = useState("");
-  const [foodItems, setFoodItems] = useState("");
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [foodGroup, setFoodGroup] = useState([]); 
+  const [foodItems, setFoodItems] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -48,9 +49,11 @@ function Entry() {
           entry: {
             date,
             time,
+          // make sure to push the foodGroups & foodItems into the array state
             foodGroup,
             foodItems,
-          },
+          }, 
+        // entryName
         })
       );
       setDate("");
@@ -102,7 +105,7 @@ function Entry() {
           </label>
           <label>
             Food:
-            <input type="text" value={foodItems} onChange={handleFoodItems} />
+            <Autocomplete value={foodItems} onChange={handleFoodItems} />
           </label>
           <button type="submit">Add Entry</button>
         </div>
