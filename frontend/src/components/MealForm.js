@@ -21,7 +21,6 @@ function Entry() {
   // Get username from auth state
   const username =
     useSelector((state) => {
-      console.log(state.auth.me);
       return state.auth.me.username;
     }) || "";
 
@@ -57,13 +56,6 @@ function Entry() {
         // entryName
         })
       );
-
-      console.log({
-        date,
-        time,
-        foodGroup,
-        foodItems,
-      });
       setDate("");
       setTime("");
       setFoodGroup("");
