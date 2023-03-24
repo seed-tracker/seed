@@ -8,7 +8,6 @@ salt = bcrypt.gensalt(5)
 
 users = Blueprint("users", __name__)
 
-
 # gets users without password displayed on browser
 @users.route("/", methods=["GET"])
 def get_users():
@@ -20,7 +19,6 @@ def get_users():
         return {"data": user_list}, 200
     else:
         return "No users found", 404
-
 
 # gets a single user
 @users.route("/single", methods=["GET"])
@@ -120,7 +118,6 @@ def add_entry(user):
     except Exception as e:
         print("Error! ", str(e))
         return "Error adding meal", 401
-
 
 @users.route("/editProfile", methods=["PUT"])
 @require_token

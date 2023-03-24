@@ -5,10 +5,12 @@ export const fetchUserCorrelations = createAsyncThunk(
   "get user's correlations",
   async (username) => {
     try {
-      //const {data} = await axios.get(`http://localhost:5000/deawdewd/correlations`)
-      //return data
+      const { data } = await axios.get(
+        `http://localhost:5000/deawdewd/correlations`
+      );
+      return data;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 );

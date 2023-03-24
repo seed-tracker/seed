@@ -2,7 +2,8 @@ from flask import Blueprint
 from db import db
 from flask import request, jsonify
 from datetime import datetime, timedelta
-from api.auth_middleware import require_token
+from api.auth_middleware import require_token, require_token_delete
+from bson.objectid import ObjectId
 
 meals = Blueprint("meals", __name__)
 
@@ -32,7 +33,7 @@ def get_user_meals(user):
             for meal in db.meals.aggregate(
                 [
                     {"$match": {"username": username}},
-                    {"$project": {"_id": 0, "related_symptoms": 0}},
+                    {"$project": {"_id": {"$toString": "$_id"},"entry_name": 1, "datetime": 1, "groups": 1, "foods": 1}},
                     {"$sort": {"datetime": -1}},
                     {"$skip": offset},
                     {"$limit": 20},
@@ -92,3 +93,17 @@ def add_entry(user):
     except Exception as e:
         print("Error! ", str(e))
         return "Error adding meal", 401
+
+# delete a meal in production.meals
+@meals.route("/user/delete/<string:mealId>", methods=["DELETE"])
+@require_token_delete
+def delete_user_meal(user, mealId):
+    try:
+        db.meals.delete_one({"_id": ObjectId(mealId)})
+        return "User's meal deleted successfully", 200
+    except Exception as e:
+        return {
+            "message": str(e),
+            "error": "Error deleting user's symptom",
+            "data": None,
+        }, 500

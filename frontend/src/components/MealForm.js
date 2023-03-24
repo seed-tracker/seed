@@ -98,8 +98,6 @@ function MealForm() {
         entry_name: entryName,
       });
 
-      console.log(res);
-
       //navigate somewhere
     } catch (error) {
       console.error(error);
