@@ -4,12 +4,15 @@ import { selectSymptoms, fetchAllSymptoms } from "../../store/symptomSlice";
 import { fetchUserCorrelations, selectUserCorrelations } from "../../store/correlationsSlice";
 import * as d3 from "d3";
 
-let categoryColorScale;
 
+const foodGroups=["Goat", "Fish", "Processed Foods", "Beans,Peas,and Soy","Fruit", "Pork", "Beef", "Milk,Yogurt,and Cheese",
+"Nuts and Seeds", "Vegetables, Starchy", "Grains, Gluten-Free", "Shellfish", "Lamb", "Refined Sugars", "Vegetables, Non-Starchy",
+"Eggs", "Caffeinated Beverages", "Grains, Gluten", "Other  Seafoods", "Poultry"]
 const BubbleChart = () => {
 
   const dispatch = useDispatch()
-  const datas = useSelector(selectUserCorrelations);
+  const datas = useSelector(selectUserCorrelations)
+  console.log("correlations", datas);
   const symptoms = useSelector(selectSymptoms)
   console.log("symptoms", symptoms);
 
@@ -29,9 +32,13 @@ console.log(result)
 
   // const count = datas.map((obj) => obj.count);
 
-  // const top_foods = datas.flatMap((obj) => obj.top_foods);
- 
+  const top_foods = datas.flatMap((obj) => obj.top_foods);
+  console.log("top_foods", top_foods); // ~ nodes
+  console.log("top_foods", top_foods.length); // ~ nodes
+
   const top_groups = datas.flatMap((obj) => obj.top_groups);
+  console.log("top_groups", top_groups);
+
   const colorPalette = d3.schemeCategory10
   const symptomColors = {};
 
