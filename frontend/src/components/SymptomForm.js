@@ -39,6 +39,10 @@ const SymptomForm = () => {
 
   useEffect(() => {
     fetchSymptoms();
+    const today = new Date().toISOString();
+    setTime(today.substring(11, 16));
+    setDate(today.substring(0, 10));
+    setSeverity(5);
   }, []);
 
   const fetchSymptoms = async () => {
@@ -89,7 +93,7 @@ const SymptomForm = () => {
           </select>
         </div>
         <label htmlFor="severity">
-          Severity:
+          Severity: {severity}
           <input
             type="range"
             min="0"

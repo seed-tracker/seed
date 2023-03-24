@@ -4,7 +4,7 @@ import { me } from "../store/authSlice";
 import Sidebar from "./Sidebar";
 import apiClient from "../config";
 
-function Entry() {
+function MealForm() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [currentGroup, setCurrentGroup] = useState("");
@@ -202,7 +202,7 @@ function Entry() {
   );
 }
 
-export default Entry;
+export default MealForm;
 
 //need to figure out how to autopopulate the food entry
 //slider is a component
