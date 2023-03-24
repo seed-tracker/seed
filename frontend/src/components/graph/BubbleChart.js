@@ -1,120 +1,96 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectSymptoms, fetchAllSymptoms } from "../../store/symptomSlice";
 import { fetchUserCorrelations, selectUserCorrelations } from "../../store/correlationsSlice";
 import * as d3 from "d3";
 
-
-const foodGroups=["Goat", "Fish", "Processed Foods", "Beans,Peas,and Soy","Fruit", "Pork", "Beef", "Milk,Yogurt,and Cheese",
-"Nuts and Seeds", "Vegetables, Starchy", "Grains, Gluten-Free", "Shellfish", "Lamb", "Refined Sugars", "Vegetables, Non-Starchy",
-"Eggs", "Caffeinated Beverages", "Grains, Gluten", "Other  Seafoods", "Poultry"]
-const BubbleChart = () => {
-
-  const dispatch = useDispatch()
-  const datas = useSelector(selectUserCorrelations)
-  console.log("correlations", datas);
-  const symptoms = useSelector(selectSymptoms)
-  console.log("symptoms", symptoms);
+const CirclePacking = () => {
+  const dispatch = useDispatch();
+  const datas = useSelector(selectUserCorrelations);
+  const symptoms = useSelector(selectSymptoms);
 
   function getSymptomsAndTopGroups(data) {
     const result = {};
     data.forEach((obj) => {
       const symptom = obj.symptom;
-      const topGroups = obj.top_groups.map((group) => group.name);
-      result[symptom] = topGroups;
+      const topGroups = obj.top_groups?.map((group) => group.name) ?? []; 
+      const lifts = obj.top_groups?.map((group) => group.lift) ?? []; 
+      result[symptom] = { topGroups, lifts }; 
     });
     return result;
   }
+
   const result = getSymptomsAndTopGroups(datas);
-console.log(result)
-  const userSymptoms = datas.map((obj) => obj.symptom);
-  console.log("userSymptoms", userSymptoms);
+  // console.log(result)
 
-  // const count = datas.map((obj) => obj.count);
+const userSymptoms = datas.map((obj) => obj.symptom);
+console.log(userSymptoms)
+  const svgRef = useRef();
 
-  const top_foods = datas.flatMap((obj) => obj.top_foods);
-  console.log("top_foods", top_foods); // ~ nodes
-  console.log("top_foods", top_foods.length); // ~ nodes
+  useEffect(() => {
+    dispatch(fetchAllSymptoms());
+    dispatch(fetchUserCorrelations());
+  }, [dispatch]);
 
-  const top_groups = datas.flatMap((obj) => obj.top_groups);
-  console.log("top_groups", top_groups);
+  useEffect(() => {
+    const svg = d3.select(svgRef.current);
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+    const pack = data => d3.pack()
+      .size([width - 2, height - 2])
+      .padding(3)
+      (d3.hierarchy({ children: data })
+        .sum(d => d.value))
 
-  const colorPalette = d3.schemeCategory10
-  const symptomColors = {};
+    const colorPalette = d3.schemeCategory10;
+    const symptomColors = {};
+    for (let i = 0; i < symptoms.length; i++) {
+      const symptomName = symptoms[i].name;
+      const colorIndex = i % colorPalette.length;
+      symptomColors[symptomName] = colorPalette[colorIndex];
+    }
 
-  for (let i = 0; i < symptoms.length; i++) {
-    const symptomName = symptoms[i].name;
-    const colorIndex = i % colorPalette.length;
-    symptomColors[symptomName] = colorPalette[colorIndex];
-  }
+  const root = pack(userSymptoms.map((d, i) => {
+  const symptomName = d;
+  const { topGroups, lifts } = result[symptomName]; 
+  const color = symptomColors[symptomName];
+  return {
+    name: symptomName,
+    value: topGroups.length ? topGroups.length : 1,
+    color: color,
+    children: topGroups.map((d, i) => ({
+      name: d,
+      value: lifts[i], // use lift value as node value
+      color: color,
+    })),
+  };
+}));
+    // let g = svg.select("g")
+    // if (g.empty()) {
+    //   g = svg.append("g")
+    // }
+    const leaf = svg.selectAll("g")
+      .data(root.leaves())
+      .join("g")
+      .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`);
+console.log(leaf)
+    leaf.append("circle")
+      .attr("r", d => d.r)
+      .attr("fill", d => d.data.color)
+      .attr("stroke", "crimson")
+      .attr("stroke-width", d=> d.data.value > 1.01 ? 10+"px" : 5+"px");
 
-useEffect(() => {
-  dispatch(fetchAllSymptoms())
-  dispatch(fetchUserCorrelations())
-}, [dispatch])
+    leaf.append("text")
+      .attr("text-anchor", "middle")
+      .attr("font-size", d => "12px")
+      .attr("dy", ".35em")
+      .text(d => d.data.name);
+  }, [symptoms, userSymptoms, result]);
 
-useEffect(() => {
-  const svg = d3.select("#graph");
-  const svgWidth = parseInt(svg.style("width"), 10);
-  const svgHeight = parseInt(svg.style("height"), 10);
-  const centerX = svgWidth / 2;
-  const centerY = svgHeight / 2;
+  return <svg ref={svgRef} width="400" height="400"></svg>;
+};
 
-  const simulation = d3.forceSimulation(userSymptoms.map((d, i) => ({ id: i, symptom: d })))
-    .force("center", d3.forceCenter(centerX, centerY))
-    .force("collision", d3.forceCollide().radius(100))
-    .on("tick", () => {
-      circles.attr("cx", d => d.x)
-             .attr("cy", d => d.y);
-      //not updating squares' position correctly...why??
-      labels.attr("x", d => {
-        // const index = userSymptoms.findIndex(s => result[s].includes(d.name));
-        // const angle = 2 * Math.PI * index / userSymptoms.length;
-        // const radius = 100;
-        // const x = centerX + radius * Math.cos(angle);
-        const x = d.cx
-          // console.log(index)
-        return x;
-      })
-    
-      .attr("y", d => {
-        // const index = userSymptoms.findIndex(s => result[s].includes(d.name));
-        // const angle = 2 * Math.PI * index / userSymptoms.length;
-        // const radius = 100;
-        // const y = centerY + radius * Math.sin(angle);
-        const y = d.cy
-        return y;
-      });
-    });
-
-  const circles = svg.selectAll("circle")
-    .data(simulation.nodes())
-    .join("circle")
-    .attr("r", 30)
-    .attr("fill", d => symptomColors[d.symptom])
-    .attr("stroke", "white")
-    .attr("stroke-width", 1)
-
-
-    const labels = svg.selectAll("text")
-    .data(top_groups)
-    .join("text")
-    .attr("font-size", "14px")
-    .attr("text-anchor", "middle")
-    .attr("fill", d => {
-      const symptom = Object.keys(result).find(key => result[key].includes(d.name));
-      return symptomColors[symptom];
-    })
-    .text(d => d.name)
-  .attr("x", d => d.x + 30)
-    .attr("y", d => d.y - 10);
-  
-}, [top_groups,symptoms, userSymptoms, symptomColors, result]);
-  return (
-    <svg id="graph"></svg>
-  )
-}
-export default BubbleChart
+export default CirclePacking;
 
 //select,data,join is combo rather than enter, append b/c if you use enter you have to manually update when data changes
 //select,data,join auto updates when data changes
