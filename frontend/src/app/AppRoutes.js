@@ -7,7 +7,7 @@ import Signup from "../components/Signup";
 import Profile from "../components/Profile";
 import Home from "../components/Home";
 import SymptomForm from "../components/SymptomForm";
-import Entry from "../components/MealForm";
+import MealForm from "../components/MealForm";
 import EditProfile from "../components/EditProfile";
 import MealEntryOverview from "../components/MealEntryOverview";
 import SymptomEntryOverview from "../components/SymtomEntryOverview";
