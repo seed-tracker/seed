@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { me } from "../store/authSlice";
 import BubbleChart from "./graph/BubbleChart";
 import Sidebar from "./Sidebar";
+import ScatterPlot from "./graph/ScatterPlot";
 
 /**
  * Placeholder component for the userprofile page
@@ -20,6 +21,7 @@ const Profile = () => {
         <Sidebar />
         <h2>PROFILE INFO WOULD GO HERE</h2>
         <BubbleChart />
+        <ScatterPlot />
       </main>
     </section>
   );
