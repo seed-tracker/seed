@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addEntry } from "../store/entrySlice";
 import { me } from "../store/authSlice";
 import Sidebar from "./Sidebar";
 import Autocomplete from './Autocomplete';
+import apiClient from "../config";
 
-function Entry() {
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [foodGroup, setFoodGroup] = useState([]); 
-  const [foodItems, setFoodItems] = useState([]);
+function MealForm() {
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [currentGroup, setCurrentGroup] = useState("");
+  const [currentFood, setCurrentFood] = useState("");
+  const [allGroups, setAllGroups] = useState(null);
+  const [foodArray, setFoodArray] = useState([]);
+  const [groupArray, setGroupArray] = useState([]);
+  const [entryName, setEntryName] = useState("");
 
   const dispatch = useDispatch();
 
@@ -18,11 +22,39 @@ function Entry() {
     dispatch(me());
   }, [dispatch]);
 
-  // Get username from auth state
-  const username =
-    useSelector((state) => {
-      return state.auth.me.username;
-    }) || "";
+  //fetch food groups when the component mounts
+  useEffect(() => {
+    const today = new Date().toISOString();
+    setTime(today.substring(11, 16));
+    setDate(today.substring(0, 10));
+
+    fetchGroups();
+  }, []);
+
+  //fetch groups from api
+  const fetchGroups = async () => {
+    try {
+      const { data } = await apiClient.get("groups/");
+
+      if (data && data["data"]) {
+        setAllGroups(data["data"]);
+        setCurrentGroup(data["data"][0]["name"]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const addFood = (e) => {
+    e.preventDefault();
+    if (currentFood.length && currentGroup.length) {
+      const foods = foodArray;
+      const groups = groupArray;
+      setFoodArray([...foods, currentFood]);
+      setGroupArray([...groups, currentGroup]);
+      setCurrentFood("");
+    }
+  };
 
   const handleDateChange = (event) => {
     setDate(event.target.value);
@@ -33,88 +65,141 @@ function Entry() {
   };
 
   const handleFoodGroupChange = (event) => {
-    setFoodGroup(event.target.value);
+    setCurrentGroup(event.target.value);
   };
 
   const handleFoodItems = (event) => {
-    setFoodItems(event.target.value);
+    setCurrentFood(event.target.value);
+  };
+
+  const handleNameChange = (event) => {
+    setEntryName(event.target.value);
+  };
+
+  const makeUnique = (array) => {
+    return array.filter((item, idx) => array.indexOf(item) === idx);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await dispatch(
-        addEntry({
-          username,
-          entry: {
-            date,
-            time,
-          // make sure to push the foodGroups & foodItems into the array state
-            foodGroup,
-            foodItems,
-          }, 
-        // entryName
-        })
-      );
-      setDate("");
-      setTime("");
-      setFoodGroup("");
-      setFoodItems("");
+      const foods = makeUnique([...foodArray]);
+      const groups = makeUnique([...groupArray]);
+
+      if (currentGroup.length && currentFood.length) {
+        foods.push(currentFood);
+        groups.push(currentGroup);
+      }
+
+      const res = await apiClient.post("users/addMeal", {
+        date,
+        time,
+        foods,
+        groups,
+        entry_name: entryName,
+      });
     } catch (error) {
       console.error(error);
     }
   };
 
+  const AddedFoods = () => {
+    return (
+      <table>
+        <tr>
+          <th>Food</th>
+          <th>Group</th>
+        </tr>
+        {foodArray.length &&
+          foodArray.map((food, i) => (
+            <tr key={i}>
+              <td>{food}</td>
+              <td>{groupArray[i]}</td>
+            </tr>
+          ))}
+      </table>
+    );
+  };
+
   return (
     <main>
       <Sidebar />
-      <form onSubmit={handleSubmit}>
+      <form>
         <div>
-          <label>
-            Date:
-            <input type="date" value={date} onChange={handleDateChange} />
-          </label>
-          <label>
-            Time:
-            <input type="time" value={time} onChange={handleTimeChange} />
-          </label>
+          <div>
+            <label>
+              Date:
+              <input
+                type="date"
+                value={date}
+                onChange={handleDateChange}
+                required
+              />
+            </label>
+            <label>
+              Time:
+              <input
+                type="time"
+                value={time}
+                onChange={handleTimeChange}
+                required
+              />
+            </label>
+            <label>
+              Entry name:
+              <input
+                type="text"
+                value={entryName}
+                onChange={handleNameChange}
+                required
+              />
+            </label>
+          </div>
           <label>
             Food Group:
-            <select value={foodGroup} onChange={handleFoodGroupChange}>
-              <option value="goat">Goat</option>
-              <option value="fish">Fish</option>
-              <option value="processed">Processed Foods</option>
-              <option value="beans">Beans, Peas, and Soy </option>
-              <option value="fruit">Fruit</option>
-              <option value="pork">Pork</option>
-              <option value="beef">Beef</option>
-              <option value="dairy">Milk, Yogurt, and Cheese</option>
-              <option value="nuts">Nuts and Seeds</option>
-              <option value="starchveg">Vegetables, Starchy</option>
-              <option value="glutenfree">Grains, Gluten-Free</option>
-              <option value="shellfish">Shellfish</option>
-              <option value="lamb">Lamb</option>
-              <option value="sugar">Refined Sugars</option>
-              <option value="nonstarchveg">Vegetables, Non-Starchy</option>
-              <option value="eggs">Eggs</option>
-              <option value="caffeine">Caffeinated Beverages</option>
-              <option value="gluten">Grains, Gluten</option>
-              <option value="otherseafoods">Other Seafoods</option>
-              <option value="poultry">Poultry</option>
+            <select value={currentGroup} onChange={handleFoodGroupChange}>
+              {allGroups &&
+                allGroups.length &&
+                allGroups.map((group) => (
+                  <option value={group["name"]} key={group["id"]}>
+                    {group["name"]}
+                  </option>
+                ))}
             </select>
           </label>
           <label>
             Food:
             <Autocomplete value={foodItems} onChange={handleFoodItems} />
           </label>
-          <button type="submit">Add Entry</button>
+
+          <button onClick={addFood}>Add Food</button>
+          <button
+            onClick={handleSubmit}
+            disabled={
+              !(
+                foodArray.length &&
+                time.length &&
+                date.length &&
+                entryName.length
+              )
+            }
+          >
+            Submit Meal
+          </button>
+
+          {foodArray.length ? (
+            <div>
+              <br></br>
+              Added foods: <AddedFoods />
+            </div>
+          ) : null}
         </div>
       </form>
     </main>
   );
 }
 
-export default Entry;
+export default MealForm;
 
 //need to figure out how to autopopulate the food entry
 //slider is a component

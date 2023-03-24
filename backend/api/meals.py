@@ -68,24 +68,22 @@ def add_entry(user):
 
         meal_time = datetime.strptime(date + " " + time, "%Y-%m-%d %H:%M")
 
-        food_group = request.json.get("foodGroup")
-        food_items = request.json.get("foodItems")
+        foods = request.json.get("foods")
+        groups = request.json.get("groups")
         timelimit = meal_time + timedelta(hours=30)
 
         symptoms = db.user_symptoms.find(
             {"username": username, "datetime": {"$gte": meal_time, "$lte": timelimit}}
         )
 
-        symptom_list = []
-        for symptom in symptoms:
-            symptom_list.append(symptom["_id"])
+        symptom_list = [s["_id"] for s in symptoms]
 
         entry = {
             "entry_name": entry_name,
             "username": username,
             "datetime": meal_time,
-            "groups": [food_group],
-            "foods": [food_items],
+            "groups": groups,
+            "foods": foods,
             "related_symptoms": symptom_list,
         }
 

@@ -17,6 +17,7 @@ const store = configureStore({
     allEntries: allEntriesSlice,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  devTools: true,
 });
 
 export default store;

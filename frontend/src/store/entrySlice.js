@@ -1,15 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../config";
 
-export const addEntry = createAsyncThunk("user/addFood", async ({ entry }) => {
-  try {
-    const { data } = await apiClient.post("users/addMeal", entry);
-    return data;
-  } catch (err) {
-    console.error(err);
-  }
-});
-
 export const editProfile = createAsyncThunk(
   "user/editProfile",
   async ({ username, name, email, password }) => {
@@ -43,9 +34,6 @@ const entrySlice = createSlice({
   name: "entry",
   initialState: {},
   extraReducers: (builder) => {
-    builder.addCase(addEntry.fulfilled, (state, action) => {
-      return action.payload;
-    });
     builder.addCase(editProfile.fulfilled, (state, action) => {
       return action.payload;
     });
