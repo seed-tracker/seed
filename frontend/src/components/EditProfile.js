@@ -1,10 +1,11 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { editProfile } from "../store/entrySlice";
 import { selectAuthUser } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import apiClient from "../config";
 
 
 function EditProfile() {
