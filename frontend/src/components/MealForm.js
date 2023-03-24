@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addEntry } from "../store/entrySlice";
 import { me } from "../store/authSlice";
 import Sidebar from "./Sidebar";
+import Autocomplete from './Autocomplete';
 
 function Entry() {
   const [date, setDate] = useState('');
@@ -112,7 +113,7 @@ function Entry() {
           </label>
           <label>
             Food:
-            <input type="text" value={foodItems} onChange={handleFoodItems} />
+            <Autocomplete value={foodItems} onChange={handleFoodItems} />
           </label>
           <button type="submit">Add Entry</button>
         </div>
