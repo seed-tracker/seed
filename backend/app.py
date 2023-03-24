@@ -16,6 +16,8 @@ from api.meals import meals
 
 app = Flask(__name__)
 
+cors = CORS(app)
+
 app.register_blueprint(auth, url_prefix="/auth")
 app.register_blueprint(groups, url_prefix="/groups")
 app.register_blueprint(foods, url_prefix="/foods")
@@ -24,7 +26,7 @@ app.register_blueprint(meals, url_prefix="/meals")
 app.register_blueprint(user_symptoms, url_prefix="/user/symptoms")
 app.register_blueprint(users, url_prefix="/users")
 
-cors = CORS(app)
+
 
 
 # to protect the app

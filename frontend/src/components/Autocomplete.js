@@ -18,7 +18,7 @@ const Autocomplete = () => {
     // console.log("from React",data)
     //* map data so it's just an array of strings food names. No objects.
     const suggestionArray = data?.map((object) => object.name)
-    // console.log(suggestionArray)
+    console.log(suggestionArray)
     /* ["Lamb or mutton loaf", ow, woetewg,] */
     if (query.length > 1) {
       const filterSuggestions = suggestionArray?.filter(
