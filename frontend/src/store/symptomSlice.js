@@ -5,7 +5,7 @@ export const fetchAllSymptoms = createAsyncThunk(
   "get/allSymptoms",
   async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/symptoms/");
+      const { data } = await apiClient.get("symptoms/");
       return data;
     } catch (err) {
       console.log(err);
@@ -32,6 +32,9 @@ export const symptomSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(addSymptomEntry.fulfilled, (state, action) => {
       state.push(action.payload);
+    })
+    .addCase(fetchAllSymptoms.fulfilled, (state, action) => {
+      return action.payload;
     });
   },
 });
