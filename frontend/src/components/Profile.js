@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { me } from "../store/authSlice";
-import BubbleChart from "./graph/BubbleChart";
+import CirclePacking from "./graph/CirclePacking";
 import Sidebar from "./Sidebar";
 
 /**
@@ -15,13 +15,11 @@ const Profile = () => {
   }, [dispatch]);
 
   return (
-    <section>
-      <main>
-        <Sidebar />
-        <h2>PROFILE INFO WOULD GO HERE</h2>
-        <BubbleChart />
-      </main>
-    </section>
+    <>
+      <Sidebar />
+      <h2>PROFILE INFO WOULD GO HERE</h2>
+      <CirclePacking />
+    </>
   );
 };
 
