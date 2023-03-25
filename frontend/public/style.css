@@ -7,9 +7,7 @@ body {
   min-height: 100vh;
 }
 
-#graph {
-  width: 100vw;
-  height: 100vh;
+#graph-area {
   display: block;
   background: cornflowerblue;
   cursor: pointer;
