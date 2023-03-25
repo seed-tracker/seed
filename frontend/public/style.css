@@ -9,6 +9,10 @@ body {
 
 #graph-area {
   display: block;
-  background: cornflowerblue;
+  background: rgb(237, 241, 249);
   cursor: pointer;
+}
+
+text {
+  z-index: 1;
 }

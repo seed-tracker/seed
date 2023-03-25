@@ -1,108 +1,105 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectSymptoms, fetchAllSymptoms } from "../../store/symptomSlice";
 import { fetchUserCorrelations, selectUserCorrelations } from "../../store/correlationsSlice";
 import * as d3 from "d3";
 
-const BubbleChart = () => {
-  const dispatch = useDispatch()
-  const datas = useSelector(selectUserCorrelations)
-  console.log("correlations", datas);
-  const symptoms = useSelector(selectSymptoms)
-  console.log("symptoms", symptoms);
+const CirclePacking = () => {
+  const dispatch = useDispatch();
+  const datas = useSelector(selectUserCorrelations);
+  const symptoms = useSelector(selectSymptoms);
 
-  const userSymptoms = datas.map((obj) => obj.symptom);
-  console.log("userSymptoms", userSymptoms);
-
-  const count = datas.map((obj) => obj.count);
-
-  const top_foods = datas.flatMap((obj) => obj.top_foods);
-  console.log("top_foods", top_foods); // ~ nodes
-  console.log("top_foods", top_foods.length); // ~ nodes
-
-  const top_groups = datas.flatMap((obj) => obj.top_groups);
-  console.log("top_groups", top_groups);
-
-  const colorPalette = d3.schemeCategory10
-  console.log("colorPalette", colorPalette);
-
-  const symptomColors = {};
-
-  for (let i = 0; i < symptoms.length; i++) {
-    const symptomName = symptoms[i].name;
-    const colorIndex = i % colorPalette.length;
-    symptomColors[symptomName] = colorPalette[colorIndex];
+  function getSymptomsAndTopGroups(data) {
+    const result = {};
+    data.forEach((obj) => {
+      const symptom = obj.symptom;
+      const topGroups = obj.top_groups?.map((group) => group.name) ?? []; 
+      const lifts = obj.top_groups?.map((group) => group.lift) ?? []; 
+      result[symptom] = { topGroups, lifts }; 
+    });
+    return result;
   }
 
-useEffect(() => {
-  dispatch(fetchAllSymptoms())
-  dispatch(fetchUserCorrelations())
-}, [dispatch])
+  const result = getSymptomsAndTopGroups(datas);
+  // console.log(result)
 
-useEffect(() => {
-  const svg = d3.select("#graph");
-  const svgWidth = parseInt(svg.style("width"), 10);
-  const svgHeight = parseInt(svg.style("height"), 10);
-  const centerX = svgWidth / 2;
-  const centerY = svgHeight / 2;
+const userSymptoms = datas.map((obj) => obj.symptom);
+console.log(userSymptoms)
+  const svgRef = useRef();
 
-  const simulation = d3.forceSimulation(userSymptoms.map((d, i) => ({ id: i, symptom: d })))
-    .force("center", d3.forceCenter(centerX, centerY))
-    .force("collision", d3.forceCollide().radius(100))
-    .on("tick", () => {
-      circles.attr("cx", d => d.x)
-             .attr("cy", d => d.y);
-    });
+  useEffect(() => {
+    dispatch(fetchAllSymptoms());
+    dispatch(fetchUserCorrelations());
+  }, [dispatch]);
 
-    const simulation2 = d3.forceSimulation(top_foods.map((d, i) => ({ id: i, food: d })))
-      .force("center", d3.forceCenter(centerX, centerY))
-      .force("collision", d3.forceCollide())
-      // .on("tick", () => {
-      //   squares.attr("rx", d => d.x)
-      //          .attr("ry", d => d.y);
-      // })
+  useEffect(() => {
+    const svg = d3.select(svgRef.current);
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+    const pack = data => d3.pack()
+      .size([width - 2, height - 2])
+      .padding(3)
+      (d3.hierarchy({ children: data })
+        .sum(d => d.value))
 
-      const squareSize = 100
-      const squares = svg.selectAll("rect")
-      .data(top_foods);
+    const colorPalette = d3.schemeCategory10;
+    const symptomColors = {};
+    for (let i = 0; i < symptoms.length; i++) {
+      const symptomName = symptoms[i].name;
+      const colorIndex = i % colorPalette.length;
+      symptomColors[symptomName] = colorPalette[colorIndex];
+    }
 
+  const root = pack(userSymptoms.map((d, i) => {
+  const symptomName = d;
+  const { topGroups, lifts } = result[symptomName]; 
+  const color = symptomColors[symptomName];
+  return {
+    name: symptomName,
+    value: topGroups.length ? topGroups.length : 1,
+    color: color,
+    children: topGroups.map((d, i) => ({
+      name: d,
+      value: lifts[i], // use lift value as node value
+      color: color,
+    })),
+  };
+}));
+    // let g = svg.select("g")
+    // if (g.empty()) {
+    //   g = svg.append("g")
+    // }
+    const leaf = svg.selectAll("g")
+      .data(root.leaves())
+      .join("g")
+      .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`);
+console.log(leaf)
+    leaf.append("circle")
+      .attr("r", d => d.r)
+      .attr("fill", d => d.data.color)
+      .attr("stroke", "crimson")
+      .attr("stroke-width", d=> d.data.value > 1.01 ? 10+"px" : 5+"px");
 
-    squares.enter()
-      .append("rect")
-      .attr("width", squareSize)
-      .attr("height", squareSize)
-      .attr("fill", "pink")
-      .attr("x", (d, i) => i * squareSize * 2)
-      .attr("y", 0);
+    leaf.append("text")
+      .attr("text-anchor", "middle")
+      .attr("font-size", d => "12px")
+      .attr("dy", ".35em")
+      .text(d => d.data.name);
+  }, [symptoms, userSymptoms, result]);
 
+  return <svg ref={svgRef} width="400" height="400"></svg>;
+};
 
-    squares.attr("fill", "blue")
-      .attr("x", (d, i) => i * squareSize)
-      .attr("y", 0);
-
-
-    squares.exit().remove();
-
-  const circles = svg.selectAll("circle")
-    .data(simulation.nodes())
-    .join("circle")
-    .attr("r", 20)
-    .attr("fill", d => symptomColors[d.symptom])
-    .attr("stroke", "white")
-    .attr("stroke-width", 2);
-}, [symptoms, userSymptoms, symptomColors, top_foods]);
-
-
-
+export default CirclePacking;
 
 //select,data,join is combo rather than enter, append b/c if you use enter you have to manually update when data changes
 //select,data,join auto updates when data changes
 //datum is d
 //each mark/variable we want to visualize there should a 1:1 to an attribute with an arrow function
 
-  return (
-    <svg id="graph"></svg>
-  )
-}
+// const foodGroups=["Goat", "Fish", "Processed Foods", "Beans,Peas,and Soy","Fruit", "Pork", "Beef", "Milk,Yogurt,and Cheese",
+// "Nuts and Seeds", "Vegetables, Starchy", "Grains, Gluten-Free", "Shellfish", "Lamb", "Refined Sugars", "Vegetables, Non-Starchy",
+// "Eggs", "Caffeinated Beverages", "Grains, Gluten", "Other  Seafoods", "Poultry"]
 
-export default BubbleChart
+// const colors = ['#ffcc00', '#ff6666', '#cc0066', '#66cccc', '#f688bb', '#65587f', '#baf1a1', '#333333', '#75b79e',
+// '#66cccc', '#9de3d0', '#f1935c', '#0c7b93', '#eab0d9', '#baf1a1', '#9399ff','#06AED5', '#086788', '#F0C808', '#DD1C1A']
