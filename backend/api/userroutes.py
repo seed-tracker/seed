@@ -32,7 +32,6 @@ def get_user(user):
     else:
         return "User not found", 404
 
-
 # gets each single user's symptoms, paginated
 @users.route("/symptoms", methods=["GET"])
 @require_token

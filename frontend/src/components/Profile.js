@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { me } from "../store/authSlice";
 import { useSelector } from "react-redux";
-import BubbleChart from "./graph/BubbleChart";
 import Sidebar from "./Sidebar";
 import StatsAndFacts from "./StatsAndFacts";
 import {
   fetchUserCorrelations,
   selectUserCorrelations,
 } from "../store/correlationsSlice";
+import CirclePacking from "./graph/CirclePacking";
+
 
 /**
  * Placeholder component for the userprofile page
@@ -27,8 +29,11 @@ const Profile = () => {
       <section>
         <StatsAndFacts />
       </section>
+      <section>
+        <CirclePacking />
+      </section>
 
-      <section>{!!correlationsLoaded && <BubbleChart />}</section>
+      <section>{!!correlationsLoaded && <CirclePacking />}</section>
     </main>
   );
 };
