@@ -128,11 +128,7 @@ const CirclePacking = () => {
     // and stroke color and width based on lift value (higher values have thicker stroke)
     leaf.append("circle")
       .attr("r", (d) => d.r)
-      .attr("fill", (d) => d.data.color)
-      .attr("stroke", "crimson")
-      .attr("stroke-width", (d) =>
-        d.data.value > 1.01 ? 10 + "px" : 5 + "px"
-      );
+      .attr("fill", (d) => d.data.color);
 
     leaf.append("text") // Add text labels to each leaf node, with the symptom name as the label text
       .attr("text-anchor", "middle")
