@@ -1,7 +1,5 @@
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
 from db import db
-from flask import request
-from flask import jsonify
 from datetime import datetime, timedelta
 from api.auth_middleware import require_token
 import bcrypt
@@ -9,7 +7,6 @@ import bcrypt
 salt = bcrypt.gensalt(5)
 
 users = Blueprint("users", __name__)
-
 
 # gets users without password displayed on browser
 @users.route("/", methods=["GET"])
@@ -22,7 +19,6 @@ def get_users():
         return {"data": user_list}, 200
     else:
         return "No users found", 404
-
 
 # gets a single user
 @users.route("/single", methods=["GET"])
@@ -83,7 +79,7 @@ def get_user_symptoms(user):
 def add_entry(user):
     try:
         username = user["username"]
-        entry_name = request.json.get("entry_name")
+        entry_name = request.json.get("entry_name") or "Breakfast"
         date = request.json.get("date")
         time = request.json.get("time")
 
@@ -94,8 +90,8 @@ def add_entry(user):
 
         meal_time = datetime.strptime(date + " " + time, "%Y-%m-%d %H:%M")
 
-        food_group = request.json.get("foodGroup")
-        food_items = request.json.get("foodItems")
+        groups = request.json.get("groups")
+        foods = request.json.get("foods")
         timelimit = meal_time + timedelta(hours=30)
 
         symptoms = db.user_symptoms.find(
@@ -110,8 +106,8 @@ def add_entry(user):
             "entry_name": entry_name,
             "username": username,
             "datetime": meal_time,
-            "groups": [food_group],
-            "foods": [food_items],
+            "groups": groups,
+            "foods": foods,
             "related_symptoms": symptom_list,
         }
 
@@ -122,7 +118,6 @@ def add_entry(user):
         print("Error! ", str(e))
         return "Error adding meal", 401
 
-
 @users.route("/editProfile", methods=["PUT"])
 @require_token
 def edit_profile(user):
@@ -131,17 +126,18 @@ def edit_profile(user):
         request_data = request.get_json()
         if request_data is None:
             return jsonify({"error": "Invalid request body"}), 400
-        hashedPassword = bcrypt.hashpw(request_data["password"].encode("utf-8"), salt)
+
+        set_dict = {"name": request_data["name"], "email": request_data["email"]}
+
+        if request_data["password"] and len(request_data["password"]) > 5:
+            set_dict["password"] = bcrypt.hashpw(
+                request_data["password"].encode("utf-8"), salt
+            )
+
         # Find the user by their username and update their information
         updated_user = db.users.find_one_and_update(
             {"username": username},
-            {
-                "$set": {
-                    "password": hashedPassword.decode("utf-8"),
-                    "name": request_data["name"],
-                    "email": request_data["email"],
-                }
-            },
+            {"$set": set_dict},
             return_document=True,
         )
 

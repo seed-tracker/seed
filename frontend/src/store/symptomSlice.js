@@ -20,7 +20,7 @@ export const addSymptomEntry = createAsyncThunk(
       const { data } = await apiClient.post(`user/symptoms/`, symptomEntry);
       return data;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 );

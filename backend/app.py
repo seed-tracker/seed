@@ -13,8 +13,11 @@ from api.symptoms import symptoms
 from api.user_symptoms import user_symptoms
 from api.auth import auth
 from api.meals import meals
+from api.stats import stats
 
 app = Flask(__name__)
+
+cors = CORS(app)
 
 app.register_blueprint(auth, url_prefix="/auth")
 app.register_blueprint(groups, url_prefix="/groups")
@@ -23,12 +26,13 @@ app.register_blueprint(symptoms, url_prefix="/symptoms")
 app.register_blueprint(meals, url_prefix="/meals")
 app.register_blueprint(user_symptoms, url_prefix="/user/symptoms")
 app.register_blueprint(users, url_prefix="/users")
+app.register_blueprint(stats, url_prefix="/stats")
 
-cors = CORS(app)
+
 
 
 # to protect the app
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(port=5000, debug=True)

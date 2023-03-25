@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../config";
 const TOKEN = "token";
+
 /**
  * async thunk that authorizes a user through an AJAX request
  * receives the token from local storage when user is logged in
@@ -36,7 +37,7 @@ export const login = createAsyncThunk(
   async (userInfo, thunkAPI) => {
     try {
       const { data } = await apiClient.post("auth/login", userInfo);
-      console.log(data);
+
       window.localStorage.setItem(TOKEN, data.token);
       thunkAPI.dispatch(me());
     } catch (err) {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import { me } from "../store/authSlice";
 import { addSymptomEntry } from "../store/symptomSlice";
 import Sidebar from "./Sidebar";
@@ -14,7 +15,6 @@ const SymptomForm = () => {
   const [symptoms, setSymptoms] = useState(null);
 
   const user = useSelector((state) => state.auth.me);
-  console.log(user.username);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,6 +39,10 @@ const SymptomForm = () => {
 
   useEffect(() => {
     fetchSymptoms();
+    const today = new Date().toISOString();
+    setTime(today.substring(11, 16));
+    setDate(today.substring(0, 10));
+    setSeverity(5);
   }, []);
 
   const fetchSymptoms = async () => {
@@ -89,7 +93,7 @@ const SymptomForm = () => {
           </select>
         </div>
         <label htmlFor="severity">
-          Severity:
+          Severity: {severity}
           <input
             type="range"
             min="0"
