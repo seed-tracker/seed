@@ -142,6 +142,9 @@ def get_monthly_data(user):
 
         correlations = list(db.correlations.aggregate(pipeline))
 
+        if not correlations or len(correlations) < 1:
+            return "Insufficient data", 404
+
         # format the data to use in the next step
         # {symptom: name, top_foods: [food1, food2,...], top_groups...}
         data = list(map(lambda corr: {"symptom": corr["symptom"]}, correlations))
@@ -237,13 +240,13 @@ def get_monthly_data(user):
                     "group", sym["top_groups"], username, min_date, delta.months
                 )
 
-        # return the formatted data
         return (
-            jsonify(data),
+            jsonify({"data": data, "max_months": get_date_range(username)}),
             200,
         )
 
     except Exception as e:
+        print(e)
         return {
             "message": str(e),
             "error": "Error fetching user's monthly data",
@@ -264,6 +267,23 @@ def get_last_date(username):
             ]
         )
     ][0]["datetime"]
+
+
+def get_date_range(username):
+    return relativedelta(
+        get_last_date(username),
+        [
+            m
+            for m in db.meals.aggregate(
+                [
+                    {"$match": {"username": username}},
+                    {"$sort": {"datetime": 1}},
+                    {"$project": {"datetime": 1}},
+                    {"$limit": 1},
+                ]
+            )
+        ][0]["datetime"],
+    ).months
 
 
 # array = array of foods to search

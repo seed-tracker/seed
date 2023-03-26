@@ -6,7 +6,7 @@ import ScatterControls from "./ScatterControls";
 
 const ScatterPlot = () => {
   const dispatch = useDispatch();
-  const chartData = useSelector((state) => state.scatter);
+  const { data: chartData, maxMonths } = useSelector((state) => state.scatter);
   const [allData, setAllData] = useState([]);
   const [currentSymptom, setCurrentSymptom] = useState(null);
   const [dateRange, setDateRange] = useState([]);
@@ -19,7 +19,7 @@ const ScatterPlot = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (chartData.length) {
+    if (chartData && chartData.length) {
       formatData();
     }
   }, [chartData]);
@@ -45,9 +45,11 @@ const ScatterPlot = () => {
 
     if (!currentSymptom) {
       setCurrentSymptom(symptomData.name);
-      setCurrentFoods([foodData[0].name]);
-      setCurrentGroups([]);
+      if (foodData[0] && foodData[0].name) setCurrentFoods([foodData[0].name]);
+      else setCurrentGroups([groupData[0].name || null]);
     }
+
+    //get the max:
 
     setDateRange([
       symptomData.values[0].date,
@@ -72,32 +74,25 @@ const ScatterPlot = () => {
     }));
   };
 
-  const toggleGroup = (group) => {
-    const idx = currentGroups.findIndex((g) => g === group);
-    console.log(idx);
-    if (idx >= 0) {
-      setCurrentGroups([
-        ...currentGroups.slice(0, idx),
-        ...currentGroups.slice(idx + 1),
-      ]);
+  const toggleSymptom = (symptom) => {
+    setCurrentSymptom(symptom);
+    const { groupData, foodData } = allData.find(
+      ({ symptomData }) => symptomData.name === symptom
+    );
+
+    if (foodData.length) {
+      setCurrentFoods([foodData[0].name]);
+      setCurrentGroups([]);
     } else {
-      setCurrentGroups([...currentGroups, group]);
+      setCurrentFoods([]);
+      if (groupData.length) setCurrentGroups([groupData[0].name]);
+      else setCurrentGroups([]);
     }
   };
 
-  const toggleFood = (food) => {
-    const idx = currentFoods.findIndex((f) => f === food);
-    if (idx >= 0) {
-      setCurrentFoods([
-        ...currentFoods.slice(0, idx),
-        ...currentFoods.slice(idx + 1),
-      ]);
-    } else {
-      setCurrentFoods([...currentFoods, food]);
-    }
+  const makeKey = (text) => {
+    return text.split(" ").join("_").split(",").join("_");
   };
-
-  const toggleSymptom = (symptom) => setCurrentSymptom(symptom);
 
   // set up container, scaling, axis, labeling, data
 
@@ -105,7 +100,7 @@ const ScatterPlot = () => {
     if (!allData || !allData.length) return;
 
     const width = 700;
-    const height = 300;
+    const height = 400;
 
     const svg = d3.select(svgRef.current);
 
@@ -122,12 +117,21 @@ const ScatterPlot = () => {
     const { symptomData, groupData, foodData } = allData.find(
       ({ symptomData }) => symptomData.name === currentSymptom
     );
-    const foods = foodData.filter(({ name }) => currentFoods.includes(name));
-    const groups = groupData.filter(({ name }) => currentGroups.includes(name));
 
-    const data = [symptomData, ...foods, ...groups];
+    const data = [symptomData, ...groupData, ...foodData];
+
+    //working on this:
+    const max_y = data.reduce(
+      (max, { values }) =>
+        Math.max(
+          d3.max(values, (d) => d.count + 5),
+          max
+        ),
+      0
+    );
 
     //make a color range
+    //we probably want to change this for better accessibility:
     const colors = d3.scaleOrdinal().domain(labels).range(d3.schemeSet2);
 
     const x = d3.scaleTime().domain(dateRange).range([0, width]);
@@ -142,7 +146,7 @@ const ScatterPlot = () => {
 
     //add y axis
 
-    const y = d3.scaleLinear().domain([0, 30]).range([height, 0]);
+    const y = d3.scaleLinear().domain([0, max_y]).range([height, 0]);
     svg.append("g").call(d3.axisLeft(y));
 
     //add the lines
@@ -157,8 +161,16 @@ const ScatterPlot = () => {
       .join("path")
       .attr("d", (d) => line(d.values))
       .attr("stroke", (d) => colors(d.name))
+      .attr("class", function (d) {
+        return makeKey(d.name);
+      })
       .style("stroke-width", 4)
-      .style("fill", "none");
+      .style("fill", "none")
+      .style("opacity", (d) =>
+        [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
+          ? 1
+          : 0
+      );
 
     svg
       .selectAll("myDots")
@@ -169,7 +181,12 @@ const ScatterPlot = () => {
       .data((d) => d.values)
       .join("circle")
       .attr("r", 5)
-      .attr("stroke", "white");
+      .attr("stroke", "white")
+      .style("opacity", (d) =>
+        [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
+          ? 1
+          : 0
+      );
 
     svg
       .selectAll("myLabels")
@@ -184,24 +201,60 @@ const ScatterPlot = () => {
         (d) => `translate(${x(d.value.date)},${y(d.value.count)})`
       ) // Put the text at the position of the last point
       .attr("x", 12) // shift the text a bit more right
+      .attr("class", function (d) {
+        return makeKey(d.name);
+      })
       .text((d) => d.name)
       .style("fill", (d) => colors(d.name))
-      .style("font-size", 15);
+      .style("font-size", 15)
+      .style("opacity", (d) =>
+        [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
+          ? 1
+          : 0
+      );
+
+    svg
+      .selectAll("myLegend")
+      .data(data.slice(1))
+      .enter()
+      .append("g")
+      .append("text")
+      .attr("x", 800)
+      .attr("y", function (d, i) {
+        return 30 + i * 20;
+      })
+      .text(function (d) {
+        return d.name;
+      })
+      .style("fill", function (d) {
+        return colors(d.name);
+      })
+      .style("font-size", 10)
+      .on("click", function (d) {
+        // is the element currently visible ?
+
+        if (d === undefined || !d || !d.target.textContent) return;
+
+        const nodes = d3.selectAll(`.${makeKey(d.target.textContent)}`);
+
+        if (!nodes) return;
+
+        // Change the opacity: from 0 to 1 or from 1 to 0
+        nodes
+          .transition()
+          .style("opacity", nodes.style("opacity") == 1 ? 0 : 1);
+      });
   }, [allData, currentFoods, currentGroups, currentSymptom]);
 
   return (
     <>
       <section>
-        {allData && allData.length && (
+        {allData && allData.length && allData[0].symptomData && (
           <ScatterControls
             symptomList={allData.map(({ symptomData }) => symptomData.name)}
-            symptomData={allData.find(
-              ({ symptomData }) => symptomData.name === currentSymptom
-            )}
-            toggleFood={toggleFood}
-            toggleGroup={toggleGroup}
             toggleSymptom={toggleSymptom}
             changeTimeRange={changeTimeRange}
+            maxMonths={maxMonths}
           />
         )}
       </section>

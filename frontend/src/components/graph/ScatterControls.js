@@ -5,27 +5,33 @@ import { fetchScatterData } from "../../store/scatterSlice";
 
 const ScatterControls = ({
   symptomList,
-  symptomData,
-  toggleFood,
-  toggleGroup,
   toggleSymptom,
   changeTimeRange,
+  maxMonths,
 }) => {
-  console.log(symptomData.food);
+  const [months, setMonths] = useState([]);
+
+  useEffect(() => {
+    if (!maxMonths || maxMonths < 3) return;
+    let monthsArr = [3];
+
+    if (maxMonths >= 6) monthsArr.push(6);
+    if (maxMonths >= 12) monthsArr.push(12);
+    if (maxMonths >= 24) monthsArr.push(24);
+
+    setMonths(monthsArr);
+  }, []);
+
   return (
     <section>
       <section>
-        <button value={1200} onClick={changeTimeRange}>
+        {months.map((num) => (
+          <button value={num} onClick={changeTimeRange}>
+            {num >= 12 ? `${Math.floor(num / 12)} years` : `${num} months`}
+          </button>
+        ))}
+        <button value={maxMonths} onClick={changeTimeRange}>
           All time
-        </button>
-        <button value={12} onClick={changeTimeRange}>
-          1 year
-        </button>
-        <button value={6} onClick={changeTimeRange}>
-          6 months
-        </button>
-        <button value={3} onClick={changeTimeRange}>
-          3 months
         </button>
       </section>
       <section>
@@ -38,26 +44,6 @@ const ScatterControls = ({
             ))
           : null}
       </section>
-      {symptomData.foodData ? (
-        <section>
-          Foods:
-          {symptomData.foodData.map(({ name }, i) => (
-            <button key={i} onClick={() => toggleFood(name)}>
-              {name}
-            </button>
-          ))}
-        </section>
-      ) : null}
-      {symptomData.groupData ? (
-        <section>
-          Food groups:
-          {symptomData.groupData.map(({ name }, i) => (
-            <button key={i} onClick={() => toggleGroup(name)}>
-              {name}
-            </button>
-          ))}
-        </section>
-      ) : null}
     </section>
   );
 };

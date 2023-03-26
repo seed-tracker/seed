@@ -12,7 +12,7 @@ export const fetchScatterData = createAsyncThunk(
 
       if (error) throw new Error(error);
 
-      return data;
+      return { data: data.data, maxMonths: data.max_months };
     } catch (err) {
       console.error(err);
     }
@@ -21,7 +21,10 @@ export const fetchScatterData = createAsyncThunk(
 
 const scatterSlice = createSlice({
   name: "entry",
-  initialState: {},
+  initialState: {
+    data: null,
+    maxMonths: null,
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchScatterData.fulfilled, (state, action) => {
       return action.payload;
