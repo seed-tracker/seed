@@ -128,7 +128,26 @@ const CirclePacking = () => {
     // and stroke color and width based on lift value (higher values have thicker stroke)
     leaf.append("circle")
       .attr("r", (d) => d.r)
-      .attr("fill", (d) => d.data.color);
+      .attr("fill", (d) => d.data.color)
+      // .attr("stroke", "crimson")
+      // .classed((d) =>
+      //   d.data.value > 1.04 ? ("pulse",true) : ("pulse", false)
+      // )
+      .classed("pulse", function(d)
+      {
+        if (d.data.value > 1.01) {
+          return true;
+        }
+        return false;
+      });
+
+    // leaf.append("circle")
+    //   .attr("r", (d) => d.r)
+    //   .attr("fill", (d) => d.data.color)
+    //   .attr("stroke", "crimson")
+    //   .attr("stroke-width", (d) =>
+    //     d.data.value > 1.01 ? 10 + "px" : 5 + "px"
+    //   );
 
     leaf.append("text") // Add text labels to each leaf node, with the symptom name as the label text
       .attr("text-anchor", "middle")
@@ -140,6 +159,7 @@ const CirclePacking = () => {
 
   return (
     <div id="graph-area">
+      <h3>Higher food group and symptom correlations are emphasized by the pulse effect.</h3>
       <svg ref={svgRef} width="400" height="400"></svg>
       <svg id="legend" width="1400px" height="250"></svg>
     </div>
