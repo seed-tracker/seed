@@ -1,8 +1,15 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { me } from "../store/authSlice";
-import BubbleChart from "./graph/BubbleChart";
+import { useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
+import StatsAndFacts from "./StatsAndFacts";
+import {
+  fetchUserCorrelations,
+  selectUserCorrelations,
+} from "../store/correlationsSlice";
+import CirclePacking from "./graph/CirclePacking";
+
 
 /**
  * Placeholder component for the userprofile page
@@ -11,16 +18,22 @@ import Sidebar from "./Sidebar";
 const Profile = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(me());
-  }, [dispatch]);
+    dispatch(fetchUserCorrelations());
+  }, []);
+
+  const correlationsLoaded = useSelector(selectUserCorrelations);
 
   return (
     <main>
       <Sidebar />
-      <h2>PROFILE INFO WOULD GO HERE</h2>
       <section>
-        <BubbleChart />
+        <StatsAndFacts />
       </section>
+      <section>
+        <CirclePacking />
+      </section>
+
+      <section>{!!correlationsLoaded && <CirclePacking />}</section>
     </main>
   );
 };

@@ -1,15 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import apiClient from "../config";
 
-export const fetchUserCorrelations = createAsyncThunk(
-  "get user's correlations",
-  async (username) => {
-    try {
-      const { data } = await axios.get("users/correlations/");
-      return data;
-    } catch (err) {
-      console.error(err);
-    }
+
+export const fetchUserCorrelations = createAsyncThunk("get user's correlations", async () => {
+  try {
+    const {data} = await apiClient.get("users/correlations/")
+    return data
+  } catch(err) {
+    console.log(err);
   }
 );
 

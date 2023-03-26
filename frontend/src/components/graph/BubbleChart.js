@@ -1,89 +1,105 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { selectAuthUser } from "../../store/authSlice";
+import { selectSymptoms, fetchAllSymptoms } from "../../store/symptomSlice";
 import { fetchUserCorrelations, selectUserCorrelations } from "../../store/correlationsSlice";
 import * as d3 from "d3";
 
-const BubbleChart = () => {
-  const dispatch = useDispatch()
-  // const user = useSelector(selectAuthUser)
+const CirclePacking = () => {
+  const dispatch = useDispatch();
   const datas = useSelector(selectUserCorrelations);
+  const symptoms = useSelector(selectSymptoms);
 
-  // const symptom = datas.forEach((obj) => {
-  //   return obj.symptom
-  // })
+  function getSymptomsAndTopGroups(data) {
+    const result = {};
+    data.forEach((obj) => {
+      const symptom = obj.symptom;
+      const topGroups = obj.top_groups?.map((group) => group.name) ?? []; 
+      const lifts = obj.top_groups?.map((group) => group.lift) ?? []; 
+      result[symptom] = { topGroups, lifts }; 
+    });
+    return result;
+  }
 
-  // const count = datas.forEach((obj) => {
-  //   return obj.count
-  // })
+  const result = getSymptomsAndTopGroups(datas);
+  // console.log(result)
 
-  // access key in arr with item.lift, etc
-//   const top_foods = datas.forEach((obj) => {
-//     obj['top_foods'].forEach((item) => {
-//       return item
-//     })
-//   })
-// console.log(top_foods)
-//   // access key in arr with item.avg_severity, etc
-//   const top_groups = datas.forEach((obj) => {
-//     obj['top_groups'].forEach((item) => {
-//       return item
-//     })
-//   })
-
-const symptom = datas.map((obj) => obj.symptom);
-
-const count = datas.map((obj) => obj.count);
-
-const top_foods = datas.flatMap((obj) => obj.top_foods);
-console.log(top_foods)
-
-const top_groups = datas.flatMap((obj) => obj.top_groups);
+const userSymptoms = datas.map((obj) => obj.symptom);
+console.log(userSymptoms)
+  const svgRef = useRef();
 
   useEffect(() => {
-    dispatch(fetchUserCorrelations())
-    // const graphSection = d3.select("#graph svg")
-    // graphSection.append("g")
-  }, [dispatch])
-
- //useRef to reference and manipulate the SVG element
-  // const svgRef = React.useRef(null);
+    dispatch(fetchAllSymptoms());
+    dispatch(fetchUserCorrelations());
+  }, [dispatch]);
 
   useEffect(() => {
-    const svg = d3.select("#graph");
- 
- 
-  //this would change the radius of the circle
-  // const countScale = d3.scaleLinear()
-  // .domain([0, d3.max(data, d => d.count)])
-  // .range([10, 50]);
-  const circles = svg.selectAll("circle")
-  .data(top_foods)
-  .join("circle")
-  .attr("cx", (d, i) => i * 100 + 50)
-  .attr("cy", 50)
-  .attr("r", 20)
-  .attr("fill", (d)=>d.lift>1.01 ? "red":"green")
-  .attr("stroke", "white")
-  .attr("stroke-width", 2);
-  })
+    const svg = d3.select(svgRef.current);
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+    const pack = data => d3.pack()
+      .size([width - 2, height - 2])
+      .padding(3)
+      (d3.hierarchy({ children: data })
+        .sum(d => d.value))
 
+    const colorPalette = d3.schemeCategory10;
+    const symptomColors = {};
+    for (let i = 0; i < symptoms.length; i++) {
+      const symptomName = symptoms[i].name;
+      const colorIndex = i % colorPalette.length;
+      symptomColors[symptomName] = colorPalette[colorIndex];
+    }
+
+  const root = pack(userSymptoms.map((d, i) => {
+  const symptomName = d;
+  const { topGroups, lifts } = result[symptomName]; 
+  const color = symptomColors[symptomName];
+  return {
+    name: symptomName,
+    value: topGroups.length ? topGroups.length : 1,
+    color: color,
+    children: topGroups.map((d, i) => ({
+      name: d,
+      value: lifts[i], // use lift value as node value
+      color: color,
+    })),
+  };
+}));
+    // let g = svg.select("g")
+    // if (g.empty()) {
+    //   g = svg.append("g")
+    // }
+    const leaf = svg.selectAll("g")
+      .data(root.leaves())
+      .join("g")
+      .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`);
+console.log(leaf)
+    leaf.append("circle")
+      .attr("r", d => d.r)
+      .attr("fill", d => d.data.color)
+      .attr("stroke", "crimson")
+      .attr("stroke-width", d=> d.data.value > 1.01 ? 10+"px" : 5+"px");
+
+    leaf.append("text")
+      .attr("text-anchor", "middle")
+      .attr("font-size", d => "12px")
+      .attr("dy", ".35em")
+      .text(d => d.data.name);
+  }, [symptoms, userSymptoms, result]);
+
+  return <svg ref={svgRef} width="400" height="400"></svg>;
+};
+
+export default CirclePacking;
 
 //select,data,join is combo rather than enter, append b/c if you use enter you have to manually update when data changes
 //select,data,join auto updates when data changes
 //datum is d
 //each mark/variable we want to visualize there should a 1:1 to an attribute with an arrow function
-  // const svg = d3.create("svg").attr("width", 932).attr("height", 932).style("display", "block").style("margin", "0 auto").style("background", "cornflowerblue").style("cursor", "pointer")
-  // graphSection.append("svg")
 
-  const svg = d3.select("svg")
-  svg.append("g")
+// const foodGroups=["Goat", "Fish", "Processed Foods", "Beans,Peas,and Soy","Fruit", "Pork", "Beef", "Milk,Yogurt,and Cheese",
+// "Nuts and Seeds", "Vegetables, Starchy", "Grains, Gluten-Free", "Shellfish", "Lamb", "Refined Sugars", "Vegetables, Non-Starchy",
+// "Eggs", "Caffeinated Beverages", "Grains, Gluten", "Other  Seafoods", "Poultry"]
 
-  
-
-  return (
-    <svg id="graph"></svg>
-  )
-}
-
-export default BubbleChart
+// const colors = ['#ffcc00', '#ff6666', '#cc0066', '#66cccc', '#f688bb', '#65587f', '#baf1a1', '#333333', '#75b79e',
+// '#66cccc', '#9de3d0', '#f1935c', '#0c7b93', '#eab0d9', '#baf1a1', '#9399ff','#06AED5', '#086788', '#F0C808', '#DD1C1A']
