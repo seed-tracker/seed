@@ -9,5 +9,5 @@ const apiClient = axios.create({
     authorization: token,
   },
 });
-
+console.log(process.env.REACT_APP_API_URL)
 export default apiClient;

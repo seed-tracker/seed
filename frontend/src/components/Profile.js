@@ -8,8 +8,8 @@ import {
   fetchUserCorrelations,
   selectUserCorrelations,
 } from "../store/correlationsSlice";
-import CirclePacking from "./graph/CirclePacking";
-
+import  CirclePacking  from "./graph/CirclePacking";
+import Beeswarm from "./graph/Beeswarm";
 
 /**
  * Placeholder component for the userprofile page
@@ -32,8 +32,10 @@ const Profile = () => {
       <section>
         <CirclePacking />
       </section>
-
-      <section>{!!correlationsLoaded && <CirclePacking />}</section>
+      <section>
+        <Beeswarm />
+      </section>
+      <section>{!correlationsLoaded && <CirclePacking />}</section>
     </main>
   );
 };
