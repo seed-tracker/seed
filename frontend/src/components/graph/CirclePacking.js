@@ -64,7 +64,7 @@ const CirclePacking = () => {
       .sum((d) => d.value)
     )
 
-    const colorPalette = d3.schemeCategory10; // Define a color palette for the symptoms and map each symptom to a unique color
+    const colorPalette = d3.schemeSet3;; // Define a color palette for the symptoms and map each symptom to a unique color
     const symptomColors = {};
     for (let i = 0; i < symptoms.length; i++) {
       const symptomName = symptoms[i].name;
@@ -122,24 +122,55 @@ const CirclePacking = () => {
       .selectAll("g")
       .data(root.leaves())
       .join("g")
-      .attr("transform", (d) => `translate(${d.x + 1},${d.y + 1})`);
+      .attr("transform", (d) => `translate(${d.x + 1},${d.y + 1})`)
+      .on("mouseover", function () {
+        d3.select(this).select("circle")
+          .transition()
+          .duration(250)
+    
+        d3.select(this).append("text")
+          .attr("class", "text")
+          .text((d) => d.data.name)
+          .attr("x", (d) => -d.r)
+          .attr("y", (d) => -d.r - 5)
+          .attr("font-size", "14px")
+
+      })
+      .on("mouseout", function () {
+        d3.select(this).select("circle")
+          .transition()
+          .duration(250)
+          // .attr("stroke-width", 1)
+          // .attr("stroke", "black");
+    
+        d3.select(this).select(".text").remove();
+      })
+      .on("click", (d) => console.log("clicked", d.count))
+      .attr("class", "node");
+      //shadow
+      svg.append("filter")
+  .attr("id", "circle-shadow")
+  .append("feDropShadow")
+  .attr("dx", 0)
+  .attr("dy", 2)
+  .attr("stdDeviation", 2)
+  .attr("flood-color", "#000000")
+  .attr("flood-opacity", 0.25);
+      
 
     // Create a circle for each leaf node, with radius based on node size, fill color based on symptom color,
     // and stroke color and width based on lift value (higher values have thicker stroke)
     leaf.append("circle")
-      .attr("r", (d) => d.r)
-      .attr("fill", (d) => d.data.color)
-      // .attr("stroke", "crimson")
-      // .classed((d) =>
-      //   d.data.value > 1.04 ? ("pulse",true) : ("pulse", false)
-      // )
-      .classed("pulse", function(d)
-      {
-        if (d.data.value > 1.01) {
-          return true;
-        }
-        return false;
-      });
+    .attr("r", (d) => d.r)
+    .attr("fill", (d) => d.data.color)
+    .attr("filter", "url(#circle-shadow)")
+    .classed("pulse", function(d) {
+      if (d.data.value > 1.01) {
+        return true;
+      }
+      return false;
+    })
+
 
     // leaf.append("circle")
     //   .attr("r", (d) => d.r)
@@ -151,7 +182,7 @@ const CirclePacking = () => {
 
     leaf.append("text") // Add text labels to each leaf node, with the symptom name as the label text
       .attr("text-anchor", "middle")
-      .attr("font-size", (d) => "16px")
+      .attr("font-size", (d) => "12px")
       .attr("dy", ".35em")
       .text((d) => d.data.name);
   }, [symptoms, userSymptoms, result]);
@@ -159,7 +190,6 @@ const CirclePacking = () => {
 
   return (
     <div id="graph-area">
-      <h3>Higher food group and symptom correlations are emphasized by the pulse effect.</h3>
       <svg ref={svgRef} width="400" height="400"></svg>
       <svg id="legend" width="1400px" height="250"></svg>
     </div>
