@@ -1,10 +1,16 @@
+@font-face{
+  font-family: 'Lovechild';
+  src: url(./Lovechild-Regular.otf)
+}
+
 body {
-  font-family: sans-serif;
+  font-family: Lovechild, sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   position: relative;
   min-height: 100vh;
+  background-color: #cfdbd1;
 }
 
 #graph-area {
