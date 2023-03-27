@@ -68,14 +68,14 @@ const Beeswarm = () => {
           .data(symptoms)
           .join("circle")
           .attr("cx", d => xScale(d.name))
-          .attr("r", 2);
+          .attr("r", 5);
 
         for (let i = 0; i < symptoms.length; i++) {
           for (let j = 0; j < counts[i]; j++) {
             g.append("circle")
               .attr("cx", xScale(symptoms[i].name))
               .attr("cy", yScale(j))
-              .attr("r", 2);
+              .attr("r", 5);
           }
         }
 
