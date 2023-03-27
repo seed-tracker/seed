@@ -11,6 +11,8 @@ import MealForm from "../components/MealForm";
 import EditProfile from "../components/EditProfile";
 import MealEntryOverview from "../components/MealEntryOverview";
 import SymptomEntryOverview from "../components/SymtomEntryOverview";
+import Dashboard from "../components/Dashboard";
+import Beeswarm from "../components/graph/Beeswarm";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
@@ -25,6 +27,7 @@ const AppRoutes = () => {
       {isLoggedIn ? (
         <Routes>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/dashboard" element={<Beeswarm />} />
           <Route path="/add/symptom" element={<SymptomForm />} />
           <Route path="/user/addFood" element={<MealForm />}></Route>
           <Route path="/user/edit-profile" element={<EditProfile />}></Route>
