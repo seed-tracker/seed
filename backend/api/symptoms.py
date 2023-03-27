@@ -6,12 +6,13 @@ from flask import jsonify
 symptoms = Blueprint("symptoms", __name__)
 
 
-# get all symptoms
+# get all symptoms (not connected to user)
 @symptoms.route("/", methods=["GET"])
 def get_symptoms():
     try:
         symptoms = db.symptoms.find()
 
+        # turn the object ids into strings
         symptoms_list = [
             {key: str(symptom[key]) for key in symptom} for symptom in symptoms
         ]
@@ -29,11 +30,13 @@ def get_symptoms():
         }, 500
 
 
-# get a single symptom
+# get a single symptom (not connected to a user)
 @symptoms.route("/<string:name>", methods=["GET"])
 def get_symptom_by_name(name):
     try:
         symptom = db.symptoms.find_one({"name": name})
+
+        # stringify the object ids
         if symptom:
             symptom["_id"] = str(symptom["_id"])
             return {"data": symptom}, 200

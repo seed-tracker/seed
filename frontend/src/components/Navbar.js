@@ -23,11 +23,17 @@ const NavigationBar = () => {
     dispatch(logout());
     navigate("/");
   };
-
+/**
+ * Component for the Navbar
+ * @component is the navigation bar that has two views:
+ * If user is signed in: links to view profile & logout
+ * If visitor: links to Login or Sign up
+ */
+// TODO: 
   return (
-    <Navbar isBordered variant="sticky" css={{backgroundColor:'#cfdbd1', color:'#444c38'}}>
-      <Navbar.Brand>
-      <Text h1 css={{fontFamily: "Lovechild"}} color="#4D5D53" weight="bold">SEED</Text>
+    <Navbar isBordered maxWidth={"fluid"} variant="sticky" css={{backgroundColor:'#cfdbd1', color:'#444c38'}}>
+      <Navbar.Brand css={{alignItems:'center'}}>
+      <Text h1 css={{fontFamily: "Lovechild", alignItems:'center', margin:0}} color="logo">SEED</Text>
       </Navbar.Brand>
       {isLoggedIn ? (
         <Navbar.Content>

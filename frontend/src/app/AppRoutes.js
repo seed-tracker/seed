@@ -13,6 +13,7 @@ import MealEntryOverview from "../components/MealEntryOverview";
 import SymptomEntryOverview from "../components/SymtomEntryOverview";
 import Dashboard from "../components/Dashboard";
 import Beeswarm from "../components/graph/Beeswarm";
+import Sidebar from "../components/Sidebar";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
@@ -25,19 +26,22 @@ const AppRoutes = () => {
   return (
     <main>
       {isLoggedIn ? (
-        <Routes>
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/dashboard" element={<Beeswarm />} />
-          <Route path="/add/symptom" element={<SymptomForm />} />
-          <Route path="/user/addFood" element={<MealForm />}></Route>
-          <Route path="/user/edit-profile" element={<EditProfile />}></Route>
-          <Route path="/user/meal-entries" element={<MealEntryOverview />} />
-          <Route
-            path="/user/symptom-entries"
-            element={<SymptomEntryOverview />}
-          />
-          <Route path="/*" element={<Home />} />
-        </Routes>
+        <>
+          <Sidebar />
+          <Routes>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/dashboard" element={<Beeswarm />} />
+            <Route path="/add/symptom" element={<SymptomForm />} />
+            <Route path="/user/addFood" element={<MealForm />}></Route>
+            <Route path="/user/edit-profile" element={<EditProfile />}></Route>
+            <Route path="/user/meal-entries" element={<MealEntryOverview />} />
+            <Route
+              path="/user/symptom-entries"
+              element={<SymptomEntryOverview />}
+            />
+            <Route path="/*" element={<Home />} />
+          </Routes>
+        </>
       ) : (
         <Routes>
           <Route path="/login" element={<Login />} />
