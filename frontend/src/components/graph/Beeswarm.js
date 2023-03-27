@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { select } from "d3-selection";
 import { scaleBand, scaleLinear } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
-import { statsSlice, selectUserStats, getUserStats } from "../../store/statsSlice";import * as d3 from "d3";
 import { forceCollide, forceSimulation } from "d3-force";
 import { fetchAllSymptoms, selectSymptoms } from "../../store/symptomSlice";
 import { statsSlice, selectUserStats, getUserStats } from "../../store/statsSlice";
@@ -49,6 +48,7 @@ const Beeswarm = () => {
         .range([0, width]);
 
       const yScale = scaleLinear()
+        // .domain([Math.max(...counts) + 100, 0])
         .domain([Math.max(...counts) * 2, 0])
         .range([height, 0]);
 
@@ -65,7 +65,8 @@ const Beeswarm = () => {
         .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
         .call(yAxis);
 
-        const g = svg.append("g").attr("transform", `translate(${margin.left * 2 - 6}, ${margin.top * 2})`);
+        const g = svg.append("g").attr("transform", `translate(${margin.left * 2.5 - 6}, ${margin.top * 2})`);
+
         const colorPalette = d3.schemeSet3;; // Define a color palette for the symptoms and map each symptom to a unique color
         const symptomColors = {};
         for (let i = 0; i < allSymptoms.length; i++) {
@@ -75,7 +76,7 @@ const Beeswarm = () => {
         }
 
 
-        const legend = d3.select("#legend") // Create the legend
+        const legend = d3.select("#legend-lollipop") // Create the legend
         const legendHeight = +legend.attr("height");
 
         legend.selectAll("circle") // Create a circle for each symptom in the legend and color it with the corresponding color
@@ -106,17 +107,25 @@ const Beeswarm = () => {
 
           for (let i = 0; i < symptoms.length; i++) {
             for (let j = 0; j < counts[i]; j++) {
+               g.append("circle")
+                  .attr("cx", xScale(symptoms[i].name))
+                  .attr("cy", yScale(j))
+                  .attr("fill", symptomColors[symptoms[i].name])
+                  .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
               if (j === counts[i] - 1) {
-                g.append("circle")
-                  .attr("cx", xScale(symptoms[i].name))
-                  .attr("cy", yScale(j))
-                  .attr("r", 5); // larger radius for last element
-              } else {
-                g.append("circle")
-                  .attr("cx", xScale(symptoms[i].name))
-                  .attr("cy", yScale(j))
-                  .attr("r", 1); // smaller radius for other elements
+                g.append("text")
+                  .attr("x", xScale(symptoms[i].name))
+                  .attr("y", yScale(j) - 10)
+                  .attr("text-anchor", "middle")
+                  .text("Count: " + counts[i]);
               }
+              // else {
+              //   g.append("circle")
+              //     .attr("cx", xScale(symptoms[i].name))
+              //     .attr("cy", yScale(j))
+              //     .attr("fill", symptomColors[symptoms[i].name])
+              //     .attr("r", 2); // smaller radius for other elements
+              // }
             }
           }
 
@@ -126,20 +135,19 @@ const Beeswarm = () => {
   }, [data]);
 
   return (
-    <section>
-      <span>Toggle Food Groups:</span>
-      <label>
-        <input />
-      </label>
-      <button type="button" onClick={handleGetAllTime} value="all">All</button>
-      <button type="button" onClick={handleGetSixMonths} value="180">6 Months</button>
-      <button type="button" onClick={handleGetOneYear} value="365">1 Year</button>
-
-     <div className="beeSwarmChart">
-     <svg id="legend" width="1400px" height="250"></svg>
-      <svg ref={svgRef} width="2000" height="1000"></svg></div>
-
-    </section>
+     <section className="beeSwarmChart">
+        <h1>Your top 5 symptoms:</h1>
+        <div>
+          <svg ref={svgRef} width="2000" height="500"></svg>
+          <button type="button" onClick={handleGetAllTime} value="all">All</button>
+          <button type="button" onClick={handleGetSixMonths} value="180">6 Months</button>
+          <button type="button" onClick={handleGetOneYear} value="365">1 Year</button>
+        </div>
+        <div>
+          <h3>Legend:</h3>
+          <svg id="legend-lollipop" width="1400px" height="250"></svg>
+        </div>
+      </section>
   );
 };
 
