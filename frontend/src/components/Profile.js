@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { me } from "../store/authSlice";
 import { useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
 import ScatterPlot from "./graph/ScatterPlot";
@@ -9,7 +8,7 @@ import {
   fetchUserCorrelations,
   selectUserCorrelations,
 } from "../store/correlationsSlice";
-import  CirclePacking  from "./graph/CirclePacking";
+import CirclePacking from "./graph/CirclePacking";
 import Beeswarm from "./graph/Beeswarm";
 
 /**
@@ -28,7 +27,6 @@ const Profile = () => {
     <main>
       <Sidebar />
       <section>
-        <BubbleChart />
         <ScatterPlot />
         <StatsAndFacts />
       </section>

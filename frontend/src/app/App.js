@@ -2,8 +2,7 @@ import React from "react";
 import AppRoutes from "./AppRoutes";
 import NavigationBar from "../components/Navbar";
 import Footer from "../components/Footer";
-import {NextUIProvider, createTheme} from '@nextui-org/react';
-
+import { NextUIProvider, createTheme } from "@nextui-org/react";
 
 /**
  * Component for the main page structure
@@ -14,25 +13,24 @@ const App = () => {
   const theme = createTheme({
     type: "light",
     theme: {
-      colors:{
-        primary: '#000000',
-        // logo: '#4D5D53', 
-        background: '#cfdbd1',
+      colors: {
+        primary: "#000000",
+        secondary: "#4D5D53",
+        // logo: '#4D5D53',
+        background: "#cfdbd1",
       },
       fonts: {
-        sans: "sans-serif"
-      }
-    }
-
-
-  })
+        sans: "sans-serif",
+      },
+    },
+  });
   return (
     <NextUIProvider theme={theme}>
-    <>
-      <NavigationBar />
-      <AppRoutes />
-      <Footer />
-    </>
+      <>
+        <NavigationBar />
+        <AppRoutes />
+        <Footer />
+      </>
     </NextUIProvider>
   );
 };
