@@ -6,6 +6,7 @@ import entrySlice from "./entrySlice";
 import allEntriesSlice from "./allEntriesSlice";
 import correlationsSlice from "./correlationsSlice";
 import statsSlice from "./statsSlice"
+import scatterSlice from "./scatterSlice";
 
 // import created slices
 
@@ -15,6 +16,7 @@ const store = configureStore({
     entry: entrySlice,
     symptoms: symptomSlice,
     correlations: correlationsSlice,
+    scatter: scatterSlice,
     allEntries: allEntriesSlice,
     stats: statsSlice
   },
