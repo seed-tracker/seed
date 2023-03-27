@@ -3,19 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { select } from "d3-selection";
 import { scaleBand, scaleLinear } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
-import correlationsSlice from "../../store/correlationsSlice";
-import { selectUserCorrelations } from "../../store/correlationsSlice";
-import { getUserStats } from "../../store/correlationsSlice";
-import * as d3 from "d3";
+import { statsSlice, selectUserStats, getUserStats } from "../../store/statsSlice";import * as d3 from "d3";
 
 const Beeswarm = () => {
   const svgRef = useRef();
 
   const dispatch = useDispatch()
-  const data = useSelector(selectUserCorrelations)
-  // const {data} = datas
+  const data = useSelector(selectUserStats)
   const symptoms = data.symptoms
-  const counts = symptoms ? symptoms.map((symptom) => symptom.count) : []
+  const counts = symptoms ? symptoms.map((symptom) => symptom.count/2) : []
   // console.log(typeof data)
   console.log(counts);
 
@@ -39,8 +35,7 @@ const Beeswarm = () => {
   useEffect(() => {
     const svg = select(svgRef.current);
     const margin = {top: 200, right: 10, bottom: 200, left: 50};
-    const width = 500 - margin.left - margin.right;
-    const height = 300 - margin.top - margin.bottom;
+    const width = 500 - margin.left - margin.right, height = 300 - margin.top - margin.bottom;
 
     // svg.selectAll("svg")
 
@@ -51,7 +46,7 @@ const Beeswarm = () => {
         .range([0, width]);
       const yScale = scaleLinear()
 
-      .domain([Math.max(...counts), 0])
+      .domain([Math.max(...counts)*2])
       .range([height, 0]);
 
       const xAxis = axisBottom(xScale);
@@ -62,26 +57,43 @@ const Beeswarm = () => {
       .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
       .call(xAxis);
 
-      const yAxisLine = svg
+    const yAxisLine = svg
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
       .call(yAxis)
-        // .attr("transform", "translate(" + margin.left + "," + (height + margin.top) + ")")
+
         const nodes = svg.selectAll("circle")
         .data(symptoms)
-        .join("circle")
-        .attr("cx", d => xScale(d.name))
-        .attr("cy", d => yScale(d.count))
-        .attr("r", 5);
+        .join(
+          enter => enter.append("circle")
+            .attr("cx", d => xScale(d.name))
+            .attr("cy", d => yScale(d.count))
+            .attr("r", 5)
+        );
+
+        const simulation = d3.forceSimulation()
+        .force("x", d3.forceX().strength(.1).x(d=>xScale(d.name)))
+        .force("y", d3.forceY().strength(.8).y(d=>yScale(d.count)))
+        .force("collide",d3.forceCollide().radius(5));
+
+        simulation.nodes(nodes.nodes())
+      .on("tick", () => {
+        nodes
+          .attr("cx", d => d.x)
+          .attr("cy", d => d.y)
+      })
+
         for (let i = 0; i < symptoms.length; i++) {
-      for (let j = 0; j < counts[i]; j++) {
-        svg
-          .append("circle")
-          .attr("cx", xScale(symptoms[i].name))
-          .attr("cy", yScale(j))
-          .attr("r", 5);
-      }
-    }
+          for (let j = 0; j < counts[i]; j++) {
+
+            svg
+              .append("circle")
+              .attr("cx", xScale(symptoms[i].name))
+              .attr("cy", yScale(j))
+              .attr("r", 5);
+
+          }
+        }
     }
   }, [data]);
 
@@ -100,4 +112,3 @@ const Beeswarm = () => {
 };
 
 export default Beeswarm;
-
