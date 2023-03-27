@@ -9,25 +9,28 @@ stats = Blueprint("stats", __name__)
 
 
 # /stats?days=numberorall
-# get a users most eaten foods and food groups and symptoms over a certain number of days
+# get a users most eaten foods, food groups and symptoms over a certain number of days
 @stats.route("", methods=["GET"])
 @require_token
 def get_user_foods(user):
     try:
+        # get the username, found through the auth middleware
         username = user["username"]
         if not user:
             return "Not authorized", 401
 
         days = request.args.get("days")
 
-        # if the days query is days=all, show all data (unless users have input data pre-1900...)
+        # if the days query is days=all, show all data. Set default to 60 days
         if days == "all":
             min_time = datetime(1900, 1, 1)
         else:
             days = int(days) if days else 60
             min_time = get_last_date(username) - timedelta(days=days)
 
+        # a helper function to get food or group data for that user
         def get_food_data(type):
+            # get the count and name of the user's foods/groups, ordered by most frequent
             pipeline = [
                 {"$match": {"username": username, "datetime": {"$gte": min_time}}},
                 {"$unwind": f"${type}"},
@@ -36,6 +39,7 @@ def get_user_foods(user):
                 {"$project": {"name": "$_id", "count": 1, "_id": 0}},
             ]
 
+            # for foods, also get the attached groups
             if type == "foods":
                 pipeline += [
                     {
@@ -59,11 +63,12 @@ def get_user_foods(user):
                     {"$project": {"_id": 0}},
                 ]
 
+            # parse the mongodb cursor
             return [meal for meal in db.meals.aggregate(pipeline)]
 
-        # count = count of number of times that symptom has occured in the given time period
-        # avg_severity = avg severity of all of those times in the time period
-        # min_severity = min of all those time, max_severity = max of all those times
+        # count = number of times that symptom has occured in the given time period
+        # avg_severity = avg severity of all of those times
+        # min/max_severity = min/max of all those time
         symptom_pipeline = [
             {"$match": {"username": username, "datetime": {"$gte": min_time}}},
             {
@@ -88,11 +93,11 @@ def get_user_foods(user):
             },
         ]
 
+        # get total number of meals eaten in that time period
         count = db.meals.count_documents(
             {"username": username, "datetime": {"$gte": min_time}}
         )
 
-        # counted_meals = number of meals counted within the given period
         result = {
             "username": username,
             "days": days,
@@ -118,12 +123,14 @@ def get_user_foods(user):
 @require_token
 def get_monthly_data(user):
     try:
+        # get username from auth middleware
         username = user["username"]
-        print(username)
 
+        # get months, or set to default (12)
         months = request.args.get("months")
         months = int(months) if months else 12
 
+        # find min date to search for
         min_date = get_last_date(username) - relativedelta(months=months)
         delta = relativedelta(get_last_date(username), datetime.now())
 
@@ -142,11 +149,12 @@ def get_monthly_data(user):
 
         correlations = list(db.correlations.aggregate(pipeline))
 
+        # if none found, return error
         if not correlations or len(correlations) < 1:
             return "Insufficient data", 404
 
         # format the data to use in the next step
-        # {symptom: name, top_foods: [food1, food2,...], top_groups...}
+        # {symptom: name, top_foods: [food1, food2,...], top_groups: [group1, group2, ...]}
         data = list(map(lambda corr: {"symptom": corr["symptom"]}, correlations))
 
         # helper function to format foods, symptoms into flat array
@@ -156,11 +164,12 @@ def get_monthly_data(user):
             else:
                 data[i][key] = []
 
+        # format the correlations data
         for i, corr in enumerate(correlations):
             format(data, "top_groups")
             format(data, "top_foods")
 
-        # get the symptoms grouped by month with count and severity and adjusted date
+        # get the symptoms grouped by month, with count, average severity and adjusted date
         symptom_pipeline = [
             {
                 "$match": {
@@ -223,7 +232,7 @@ def get_monthly_data(user):
         # call the aggregation pipeline
         user_symptoms = list(db.user_symptoms.aggregate(symptom_pipeline))
 
-        # format symptoms, top_foods and top_groupsdata
+        # format symptoms, top_foods and top_groups for use in d3 on frontend data
         for i, sym in enumerate(data):
             for s in user_symptoms:
                 if sym["symptom"] == s["symptom"]:
@@ -253,8 +262,8 @@ def get_monthly_data(user):
         }, 500
 
 
+# find the date of the user's most recent entry
 def get_last_date(username):
-    # find the date of the user's last entry
     return [
         m
         for m in db.meals.aggregate(
@@ -268,6 +277,7 @@ def get_last_date(username):
     ][0]["datetime"]
 
 
+# get the total range of time that the user has been entering data in months
 def get_date_range(username):
     range = relativedelta(
         get_last_date(username),
@@ -288,7 +298,8 @@ def get_date_range(username):
 
 
 # array = array of foods to search
-# type = food or group, array = foods/groups to search
+# type = food or group
+# array = foods/groups to search
 # returns food/group data, grouped by month and year, including count
 def get_food_data(type, array, username, min_date, delta):
     pipeline = [
