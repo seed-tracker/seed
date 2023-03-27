@@ -32,10 +32,14 @@ text {
     .pulse
     {
       /* Giving Animation Function */
-      -webkit-animation: pulse 2s linear infinite;
+      -webkit-animation: pulse 4s linear infinite;
     }
 
     .shadow {
     -webkit-filter: drop-shadow( 0px 0px 5px white );
             filter: drop-shadow( 0px 0px 5px #000 ); /* Same syntax as box-shadow */
+}
+
+.beeSwarmChart {
+  padding: 5rem;
 }

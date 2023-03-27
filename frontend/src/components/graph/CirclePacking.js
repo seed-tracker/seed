@@ -25,7 +25,6 @@ const CirclePacking = () => {
    */
   function getSymptomsAndTopGroups(datas) {
     const result = {};
-
     datas.forEach((obj) => {
       const symptom = obj.symptom;
       const topGroups = obj.top_groups?.map((group) => group.name) ?? [];
@@ -35,7 +34,7 @@ const CirclePacking = () => {
 
     return result;
   }
-
+console.log(datas)
   const result = getSymptomsAndTopGroups(datas);
 
   const userSymptoms = datas.map((obj) => obj.symptom); // Get an array of the user's symptoms
@@ -127,10 +126,10 @@ const CirclePacking = () => {
         d3.select(this).select("circle")
           .transition()
           .duration(250)
-    
+
         d3.select(this).append("text")
           .attr("class", "text")
-          .text((d) => d.data.name)
+          .text((d) => d.data.value)
           .attr("x", (d) => -d.r)
           .attr("y", (d) => -d.r - 5)
           .attr("font-size", "14px")
@@ -142,7 +141,7 @@ const CirclePacking = () => {
           .duration(250)
           // .attr("stroke-width", 1)
           // .attr("stroke", "black");
-    
+
         d3.select(this).select(".text").remove();
       })
       .on("click", (d) => console.log("clicked", d.count))
@@ -156,7 +155,7 @@ const CirclePacking = () => {
   .attr("stdDeviation", 2)
   .attr("flood-color", "#000000")
   .attr("flood-opacity", 0.25);
-      
+
 
     // Create a circle for each leaf node, with radius based on node size, fill color based on symptom color,
     // and stroke color and width based on lift value (higher values have thicker stroke)
@@ -191,9 +190,15 @@ const CirclePacking = () => {
   return (
     <div id="graph-area">
       <svg ref={svgRef} width="400" height="400"></svg>
+      <h3>Hover over each circle to view the lift value for the symptom and food group.</h3>
       <svg id="legend" width="1400px" height="250"></svg>
     </div>
   );
 };
 
 export default CirclePacking;
+
+// take string split into rows , generate text ele for each
+// nest html inside svg
+
+// 2 slices or initial state is correlations.beeswarm, 2 keys [beeswarm: [], circlePack: []]

@@ -11,17 +11,6 @@ export const fetchUserCorrelations = createAsyncThunk("get user's correlations",
   }
 });
 
-export const getUserStats = createAsyncThunk("get user's history", async(days)=>{
-  try{
-    const {data} = await apiClient.get(`/stats?days=${days}`)
-    return data
-  } catch(err){
-    console.log(err)
-  }
-})
-
-
-
 export const correlationsSlice = createSlice({
   name: "correlations",
   initialState: [],
@@ -32,12 +21,6 @@ export const correlationsSlice = createSlice({
         return action.payload;
       })
       .addCase(fetchUserCorrelations.rejected, (state, action) => {
-        state.error = action.error;
-      })
-      .addCase(getUserStats.fulfilled, (state,action) => {
-        return action.payload;
-      })
-      .addCase(getUserStats.rejected, (state,action) =>{
         state.error = action.error;
       })
   }
