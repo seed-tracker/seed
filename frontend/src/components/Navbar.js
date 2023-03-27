@@ -33,7 +33,7 @@ const NavigationBar = () => {
   return (
     <Navbar isBordered maxWidth={"fluid"} variant="sticky" css={{backgroundColor:'#cfdbd1', color:'#444c38'}}>
       <Navbar.Brand css={{alignItems:'center'}}>
-      <Text h1 css={{fontFamily: "Lovechild", alignItems:'center', margin:0}} color="logo">SEED</Text>
+      <Text h1 css={{fontFamily: "Lovechild", alignItems:'center', margin:0}} color="$logo">SEED</Text>
       </Navbar.Brand>
       {isLoggedIn ? (
         <Navbar.Content>
