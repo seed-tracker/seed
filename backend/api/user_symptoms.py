@@ -22,23 +22,26 @@ def delete_user_symptom(user, symptomId):
         }, 500
 
 
-# post a symptom in production.user_symptoms
+# add symptom to user_symptoms collection
 @user_symptoms.route("/", methods=["POST"])
 @require_token
 def add_user_symptom(user):
     try:
+        # get username from auth middleware
         username = user["username"]
 
         data = request.get_json()
         date = data["date"]
         time = data["time"]
 
+        # set default time/date to now
         if not time:
             time = datetime.now().time().strftime("%H:%M")
         if not date:
             date = datetime.now().date().strftime("%Y-%m-%d")
 
         symptom_time = datetime.strptime(date + " " + time, "%Y-%m-%d %H:%M")
+
         symptom = data["symptom"]
         severity = data["severity"]
 
@@ -47,6 +50,7 @@ def add_user_symptom(user):
         if not severity:
             return "Severity level required", 400
 
+        # add the symptom
         new_symptom = db.user_symptoms.insert_one(
             {
                 "username": username,
@@ -56,6 +60,7 @@ def add_user_symptom(user):
             }
         )
 
+        # add the symptom to all related meals (any that occured in the previous 30 hours)
         timelimit = symptom_time - timedelta(hours=30)
         meals = db.meals.find(
             {
@@ -64,6 +69,7 @@ def add_user_symptom(user):
             }
         )
 
+        # update the meals with the array
         for meal in meals:
             db.meals.find_one_and_update(
                 {"_id": meal["_id"]},
@@ -80,16 +86,17 @@ def add_user_symptom(user):
         }, 500
 
 
-
 # gets each single user's symptoms, paginated
 @user_symptoms.route("", methods=["GET"])
 @require_token
 def get_user_symptoms(user):
     try:
+        # get username from auth middleware
         username = user["username"]
 
         page = request.args.get("page")
 
+        # default page = 1
         if page:
             page = int(page)
         else:
@@ -97,8 +104,10 @@ def get_user_symptoms(user):
 
         offset = (page - 1) * 20
 
+        # get count of user's symptoms, for pagination
         total_symptoms = db.user_symptoms.count_documents({"username": username})
 
+        # change page to final page if there are no symptoms for the given page
         if offset > total_symptoms:
             offset = total_symptoms - 20
 
@@ -107,7 +116,14 @@ def get_user_symptoms(user):
             for symptom in db.user_symptoms.aggregate(
                 [
                     {"$match": {"username": username}},
-                    {"$project": {"_id": {"$toString": "$_id"}, "datetime": 1, "severity": 1, "symptom": 1}},
+                    {
+                        "$project": {
+                            "_id": {"$toString": "$_id"},
+                            "datetime": 1,
+                            "severity": 1,
+                            "symptom": 1,
+                        }
+                    },
                     {"$sort": {"datetime": -1}},
                     {"$skip": offset},
                     {"$limit": 20},

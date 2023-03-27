@@ -8,6 +8,7 @@ salt = bcrypt.gensalt(5)
 
 users = Blueprint("users", __name__)
 
+
 # gets users without password displayed on browser
 @users.route("/", methods=["GET"])
 def get_users():
@@ -20,7 +21,8 @@ def get_users():
     else:
         return "No users found", 404
 
-# gets a single user
+
+# gets a single user, username only
 @users.route("/single", methods=["GET"])
 @require_token
 def get_user(user):
@@ -31,46 +33,6 @@ def get_user(user):
         return {"data": username}, 200
     else:
         return "User not found", 404
-
-# gets each single user's symptoms, paginated
-@users.route("/symptoms", methods=["GET"])
-@require_token
-def get_user_symptoms(user):
-    try:
-        username = user["username"]
-
-        page = int(request.args.get("page"))
-        if not page:
-            page = 1
-
-        offset = (page - 1) * 20
-
-        total_symptoms = db.user_symptoms.count_documents({"username": username})
-
-        if offset > total_symptoms:
-            offset = total_symptoms - 20
-
-        symptoms = [
-            symptom
-            for symptom in db.user_symptoms.aggregate(
-                [
-                    {"$match": {"username": username}},
-                    {"$project": {"_id": 0}},
-                    {"$sort": {"datetime": -1}},
-                    {"$skip": offset},
-                    {"$limit": 20},
-                ]
-            )
-        ]
-
-        if symptoms:
-            return {"count": total_symptoms, "symptoms": symptoms}, 200
-        else:
-            return f"No meals found for user {username}", 500
-
-    except Exception as e:
-        print("Error! ", str(e))
-        return "Error fetching meals", 500
 
 
 # post route for adding a meal to the user's collection
@@ -117,6 +79,7 @@ def add_entry(user):
     except Exception as e:
         print("Error! ", str(e))
         return "Error adding meal", 401
+
 
 @users.route("/editProfile", methods=["PUT"])
 @require_token
