@@ -82,7 +82,7 @@ const Beeswarm = () => {
         .append("circle")
         .attr("cx", (d, i) => 25 + i * 120)
         .attr("cy", legendHeight / 2)
-        .attr("r", 16)
+        .attr("r", 12)
         .attr("fill", (d, i) => d[1]);
   
       legend.selectAll("text") // Add text labels for each symptom in the legend
@@ -92,7 +92,7 @@ const Beeswarm = () => {
         .attr("text-anchor", "middle")
         .attr("x", (d, i) => 25 + i * 120)
         .attr("y", (legendHeight / 2) + 50)
-        .attr("font-size", "16px")
+        .attr("font-size", "12px")
         .text((d) => d[0]);
   
         const nodes = g
