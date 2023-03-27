@@ -1,4 +1,3 @@
-import React from "react";
 import React, {useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserStats, selectUserCorrelations } from "../../store/correlationsSlice";
@@ -40,3 +39,5 @@ const Beeswarm = () => {
     </section>
   )
 }
+
+export default Beeswarm
