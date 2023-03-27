@@ -69,6 +69,8 @@ const ScatterPlot = () => {
   };
 
   const toggleSymptom = (symptom) => {
+    if (!allData || !allData.length) return;
+
     setCurrentSymptom(symptom);
     const { groupData, foodData } = allData.find(
       ({ symptomData }) => symptomData.name === symptom
@@ -136,16 +138,12 @@ const ScatterPlot = () => {
     const colors = d3.scaleOrdinal().domain(labels).range(d3.schemeSet2);
 
     const x = d3.scaleTime().domain(dateRange).range([0, width]);
-
-    x.ticks(12);
-
+    const axis = d3.axisBottom(x).ticks(6);
     //generagte x axis, date format
     const xAxis = svg
       .append("g")
       .attr("transform", `translate(0, ${height})`)
-      .call(d3.axisBottom(x));
-
-    //add y axis
+      .call(axis);
 
     const y = d3.scaleLinear().domain([0, max_y]).range([height, 0]);
     const yAxis = svg
@@ -269,10 +267,9 @@ const ScatterPlot = () => {
 
       x.domain(newRange);
 
-      xAxis.transition().duration(500).call(d3.axisBottom(x));
+      xAxis.transition().duration(500).call(d3.axisBottom(x).ticks(6));
 
       dots
-        // .selectAll("myDots")
         .data(data)
         .transition()
         .duration(500)
@@ -284,7 +281,6 @@ const ScatterPlot = () => {
         });
 
       lines
-        // .selectAll("myLines")
         .data(data)
         .transition()
         .duration(500)
