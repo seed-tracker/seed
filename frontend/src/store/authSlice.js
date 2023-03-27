@@ -12,11 +12,7 @@ export const me = createAsyncThunk("auth/me", async (thunkAPI) => {
   const token = window.localStorage.getItem(TOKEN);
   try {
     if (token) {
-      const { data } = await apiClient.get("auth/me", {
-        headers: {
-          authorization: token,
-        },
-      });
+      const { data } = await apiClient.get("auth/me");
       return data;
     } else {
       return {};
