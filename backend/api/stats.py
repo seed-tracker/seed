@@ -119,7 +119,6 @@ def get_user_foods(user):
 def get_monthly_data(user):
     try:
         username = user["username"]
-        print(username)
 
         months = request.args.get("months")
         months = int(months) if months else 12
