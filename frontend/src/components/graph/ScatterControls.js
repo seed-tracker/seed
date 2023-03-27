@@ -3,13 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import * as d3 from "d3";
 import { fetchScatterData } from "../../store/scatterSlice";
 
-const ScatterControls = ({
-  symptomList,
-  toggleSymptom,
-  changeTimeRange,
-  maxMonths,
-}) => {
+const ScatterControls = ({ symptomList, toggleSymptom, maxMonths }) => {
   const [months, setMonths] = useState([]);
+  const [sliderVal, setSliderVal] = useState(maxMonths);
 
   useEffect(() => {
     if (!maxMonths || maxMonths < 3) return;
@@ -26,13 +22,22 @@ const ScatterControls = ({
     <section>
       <section>
         {months.map((num) => (
-          <button value={num} onClick={changeTimeRange}>
+          <button value={num} className="time_range_btn" key={num}>
             {num >= 12 ? `${Math.floor(num / 12)} years` : `${num} months`}
           </button>
         ))}
-        <button value={maxMonths} onClick={changeTimeRange}>
+        <button value={maxMonths} className="time_range_btn">
           All time
         </button>
+        <input
+          type="range"
+          min="3"
+          max={12 || maxMonths || 3}
+          className="slider"
+          step="1"
+          onChange={(e) => setSliderVal(e.target.value)}
+        />{" "}
+        {sliderVal}
       </section>
       <section>
         {symptomList

@@ -165,7 +165,7 @@ def get_monthly_data(user):
             {
                 "$match": {
                     "username": username,
-                    "datetime": {"$gte": min_date},
+                    # "datetime": {"$gte": min_date},
                     "symptom": {"$in": [c["symptom"] for c in data]},
                 }
             },
@@ -294,7 +294,7 @@ def get_food_data(type, array, username, min_date, delta):
         {
             "$match": {
                 "username": username,
-                "datetime": {"$gte": min_date},
+                # "datetime": {"$gte": min_date},
             }
         },
         {"$unwind": f"${type}s"},

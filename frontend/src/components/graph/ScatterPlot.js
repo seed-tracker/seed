@@ -49,16 +49,10 @@ const ScatterPlot = () => {
       else setCurrentGroups([groupData[0].name || null]);
     }
 
-    //get the max:
-
     setDateRange([
       symptomData.values[0].date,
       symptomData.values[symptomData.values.length - 1].date,
     ]);
-  };
-
-  const changeTimeRange = ({ target }) => {
-    dispatch(fetchScatterData(target.value));
   };
 
   const createDate = (data) =>
@@ -94,8 +88,15 @@ const ScatterPlot = () => {
     return text.split(" ").join("_").split(",").join("_");
   };
 
-  // set up container, scaling, axis, labeling, data
+  //when time range changes, update the graph
+  useEffect(() => {
+    if (!allData || !allData.length) return;
 
+    // const x = d3.scaleTime().domain(dateRange).range([0, 700]);
+    // xAxis.transition().duration(500).call(x);
+  }, [dateRange]);
+
+  // set up container, scaling, axis, labeling, data
   useEffect(() => {
     if (!allData || !allData.length) return;
 
@@ -139,7 +140,7 @@ const ScatterPlot = () => {
     x.ticks(12);
 
     //generagte x axis, date format
-    svg
+    const xAxis = svg
       .append("g")
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(x));
@@ -147,7 +148,11 @@ const ScatterPlot = () => {
     //add y axis
 
     const y = d3.scaleLinear().domain([0, max_y]).range([height, 0]);
-    svg.append("g").call(d3.axisLeft(y));
+    const yAxis = svg
+      .append("g")
+      .transition()
+      .duration(500)
+      .call(d3.axisLeft(y));
 
     //add the lines
     const line = d3
@@ -155,7 +160,17 @@ const ScatterPlot = () => {
       .x((d) => x(d.date))
       .y((d) => y(d.count));
 
-    svg
+    const clip = svg
+      .append("defs")
+      .append("svg:clipPath")
+      .attr("id", "clip")
+      .append("svg:rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("x", 0)
+      .attr("y", 0);
+
+    const lines = svg
       .selectAll("myLines")
       .data(data)
       .join("path")
@@ -164,6 +179,7 @@ const ScatterPlot = () => {
       .attr("class", function (d) {
         return makeKey(d.name);
       })
+      .attr("clip-path", "url(#clip")
       .style("stroke-width", 4)
       .style("fill", "none")
       .style("opacity", (d) =>
@@ -172,7 +188,7 @@ const ScatterPlot = () => {
           : 0
       );
 
-    svg
+    const dots = svg
       .selectAll("myDots")
       .data(data)
       .join("g")
@@ -181,7 +197,7 @@ const ScatterPlot = () => {
       .data((d) => d.values)
       .join("circle")
       .attr("r", 5)
-      .attr("stroke", "white")
+      .attr("stroke", "blue")
       .style("opacity", (d) =>
         [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
           ? 1
@@ -244,6 +260,40 @@ const ScatterPlot = () => {
           .transition()
           .style("opacity", nodes.style("opacity") == 1 ? 0 : 1);
       });
+
+    const updateAxis = ({ target }) => {
+      let newStartDate = new Date(dateRange[1]);
+      newStartDate.setMonth(newStartDate.getMonth() - target.value);
+
+      const newRange = [newStartDate, dateRange[1]];
+
+      x.domain(newRange);
+
+      xAxis.transition().duration(500).call(d3.axisBottom(x));
+
+      dots
+        // .selectAll("myDots")
+        .data(data)
+        .transition()
+        .duration(500)
+        .attr("cx", function (d) {
+          return x(+d.date);
+        })
+        .attr("cy", function (d) {
+          return y(+d.count);
+        });
+
+      lines
+        // .selectAll("myLines")
+        .data(data)
+        .transition()
+        .duration(500)
+        .attr("d", (d) => line(d.values));
+
+      setDateRange(newRange);
+    };
+
+    d3.selectAll(".slider").on("click", updateAxis);
   }, [allData, currentFoods, currentGroups, currentSymptom]);
 
   return (
@@ -253,7 +303,6 @@ const ScatterPlot = () => {
           <ScatterControls
             symptomList={allData.map(({ symptomData }) => symptomData.name)}
             toggleSymptom={toggleSymptom}
-            changeTimeRange={changeTimeRange}
             maxMonths={maxMonths}
           />
         )}
