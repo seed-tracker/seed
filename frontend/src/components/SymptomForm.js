@@ -6,6 +6,7 @@ import { me } from "../store/authSlice";
 import { addSymptomEntry } from "../store/symptomSlice";
 import Sidebar from "./Sidebar";
 import apiClient from "../config";
+import Inputs from "./nextUI/Inputs";
 
 const SymptomForm = () => {
   const [date, setDate] = useState("");
@@ -60,22 +61,22 @@ const SymptomForm = () => {
     <main>
       <Sidebar />
       <form onSubmit={handleSymptomSubmit}>
-        <label htmlFor="date">
-          Date:
-          <input
-            type="date"
-            value={date}
-            onChange={(event) => setDate(event.target.value)}
-          />
-        </label>
-        <label htmlFor="time">
-          Time:
-          <input
-            type="time"
-            value={time}
-            onChange={(event) => setTime(event.target.value)}
-          />
-        </label>
+        <Inputs
+          type={"date"}
+          required={true}
+          label={"Date:"}
+          value={date}
+          onChange={(event) => setDate(event.target.value)}
+          helperText={"required"}
+        />
+        <Inputs
+          type={"time"}
+          required={true}
+          label={"Time:"}
+          value={time}
+          onChange={(event) => setTime(event.target.value)}
+          helperText={"required"}
+        />
         <div>
           <label htmlFor="symptoms">Select symptom(s):</label>
           <select
