@@ -98,7 +98,7 @@ const ScatterPlot = () => {
 
   // set up container, scaling, axis, labeling, data
   useEffect(() => {
-    if (!allData || !allData.length) return;
+    if (!allData || !allData.length || !allData[0].symptomData) return;
 
     const width = 700;
     const height = 400;

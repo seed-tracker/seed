@@ -165,7 +165,6 @@ def get_monthly_data(user):
             {
                 "$match": {
                     "username": username,
-                    # "datetime": {"$gte": min_date},
                     "symptom": {"$in": [c["symptom"] for c in data]},
                 }
             },
@@ -270,7 +269,7 @@ def get_last_date(username):
 
 
 def get_date_range(username):
-    return relativedelta(
+    range = relativedelta(
         get_last_date(username),
         [
             m
@@ -283,7 +282,9 @@ def get_date_range(username):
                 ]
             )
         ][0]["datetime"],
-    ).months
+    )
+
+    return range.months + range.years * 12
 
 
 # array = array of foods to search
@@ -291,12 +292,7 @@ def get_date_range(username):
 # returns food/group data, grouped by month and year, including count
 def get_food_data(type, array, username, min_date, delta):
     pipeline = [
-        {
-            "$match": {
-                "username": username,
-                # "datetime": {"$gte": min_date},
-            }
-        },
+        {"$match": {"username": username}},
         {"$unwind": f"${type}s"},
         {
             "$project": {
