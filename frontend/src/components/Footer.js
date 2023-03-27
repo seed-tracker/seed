@@ -24,11 +24,10 @@ const Footer = () => {
               Our Mission
             </Text>
             <Text size={13}>
-              Finding correlations between symptoms and foods, allowing you to
-              narrow down food-based triggers. <br />
+              Finding associations/relationships between symptoms and foods,
+              allowing you to narrow down food-based triggers. <br />
               <strong>
-                Please remember that correlation DOES NOT equal causation and
-                SEED does not provide medical advice!
+                Please remember that SEED does not provide medical advice!
               </strong>
             </Text>
           </Col>
