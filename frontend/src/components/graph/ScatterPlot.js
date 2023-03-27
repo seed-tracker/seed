@@ -69,7 +69,7 @@ const ScatterPlot = () => {
   };
 
   const toggleSymptom = (symptom) => {
-    if (!allData || !allData.length) return;
+    if (!allData || !allData.length || !allData.symptomData) return;
 
     setCurrentSymptom(symptom);
     const { groupData, foodData } = allData.find(
