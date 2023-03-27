@@ -28,6 +28,7 @@ const Profile = () => {
     <main>
       <Sidebar />
       <section>
+<<<<<<<<< Temporary merge branch 1
         <StatsAndFacts />
       </section>
       <section>
@@ -35,7 +36,10 @@ const Profile = () => {
       </section>
       <section>
         <Beeswarm />
+=========
+        <BubbleChart />
         <ScatterPlot />
+>>>>>>>>> Temporary merge branch 2
       </section>
       <section>{!correlationsLoaded && <CirclePacking />}</section>
     </main>
