@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import Sidebar from "./Sidebar";
-import Autocomplete from './Autocomplete';
+import Autocomplete from "./Autocomplete";
 import apiClient from "../config";
+import { Table, Button, Grid, Input, Dropdown, Text } from "@nextui-org/react";
 
 function MealForm() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [currentGroup, setCurrentGroup] = useState("");
-  const [currentFood, setCurrentFood] = useState("");
-  const [allGroups, setAllGroups] = useState(null);
-  const [foodArray, setFoodArray] = useState([]);
-  const [groupArray, setGroupArray] = useState([]);
   const [entryName, setEntryName] = useState("");
+  const [mealArray, setMealArray] = useState([]);
+  const [validation, setValidation] = useState(false);
+  const [allGroups, setAllGroups] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -25,7 +24,6 @@ function MealForm() {
   //fetch food groups when the component mounts
   useEffect(() => {
     const today = new Date().toISOString();
-    setTime(today.substring(11, 16));
     setDate(today.substring(0, 10));
 
     fetchGroups();
@@ -38,22 +36,14 @@ function MealForm() {
 
       if (data && data["data"]) {
         setAllGroups(data["data"]);
-        setCurrentGroup(data["data"][0]["name"]);
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  const addFood = (e) => {
-    e.preventDefault();
-    if (currentFood.length && currentGroup.length) {
-      const foods = foodArray;
-      const groups = groupArray;
-      setFoodArray([...foods, currentFood]);
-      setGroupArray([...groups, currentGroup]);
-      setCurrentFood("");
-    }
+  const addFood = (foodObj) => {
+    setMealArray([...mealArray, foodObj]);
   };
 
   const handleDateChange = (event) => {
@@ -64,14 +54,6 @@ function MealForm() {
     setTime(event.target.value);
   };
 
-  const handleFoodGroupChange = (event) => {
-    setCurrentGroup(event.target.value);
-  };
-
-  const handleFoodItems = (event) => {
-    setCurrentFood(event.target.value);
-  };
-
   const handleNameChange = (event) => {
     setEntryName(event.target.value);
   };
@@ -80,18 +62,32 @@ function MealForm() {
     return array.filter((item, idx) => array.indexOf(item) === idx);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     try {
-      const foods = makeUnique([...foodArray]);
-      const groups = makeUnique([...groupArray]);
-
-      if (currentGroup.length && currentFood.length) {
-        foods.push(currentFood);
-        groups.push(currentGroup);
+      if (
+        !mealArray.length ||
+        !time.length ||
+        !date.length ||
+        !entryName.length ||
+        !mealArray.length
+      ) {
+        setValidation(true);
+        return;
       }
 
-      const res = await apiClient.post("users/addMeal", {
+      const foods = makeUnique(mealArray.map(({ name }) => name));
+      const groups = mealArray.reduce((array, { groups }) => {
+        groups.forEach((g) => {
+          if (!array.includes(g)) array.push(g);
+        });
+        return array;
+      }, []);
+
+      console.log(foods, groups);
+
+      return;
+
+      await apiClient.post("users/addMeal", {
         date,
         time,
         foods,
@@ -103,101 +99,93 @@ function MealForm() {
     }
   };
 
+  const removeFood = (idx) => {
+    console.log(idx);
+    setMealArray([...mealArray.slice(0, idx), ...mealArray.slice(idx + 1)]);
+  };
+
   const AddedFoods = () => {
     return (
-      <table>
-        <tr>
-          <th>Food</th>
-          <th>Group</th>
-        </tr>
-        {foodArray.length &&
-          foodArray.map((food, i) => (
-            <tr key={i}>
-              <td>{food}</td>
-              <td>{groupArray[i]}</td>
-            </tr>
+      <Table
+        aria-label="Added foods table"
+        css={{
+          height: "auto",
+          width: "150px",
+          minWidth: "20%",
+        }}
+      >
+        <Table.Header>
+          <Table.Column key={1}>Foods</Table.Column>
+          <Table.Column key={2}>Groups</Table.Column>
+          <Table.Column key={3}></Table.Column>
+        </Table.Header>
+        <Table.Body>
+          {mealArray.map((food, i) => (
+            <Table.Row key={i}>
+              <Table.Cell>{food.name}</Table.Cell>
+              <Table.Cell>{food.groups.join(", ")}</Table.Cell>
+              <Table.Cell>
+                <Button
+                  size="xs"
+                  color="error"
+                  auto
+                  onPress={() => removeFood(i)}
+                >
+                  Delete
+                </Button>
+              </Table.Cell>
+            </Table.Row>
           ))}
-      </table>
+        </Table.Body>
+      </Table>
     );
   };
 
   return (
-    <main>
-      <Sidebar />
-      <form>
-        <div>
-          <div>
-            <label>
-              Date:
-              <input
-                type="date"
-                value={date}
-                onChange={handleDateChange}
-                required
-              />
-            </label>
-            <label>
-              Time:
-              <input
-                type="time"
-                value={time}
-                onChange={handleTimeChange}
-                required
-              />
-            </label>
-            <label>
-              Entry name:
-              <input
-                type="text"
-                value={entryName}
-                onChange={handleNameChange}
-                required
-              />
-            </label>
-          </div>
-          <label>
-            Food Group:
-            <select value={currentGroup} onChange={handleFoodGroupChange}>
-              {allGroups &&
-                allGroups.length &&
-                allGroups.map((group) => (
-                  <option value={group["name"]} key={group["id"]}>
-                    {group["name"]}
-                  </option>
-                ))}
-            </select>
-          </label>
-          <label>
-            Food:
-            <Autocomplete value={foodArray} onChange={handleFoodItems} />
-            {/* <Autocomplete value={foodItems} onChange={handleFoodItems} /> */}
+    <>
+      <Grid.Container justify="center" css={{ marginTop: "5rem" }} gap={4}>
+        <Grid>
+          <Input
+            label="Entry Name"
+            type="text"
+            value={entryName}
+            onChange={handleNameChange}
+            required
+          />
+        </Grid>
+        <Grid>
+          <Input
+            width="186px"
+            label="Date"
+            type="date"
+            value={date}
+            onChange={handleDateChange}
+            required
+          />
+        </Grid>
+        <Grid>
+          <Input
+            width="186px"
+            label="Time"
+            type="time"
+            value={time}
+            onChange={handleTimeChange}
+            required
+          />
+        </Grid>
 
-          </label>
+        <Grid>
+          <Autocomplete addFood={addFood} allGroups={allGroups} />
+        </Grid>
 
-          <button onClick={addFood}>Add Food</button>
-          <button
-            onClick={handleSubmit}
-            disabled={
-              !(
-                foodArray.length &&
-                time.length &&
-                date.length &&
-                entryName.length
-              )
-            }
-          >
+        <Grid>
+          <Button color="primary" auto rounded onPress={handleSubmit}>
             Submit Meal
-          </button>
-
-          {foodArray.length ? (
-            <div>
-              <br></br>
-              Added foods: <AddedFoods />
-            </div>
-          ) : null}
-        </div>
-      </form>
-    </main>
+          </Button>
+        </Grid>
+        {mealArray.length ? <AddedFoods /> : null}
+      </Grid.Container>
+    </>
   );
 }
 

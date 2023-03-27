@@ -69,7 +69,7 @@ const ScatterPlot = () => {
   };
 
   const toggleSymptom = (symptom) => {
-    if (!allData || !allData.length || !allData.symptomData) return;
+    if (!allData || !allData.length) return;
 
     setCurrentSymptom(symptom);
     const { groupData, foodData } = allData.find(
@@ -146,11 +146,7 @@ const ScatterPlot = () => {
       .call(axis);
 
     const y = d3.scaleLinear().domain([0, max_y]).range([height, 0]);
-    const yAxis = svg
-      .append("g")
-      .transition()
-      .duration(500)
-      .call(d3.axisLeft(y));
+    svg.append("g").transition().duration(500).call(d3.axisLeft(y));
 
     //add the lines
     const line = d3
@@ -259,6 +255,21 @@ const ScatterPlot = () => {
           .style("opacity", nodes.style("opacity") == 1 ? 0 : 1);
       });
 
+    svg
+      .append("text")
+      .attr("text-anchor", "end")
+      .attr("transform", "rotate(-90)")
+      .attr("y", -40)
+      .attr("x", -height / 4)
+      .text("Number of occurences per month");
+
+    svg
+      .append("text")
+      .attr("text-anchor", "end")
+      .attr("x", width / 2)
+      .attr("y", height + 40)
+      .text("Months");
+
     const updateAxis = ({ target }) => {
       let newStartDate = new Date(dateRange[1]);
       newStartDate.setMonth(newStartDate.getMonth() - target.value);
@@ -303,6 +314,7 @@ const ScatterPlot = () => {
           />
         )}
       </section>
+      <h1>Your top associations</h1>
       <svg ref={svgRef} style={{ margin: "90px" }}></svg>
     </>
   );

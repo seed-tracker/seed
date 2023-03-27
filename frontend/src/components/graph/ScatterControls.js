@@ -8,6 +8,15 @@ const ScatterControls = ({ symptomList, toggleSymptom, maxMonths }) => {
 
   return (
     <section>
+      <h3>
+        {" "}
+        Showing data over the past{" "}
+        {sliderVal === 12
+          ? "1 year"
+          : sliderVal % 12 === 0 && sliderVal > 13
+          ? `${sliderVal / 12} years`
+          : `${sliderVal} months`}
+      </h3>
       <section>
         <input
           type="range"
@@ -16,14 +25,11 @@ const ScatterControls = ({ symptomList, toggleSymptom, maxMonths }) => {
           className="slider"
           step="1"
           onChange={(e) => setSliderVal(Number(e.target.value))}
-        />{" "}
-        {sliderVal === 12
-          ? "1 year"
-          : sliderVal % 12 === 0 && sliderVal > 13
-          ? `${sliderVal / 12} years`
-          : `${sliderVal} months`}
+        />
       </section>
       <section>
+        {/* this should probably be a dropdown? */}
+        Most common symptoms:{" "}
         {symptomList
           ? symptomList.length &&
             symptomList.map((s, i) => (
