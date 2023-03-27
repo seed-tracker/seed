@@ -2,4 +2,7 @@
 import Dropdown from "./Dropdown";
 import Button from "./Button";
 
-export { Button, Dropdown };
+export default {
+  Dropdown,
+  Button,
+};

@@ -15,14 +15,25 @@ const App = () => {
   const theme = createTheme({
     type: "light",
     theme: {
-      // these represent names of colors. The keys can be called in individ components
+      /* Color key
+      background: default page background color
+      primary: All text (black)
+      secondary: Logos and Headers (h1, etc.)
+      success: links
+      error: red
+      backgroundAlpha: defines button background  */
       colors:{
-        primary: '#000000',
-        darkgreen: '#4D5D53',
-        logo: 'darkgreen', 
         milkyJade: '#cfdbd1',
         background: '$milkyJade',
-        /*backgroundAlpha: determine navbar background color, use 8 digit hex code where last 2 digits refer to alpha , */
+        text: '#000000',
+        primary: '$text',
+        logoHeader: '#4D5D53',
+        secondary: '$logoHeader', 
+        links: '#444c38',
+        success: '$links',
+        red: '#ff4848',
+        error: '$red',
+        backgroundAlpha: '#7a918dcc',
       },
       fonts: {
         sans: "sans-serif"
