@@ -2,7 +2,8 @@ import { useState } from "react";
 // import {useDispatch} from 'react-redux';
 // import { autocompleteFood } from "../store/entrySlice";
 import apiClient from "../config";
-import { Card, Input, Row, Button, Dropdown } from "@nextui-org/react";
+import { Card, Input, Row } from "@nextui-org/react";
+import { Button, Dropdown } from "./nextUI";
 
 const Autocomplete = ({ addFood, allGroups }) => {
   const [suggestions, setSuggestions] = useState([]);
@@ -64,6 +65,11 @@ const Autocomplete = ({ addFood, allGroups }) => {
     setChosenGroup([]);
   };
 
+  const cancelNewFood = () => {
+    setShowDropdown(false);
+    setChosenGroup([]);
+  };
+
   return (
     <div className="autocomplete">
       <Card css={{ marginTop: "0", width: "150px" }}>
@@ -77,16 +83,19 @@ const Autocomplete = ({ addFood, allGroups }) => {
           css={{ marginBottom: "0px" }}
         />
         <Card.Body css={{ padding: "0" }}>
-          {value.length > 1 ? (
+          {value.length > 1 && !showDropdown ? (
             <>
               {suggestions.map((suggestion, idx) => (
                 <Row key={idx} onClick={() => handleClick(idx)}>
                   {suggestion.name}
                 </Row>
               ))}
-              {!showDropdown && (
-                <Row onClick={() => setShowDropdown(true)}>Add new food</Row>
-              )}
+              <Row
+                onClick={() => setShowDropdown(true)}
+                style={{ color: "red" }}
+              >
+                Add new food
+              </Row>
             </>
           ) : null}
         </Card.Body>
@@ -94,27 +103,27 @@ const Autocomplete = ({ addFood, allGroups }) => {
 
       {showDropdown && (
         <>
-          <Dropdown>
-            <Dropdown.Button flat color="secondary" css={{ tt: "capitalize" }}>
-              {chosenGroup.join(", ") || "Choose a food group"}
-            </Dropdown.Button>
-            <Dropdown.Menu
-              aria-label="Food groups"
-              onChange={changeGroup}
-              selectionMode="multiple"
-              selectedKeys={chosenGroup}
-              onSelectionChange={changeGroup}
-            >
-              {allGroups.map((group, i) => (
-                <Dropdown.Item key={group.name} value={group.name}>
-                  {group.name}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-          <Button auto rounded onPress={handleAddNewFood}>
-            Add food
-          </Button>
+          <Dropdown
+            selectedKeys={chosenGroup}
+            selectionMode="multiple"
+            ariaLabel="Dropdown to select a food group"
+            onChange={changeGroup}
+            defaultName="Choose a food group"
+            items={allGroups.map(({ name }) => ({ name: name, key: name }))}
+          />
+          <Button
+            size="xs"
+            ariaLabel="Add a new food"
+            text="Add food"
+            onPress={handleAddNewFood}
+          />
+          <Button
+            size="xs"
+            ariaLabel="Cancel adding a new food"
+            text="Cancel"
+            color="error"
+            onPress={cancelNewFood}
+          />
         </>
       )}
     </div>

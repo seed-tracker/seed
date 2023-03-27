@@ -10,10 +10,24 @@ add foods
 logout
 */
 
-//props: text, color, ariaLabel, loading
-const Button = ({ text, color, ariaLabel, loading }) => {
+//props: text, color, ariaLabel, loading, size, disabled
+const Button = ({
+  text,
+  color,
+  ariaLabel,
+  loading,
+  disabled,
+  size,
+  onPress,
+}) => {
   return (
-    <NextUIButton color={color || "primary"} bordered md aria-label={ariaLabel}>
+    <NextUIButton
+      color={color || "primary"}
+      size={size || "md"}
+      aria-label={ariaLabel}
+      disabled={disabled}
+      onPress={onPress}
+    >
       {!loading ? (
         text
       ) : (

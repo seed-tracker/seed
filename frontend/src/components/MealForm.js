@@ -4,7 +4,16 @@ import { me } from "../store/authSlice";
 import Sidebar from "./Sidebar";
 import Autocomplete from "./Autocomplete";
 import apiClient from "../config";
-import { Table, Button, Grid, Input, Dropdown, Text } from "@nextui-org/react";
+import {
+  Table,
+  Button as NextUIButton,
+  Grid,
+  Input,
+  Dropdown as NextUIDropdown,
+  Text,
+} from "@nextui-org/react";
+
+import { Button, Dropdown } from "./nextUI/index";
 
 function MealForm() {
   const [date, setDate] = useState("");
@@ -83,10 +92,6 @@ function MealForm() {
         return array;
       }, []);
 
-      console.log(foods, groups);
-
-      return;
-
       await apiClient.post("users/addMeal", {
         date,
         time,
@@ -128,11 +133,10 @@ function MealForm() {
                 <Button
                   size="xs"
                   color="error"
-                  auto
+                  ariaLabel={`Remove ${food.name} from meal`}
                   onPress={() => removeFood(i)}
-                >
-                  Delete
-                </Button>
+                  text="Remove"
+                />
               </Table.Cell>
             </Table.Row>
           ))}
@@ -179,7 +183,12 @@ function MealForm() {
         </Grid>
 
         <Grid>
-          <Button color="primary" auto rounded onPress={handleSubmit}>
+          <Button
+            text="Submit Meal"
+            ariaLabel="Button to submit a meal"
+            onPress={handleSubmit}
+            disabled={mealArray.length < 1}
+          >
             Submit Meal
           </Button>
         </Grid>
@@ -190,19 +199,3 @@ function MealForm() {
 }
 
 export default MealForm;
-
-//need to figure out how to autopopulate the food entry
-//slider is a component
-
-// {/* for all items */}
-// {props.foodEntries.length > 0 && sort === "all"
-// ? props.foodEntries.map((item) => {
-//     return (
-//       <FoodItem
-//         key={item.id}
-//         item={item}
-//         removeTodo={props.addFoodEntry}
-
-//       />
-//     );
-//   })
