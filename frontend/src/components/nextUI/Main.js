@@ -1,0 +1,4 @@
+/* Page template view for main area of the following pages
+Login
+Sign up
+Edit Profile */

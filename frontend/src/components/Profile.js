@@ -28,14 +28,11 @@ const Profile = () => {
     <main>
       <Sidebar />
       <section>
+        <ScatterPlot />
         <StatsAndFacts />
       </section>
       <section>
         <CirclePacking />
-      </section>
-      <section>
-        <Beeswarm />
-        <ScatterPlot />
       </section>
       <section>{!correlationsLoaded && <CirclePacking />}</section>
     </main>
