@@ -34,7 +34,7 @@ const CirclePacking = () => {
 
     return result;
   }
-
+console.log(datas)
   const result = getSymptomsAndTopGroups(datas);
 
   const userSymptoms = datas.map((obj) => obj.symptom); // Get an array of the user's symptoms
