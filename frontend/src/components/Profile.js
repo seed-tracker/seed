@@ -28,7 +28,7 @@ const Profile = () => {
     <main>
       <Sidebar />
       <section>
-        <BubbleChart />
+   
         <ScatterPlot />
         <StatsAndFacts />
       </section>
