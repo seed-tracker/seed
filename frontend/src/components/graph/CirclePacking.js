@@ -16,13 +16,12 @@ import * as d3 from "d3";
 const CirclePacking = () => {
   const dispatch = useDispatch();
   const datas = useSelector(selectUserCorrelations);
-  // console.log(datas);
   const symptoms = useSelector(selectSymptoms);
 
   /**
-   * This function creates an object that maps each user's symptom to its top groups, top foods, and lifts.
+   * This function creates an object that maps each user's symptom to its top groups and lifts.
    * @param {Array} datas - An array of objects containing user's correlations data
-   * @returns {Object} An object that maps each symptom to its top groups, top foods, and lifts
+   * @returns {Object} An object that maps each symptom to its top groups and lifts
    */
   function getSymptomsAndTopGroups(datas) {
     const result = {};
@@ -38,7 +37,6 @@ const CirclePacking = () => {
   }
 
   const result = getSymptomsAndTopGroups(datas);
-  console.log("result", result);
 
   const userSymptoms = datas.map((obj) => obj.symptom); // Get an array of the user's symptoms
 
@@ -129,7 +127,7 @@ const CirclePacking = () => {
         d3.select(this).select("circle")
           .transition()
           .duration(250)
-
+    
         d3.select(this).append("text")
           .attr("class", "text")
           .text((d) => d.data.name)
@@ -144,35 +142,34 @@ const CirclePacking = () => {
           .duration(250)
           // .attr("stroke-width", 1)
           // .attr("stroke", "black");
-
+    
         d3.select(this).select(".text").remove();
       })
       .on("click", (d) => console.log("clicked", d.count))
-      .attr("class", "node")
-
-        //shadow
-    leaf.append("filter")
-      .attr("id", "circle-shadow")
-      .append("feDropShadow")
-      .attr("dx", 0)
-      .attr("dy", 2)
-      .attr("stdDeviation", 2)
-      .attr("flood-color", "#333333")
-      .attr("flood-opacity", 0.25)
-
+      .attr("class", "node");
+      //shadow
+      svg.append("filter")
+  .attr("id", "circle-shadow")
+  .append("feDropShadow")
+  .attr("dx", 0)
+  .attr("dy", 2)
+  .attr("stdDeviation", 2)
+  .attr("flood-color", "#000000")
+  .attr("flood-opacity", 0.25);
+      
 
     // Create a circle for each leaf node, with radius based on node size, fill color based on symptom color,
     // and stroke color and width based on lift value (higher values have thicker stroke)
     leaf.append("circle")
-      .attr("r", (d) => d.r)
-      .attr("fill", (d) => d.data.color)
-      .attr("filter", "url(#circle-shadow)")
-      .classed("pulse", function(d) {
-        if (d.data.value > 1.01) {
-          return true;
-        }
-        return false;
-      })
+    .attr("r", (d) => d.r)
+    .attr("fill", (d) => d.data.color)
+    .attr("filter", "url(#circle-shadow)")
+    .classed("pulse", function(d) {
+      if (d.data.value > 1.01) {
+        return true;
+      }
+      return false;
+    })
 
 
     // leaf.append("circle")
@@ -187,12 +184,7 @@ const CirclePacking = () => {
       .attr("text-anchor", "middle")
       .attr("font-size", (d) => "12px")
       .attr("dy", ".35em")
-      .selectAll("tspan")
-      .data((d) => d.data.name.split(/\s+/))
-      .enter().append("tspan")
-      .attr("x", 0)
-      .attr("y", (d, i, nodes) => `${-(nodes.length - 1) * 0.5 + 1.5 * i}em`) // calculate the y position for each line of text
-      .text((d) => d);
+      .text((d) => d.data.name);
   }, [symptoms, userSymptoms, result]);
 
 
