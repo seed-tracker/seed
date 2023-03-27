@@ -9,7 +9,7 @@ import {
   fetchUserCorrelations,
   selectUserCorrelations,
 } from "../store/correlationsSlice";
-import  CirclePacking  from "./graph/CirclePacking";
+import CirclePacking from "./graph/CirclePacking";
 import Beeswarm from "./graph/Beeswarm";
 
 /**
@@ -28,7 +28,6 @@ const Profile = () => {
     <main>
       <Sidebar />
       <section>
-<<<<<<<<< Temporary merge branch 1
         <StatsAndFacts />
       </section>
       <section>
@@ -36,10 +35,7 @@ const Profile = () => {
       </section>
       <section>
         <Beeswarm />
-=========
-        <BubbleChart />
         <ScatterPlot />
->>>>>>>>> Temporary merge branch 2
       </section>
       <section>{!correlationsLoaded && <CirclePacking />}</section>
     </main>
