@@ -1,19 +1,26 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import apiClient from "../config";
 
-export const fetchUserCorrelations = createAsyncThunk(
-  "get user's correlations",
-  async (username) => {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:5000/deawdewd/correlations`
-      );
-      return data;
-    } catch (err) {
-      console.error(err);
-    }
+
+export const fetchUserCorrelations = createAsyncThunk("get user's correlations", async () => {
+  try {
+    const {data} = await apiClient.get("users/correlations/")
+    return data
+  } catch(err) {
+    console.log(err);
   }
-);
+});
+
+export const getUserStats = createAsyncThunk("get user's history", async(days)=>{
+  try{
+    const {data} = await apiClient.get(`/stats?days=${days}`)
+    return data
+  } catch(err){
+    console.log(err)
+  }
+})
+
+
 
 export const correlationsSlice = createSlice({
   name: "correlations",
@@ -26,8 +33,14 @@ export const correlationsSlice = createSlice({
       })
       .addCase(fetchUserCorrelations.rejected, (state, action) => {
         state.error = action.error;
-      });
-  },
+      })
+      .addCase(getUserStats.fulfilled, (state,action) => {
+        return action.payload;
+      })
+      .addCase(getUserStats.rejected, (state,action) =>{
+        state.error = action.error;
+      })
+  }
 });
 
 export const selectUserCorrelations = (state) => state.correlations;

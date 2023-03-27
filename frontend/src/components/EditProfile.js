@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import apiClient from "../config";
 
+
 function EditProfile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
