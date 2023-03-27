@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from db import db
 from bson import ObjectId
 from pprint import PrettyPrinter
+
 printer = PrettyPrinter()
 
 foods = Blueprint("foods", __name__)
@@ -111,4 +112,3 @@ def get_food_by_id(id):
             "error": "Error fetching food",
             "data": None,
         }, 500
-

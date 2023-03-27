@@ -33,9 +33,6 @@ const Profile = () => {
       <section>
         <CirclePacking />
       </section>
-      {/* <section>
-        <Beeswarm />
-      </section> */}
       <section>{!correlationsLoaded && <CirclePacking />}</section>
     </main>
   );

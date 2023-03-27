@@ -4,10 +4,12 @@ import { select } from "d3-selection";
 import { scaleBand, scaleLinear } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
 import { statsSlice, selectUserStats, getUserStats } from "../../store/statsSlice";import * as d3 from "d3";
+import { forceCollide, forceSimulation } from "d3-force";
+import { fetchAllSymptoms, selectSymptoms } from "../../store/symptomSlice";
 
 const Beeswarm = () => {
   const svgRef = useRef();
-
+  const allSymptoms = useSelector(selectSymptoms);
   const dispatch = useDispatch()
   const data = useSelector(selectUserStats)
   const symptoms = data.symptoms
@@ -17,6 +19,7 @@ const Beeswarm = () => {
 
   useEffect(() => {
     dispatch(getUserStats("all"))
+    dispatch(fetchAllSymptoms())
   }, [dispatch])
 
   const handleGetAllTime = async (all) => {
@@ -35,8 +38,8 @@ const Beeswarm = () => {
   useEffect(() => {
     const svg = select(svgRef.current);
     const margin = { top: 200, right: 10, bottom: 200, left: 50 };
-    const width = 500 - margin.left - margin.right;
-    const height = 300 - margin.top - margin.bottom;
+    const width = 750 - margin.left - margin.right;
+    const height = 60 - margin.top - margin.bottom;
 
     if (symptoms && symptoms.length > 0) {
       const xScale = scaleBand()
@@ -60,23 +63,61 @@ const Beeswarm = () => {
         .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
         .call(yAxis);
 
-        const g = svg.append("g").attr("transform", `translate(${margin.left * 2 - 5}, ${margin.top * 2})`);
+        const g = svg.append("g").attr("transform", `translate(${margin.left * 2 - 6}, ${margin.top * 2})`);
+        const colorPalette = d3.schemeSet3;; // Define a color palette for the symptoms and map each symptom to a unique color
+        const symptomColors = {};
+        for (let i = 0; i < allSymptoms.length; i++) {
+          const symptomName = allSymptoms[i].name;
+          const colorIndex = i % colorPalette.length;
+          symptomColors[symptomName] = colorPalette[colorIndex];
+        }
 
+     
+        const legend = d3.select("#legend") // Create the legend
+        const legendHeight = +legend.attr("height");
+    
+        legend.selectAll("circle") // Create a circle for each symptom in the legend and color it with the corresponding color
+        .data(Object.entries(symptomColors))
+        .enter()
+        .append("circle")
+        .attr("cx", (d, i) => 25 + i * 120)
+        .attr("cy", legendHeight / 2)
+        .attr("r", 12)
+        .attr("fill", (d, i) => d[1]);
+  
+      legend.selectAll("text") // Add text labels for each symptom in the legend
+        .data(Object.entries(symptomColors))
+        .enter()
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", (d, i) => 25 + i * 120)
+        .attr("y", (legendHeight / 2) + 50)
+        .attr("font-size", "12px")
+        .text((d) => d[0]);
+  
         const nodes = g
           .selectAll("circle")
           .data(symptoms)
           .join("circle")
           .attr("cx", d => xScale(d.name))
-          .attr("r", 5);
+          // .attr("r", 5);
 
-        for (let i = 0; i < symptoms.length; i++) {
-          for (let j = 0; j < counts[i]; j++) {
-            g.append("circle")
-              .attr("cx", xScale(symptoms[i].name))
-              .attr("cy", yScale(j))
-              .attr("r", 5);
+          for (let i = 0; i < symptoms.length; i++) {
+            for (let j = 0; j < counts[i]; j++) {
+              if (j === counts[i] - 1) {
+                g.append("circle")
+                  .attr("cx", xScale(symptoms[i].name))
+                  .attr("cy", yScale(j))
+                  .attr("r", 5); // larger radius for last element
+              } else {
+                g.append("circle")
+                  .attr("cx", xScale(symptoms[i].name))
+                  .attr("cy", yScale(j))
+                  .attr("r", 1); // smaller radius for other elements
+              }
+            }
           }
-        }
+  
 
       console.log("nodes", nodes);
     }
@@ -91,7 +132,11 @@ const Beeswarm = () => {
       <button type="button" onClick={handleGetAllTime} value="all">All</button>
       <button type="button" onClick={handleGetSixMonths} value="180">6 Months</button>
       <button type="button" onClick={handleGetOneYear} value="365">1 Year</button>
-     <div className="beeSwarmChart"><svg ref={svgRef} width="1700" height="700"></svg></div>
+    
+     <div className="beeSwarmChart">
+     <svg id="legend" width="1400px" height="250"></svg>
+      <svg ref={svgRef} width="2000" height="1000"></svg></div>
+
     </section>
   );
 };
