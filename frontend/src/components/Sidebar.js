@@ -7,12 +7,13 @@ import { Link } from "react-router-dom";
  */
 const Sidebar = () => {
   return (
-    <div>
-      <Link to="/user/editProfile">Edit Profile</Link>
-      <Link>All Entries</Link>
+    <aside>
+      <Link to="/user/edit-profile">Edit Profile</Link>
       <Link to="/add/symptom">Add Symptom Entry</Link>
       <Link to="/user/addFood">Add Food Entry</Link>
-    </div>
+      <Link to="/user/symptom-entries">Past Symptom Entries</Link>
+      <Link to="/user/meal-entries">Past Meal Entries</Link>
+    </aside>
   );
 };
 

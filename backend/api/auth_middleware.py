@@ -46,3 +46,40 @@ def require_token(f):
             }, 500
 
     return auth
+
+def require_token_delete(f):
+    @wraps(f)
+    def auth_delete(*args, **kwargs):
+        token = None
+        data = request.get_json()
+        # check for authorization
+        if "authorization" in data:
+            token = data["authorization"]
+        # if there's no token, return an error
+        if token is None:
+            return {
+                "data": None,
+                "error": "Not authorized",
+                "message": "Authentification token required",
+            }, 401
+        try:
+            # try to decode the token and get the user from the db
+            decoded_user = jwt.decode(token, secret, algorithms="HS256")
+            user = db.users.find_one({"username": decoded_user["username"]})
+            # if there's no user, send an error
+            if not user:
+                return {
+                    "data": None,
+                    "error": "Invalid token",
+                    "message": "Authentication failed",
+                }, 401
+            # if there is, return the user and args
+            return f(user, *args, **kwargs)
+        except Exception as e:
+            return {
+                "message": str(e),
+                "error": "Error fetching user",
+                "data": None,
+            }, 500
+
+    return auth_delete
