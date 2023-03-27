@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { me } from "../store/authSlice";
 import { useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
+import ScatterPlot from "./graph/ScatterPlot";
 import StatsAndFacts from "./StatsAndFacts";
 import {
   fetchUserCorrelations,
@@ -27,14 +28,16 @@ const Profile = () => {
     <main>
       <Sidebar />
       <section>
+        <BubbleChart />
+        <ScatterPlot />
         <StatsAndFacts />
       </section>
       <section>
         <CirclePacking />
       </section>
-      <section>
+      {/* <section>
         <Beeswarm />
-      </section>
+      </section> */}
       <section>{!correlationsLoaded && <CirclePacking />}</section>
     </main>
   );

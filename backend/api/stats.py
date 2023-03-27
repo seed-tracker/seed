@@ -119,6 +119,7 @@ def get_user_foods(user):
 def get_monthly_data(user):
     try:
         username = user["username"]
+        print(username)
 
         months = request.args.get("months")
         months = int(months) if months else 12
@@ -126,8 +127,47 @@ def get_monthly_data(user):
         min_date = get_last_date(username) - relativedelta(months=months)
         delta = relativedelta(get_last_date(username), datetime.now())
 
+        # get user's correlated symptoms
         pipeline = [
-            {"$match": {"username": username, "datetime": {"$gte": min_date}}},
+            {"$match": {"username": username}},
+            {
+                "$project": {
+                    "symptom": 1,
+                    "top_foods": {"name": 1},
+                    "top_groups": {"name": 1},
+                    "_id": 0,
+                }
+            },
+        ]
+
+        correlations = list(db.correlations.aggregate(pipeline))
+
+        if not correlations or len(correlations) < 1:
+            return "Insufficient data", 404
+
+        # format the data to use in the next step
+        # {symptom: name, top_foods: [food1, food2,...], top_groups...}
+        data = list(map(lambda corr: {"symptom": corr["symptom"]}, correlations))
+
+        # helper function to format foods, symptoms into flat array
+        def format(dict, key):
+            if key in corr:
+                data[i][key] = list(map(lambda f: f["name"], corr[key]))
+            else:
+                data[i][key] = []
+
+        for i, corr in enumerate(correlations):
+            format(data, "top_groups")
+            format(data, "top_foods")
+
+        # get the symptoms grouped by month with count and severity and adjusted date
+        symptom_pipeline = [
+            {
+                "$match": {
+                    "username": username,
+                    "symptom": {"$in": [c["symptom"] for c in data]},
+                }
+            },
             {
                 "$project": {
                     "username": 1,
@@ -139,6 +179,7 @@ def get_monthly_data(user):
                             "amount": delta.months,
                         }
                     },
+                    "severity": 1,
                 }
             },
             {
@@ -149,6 +190,7 @@ def get_monthly_data(user):
                         "year": {"$year": "$date"},
                     },
                     "count": {"$sum": 1},
+                    "avg_severity": {"$avg": "$severity"},
                 }
             },
             {
@@ -157,6 +199,7 @@ def get_monthly_data(user):
                     "month": "$_id.month",
                     "year": "$_id.year",
                     "count": 1,
+                    "avg_severity": 1,
                 }
             },
             {"$sort": {"year": 1, "month": 1}},
@@ -168,26 +211,41 @@ def get_monthly_data(user):
                             "month": "$_id.month",
                             "year": "$_id.year",
                             "count": "$count",
+                            "symptom": "$symptom",
+                            "avg_severity": "$avg_severity",
                         }
                     },
                 }
             },
-            {"$project": {"symptom": "$_id", "months": 1, "_id": 0}}
+            {"$project": {"symptom": "$_id", "months": 1, "_id": 0}},
         ]
 
-        # returns data formatted monthly, from current date backwards x number of months
+        # call the aggregation pipeline
+        user_symptoms = list(db.user_symptoms.aggregate(symptom_pipeline))
+
+        # format symptoms, top_foods and top_groupsdata
+        for i, sym in enumerate(data):
+            for s in user_symptoms:
+                if sym["symptom"] == s["symptom"]:
+                    data[i]["symptom_data"] = s["months"]
+
+            if len(sym["top_foods"]):
+                data[i]["top_foods"] = get_food_data(
+                    "food", sym["top_foods"], username, min_date, delta.months
+                )
+
+            if len(sym["top_groups"]):
+                data[i]["top_groups"] = get_food_data(
+                    "group", sym["top_groups"], username, min_date, delta.months
+                )
+
         return (
-            jsonify(
-                {
-                    "num_months": months,
-                    "username": username,
-                    "data": [sym for sym in db.user_symptoms.aggregate(pipeline)],
-                }
-            ),
+            jsonify({"data": data, "max_months": get_date_range(username)}),
             200,
         )
 
     except Exception as e:
+        print(e)
         return {
             "message": str(e),
             "error": "Error fetching user's monthly data",
@@ -208,3 +266,72 @@ def get_last_date(username):
             ]
         )
     ][0]["datetime"]
+
+
+def get_date_range(username):
+    range = relativedelta(
+        get_last_date(username),
+        [
+            m
+            for m in db.meals.aggregate(
+                [
+                    {"$match": {"username": username}},
+                    {"$sort": {"datetime": 1}},
+                    {"$project": {"datetime": 1}},
+                    {"$limit": 1},
+                ]
+            )
+        ][0]["datetime"],
+    )
+
+    return range.months + range.years * 12
+
+
+# array = array of foods to search
+# type = food or group, array = foods/groups to search
+# returns food/group data, grouped by month and year, including count
+def get_food_data(type, array, username, min_date, delta):
+    pipeline = [
+        {"$match": {"username": username}},
+        {"$unwind": f"${type}s"},
+        {
+            "$project": {
+                "date": {
+                    "$dateSubtract": {
+                        "startDate": {"$toDate": "$datetime"},
+                        "unit": "month",
+                        "amount": delta,
+                    }
+                },
+                f"{type}": f"${type}s",
+            }
+        },
+        {"$match": {f"{type}": {"$in": array}}},
+        {
+            "$group": {
+                "_id": {
+                    f"{type}": f"${type}",
+                    "month": {"$month": "$date"},
+                    "year": {"$year": "$date"},
+                },
+                "count": {"$sum": 1},
+            }
+        },
+        {"$sort": {"_id.year": 1, "_id.month": 1}},
+        {
+            "$group": {
+                "_id": f"$_id.{type}",
+                "months": {
+                    "$push": {
+                        "month": "$_id.month",
+                        "year": "$_id.year",
+                        "count": "$count",
+                        "name": f"$_id.{type}",
+                    }
+                },
+            }
+        },
+        {"$sort": {"_id": 1}},
+    ]
+
+    return list(db.meals.aggregate(pipeline))
