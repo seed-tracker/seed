@@ -11,6 +11,7 @@ import {
   Input,
   Dropdown as NextUIDropdown,
   Text,
+  Spacer,
 } from "@nextui-org/react";
 
 import { Button, Dropdown } from "./nextUI/index";
@@ -111,53 +112,63 @@ function MealForm() {
 
   const AddedFoods = () => {
     return (
-      <Table
-        aria-label="Added foods table"
-        css={{
-          height: "auto",
-          width: "150px",
-          minWidth: "20%",
-        }}
-      >
-        <Table.Header>
-          <Table.Column key={1}>Foods</Table.Column>
-          <Table.Column key={2}>Groups</Table.Column>
-          <Table.Column key={3}></Table.Column>
-        </Table.Header>
-        <Table.Body>
-          {mealArray.map((food, i) => (
-            <Table.Row key={i}>
-              <Table.Cell>{food.name}</Table.Cell>
-              <Table.Cell>{food.groups.join(", ")}</Table.Cell>
-              <Table.Cell>
-                <Button
-                  size="xs"
-                  color="error"
-                  ariaLabel={`Remove ${food.name} from meal`}
-                  onPress={() => removeFood(i)}
-                  text="Remove"
-                />
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      <>
+        <Table
+          aria-label="Added foods table"
+          css={{
+            height: "auto",
+            minWidth: "40rem",
+            background: "white",
+          }}
+        >
+          <Table.Header>
+            <Table.Column key={1}>Foods</Table.Column>
+            <Table.Column key={2}>Groups</Table.Column>
+            <Table.Column key={3}></Table.Column>
+          </Table.Header>
+          <Table.Body>
+            {mealArray.map((food, i) => (
+              <Table.Row key={i}>
+                <Table.Cell>{food.name}</Table.Cell>
+                <Table.Cell>{food.groups.join("--")}</Table.Cell>
+                <Table.Cell>
+                  <Button
+                    size="xs"
+                    color="error"
+                    ariaLabel={`Remove ${food.name} from meal`}
+                    onPress={() => removeFood(i)}
+                    text="Remove"
+                  />
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </>
     );
   };
 
   return (
     <>
-      <Grid.Container justify="center" css={{ marginTop: "5rem" }} gap={4}>
-        <Grid>
+      <Grid.Container
+        justify="center"
+        css={{
+          padding: "3rem",
+          maxWidth: "40rem",
+        }}
+        gap={4}
+      >
+        <Grid xs={12}>
           <Input
             label="Entry Name"
             type="text"
             value={entryName}
             onChange={handleNameChange}
             required
+            css={{ minWidth: "30rem" }}
           />
         </Grid>
-        <Grid>
+        <Grid xs={12}>
           <Input
             width="186px"
             label="Date"
@@ -165,9 +176,9 @@ function MealForm() {
             value={date}
             onChange={handleDateChange}
             required
+            css={{ minWidth: "10rem" }}
           />
-        </Grid>
-        <Grid>
+          <Spacer x={1} />
           <Input
             width="186px"
             label="Time"
@@ -175,10 +186,11 @@ function MealForm() {
             value={time}
             onChange={handleTimeChange}
             required
+            css={{ minWidth: "10rem" }}
           />
         </Grid>
 
-        <Grid>
+        <Grid xs={12}>
           <Autocomplete addFood={addFood} allGroups={allGroups} />
         </Grid>
 

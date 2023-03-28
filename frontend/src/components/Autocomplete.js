@@ -2,7 +2,7 @@ import { useState } from "react";
 // import {useDispatch} from 'react-redux';
 // import { autocompleteFood } from "../store/entrySlice";
 import apiClient from "../config";
-import { Card, Input, Row } from "@nextui-org/react";
+import { Card, Input, Row, Grid, Spacer, Popover } from "@nextui-org/react";
 import { Button, Dropdown } from "./nextUI";
 
 const Autocomplete = ({ addFood, allGroups }) => {
@@ -71,35 +71,40 @@ const Autocomplete = ({ addFood, allGroups }) => {
   };
 
   return (
-    <div className="autocomplete">
-      <Card css={{ marginTop: "0", width: "150px" }}>
-        <Input
-          placeholder="Search for a food"
-          value={value}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          size="md"
-          aria-label="food input"
-          css={{ marginBottom: "0px" }}
-        />
-        <Card.Body css={{ padding: "0" }}>
-          {value.length > 1 && !showDropdown ? (
-            <>
-              {suggestions.map((suggestion, idx) => (
-                <Row key={idx} onClick={() => handleClick(idx)}>
-                  {suggestion.name}
-                </Row>
-              ))}
-              <Row
-                onClick={() => setShowDropdown(true)}
-                style={{ color: "red" }}
-              >
-                Add new food
-              </Row>
-            </>
-          ) : null}
-        </Card.Body>
-      </Card>
+    <Grid.Container css={{ maxWidth: "30rem" }} className="autocomplete">
+      <Grid xs={12}>
+        <Card css={{ marginTop: "0", minWidth: "20rem" }}>
+          <Input
+            placeholder="Search for a food"
+            value={value}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            size="md"
+            aria-label="food input"
+            css={{ marginBottom: "0px", width: "100%" }}
+          />
+          <Card.Body css={{ padding: "0" }}>
+            {value.length > 1 && !showDropdown ? (
+              <>
+                {suggestions.map((suggestion, idx) => (
+                  <Row key={idx} onClick={() => handleClick(idx)}>
+                    {suggestion.name}
+                  </Row>
+                ))}
+              </>
+            ) : null}
+          </Card.Body>
+        </Card>
+        <Spacer y={1} />
+        <Button
+          onClick={() => setShowDropdown(true)}
+          color="error"
+          css={{ width: "100%" }}
+          text="Add new food"
+        >
+          Add new food
+        </Button>
+      </Grid>
 
       {showDropdown && (
         <>
@@ -126,7 +131,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
           />
         </>
       )}
-    </div>
+    </Grid.Container>
   );
 };
 
