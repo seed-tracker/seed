@@ -140,10 +140,15 @@ const CirclePacking = () => {
 
 
   return (
-    <div id="graph-area">
-      <svg ref={svgRef} width="400" height="400"></svg>
-      <svg id="legend-circle-packing" width="1400px" height="250"></svg>
-    </div>
+    <section className="circlePackingChart">
+      <div id="graph-area">
+        <svg ref={svgRef} width="2000" height="500"></svg>
+      </div>
+      <div>
+        <h3>Legend:</h3>
+        <svg id="legend-circle-packing" width="1400px" height="250"></svg>
+      </div>
+    </section>
   );
 };
 
