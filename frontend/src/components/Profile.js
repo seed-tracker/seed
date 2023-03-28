@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { me } from "../store/authSlice";
 import { useSelector } from "react-redux";
-import Sidebar from "./Sidebar";
 import ScatterPlot from "./graph/ScatterPlot";
 import StatsAndFacts from "./StatsAndFacts";
 import {
@@ -10,7 +9,6 @@ import {
   selectUserCorrelations,
 } from "../store/correlationsSlice";
 import CirclePacking from "./graph/CirclePacking";
-import Beeswarm from "./graph/Beeswarm";
 
 /**
  * Placeholder component for the userprofile page
@@ -26,17 +24,12 @@ const Profile = () => {
 
   return (
     <main>
-      <Sidebar />
+      {/* <Sidebar /> */}
+      <StatsAndFacts />
       <section>
         <ScatterPlot />
-        <StatsAndFacts />
       </section>
-      <section>
         <CirclePacking />
-      </section>
-      <section>
-        <Beeswarm />
-      </section>
       <section>{!correlationsLoaded && <CirclePacking />}</section>
     </main>
   );
