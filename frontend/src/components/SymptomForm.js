@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
 import { me } from "../store/authSlice";
 import { addSymptomEntry } from "../store/symptomSlice";
-import Sidebar from "./Sidebar";
 import apiClient from "../config";
-import Inputs from "./nextUI/Inputs";
+import { Inputs, Button, Dropdown } from "./nextUI";
 
 const SymptomForm = () => {
   const [date, setDate] = useState("");
@@ -59,7 +57,6 @@ const SymptomForm = () => {
 
   return (
     <main>
-      <Sidebar />
       <form onSubmit={handleSymptomSubmit}>
         <Inputs
           type={"date"}
@@ -103,7 +100,11 @@ const SymptomForm = () => {
             onChange={(event) => setSeverity(event.target.value)}
           />
         </label>
-        <button type="submit">Add Entry</button>
+        <Button
+          text={"Add Entry"}
+          aria-label={"Submit Symptom Entry Form Button"}
+          type={"submit"}
+        />
       </form>
     </main>
   );

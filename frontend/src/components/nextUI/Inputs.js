@@ -10,39 +10,47 @@ Edit Profile
 Add Symptom
 Add Food
  */
-import { Input as NextUiInput } from "@nextui-org/react";
+import { Spacer, Input as NextUiInput } from "@nextui-org/react";
 
 function Inputs(inputProps) {
   const { required, type, label, helperText, value, onChange } = inputProps;
 
   if (type === "password") {
     return (
-      <NextUiInput.Password
-        bordered
-        size="md"
-        pattern="^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*()]).{8,}$"
-        color={required ? "secondary" : "default"}
-        type={type}
-        required={required}
-        label={label}
-        helperText={helperText && helperText}
-        value={value}
-        onChange={onChange}
-      />
+      <>
+        <NextUiInput.Password
+          bordered
+          color="secondary"
+          size="md"
+          width="20vw"
+          pattern="^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*()]).{8,}$"
+          type={type}
+          required={required}
+          label={label}
+          helperText={helperText && helperText}
+          value={value}
+          onChange={onChange}
+        />
+        <Spacer y={1} />
+      </>
     );
   } else {
     return (
-      <NextUiInput
-        bordered
-        size="md"
-        color={required ? "secondary" : "default"}
-        type={type}
-        required={required}
-        label={label}
-        helperText={helperText && helperText}
-        value={value}
-        onChange={onChange}
-      />
+      <>
+        <NextUiInput
+          bordered
+          color="secondary"
+          size="md"
+          width="20vw"
+          type={type}
+          required={required}
+          label={label}
+          helperText={helperText && helperText}
+          value={value}
+          onChange={onChange}
+        />
+        <Spacer y={1} />
+      </>
     );
   }
 }
