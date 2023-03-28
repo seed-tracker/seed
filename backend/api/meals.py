@@ -33,7 +33,15 @@ def get_user_meals(user):
             for meal in db.meals.aggregate(
                 [
                     {"$match": {"username": username}},
-                    {"$project": {"_id": {"$toString": "$_id"},"entry_name": 1, "datetime": 1, "groups": 1, "foods": 1}},
+                    {
+                        "$project": {
+                            "_id": {"$toString": "$_id"},
+                            "entry_name": 1,
+                            "datetime": 1,
+                            "groups": 1,
+                            "foods": 1,
+                        }
+                    },
                     {"$sort": {"datetime": -1}},
                     {"$skip": offset},
                     {"$limit": 20},
@@ -49,6 +57,56 @@ def get_user_meals(user):
     except Exception as e:
         print("Error! ", str(e))
         return "Error fetching meals", 500
+
+
+@meals.route("/recent", methods=["GET"])
+@require_token
+def get_recent_foods(user):
+    try:
+        print("getting recents...")
+        username = user["username"]
+
+        pipeline = [
+            {"$match": {"username": username}},
+            {"$sort": {"datetime": -1}},
+            {"$limit": 50},
+            {"$project": {"foods": 1, "_id": 0}},
+            {"$unwind": "$foods"},
+            {"$group": {"_id": "$foods", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}},
+            {"$limit": 10},
+            {
+                "$lookup": {
+                    "from": "foods",
+                    "localField": "_id",
+                    "foreignField": "name",
+                    "as": "food",
+                }
+            },
+            {
+                "$project": {
+                    "name": {"$first": "$food.name"},
+                    "groups": {"$first": "$food.groups"},
+                    "_id": 0,
+                }
+            },
+        ]
+
+        recent_foods = list(db.meals.aggregate(pipeline))
+
+        print(recent_foods)
+
+        if not recent_foods:
+            return "Foods not found", 404
+
+        return jsonify(recent_foods), 200
+
+    except Exception as e:
+        return {
+            "message": str(e),
+            "error": "Error fetching user's recent foods",
+            "data": None,
+        }, 500
 
 
 # post route for adding a meal to the user's collection
@@ -93,6 +151,7 @@ def add_entry(user):
     except Exception as e:
         print("Error! ", str(e))
         return "Error adding meal", 401
+
 
 # delete a meal in production.meals
 @meals.route("/user/delete/<string:mealId>", methods=["DELETE"])

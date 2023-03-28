@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar";
 import Autocomplete from "./Autocomplete";
 import apiClient from "../config";
 import {
-  Table,
+  Table as NextUITable,
   Button as NextUIButton,
   Grid,
   Input,
@@ -14,7 +14,7 @@ import {
   Spacer,
 } from "@nextui-org/react";
 
-import { Button, Dropdown } from "./nextUI/index";
+import { Button, Table } from "./nextUI/index";
 
 function MealForm() {
   const [date, setDate] = useState("");
@@ -23,6 +23,7 @@ function MealForm() {
   const [mealArray, setMealArray] = useState([]);
   const [validation, setValidation] = useState(false);
   const [allGroups, setAllGroups] = useState([]);
+  const [recentFoods, setRecentFoods] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -37,6 +38,7 @@ function MealForm() {
     setDate(today.substring(0, 10));
 
     fetchGroups();
+    fetchRecentFoods();
   }, []);
 
   //fetch groups from api
@@ -47,6 +49,17 @@ function MealForm() {
       if (data && data["data"]) {
         setAllGroups(data["data"]);
       }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchRecentFoods = async () => {
+    try {
+      const { data } = await apiClient.get("meals/recent");
+
+      //[{name, groups}, {name, groups}, ...]
+      setRecentFoods(data);
     } catch (err) {
       console.error(err);
     }
@@ -105,53 +118,32 @@ function MealForm() {
     }
   };
 
-  const removeFood = (idx) => {
-    console.log(idx);
+  const removeFood = ({ button: idx }) => {
     setMealArray([...mealArray.slice(0, idx), ...mealArray.slice(idx + 1)]);
   };
 
   const AddedFoods = () => {
     return (
-      <>
-        <Table
-          aria-label="Added foods table"
-          css={{
-            height: "auto",
-            minWidth: "40rem",
-            background: "white",
-          }}
-        >
-          <Table.Header>
-            <Table.Column key={1}>Foods</Table.Column>
-            <Table.Column key={2}>Groups</Table.Column>
-            <Table.Column key={3}></Table.Column>
-          </Table.Header>
-          <Table.Body>
-            {mealArray.map((food, i) => (
-              <Table.Row key={i}>
-                <Table.Cell>{food.name}</Table.Cell>
-                <Table.Cell>{food.groups.join("--")}</Table.Cell>
-                <Table.Cell>
-                  <Button
-                    size="xs"
-                    color="error"
-                    ariaLabel={`Remove ${food.name} from meal`}
-                    onPress={() => removeFood(i)}
-                    text="Remove"
-                  />
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
-      </>
+      <Table
+        description="Added foods table"
+        headers={[
+          { key: "name", label: "Foods" },
+          { key: "button", label: "" },
+        ]}
+        rows={mealArray}
+        button={{
+          buttonDescription: "Button to remove a food from the current meal",
+          text: "Remove",
+          onPress: removeFood,
+        }}
+      />
     );
   };
 
   return (
-    <>
+    <Grid.Container direction="row">
       <Grid.Container
-        justify="center"
+        xs={6}
         css={{
           padding: "3rem",
           maxWidth: "40rem",
@@ -193,20 +185,36 @@ function MealForm() {
         <Grid xs={12}>
           <Autocomplete addFood={addFood} allGroups={allGroups} />
         </Grid>
-
-        <Grid>
-          <Button
-            text="Submit Meal"
-            ariaLabel="Button to submit a meal"
-            onPress={handleSubmit}
-            disabled={mealArray.length < 1}
-          >
-            Submit Meal
-          </Button>
-        </Grid>
-        {mealArray.length ? <AddedFoods /> : null}
+        {recentFoods && recentFoods.length > 0 && (
+          <Grid xs={12}>
+            <Table
+              description="Recent foods table"
+              headers={[
+                { key: "name", label: "Food" },
+                { key: "button", label: "" },
+              ]}
+              rows={recentFoods}
+              button={{
+                buttonDescription: "Button to add a recent food to the meal",
+                text: "Add food",
+                onPress: addFood,
+              }}
+            />
+          </Grid>
+        )}
       </Grid.Container>
-    </>
+      <Grid.Container xs={6}>
+        <Grid xs={12}>
+          <AddedFoods />
+        </Grid>
+        <Button
+          text="Submit Meal"
+          ariaLabel="Button to submit a meal"
+          onPress={handleSubmit}
+          disabled={mealArray.length < 1}
+        />
+      </Grid.Container>
+    </Grid.Container>
   );
 }
 

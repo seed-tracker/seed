@@ -83,52 +83,55 @@ const Autocomplete = ({ addFood, allGroups }) => {
             aria-label="food input"
             css={{ marginBottom: "0px", width: "100%" }}
           />
-          <Card.Body css={{ padding: "0" }}>
-            {value.length > 1 && !showDropdown ? (
-              <>
-                {suggestions.map((suggestion, idx) => (
-                  <Row key={idx} onClick={() => handleClick(idx)}>
-                    {suggestion.name}
-                  </Row>
-                ))}
-              </>
-            ) : null}
-          </Card.Body>
+
+          {value.length > 1 && !showDropdown ? (
+            <Card.Body>
+              {suggestions.map((suggestion, idx) => (
+                <Row key={idx} onClick={() => handleClick(idx)}>
+                  {" "}
+                  {suggestion.name}
+                </Row>
+              ))}
+              <Row onClick={() => setShowDropdown(true)} css={{ color: "red" }}>
+                {" "}
+                Add new food
+              </Row>
+            </Card.Body>
+          ) : null}
         </Card>
         <Spacer y={1} />
-        <Button
-          onClick={() => setShowDropdown(true)}
-          color="error"
-          css={{ width: "100%" }}
-          text="Add new food"
-        >
-          Add new food
-        </Button>
       </Grid>
 
       {showDropdown && (
         <>
-          <Dropdown
-            selectedKeys={chosenGroup}
-            selectionMode="multiple"
-            ariaLabel="Dropdown to select a food group"
-            onChange={changeGroup}
-            defaultName="Choose a food group"
-            items={allGroups.map(({ name }) => ({ name: name, key: name }))}
-          />
-          <Button
-            size="xs"
-            ariaLabel="Add a new food"
-            text="Add food"
-            onPress={handleAddNewFood}
-          />
-          <Button
-            size="xs"
-            ariaLabel="Cancel adding a new food"
-            text="Cancel"
-            color="error"
-            onPress={cancelNewFood}
-          />
+          <Spacer y={1} />
+          <Grid xs={12}>
+            <Dropdown
+              selectedKeys={chosenGroup}
+              selectionMode="multiple"
+              ariaLabel="Dropdown to select a food group"
+              onChange={changeGroup}
+              defaultName="Choose a food group"
+              items={allGroups.map(({ name }) => ({ name: name, key: name }))}
+            />
+          </Grid>
+          <Spacer y={1} />
+          <Grid xs={12}>
+            <Button
+              size="sm"
+              ariaLabel="Add a new food"
+              text="Add food"
+              onPress={handleAddNewFood}
+            />
+            <Spacer x={1} />
+            <Button
+              size="sm"
+              ariaLabel="Cancel adding a new food"
+              text="Cancel"
+              color="error"
+              onPress={cancelNewFood}
+            />
+          </Grid>
         </>
       )}
     </Grid.Container>
