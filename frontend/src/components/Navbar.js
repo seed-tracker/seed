@@ -30,7 +30,6 @@ const NavigationBar = () => {
  * If user is signed in: links to view profile & logout
  * If visitor: links to Login or Sign up
  */
-// TODO: 
   return (
     <Navbar isBordered maxWidth={"fluid"} variant="sticky" css={{background:'#cfdbd1', color:'#444c38'}}>
       <Navbar.Brand css={{alignItems:'center'}}>

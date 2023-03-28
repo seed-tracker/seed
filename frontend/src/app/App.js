@@ -21,18 +21,18 @@ const App = () => {
       success: links
       error: red
       backgroundAlpha: defines button background  */
-      colors:{
-        milkyJade: '#cfdbd1',
-        background: '$milkyJade',
-        text: '#000000',
-        primary: '$text',
-        logoHeader: '#444c38',
-        secondary: '$logoHeader', 
-        links: '#4d5d53',
-        success: '$links',
-        red: '#ff4848',
-        error: '$red',
-        backgroundAlpha: '#7a918dcc',
+      colors: {
+        milkyJade: "#cfdbd1",
+        background: "$milkyJade",
+        text: "#000000",
+        primary: "$text",
+        logoHeader: "#444c38",
+        secondary: "$logoHeader",
+        links: "#4d5d53",
+        success: "$links",
+        red: "#ff4848",
+        error: "$red",
+        backgroundAlpha: "#7a918dcc",
       },
       fonts: {
         sans: "sans-serif",

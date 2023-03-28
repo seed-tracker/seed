@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import {HeaderText} from './nextUI/index';
 import {
   fetchAllSymptomEntries,
   selectAllSymptoms,
@@ -50,7 +51,7 @@ function SymptomEntryOverview() {
 
   return (
     <main>
-      <h1>Past Symptom Entries</h1>
+      <HeaderText text='Past Symptom Entries' />
       <aside>
         {count < 500 && (
           <p>
