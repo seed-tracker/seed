@@ -34,7 +34,7 @@ const CirclePacking = () => {
 
     return result;
   }
-console.log(datas)
+
   const result = getSymptomsAndTopGroups(datas);
 
   const userSymptoms = datas.map((obj) => obj.symptom); // Get an array of the user's symptoms
@@ -72,7 +72,7 @@ console.log(datas)
     }
 
 
-    const legend = d3.select("#legend") // Create the legend
+    const legend = d3.select("#legend-circle-packing") // Create the legend
     const legendHeight = +legend.attr("height");
 
 
@@ -82,7 +82,7 @@ console.log(datas)
       .append("circle")
       .attr("cx", (d, i) => 25 + i * 120)
       .attr("cy", legendHeight / 2)
-      .attr("r", 16)
+      .attr("r", 12)
       .attr("fill", (d, i) => d[1]);
 
     legend.selectAll("text") // Add text labels for each symptom in the legend
@@ -92,7 +92,7 @@ console.log(datas)
       .attr("text-anchor", "middle")
       .attr("x", (d, i) => 25 + i * 120)
       .attr("y", (legendHeight / 2) + 50)
-      .attr("font-size", "16px")
+      .attr("font-size", "12px")
       .text((d) => d[0]);
 
 
@@ -122,39 +122,6 @@ console.log(datas)
       .data(root.leaves())
       .join("g")
       .attr("transform", (d) => `translate(${d.x + 1},${d.y + 1})`)
-      .on("mouseover", function () {
-        d3.select(this).select("circle")
-          .transition()
-          .duration(250)
-
-        d3.select(this).append("text")
-          .attr("class", "text")
-          .text((d) => d.data.value)
-          .attr("x", (d) => -d.r)
-          .attr("y", (d) => -d.r - 5)
-          .attr("font-size", "14px")
-
-      })
-      .on("mouseout", function () {
-        d3.select(this).select("circle")
-          .transition()
-          .duration(250)
-          // .attr("stroke-width", 1)
-          // .attr("stroke", "black");
-
-        d3.select(this).select(".text").remove();
-      })
-      .on("click", (d) => console.log("clicked", d.count))
-      .attr("class", "node");
-      //shadow
-      svg.append("filter")
-  .attr("id", "circle-shadow")
-  .append("feDropShadow")
-  .attr("dx", 0)
-  .attr("dy", 2)
-  .attr("stdDeviation", 2)
-  .attr("flood-color", "#000000")
-  .attr("flood-opacity", 0.25);
 
 
     // Create a circle for each leaf node, with radius based on node size, fill color based on symptom color,
@@ -162,22 +129,7 @@ console.log(datas)
     leaf.append("circle")
     .attr("r", (d) => d.r)
     .attr("fill", (d) => d.data.color)
-    .attr("filter", "url(#circle-shadow)")
-    .classed("pulse", function(d) {
-      if (d.data.value > 1.01) {
-        return true;
-      }
-      return false;
-    })
 
-
-    // leaf.append("circle")
-    //   .attr("r", (d) => d.r)
-    //   .attr("fill", (d) => d.data.color)
-    //   .attr("stroke", "crimson")
-    //   .attr("stroke-width", (d) =>
-    //     d.data.value > 1.01 ? 10 + "px" : 5 + "px"
-    //   );
 
     leaf.append("text") // Add text labels to each leaf node, with the symptom name as the label text
       .attr("text-anchor", "middle")
@@ -190,8 +142,7 @@ console.log(datas)
   return (
     <div id="graph-area">
       <svg ref={svgRef} width="400" height="400"></svg>
-      <h3>Hover over each circle to view the lift value for the symptom and food group.</h3>
-      <svg id="legend" width="1400px" height="250"></svg>
+      <svg id="legend-circle-packing" width="1400px" height="250"></svg>
     </div>
   );
 };

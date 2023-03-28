@@ -51,6 +51,17 @@ function SymptomEntryOverview() {
   return (
     <main>
       <h1>Past Symptom Entries</h1>
+      <aside>
+        {count < 500 && (
+          <p>
+            You've logged {count} <strong>symptom</strong> entries so far - keep
+            tracking for better results!
+          </p>
+        )}
+        {count >= 500 && (
+          <p>You've logged {count} entries so far. Keep up the good work!</p>
+        )}
+      </aside>
       <ul>
         {symptoms && symptoms.length
           ? symptoms.map((symptom) => {
