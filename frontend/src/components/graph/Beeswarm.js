@@ -14,7 +14,7 @@ const Beeswarm = () => {
   const dispatch = useDispatch()
   const data = useSelector(selectUserStats)
   const symptoms = data.symptoms
-  const counts = symptoms ? symptoms.map((symptom) => symptom.count/2) : []
+  const counts = symptoms ? symptoms.map((symptom) => symptom.count) : []
   // console.log(typeof data)
   console.log(counts);
 
@@ -38,6 +38,7 @@ const Beeswarm = () => {
 
   useEffect(() => {
     const svg = select(svgRef.current);
+    svg.selectAll("*").remove();
     const margin = { top: 200, right: 10, bottom: 200, left: 50 };
     const width = 750 - margin.left - margin.right;
     const height = 60 - margin.top - margin.bottom;
