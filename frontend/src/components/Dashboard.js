@@ -1,11 +1,13 @@
 import React from "react";
-import Beeswarm from "./graph/Beeswarm";
+import TopSymptoms from "./graph/TopSymptoms";
+import TopFoods from "./graph/TopFoods";
 
 const Dashboard = () => {
   return (
     <main>
       <section>
-        <Beeswarm />
+        <TopSymptoms />
+        <TopFoods />
       </section>
     </main>
   );
