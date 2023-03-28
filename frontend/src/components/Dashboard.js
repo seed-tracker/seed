@@ -1,13 +1,13 @@
 import React from "react";
+import CirclePacking from "./graph/CirclePacking";
 import TopSymptoms from "./graph/TopSymptoms";
-import TopFoods from "./graph/TopFoods";
 
 const Dashboard = () => {
   return (
     <main>
       <section>
+        <CirclePacking />
         <TopSymptoms />
-        <TopFoods />
       </section>
     </main>
   );

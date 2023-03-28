@@ -94,7 +94,7 @@ const TopSymptoms = () => {
           const colorIndex = i % colorPalette.length;
           symptomColors[symptomName] = colorPalette[colorIndex];
         }
-
+        console.log(symptomColors);
 
         const legend = d3.select("#legend-lollipop") // Create the legend
         const legendHeight = +legend.attr("height");
@@ -134,7 +134,7 @@ const TopSymptoms = () => {
               if (j === counts[i] - 1) {
                 g.append("text")
                   .attr("x", xScale(symptoms[i].name))
-                  .attr("y", yScale(j) - 10)
+                  .attr("y", yScale(j) - 20)
                   .attr("text-anchor", "middle")
                   .text("Count: " + counts[i]);
               }
