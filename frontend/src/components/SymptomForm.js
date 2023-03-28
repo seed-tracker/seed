@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
 import { me } from "../store/authSlice";
 import { addSymptomEntry } from "../store/symptomSlice";
-import Sidebar from "./Sidebar";
 import apiClient from "../config";
+import { Inputs, Button, Dropdown } from "./nextUI";
 
 const SymptomForm = () => {
   const [date, setDate] = useState("");
@@ -58,24 +57,23 @@ const SymptomForm = () => {
 
   return (
     <main>
-      <Sidebar />
       <form onSubmit={handleSymptomSubmit}>
-        <label htmlFor="date">
-          Date:
-          <input
-            type="date"
-            value={date}
-            onChange={(event) => setDate(event.target.value)}
-          />
-        </label>
-        <label htmlFor="time">
-          Time:
-          <input
-            type="time"
-            value={time}
-            onChange={(event) => setTime(event.target.value)}
-          />
-        </label>
+        <Inputs
+          type={"date"}
+          required={true}
+          label={"Date:"}
+          value={date}
+          onChange={(event) => setDate(event.target.value)}
+          helperText={"required"}
+        />
+        <Inputs
+          type={"time"}
+          required={true}
+          label={"Time:"}
+          value={time}
+          onChange={(event) => setTime(event.target.value)}
+          helperText={"required"}
+        />
         <div>
           <label htmlFor="symptoms">Select symptom(s):</label>
           <select
@@ -102,7 +100,11 @@ const SymptomForm = () => {
             onChange={(event) => setSeverity(event.target.value)}
           />
         </label>
-        <button type="submit">Add Entry</button>
+        <Button
+          text={"Add Entry"}
+          aria-label={"Submit Symptom Entry Form Button"}
+          type={"submit"}
+        />
       </form>
     </main>
   );

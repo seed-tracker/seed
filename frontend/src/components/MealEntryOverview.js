@@ -52,6 +52,20 @@ function MealEntryOverview() {
     <main>
       <Sidebar />
       <h1>Past Meal Entries</h1>
+      <aside>
+        {count < 500 && (
+          <p>
+            You've logged {count} <strong>meal</strong> entries so far - keep
+            tracking for better results!
+          </p>
+        )}
+        {count >= 500 && (
+          <p>
+            You've logged {count} <strong>meal</strong> entries so far. Keep up
+            the good work!
+          </p>
+        )}
+      </aside>
       <ul>
         {meals && meals.length
           ? meals.map((meal) => {
@@ -74,6 +88,7 @@ function MealEntryOverview() {
             })
           : "No entries to display"}
       </ul>
+
       <div>
         {page > 1 && (
           <button

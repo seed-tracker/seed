@@ -1,3 +1,5 @@
+#main entry point for backend
+#app combines all routes, implements CORS and runs server
 from flask_cors import CORS
 from flask import Flask
 from dotenv import load_dotenv, find_dotenv
@@ -27,8 +29,6 @@ app.register_blueprint(meals, url_prefix="/meals")
 app.register_blueprint(user_symptoms, url_prefix="/user/symptoms")
 app.register_blueprint(users, url_prefix="/users")
 app.register_blueprint(stats, url_prefix="/stats")
-
-
 
 
 # to protect the app
