@@ -1,24 +1,23 @@
 import { Table as NextUITable } from "@nextui-org/react";
 import { Button } from "./index";
 
-//description = aria label for the table
-//headers = table headers
+//description (string) = aria label for the table
+//headers (array) = table headers
 //format: [{key, label}, {key, label}, ...]
-//rows = table items
+//rows (array) = table items
 //format: [{key, col1: value, col2: value, col3: value]}, {key, col1, col2, ...}]
-//button (optional) = button component to add to end of each row
-//format: {color (optional), text, description, onPress (function which will pass in the current row's data), size}
+//button (object, optional) = button component to add to end of each row
+//format: {color (string, optional), text (string), description (string), onPress (function to be called on press), size (string, optional)}
 const Table = ({ description, headers, rows, button }) => {
   const { buttonDescription, text, onPress } = button;
 
-  rows = rows.map((row, i) => ({ ...row, key: i + 1 }));
-  console.log(rows);
+  rows = rows.map((row, i) => ({ ...row, key: i }));
+
   return (
     <NextUITable
       aria-label={description}
       css={{
-        minWidth: "20rem",
-        height: "3rem",
+        minWidth: "30rem",
       }}
     >
       <NextUITable.Header columns={headers}>
@@ -33,14 +32,15 @@ const Table = ({ description, headers, rows, button }) => {
           <NextUITable.Row key={row.key}>
             {headers.map(({ key }) =>
               key !== "button" ? (
-                <NextUITable.Cell>{row[key]}</NextUITable.Cell>
+                <NextUITable.Cell key={row.key}>{row[key]}</NextUITable.Cell>
               ) : (
-                <NextUITable.Cell>
+                <NextUITable.Cell key={key}>
                   <Button
                     ariaLabel={buttonDescription}
                     text={text}
                     onPress={() => onPress(row)}
                     size="xs"
+                    type="button"
                   />
                 </NextUITable.Cell>
               )

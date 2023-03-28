@@ -29,6 +29,7 @@ const Login = () => {
       required: true,
       value: username,
       onChange: (e) => setUsername(e.target.value),
+      helperText: "Username",
     },
     {
       name: "password",
@@ -36,6 +37,7 @@ const Login = () => {
       required: true,
       value: password,
       onChange: (e) => setPassword(e.target.value),
+      helperText: "Password",
     },
   ];
 
