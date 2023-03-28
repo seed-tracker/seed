@@ -1,20 +1,30 @@
 // // NextUI component for all dropdowns
 import { Dropdown as NextUIDropdown } from "@nextui-org/react";
+import React, { useMemo } from "react";
 // /*
 // Autocomplete?
 // Symptoms
 //  */
 
-//props = color, selectedValue (useState variable), ariaLabel (description), 
+//color (string) = default = "primary"
+//selectedValue (useState variable),
+//ariaLabel (description),
+//selectionMode (single or multiple),
+//onSelectionChange (function to call when the selection changes) typically setting a state variable for the parent component (ex. setValue)
+//items (list of items to display in format [{name, key}, {name, key}, ...])
+//defaultName (name to show on the button before any keys are set)
 const Dropdown = ({
   color,
-  selectedValue,
+  selectedKeys,
   ariaLabel,
   selectionMode,
-  onSelectionChange,
+  onChange,
   items,
   defaultName,
 }) => {
+  //continuously update the dropdown text
+  const chosenKeys = useMemo(() => Array.from(selectedKeys), [selectedKeys]);
+
   return (
     <NextUIDropdown>
       <NextUIDropdown.Button
@@ -22,15 +32,15 @@ const Dropdown = ({
         color={color || "primary"}
         css={{ tt: "capitalize" }}
       >
-        {selectedValue || defaultName}
+        {chosenKeys.length ? chosenKeys.join(", ") : defaultName}
       </NextUIDropdown.Button>
       <NextUIDropdown.Menu
         aria-label={ariaLabel}
-        color={color || '$primary'}
+        color={color || "primary"}
         disallowEmptySelection
         selectionMode={selectionMode || "single"}
-        selectedKeys={selectedValue}
-        onSelectionChange={onSelectionChange}
+        selectedKeys={selectedKeys}
+        onSelectionChange={onChange}
         items={items}
       >
         {(item) => (
