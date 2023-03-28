@@ -7,6 +7,7 @@ import { Grid, Row, Spacer, Text } from "@nextui-org/react";
 import { Button, Table, Inputs } from "./nextUI/index";
 import SuccessMessage from "./SuccessMessage";
 
+//form for entering a meal
 function MealForm() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");

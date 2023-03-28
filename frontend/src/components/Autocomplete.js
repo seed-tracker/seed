@@ -61,6 +61,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
     }
   };
 
+  //add a new food (not found through the database)
   const handleAddNewFood = () => {
     if (chosenGroups.length < 1) return;
     addFood({ name: value, groups: chosenGroups });
@@ -69,6 +70,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
     setSelectedGroups([]);
   };
 
+  //cancel adding a new food
   const cancelNewFood = () => {
     setShowDropdown(false);
     setSelectedGroups([]);
