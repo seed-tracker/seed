@@ -20,7 +20,6 @@ const Profile = () => {
   }, [dispatch]);
 
   const correlationsLoaded = useSelector(selectUserCorrelations);
-  console.log(correlationsLoaded);
 
   return (
     <main>
