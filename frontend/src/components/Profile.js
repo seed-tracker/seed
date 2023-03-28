@@ -7,7 +7,7 @@ import {
   fetchUserCorrelations,
   selectUserCorrelations,
 } from "../store/correlationsSlice";
-import CirclePacking from "./graph/CirclePacking";
+import TopFoods from "./graph/TopFoods";
 
 /**
  * Placeholder component for the userprofile page
@@ -17,20 +17,25 @@ const Profile = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUserCorrelations());
-  }, []);
+  }, [dispatch]);
 
   const correlationsLoaded = useSelector(selectUserCorrelations);
+  console.log(correlationsLoaded);
 
   return (
     <main>
-            <ScatterPlot />
-      {/* <Sidebar /> */}
-
+    {correlationsLoaded && correlationsLoaded.length > 0 ? (
+      <>
+        <ScatterPlot />
+        <TopFoods />
+        <section>{!correlationsLoaded && <TopFoods />}</section>
+      </>
+    ) : (
       <section>
         <StatsAndFacts />
       </section>
-        <CirclePacking />
-      <section>{!correlationsLoaded && <CirclePacking />}</section>
+    )
+    }
     </main>
   );
 };
