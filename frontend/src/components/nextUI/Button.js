@@ -13,7 +13,7 @@ logout
 //props: text, color, ariaLabel, loading
 const Button = ({ text, color, ariaLabel, loading }) => {
   return (
-    <NextUIButton color={color || "primary"} bordered md aria-label={ariaLabel}>
+    <NextUIButton color={color || "$primary"} bordered md aria-label={ariaLabel}>
       {!loading ? (
         text
       ) : (
