@@ -50,7 +50,6 @@ function MealEntryOverview() {
 
   return (
     <main>
-      <Sidebar />
       <h1>Past Meal Entries</h1>
       <ul>
         {meals && meals.length

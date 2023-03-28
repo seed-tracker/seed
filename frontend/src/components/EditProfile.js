@@ -35,7 +35,6 @@ function EditProfile() {
 
   return (
     <main>
-      <Sidebar />
       <form onSubmit={handleSubmit}>
         <label>
           Name:

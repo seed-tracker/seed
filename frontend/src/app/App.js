@@ -27,13 +27,13 @@ const App = () => {
         background: '$milkyJade',
         text: '#000000',
         primary: '$text',
-        logoHeader: '#4D5D53',
+        logoHeader:'#444c38',
         secondary: '$logoHeader', 
-        links: '#444c38',
+        links: '#4d5d53',
         success: '$links',
         red: '#ff4848',
         error: '$red',
-        backgroundAlpha: '#7a918dcc',
+        // backgroundAlpha: '#7a918dcc',
       },
       fonts: {
         sans: "sans-serif"

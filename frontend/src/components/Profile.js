@@ -26,7 +26,6 @@ const Profile = () => {
 
   return (
     <main>
-      <Sidebar />
       <section>
         <ScatterPlot />
         <StatsAndFacts />

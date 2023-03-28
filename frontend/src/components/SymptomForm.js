@@ -58,7 +58,6 @@ const SymptomForm = () => {
 
   return (
     <main>
-      <Sidebar />
       <form onSubmit={handleSymptomSubmit}>
         <label htmlFor="date">
           Date:

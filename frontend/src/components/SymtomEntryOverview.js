@@ -50,7 +50,6 @@ function SymptomEntryOverview() {
 
   return (
     <main>
-      <Sidebar />
       <h1>Past Symptom Entries</h1>
       <ul>
         {symptoms && symptoms.length

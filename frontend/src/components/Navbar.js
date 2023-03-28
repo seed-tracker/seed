@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../store/authSlice";
 import { me } from "../store/authSlice";
-import {Text, Navbar, Button, Link} from '@nextui-org/react';
+import {Text, Navbar, Link, Button} from '@nextui-org/react';
+// import {Button, Link} from './nextUI/index';
 
 /**
  * Component for the navbar
@@ -31,15 +32,15 @@ const NavigationBar = () => {
  */
 // TODO: 
   return (
-    <Navbar isBordered maxWidth={"fluid"} variant="sticky" css={{backgroundColor:'#cfdbd1', color:'#444c38'}}>
+    <Navbar isBordered maxWidth={"fluid"} variant="sticky" css={{background:'#cfdbd1', color:'#444c38'}}>
       <Navbar.Brand css={{alignItems:'center'}}>
-      <Text h1 css={{fontFamily: "Lovechild", alignItems:'center', margin:0}} color="$logo">SEED</Text>
+      <Text h1 css={{fontFamily: "Lovechild", alignItems:'center', margin:0}} color="$secondary">SEED</Text>
       </Navbar.Brand>
       {isLoggedIn ? (
         <Navbar.Content>
-          <Navbar.Link href="/profile">My Profile</Navbar.Link>
+          <Navbar.Link href="/profile" as={Link}>My Profile</Navbar.Link>
           <Navbar.Item>
-          <Button size="xs" flat color='#444c38' css={{color:'#444c38'}} auto as={Link} onClick={logoutAndRedirectHome}>
+          <Button size="md" flat bordered color='#7A918D' css={{backgroundColor:'#7A918Dcc'}} auto as={Link} onClick={logoutAndRedirectHome}>
             Logout
           </Button>
           </Navbar.Item>
