@@ -1,5 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
+import { Links } from "./nextUI/index";
+import { Container, Spacer } from "@nextui-org/react";
 
 /**
  * Component for the sidebar
@@ -8,11 +10,24 @@ import { Link } from "react-router-dom";
 const Sidebar = () => {
   return (
     <aside>
-      <Link to="/user/edit-profile">Edit Profile</Link>
-      <Link to="/add/symptom">Add Symptom Entry</Link>
-      <Link to="/user/addFood">Add Food Entry</Link>
-      <Link to="/user/symptom-entries">Past Symptom Entries</Link>
-      <Link to="/user/meal-entries">Past Meal Entries</Link>
+      <Container
+        display={"flex"}
+        direction={"column"}
+        css={{ padding: "3rem", minWidth: "20rem", height: "80vh" }}
+      >
+        <Links href={"/user/edit-profile"} text={"Edit Profile"} />
+        <Spacer y={0.5} />
+        <Links href={"/user/symptom-entries"} text={"Past Symptom Entries"} />
+        <Spacer y={0.5} />
+        <Links href={"/user/meal-entries"} text={"Past Meal Entries"} />
+        <Spacer y={0.5} />
+
+        <Links href={"/add/symptom"} text={"Add Symptom Entry"} />
+
+        <Spacer y={0.5} />
+
+        <Links href={"/user/addFood"} text={"Add Food Entry"} />
+      </Container>
     </aside>
   );
 };
