@@ -5,7 +5,7 @@ import { Dropdown as NextUIDropdown } from "@nextui-org/react";
 // Symptoms
 //  */
 
-//props = color, selectedValue (useState variable), ariaLabel (description), 
+//props = color, selectedValue (useState variable), ariaLabel (description),
 const Dropdown = ({
   color,
   selectedValue,
@@ -26,10 +26,10 @@ const Dropdown = ({
       </NextUIDropdown.Button>
       <NextUIDropdown.Menu
         aria-label={ariaLabel}
-        color={color || primary}
+        color={color || "primary"}
         disallowEmptySelection
         selectionMode={selectionMode || "single"}
-        selectedKeys={selected}
+        selectedKeys={selectedValue}
         onSelectionChange={onSelectionChange}
         items={items}
       >
