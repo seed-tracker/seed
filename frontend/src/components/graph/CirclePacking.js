@@ -55,8 +55,6 @@ const CirclePacking = () => {
     const width = +svg.attr("width");
     const height = +svg.attr("height");
 
-    
-
     const pack = (data) => d3.pack() // Define the circle packing layout
       .size([width - 2, height - 2])
       .padding(3)
@@ -130,23 +128,20 @@ const CirclePacking = () => {
       .join("g")
       .attr("transform", (d) => `translate(${d.x + 1},${d.y + 1})`)
 
-    // Create a circle for each leaf node, with radius based on node size, fill color based on symptom color,
-    // and stroke color and width based on lift value (higher values have thicker stroke)
-    leaf
-    .append("circle")
-    .attr("fill", (d) => d.data.color)
-    .attr("r", (d) => d.r);
+    // Create a circle for each leaf node, with radius based on node size, fill color based on symptom color
+    leaf.append("circle")
+      .attr("fill", (d) => d.data.color)
+      .attr("r", (d) => d.r);
 
-    leaf
-  .append("foreignObject")
-  .attr("x", (d) => -d.r)
-  .attr("y", (d) => -d.r)
-  .attr("width", (d) => d.r * 2)
-  .attr("height", (d) => d.r * 2)
-  .html((d) => getNodeLabel(d))
-  .style("font-size", "8px")
-  .style("display", "flex") 
-  .style("justify-content", "center")
+    leaf.append("foreignObject")
+      .attr("x", (d) => -d.r)
+      .attr("y", (d) => -d.r)
+      .attr("width", (d) => d.r * 2)
+      .attr("height", (d) => d.r * 2)
+      .html((d) => getNodeLabel(d))
+      .style("font-size", "8px")
+      .style("display", "flex")
+      .style("justify-content", "center")
     // leaf.append("text") // Add text labels to each leaf node, with the symptom name as the label text
     //   .attr("text-anchor", "middle")
     //   .attr("font-size", (d) => "12px")
@@ -155,10 +150,15 @@ const CirclePacking = () => {
   }, [symptoms, userSymptoms, result]);
 
   return (
-    <div id="graph-area">
-      <svg ref={svgRef} width="400" height="400"></svg>
-      <svg id="legend-circle-packing" width="1400px" height="250"></svg>
-    </div>
+    <section className="circlePackingChart">
+      <div id="graph-area">
+        <svg ref={svgRef} width="2000" height="500"></svg>
+      </div>
+      <div>
+        <h3>Legend:</h3>
+        <svg id="legend-circle-packing" width="1400px" height="250"></svg>
+      </div>
+    </section>
   );
 };
 
