@@ -7,6 +7,8 @@ import { forceCollide, forceSimulation } from "d3-force";
 import { statsSlice, selectUserStats, getUserStats } from "../../store/statsSlice";
 import { foodGroupsSlice, fetchAllFoodGroups, selectFoodGroups } from "../../store/foodGroupsSlice";
 import * as d3 from "d3";
+import { HeaderText} from "../nextUI/"
+import { Container, Button, Text } from "@nextui-org/react";
 
 const TopFoods = () => {
   const svgRef = useRef();
@@ -127,19 +129,21 @@ const TopFoods = () => {
   }, [data, foodGroups]);
 
   return (
-     <section className="topFoodsChart">
-        <h1>Your top 10 foods:</h1>
-        <div>
-          <svg ref={svgRef} width="2000" height="600"></svg>
-          <button type="button" onClick={handleGetAllTime} value="all">All</button>
-          <button type="button" onClick={handleGetSixMonths} value="180">6 Months</button>
-          <button type="button" onClick={handleGetOneYear} value="365">1 Year</button>
-        </div>
-        <div>
-          <h3>Legend:</h3>
-          <svg id="legend-top-foods" width="1400px" height="250"></svg>
-        </div>
-      </section>
+     <Container>
+        <HeaderText text="Your Top 10 Foods:" />
+        <Container>
+          <svg ref={svgRef} width="100%" height="600"></svg>
+          <Button.Group color="primary" ghost>
+            <Button onClick={handleGetAllTime} value="all">All</Button>
+            <Button onClick={handleGetSixMonths} value="180">6 Months</Button>
+            <Button onClick={handleGetOneYear} value="365">1 Year</Button>
+          </Button.Group>
+        </Container>
+        <Container>
+          <Text h3>Legend:</Text>
+          <svg id="legend-top-foods" width="100%" height="250"></svg>
+        </Container>
+      </Container>
   );
 };
 

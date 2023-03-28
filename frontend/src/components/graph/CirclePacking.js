@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectSymptoms, fetchAllSymptoms } from "../../store/symptomSlice";
 import { fetchUserCorrelations, selectUserCorrelations } from "../../store/correlationsSlice";
 import * as d3 from "d3";
+import { Container, Text } from "@nextui-org/react";
 
 /**
  * This component displays a circle packing chart and a legend.
@@ -133,7 +134,7 @@ const CirclePacking = () => {
       .attr("fill", (d) => d.data.color)
       .attr("r", (d) => d.r);
 
-    leaf.append("foreignObject")
+    leaf.append("foreignObject") // Add text labels to each leaf node, with the symptom name as the label text
       .attr("x", (d) => -d.r)
       .attr("y", (d) => -d.r)
       .attr("width", (d) => d.r * 2)
@@ -142,22 +143,17 @@ const CirclePacking = () => {
       .style("font-size", "8px")
       .style("display", "flex")
       .style("justify-content", "center")
-    // leaf.append("text") // Add text labels to each leaf node, with the symptom name as the label text
-    //   .attr("text-anchor", "middle")
-    //   .attr("font-size", (d) => "12px")
-    //   .attr("dy", ".35em")
-    //   .text((d) => d.data.name);
   }, [symptoms, userSymptoms, result]);
 
   return (
     <section className="circlePackingChart">
-      <div id="graph-area">
-        <svg ref={svgRef} width="2000" height="500"></svg>
-      </div>
-      <div>
-        <h3>Legend:</h3>
-        <svg id="legend-circle-packing" width="1400px" height="250"></svg>
-      </div>
+      <Container>
+        <div id="graph-area">
+          <svg ref={svgRef} width="1200" height="500"></svg>
+        </div>
+        <Text h3>Legend:</Text>
+        <svg id="legend-circle-packing" width="100%" height="250"></svg>
+      </Container>
     </section>
   );
 };

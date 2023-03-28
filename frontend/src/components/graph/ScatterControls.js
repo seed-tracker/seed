@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as d3 from "d3";
 import { fetchScatterData } from "../../store/scatterSlice";
+import { Text, Button, Row } from "@nextui-org/react";
 
 const ScatterControls = ({ symptomList, toggleSymptom, maxMonths }) => {
   const [sliderVal, setSliderVal] = useState(maxMonths);
 
   return (
     <section>
-      <h3>
+      <Text h4>
         {" "}
         Showing data over the past{" "}
         {sliderVal === 12
@@ -16,7 +17,7 @@ const ScatterControls = ({ symptomList, toggleSymptom, maxMonths }) => {
           : sliderVal % 12 === 0 && sliderVal > 13
           ? `${sliderVal / 12} years`
           : `${sliderVal} months`}
-      </h3>
+      </Text>
       <section>
         <input
           type="range"
@@ -27,18 +28,20 @@ const ScatterControls = ({ symptomList, toggleSymptom, maxMonths }) => {
           onChange={(e) => setSliderVal(Number(e.target.value))}
         />
       </section>
-      <section>
-        {/* this should probably be a dropdown? */}
-        Most common symptoms:{" "}
-        {symptomList
-          ? symptomList.length &&
-            symptomList.map((s, i) => (
-              <button key={i} onClick={() => toggleSymptom(s)}>
-                {s}
-              </button>
-            ))
-          : null}
-      </section>
+      <Row css={{display: "flex", alignItems: "baseline"}}>
+        <Text h4>Most common symptoms:{" "}</Text>
+        <Button.Group color="primary" ghost>
+          {symptomList
+            ? symptomList.length &&
+              symptomList.map((s, i) => (
+                <Button key={i} onClick={() => toggleSymptom(s)}>
+                  {s}
+                </Button>
+              ))
+            : null}
+        </Button.Group>
+      </Row>
+
     </section>
   );
 };

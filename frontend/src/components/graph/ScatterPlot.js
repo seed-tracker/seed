@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import * as d3 from "d3";
 import { fetchScatterData } from "../../store/scatterSlice";
 import ScatterControls from "./ScatterControls";
+import { HeaderText } from "../nextUI";
+import { Container } from "@nextui-org/react";
 
 const ScatterPlot = () => {
   const dispatch = useDispatch();
@@ -305,7 +307,9 @@ const ScatterPlot = () => {
 
   return (
     <>
-      <section>
+      <Container>
+        <HeaderText text="Your Top Associations:"/>
+
         {allData && allData.length && allData[0].symptomData && (
           <ScatterControls
             symptomList={allData.map(({ symptomData }) => symptomData.name)}
@@ -313,9 +317,10 @@ const ScatterPlot = () => {
             maxMonths={maxMonths}
           />
         )}
-      </section>
-      <h1>Your top associations</h1>
-      <svg ref={svgRef} style={{ margin: "90px" }}></svg>
+
+        <svg ref={svgRef} style={{ margin: "90px" }}></svg>
+
+      </Container>
     </>
   );
 };
