@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { me } from "../store/authSlice";
 import { useSelector } from "react-redux";
 import ScatterPlot from "./graph/ScatterPlot";
 import StatsAndFacts from "./StatsAndFacts";
@@ -24,10 +23,11 @@ const Profile = () => {
 
   return (
     <main>
+            <ScatterPlot />
       {/* <Sidebar /> */}
-      <StatsAndFacts />
+
       <section>
-        <ScatterPlot />
+        <StatsAndFacts />
       </section>
         <CirclePacking />
       <section>{!correlationsLoaded && <CirclePacking />}</section>
