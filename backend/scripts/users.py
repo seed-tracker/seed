@@ -14,8 +14,17 @@ sys.path.insert(0,"..")
 from db import db, test_db
 
 def create_users(n):
+    """ Seed the database with users
+
+    n = number of users to seed
+    name = first and last name of user
+    username = username of user
+    password = hashed password
+    email = user's email
+    birthdate = date of birth for user
+    """
     user_list = []
-    
+
     for _ in range(n):
         username = fake.user_name()
         password = f"{username}_pass"
@@ -25,7 +34,7 @@ def create_users(n):
 
         user = create_user(fake.name(), username, password, fake.email(), datetime.datetime(1980, 10, 20))
         user_list.append(user)
-    
+
     return user_list
 
 def create_user(name, username, password, email, birthdate):

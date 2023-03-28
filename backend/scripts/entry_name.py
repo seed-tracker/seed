@@ -4,6 +4,8 @@ from bson import ObjectId
 sys.path.insert(0,"..")
 from db import db, test_db
 
+""" Add entry names to meal entries
+    """
 def add_entry_name():
     pipeline = [
         {
@@ -11,7 +13,7 @@ def add_entry_name():
                 "entry_name": {
                     "$switch": {
                         "branches": [
-                            {"case": 
+                            {"case":
                                 {"$lte": [{"$hour": { "$toDate": "$datetime" }}, 10]},
                                 "then": "Breakfast"
                             },

@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { me } from "../store/authSlice";
 import { useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
 import ScatterPlot from "./graph/ScatterPlot";
