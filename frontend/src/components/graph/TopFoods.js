@@ -12,9 +12,7 @@ const TopFoods = () => {
   const dispatch = useDispatch()
   const data = useSelector(selectUserStats)
   const topFoods = data.foods ? data.foods.slice(0, 10) : []
-  // console.log("DATA", topFoods);
   const counts = topFoods ? topFoods.map((food) => food.count) : []
-  // console.log(counts);
 
   useEffect(() => {
     dispatch(getUserStats("all"))
@@ -79,23 +77,23 @@ const TopFoods = () => {
         const legendHeight = +legend.attr("height");
 
         legend.selectAll("circle") // Create a circle for each symptom in the legend and color it with the corresponding color
-        .data(Object.entries(foodsColors))
-        .enter()
-        .append("circle")
-        .attr("cx", (d, i) => 25 + i * 120)
-        .attr("cy", legendHeight / 2)
-        .attr("r", 12)
-        .attr("fill", (d, i) => d[1]);
+          .data(Object.entries(foodsColors))
+          .enter()
+          .append("circle")
+          .attr("cx", (d, i) => 25 + i * 120)
+          .attr("cy", legendHeight / 2)
+          .attr("r", 12)
+          .attr("fill", (d, i) => d[1]);
 
         legend.selectAll("text") // Add text labels for each symptom in the legend
-        .data(Object.entries(foodsColors))
-        .enter()
-        .append("text")
-        .attr("text-anchor", "middle")
-        .attr("x", (d, i) => 25 + i * 120)
-        .attr("y", (legendHeight / 2) + 50)
-        .attr("font-size", "12px")
-        .text((d) => d[0]);
+          .data(Object.entries(foodsColors))
+          .enter()
+          .append("text")
+          .attr("text-anchor", "middle")
+          .attr("x", (d, i) => 25 + i * 120)
+          .attr("y", (legendHeight / 2) + 50)
+          .attr("font-size", "12px")
+          .text((d) => d[0]);
 
         const nodes = g
           .selectAll("circle")
