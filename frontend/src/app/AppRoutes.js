@@ -14,6 +14,7 @@ import SymptomEntryOverview from "../components/SymtomEntryOverview";
 import Dashboard from "../components/Dashboard";
 import TopSymptoms from "../components/graph/TopSymptoms";
 import Sidebar from "../components/Sidebar";
+import { Container } from "@nextui-org/react";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
@@ -26,7 +27,12 @@ const AppRoutes = () => {
   return (
     <main>
       {isLoggedIn ? (
-        <>
+        <Container
+          display={"flex"}
+          wrap
+          justify={"space-between"}
+          css={{ margin: 0, padding: 0 }}
+        >
           <Sidebar />
           <Routes>
             <Route path="/profile" element={<Profile />} />
@@ -41,7 +47,7 @@ const AppRoutes = () => {
             />
             <Route path="/*" element={<Home />} />
           </Routes>
-        </>
+        </Container>
       ) : (
         <Routes>
           <Route path="/login" element={<Login />} />
