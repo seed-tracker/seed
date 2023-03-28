@@ -191,18 +191,4 @@ function MealForm() {
 
 export default MealForm;
 
-//need to figure out how to autopopulate the food entry
-//slider is a component
 
-// {/* for all items */}
-// {props.foodEntries.length > 0 && sort === "all"
-// ? props.foodEntries.map((item) => {
-//     return (
-//       <FoodItem
-//         key={item.id}
-//         item={item}
-//         removeTodo={props.addFoodEntry}
-
-//       />
-//     );
-//   })

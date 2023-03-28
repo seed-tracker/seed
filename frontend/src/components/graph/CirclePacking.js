@@ -55,6 +55,8 @@ const CirclePacking = () => {
     const width = +svg.attr("width");
     const height = +svg.attr("height");
 
+    
+
     const pack = (data) => d3.pack() // Define the circle packing layout
       .size([width - 2, height - 2])
       .padding(3)
@@ -116,6 +118,11 @@ const CirclePacking = () => {
       })
     );
 
+    function getNodeLabel(node) {
+      return `<div style="width:${node.r * 2}px;height:${node.r * 2}px;display:flex;justify-content:center;align-items:center;font-size:12px;">
+        ${node.data.name}
+      </div>`;
+    }
 
     const leaf = svg // Select all groups and bind them to the data for the leaf nodes of the tree
       .selectAll("g")
@@ -123,21 +130,29 @@ const CirclePacking = () => {
       .join("g")
       .attr("transform", (d) => `translate(${d.x + 1},${d.y + 1})`)
 
-
     // Create a circle for each leaf node, with radius based on node size, fill color based on symptom color,
     // and stroke color and width based on lift value (higher values have thicker stroke)
-    leaf.append("circle")
-    .attr("r", (d) => d.r)
+    leaf
+    .append("circle")
     .attr("fill", (d) => d.data.color)
+    .attr("r", (d) => d.r);
 
-
-    leaf.append("text") // Add text labels to each leaf node, with the symptom name as the label text
-      .attr("text-anchor", "middle")
-      .attr("font-size", (d) => "12px")
-      .attr("dy", ".35em")
-      .text((d) => d.data.name);
+    leaf
+  .append("foreignObject")
+  .attr("x", (d) => -d.r)
+  .attr("y", (d) => -d.r)
+  .attr("width", (d) => d.r * 2)
+  .attr("height", (d) => d.r * 2)
+  .html((d) => getNodeLabel(d))
+  .style("font-size", "8px")
+  .style("display", "flex") 
+  .style("justify-content", "center")
+    // leaf.append("text") // Add text labels to each leaf node, with the symptom name as the label text
+    //   .attr("text-anchor", "middle")
+    //   .attr("font-size", (d) => "12px")
+    //   .attr("dy", ".35em")
+    //   .text((d) => d.data.name);
   }, [symptoms, userSymptoms, result]);
-
 
   return (
     <div id="graph-area">
@@ -149,7 +164,5 @@ const CirclePacking = () => {
 
 export default CirclePacking;
 
-// take string split into rows , generate text ele for each
-// nest html inside svg
 
-// 2 slices or initial state is correlations.beeswarm, 2 keys [beeswarm: [], circlePack: []]
+

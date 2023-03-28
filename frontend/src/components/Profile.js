@@ -25,8 +25,9 @@ const Profile = () => {
 
   return (
     <main>
+            <ScatterPlot />
+
       <section>
-        <ScatterPlot />
         <StatsAndFacts />
       </section>
       <section>
