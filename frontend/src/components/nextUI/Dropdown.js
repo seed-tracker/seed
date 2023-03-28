@@ -26,10 +26,10 @@ const Dropdown = ({
       </NextUIDropdown.Button>
       <NextUIDropdown.Menu
         aria-label={ariaLabel}
-        color={color || primary}
+        color={color || '$primary'}
         disallowEmptySelection
         selectionMode={selectionMode || "single"}
-        selectedKeys={selected}
+        selectedKeys={selectedValue}
         onSelectionChange={onSelectionChange}
         items={items}
       >
