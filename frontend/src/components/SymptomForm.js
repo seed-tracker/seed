@@ -23,7 +23,6 @@ const SymptomForm = () => {
 
   // submit the symptom
   const handleSymptomSubmit = async (e) => {
-    console.log(symptom)
     try {
       e.preventDefault();
 
@@ -99,7 +98,6 @@ const SymptomForm = () => {
   const fetchRecentSymptoms = async () => {
     try {
       const { data } = await apiClient.get("user/symptoms/recent");
-      console.log(data);
       if (data) {
         // setRecentSymptoms(data)
         setRecentSymptoms(
@@ -139,6 +137,7 @@ const SymptomForm = () => {
                 color={"#7A918D"}
                 css={{
                   background:"#7a918d",
+                  padding:"1rem",
                 }}
                 selectedKeys={symptom}
                 ariaLabel="Select Symptom Dropdown"
@@ -146,8 +145,12 @@ const SymptomForm = () => {
                 items={symptoms}
                 defaultName={"How are you feeling?"}
               />
+              </div>
+              <br></br>
+              <div>
               <Table
               color="primary"
+              css={{padding:"1rem"}}
                 description="Recent symptoms table"
                 headers={[
                   { key: "name", label: "Your recent symptoms" },
