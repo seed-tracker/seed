@@ -123,9 +123,11 @@ const CirclePacking = () => {
   }, [symptoms, userSymptoms, result]);
 
   return (
-    <Container css={{ margin: "5rem 0" }}>
+    <Container css={{ margin: "5rem 0" }}
+    className="glassmorpheus">
       <HeaderText text="Your Food Group and Symptom Relationships" />
       <Text h3>Legend:</Text>
+      
       {Object.keys(symptomColors).map((symptomName) => (
           <Container
           display="flex"

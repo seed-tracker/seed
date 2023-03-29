@@ -231,7 +231,7 @@ const ScatterPlot = () => {
       .enter()
       .append("g")
       .append("text")
-      .attr("x", 800)
+      .attr("x", 700)
       .attr("y", function (d, i) {
         return 30 + i * 20;
       })
@@ -307,7 +307,8 @@ const ScatterPlot = () => {
 
   return (
     <>
-      <Container css={{margin: "5rem 0"}}>
+      <Container className="glassmorpheus" css={{margin: "5rem 0"}}
+      >
         <HeaderText text="Your Top Associations:"/>
 
         {allData && allData.length && allData[0].symptomData && (
