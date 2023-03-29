@@ -31,6 +31,7 @@ const NavigationBar = () => {
       maxWidth={"fluid"}
       variant="sticky"
       css={{
+        zIndex: 999,
         background: "transparent",
         color: "#444c38",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
@@ -79,9 +80,9 @@ const NavigationBar = () => {
           
             <Button onClick={()=>navigate("/login")}
               size="md"
-              color="success"
+              // color="success"
               borderRadius="50%"
-              /* css={{
+               css={{
                 backgroundColor: "#67c43f",
                 backgroundImage:
                   "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
@@ -90,15 +91,15 @@ const NavigationBar = () => {
                 "&:hover": {
                   backgroundPosition: "100% 0",
                 },
-              }} */
+              }} 
             >
               Login
             </Button>
             <Button onClick={()=>navigate("/signup")}
               size="md"
-              color="success"
+              // color="success"
               borderRadius="50%"
-              /* css={{
+             css={{
                backgroundColor: "#67c43f",
                 backgroundImage: "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
                 backgroundSize: "400% 400%",
@@ -106,7 +107,7 @@ const NavigationBar = () => {
                 "&:hover": {
                   backgroundPosition: "100% 0",
                 },
-              }} */
+              }} 
             >
               Signup
             </Button>
