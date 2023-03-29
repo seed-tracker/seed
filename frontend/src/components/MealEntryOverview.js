@@ -8,7 +8,8 @@ import {
   deleteMealEntry,
 } from "../store/allEntriesSlice";
 import { v4 as uuidv4 } from "uuid";
-import {HeaderText} from './nextUI/index';
+import { HeaderText, MealCard, Pagination } from "./nextUI/index";
+import { Grid } from "@nextui-org/react";
 
 function MealEntryOverview() {
   const [meals, setMeals] = useState([]);
@@ -33,19 +34,14 @@ function MealEntryOverview() {
     setMeals(mealEntries.meals);
   }, [mealEntries]);
 
-  const handlePageChange = (event) => {
-    if (event.target.value === "previous") {
-      page -= 1;
-      navigate(`/user/meal-entries?page=${page}`);
-    } else if (event.target.value === "next") {
-      page += 1;
-      navigate(`/user/meal-entries?page=${page}`);
-    }
+  const handlePageChange = (page) => {
+    navigate(`/user/meal-entries?page=${page}`);
+    window.scrollTo(0, 0);
   };
 
   const handleEntryDelete = async (id) => {
-    await dispatch(deleteMealEntry(id));
-    await dispatch(fetchAllMealEntries(page));
+    dispatch(deleteMealEntry(id));
+    dispatch(fetchAllMealEntries(page));
   };
 
   return (
@@ -65,43 +61,28 @@ function MealEntryOverview() {
           </p>
         )}
       </aside>
-      <ul>
-        {meals && meals.length
-          ? meals.map((meal) => {
-              return (
-                <li key={uuidv4()}>
-                  <p>
-                    {new Date(meal.datetime).toLocaleString("en-US", {
-                      dateStyle: "full",
-                      timeStyle: "long",
-                    })}
-                  </p>
-                  <p>{meal.entry_name}</p>
-                  <p>Food Groups: {meal.groups?.join(", ")}</p>
-                  <p>Foods: {meal.foods?.join(", ")}</p>
-                  <button onClick={() => handleEntryDelete(meal._id)}>
-                    Delete
-                  </button>
-                </li>
-              );
-            })
-          : "No entries to display"}
-      </ul>
+
+      {meals && meals.length ? (
+        <Grid.Container gap={3}>
+          {meals.map((meal) => {
+            return (
+              <Grid xs={4} key={uuidv4()} css={{ minWidth: "20rem" }}>
+                <MealCard meal={meal} onPress={handleEntryDelete} />
+              </Grid>
+            );
+          })}
+        </Grid.Container>
+      ) : (
+        "No entries to display"
+      )}
 
       <div>
-        {page > 1 && (
-          <button
-            value="previous"
-            onClick={(e) => handlePageChange(e, "previous")}
-          >
-            {`<<`}
-          </button>
-        )}
-        <p>{page}</p>
-        {page < maxPages && (
-          <button value="next" onClick={(e) => handlePageChange(e, "next")}>
-            {`>>`}
-          </button>
+        {maxPages > 1 && (
+          <Pagination
+            page={page}
+            totalPages={maxPages}
+            onChange={handlePageChange}
+          />
         )}
       </div>
     </main>

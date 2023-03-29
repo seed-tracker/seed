@@ -134,7 +134,7 @@ def get_user_symptoms(user):
         if symptoms:
             return {"count": total_symptoms, "symptoms": symptoms}, 200
         else:
-            return f"No symptoms found for user {username}", 500
+            return {"error": "No symptoms found"}, 204
 
     except Exception as e:
         return {

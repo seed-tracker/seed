@@ -1,5 +1,5 @@
 // NextUI component: all buttons that requires a user submit something or calls on backend/route
-import { Button as NextUIButton, Loading, styled } from "@nextui-org/react";
+import { Button as NextUIButton, Loading } from "@nextui-org/react";
 //text (string) = text to display in the button
 //color (string, optional) = color of the button (default is primary)
 //ariaLabel (string) = aria-label for the button

@@ -123,7 +123,7 @@ def authenticate(user):
         user.pop("password")
         #returns user
         return user, 200
-    except:
+    except Exception as e:
         return {
             "message": str(e),
             "error": "Authentification failed",

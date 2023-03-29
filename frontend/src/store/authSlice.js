@@ -41,7 +41,7 @@ export const login = createAsyncThunk(
       window.localStorage.setItem(TOKEN, data.token);
       thunkAPI.dispatch(me());
     } catch (err) {
-      if (typeof err.response.data == "string") {
+      if (err.response && typeof err.response.data == "string") {
         return thunkAPI.rejectWithValue(err.response.data);
       } else {
         return thunkAPI.rejectWithValue(
