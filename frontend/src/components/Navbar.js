@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../store/authSlice";
 import { me } from "../store/authSlice";
+import { clearStore } from "../store";
 import { Text, Navbar, Link, Button } from "@nextui-org/react";
-import { Link as Router } from "react-router-dom";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -17,6 +17,7 @@ const NavigationBar = () => {
 
   const logoutAndRedirectHome = () => {
     dispatch(logout());
+    dispatch(clearStore());
     navigate("/");
   };
   /**
