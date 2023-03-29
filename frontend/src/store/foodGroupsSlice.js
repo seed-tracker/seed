@@ -8,10 +8,10 @@ export const fetchAllFoodGroups = createAsyncThunk(
       const { data } = await apiClient.get("groups/");
       return data;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
-)
+);
 
 export const foodGroupsSlice = createSlice({
   name: "foodGroups",
@@ -19,12 +19,12 @@ export const foodGroupsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(fetchAllFoodGroups.fulfilled, (state, action) => {
-      return action.payload;
-    })
-    .addCase(fetchAllFoodGroups.rejected, (state, action) => {
-      state.error = action.error;
-    })
+      .addCase(fetchAllFoodGroups.fulfilled, (state, action) => {
+        return action.payload;
+      })
+      .addCase(fetchAllFoodGroups.rejected, (state, action) => {
+        state.error = action.error;
+      });
   },
 });
 

@@ -12,8 +12,12 @@ const SuccessMessage = ({ title, message, type, onClick }) => {
   const navigate = useNavigate();
 
   return (
-    <Container css={{ padding: "4rem" }} justify="center" align="center">
-      <Card css={{ maxWidth: "50rem", padding: "2rem" }}>
+    <Container
+      justify={"center"}
+      alignItems={"center"}
+      css={{ margin: 0, padding: 0, width: "auto" }}
+    >
+      <Card css={{ padding: "2rem" }}>
         <Card.Header>
           <Text h2>{title}</Text>
         </Card.Header>

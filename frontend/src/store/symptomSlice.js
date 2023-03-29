@@ -8,10 +8,10 @@ export const fetchAllSymptoms = createAsyncThunk(
       const { data } = await apiClient.get("symptoms/");
       return data;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
-)
+);
 
 export const symptomSlice = createSlice({
   name: "symptoms",
