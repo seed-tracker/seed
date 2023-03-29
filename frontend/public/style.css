@@ -10,36 +10,29 @@ body {
   box-sizing: border-box;
   position: relative;
   min-height: 100vh;
-  background-color: #cfdbd1;
-}
-
-#graph-area {
-  display: block;
-  background: #cfdbd1;
-  cursor: pointer;
+  /* background-color: #cfdbd1; */
 }
 
 text {
   z-index: 1;
 }
 
-@-webkit-keyframes pulse
-    {
-      0% {-webkit-transform: scale(1.0); opacity: 1;}
-      100% {-webkit-transform: scale(2); opacity: 0;}
-    }
-
-    .pulse
-    {
-      /* Giving Animation Function */
-      -webkit-animation: pulse 4s linear infinite;
-    }
-
-    .shadow {
-    -webkit-filter: drop-shadow( 0px 0px 5px #cfdbd1 );
-            filter: drop-shadow( 0px 0px 5px #000 ); /* Same syntax as box-shadow */
+footer {
+  margin-top: 3rem;
 }
 
-.topSymptomsChart {
-  padding: 5rem;
+.mainpage-center{
+  background-image: url("greenmarble.jpeg");
+  background-size: cover;
+  background-repeat: repeat;
+}
+
+.glassmorpheus{
+ /* From https://css.glass */
+  background: rgba(41, 124, 76, 0.23);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(11.9px);
+  -webkit-backdrop-filter: blur(11.9px);
+  border: 1px solid rgba(41, 124, 76, 0.26);
 }

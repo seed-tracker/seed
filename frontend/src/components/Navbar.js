@@ -1,15 +1,10 @@
 import React, { useEffect } from "react";
-// import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../store/authSlice";
 import { me } from "../store/authSlice";
 import { Text, Navbar, Link, Button } from "@nextui-org/react";
 
-/**
- * Component for the navbar
- * @component shows a navbar that updates links based on userstatus
- */
 const NavigationBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,12 +29,20 @@ const NavigationBar = () => {
       isBordered
       maxWidth={"fluid"}
       variant="sticky"
-      css={{ background: "#cfdbd1", color: "#444c38" }}
+      css={{
+        background: "transparent",
+        color: "#444c38",
+        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
+      }}
     >
       <Navbar.Brand css={{ alignItems: "center" }}>
         <Text
           h1
-          css={{ fontFamily: "Lovechild", alignItems: "center", margin: 0 }}
+          css={{
+            fontFamily: "Lovechild",
+            alignItems: "center",
+            margin: 0,
+          }}
           color="$secondary"
         >
           SEED
@@ -47,22 +50,19 @@ const NavigationBar = () => {
       </Navbar.Brand>
       {isLoggedIn ? (
         <Navbar.Content>
-          {/* <Navbar.Item>
-          <Link href="/profile" text={"My Profile"}/> */}
           <Navbar.Link href="/profile" as={Link}>
             My Profile
           </Navbar.Link>
-          {/* </Navbar.Item> */}
           <Navbar.Item>
             <Button
               size="md"
-              bordered
               flat
-              color={"#7A918D"}
+              bordered
+              color="#7A918D"
               css={{ backgroundColor: "#7A918Dcc" }}
               auto
               as={Link}
-              onPress={logoutAndRedirectHome}
+              onClick={logoutAndRedirectHome}
             >
               Logout
             </Button>
@@ -70,8 +70,43 @@ const NavigationBar = () => {
         </Navbar.Content>
       ) : (
         <Navbar.Content>
-          <Navbar.Link href="/login">Login</Navbar.Link>
-          <Navbar.Link href="/signup">Sign Up</Navbar.Link>
+          <Navbar.Link href="/login">
+            <Button
+            
+              size="md"
+              color="secondary"
+              borderRadius="50%"
+              css={{
+                backgroundColor: "#67c43f",
+                backgroundImage: "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
+                backgroundSize: "400% 400%",
+                transition: "background-position 0.4s ease-in-out",
+                "&:hover": {
+                  backgroundPosition: "100% 0",
+                },
+              }}
+            >
+              Login
+            </Button>
+          </Navbar.Link>
+          <Navbar.Link href="/signup">
+            <Button
+              size="md"
+              color="secondary"
+              borderRadius="50%"
+              css={{
+               backgroundColor: "#67c43f",
+                backgroundImage: "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
+                backgroundSize: "400% 400%",
+                transition: "background-position 0.8s ease-in-out",
+                "&:hover": {
+                  backgroundPosition: "100% 0",
+                },
+              }}
+            >
+              Signup
+            </Button>
+          </Navbar.Link>
         </Navbar.Content>
       )}
     </Navbar>

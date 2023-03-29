@@ -7,9 +7,9 @@ Everything on sidebar */
 
 const Link = ({ href, text }) => {
   return (
-    <NextUILink block href={href} color="success" underline>
-      {text}
-    </NextUILink>
+      <NextUILink block href={href} color="success" underline>
+        {text}
+      </NextUILink>
   );
 };
 
