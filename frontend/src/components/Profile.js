@@ -9,13 +9,14 @@ import {
 } from "../store/correlationsSlice";
 import TopFoods from "./graph/TopFoods";
 import { Loading, Container, Text } from "@nextui-org/react";
+import { PageLoading } from "./nextUI";
 
 /**
  * Placeholder component for the userprofile page
  * @component shows "profile" if the user has logged enough entries to have data to show, otherwise, shows a randomly generated quote from an API
  */
 const Profile = () => {
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -36,15 +37,7 @@ const Profile = () => {
   return (
     <Container fluid>
       {loading ? (
-        <Container
-          fluid
-          justify="center"
-          align="center"
-          css={{ padding: "10rem" }}
-        >
-          <Loading size="xl" />
-          <Text>Getting your results...</Text>
-        </Container>
+        <PageLoading text="Getting your results..." />
       ) : (
         <>
           {correlationsLoaded && correlationsLoaded.length > 0 ? (

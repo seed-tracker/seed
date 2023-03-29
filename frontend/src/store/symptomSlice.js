@@ -8,7 +8,7 @@ export const fetchAllSymptoms = createAsyncThunk(
       const { data } = await apiClient.get("symptoms/");
       return data;
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   }
 );

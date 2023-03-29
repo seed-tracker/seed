@@ -92,14 +92,6 @@ const ScatterPlot = () => {
     return text.split(" ").join("_").split(",").join("_");
   };
 
-  //when time range changes, update the graph
-  useEffect(() => {
-    if (!allData || !allData.length) return;
-
-    // const x = d3.scaleTime().domain(dateRange).range([0, 700]);
-    // xAxis.transition().duration(500).call(x);
-  }, [dateRange]);
-
   // set up container, scaling, axis, labeling, data
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
@@ -307,20 +299,19 @@ const ScatterPlot = () => {
 
   return (
     <>
-      <Container css={{margin: "5rem 0"}}>
-        <HeaderText text="Your Top Associations:"/>
+      {allData && allData.length > 0 && allData[0].symptomData && (
+        <Container css={{ margin: "5rem 0" }}>
+          <HeaderText text="Your Top Associations:" />
 
-        {allData && allData.length && allData[0].symptomData && (
           <ScatterControls
             symptomList={allData.map(({ symptomData }) => symptomData.name)}
             toggleSymptom={toggleSymptom}
             maxMonths={maxMonths}
           />
-        )}
 
-        <svg ref={svgRef} style={{ margin: "90px" }}></svg>
-
-      </Container>
+          <svg ref={svgRef} style={{ margin: "90px" }}></svg>
+        </Container>
+      )}
     </>
   );
 };
