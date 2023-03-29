@@ -142,3 +142,37 @@ def get_user_symptoms(user):
             "error": "Error fetching symptoms",
             "data": None,
         }, 500
+
+
+# gets a user's recent symptoms
+@user_symptoms.route("/recent", methods=["GET"])
+@require_token
+def get_recent_symptoms(user):
+    try:
+        # get username from the auth middlewar
+        username = user["username"]
+
+        pipeline = [
+            {"$match": {"username": username}},
+            {"$sort": {"datetime": -1}},
+            {"$limit": 200},
+            {"$group": {"_id": "$symptom", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}},
+            {"$limit": 10},
+            {"$project": {"symptom": "$_id", "_id": 0}},
+        ]
+
+        # fetch the symptoms from mongodb
+        recent_symptoms = list(db.user_symptoms.aggregate(pipeline))
+
+        if not recent_symptoms:
+            return "Symptoms not found", 204
+
+        return jsonify(list(map(lambda s: s["symptom"], recent_symptoms))), 200
+
+    except Exception as e:
+        return {
+            "message": str(e),
+            "error": "Error fetching user's recent symptoms",
+            "data": None,
+        }, 500

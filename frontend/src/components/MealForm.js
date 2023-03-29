@@ -4,7 +4,7 @@ import { me } from "../store/authSlice";
 import Autocomplete from "./Autocomplete";
 import apiClient from "../config";
 import { Grid, Row, Spacer, Text } from "@nextui-org/react";
-import { Button, Table, Inputs } from "./nextUI/index";
+import { Button, Table, Inputs, HeaderText } from "./nextUI/index";
 import SuccessMessage from "./SuccessMessage";
 
 //form for entering a meal
@@ -172,6 +172,10 @@ function MealForm() {
             }}
             gap={4}
           >
+            {" "}
+            <Grid xs={12}>
+              <HeaderText text="Add a meal" />
+            </Grid>
             <Grid xs={12}>
               <Inputs
                 label="Entry Name"
@@ -200,7 +204,6 @@ function MealForm() {
                 helperText="Required"
               />
             </Grid>
-
             <Grid xs={12}>
               <Autocomplete addFood={addFood} allGroups={allGroups} />
             </Grid>
