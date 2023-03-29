@@ -92,14 +92,6 @@ const ScatterPlot = () => {
     return text.split(" ").join("_").split(",").join("_");
   };
 
-  //when time range changes, update the graph
-  useEffect(() => {
-    if (!allData || !allData.length) return;
-
-    // const x = d3.scaleTime().domain(dateRange).range([0, 700]);
-    // xAxis.transition().duration(500).call(x);
-  }, [dateRange]);
-
   // set up container, scaling, axis, labeling, data
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;

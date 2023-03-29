@@ -34,12 +34,12 @@ const AppRoutes = () => {
   };
 
   return (
-    <main>
+    <>
       {isLoggedIn ? (
         <Container
           display={"flex"}
           wrap={"wrap"}
-          maxWidth={"100vw"}
+          width={"100vw"}
           align="center"
           css={{ margin: 0, padding: 0 }}
         >
@@ -65,7 +65,7 @@ const AppRoutes = () => {
           <Route path="/*" element={<Home />} />
         </Routes>
       )}
-    </main>
+    </>
   );
 };
 

@@ -28,18 +28,21 @@ const UserForm = ({
   }, [dispatch]);
 
   return (
-    <form onSubmit={onSubmit}>
-      <Container justify="center" align="center" aria-label={description}>
+    <Container
+      justify="center"
+      align="center"
+      aria-label={description}
+      css={{ maxWidth: "50rem" }}
+    >
+      <form onSubmit={onSubmit}>
         <Card
           css={{
             "@xs": {
               margin: 0,
               padding: 0,
-              minWidth: "100vw",
             },
             "@sm": {
               margin: "2vw",
-              minWidth: "50vw",
             },
           }}
           aria-label={description}
@@ -99,8 +102,8 @@ const UserForm = ({
           </Card.Body>
           <Spacer y={2} />
         </Card>
-      </Container>
-    </form>
+      </form>
+    </Container>
   );
 };
 

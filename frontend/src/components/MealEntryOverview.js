@@ -53,10 +53,9 @@ function MealEntryOverview() {
 
   return (
     <Container
-      fluid
-      justify="flex-start"
-      align="flex-start"
-      css={{ padding: "3rem" }}
+      justify="flex-end"
+      align="flex-end"
+      css={{ padding: "2rem", width: "75vw", mr: "0" }}
     >
       {loading ? (
         <PageLoading text="Loading..." />
@@ -79,7 +78,7 @@ function MealEntryOverview() {
           </aside>
           {meals && meals.length ? (
             <>
-              <Grid.Container gap={3}>
+              <Grid.Container gap={3} justify="flex-end" align="flex-end">
                 {meals.map((meal) => {
                   return (
                     <Grid xs={4} key={uuidv4()} css={{ minWidth: "20rem" }}>

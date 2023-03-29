@@ -57,12 +57,7 @@ function SymptomEntryOverview() {
   };
 
   return (
-    <Container
-      fluid
-      justify="flex-start"
-      align="flex-start"
-      css={{ padding: "3rem" }}
-    >
+    <Container css={{ padding: "3rem", maxWidth: "65rem" }}>
       {loading ? (
         <PageLoading text="We're fetching your symptoms..." />
       ) : (
@@ -90,7 +85,7 @@ function SymptomEntryOverview() {
                     <Grid
                       xs={2}
                       key={uuidv4()}
-                      css={{ minWidth: "20rem", maxWidth: "25rem" }}
+                      css={{ minWidth: "18rem", maxWidth: "25rem" }}
                     >
                       <SymptomCard
                         symptom={symptom}
