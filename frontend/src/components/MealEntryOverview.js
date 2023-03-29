@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
-import Sidebar from "./Sidebar";
 import {
   fetchAllMealEntries,
   selectAllMeals,
   deleteMealEntry,
 } from "../store/allEntriesSlice";
 import { v4 as uuidv4 } from "uuid";
+import {HeaderText} from './nextUI/index';
 
 function MealEntryOverview() {
   const [meals, setMeals] = useState([]);
@@ -50,7 +50,7 @@ function MealEntryOverview() {
 
   return (
     <main>
-      <h1>Past Meal Entries</h1>
+      <HeaderText text="Past Meal Entries" />
       <aside>
         {count < 500 && (
           <p>
