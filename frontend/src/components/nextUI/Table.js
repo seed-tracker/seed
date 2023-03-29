@@ -18,8 +18,10 @@ const Table = ({ description, headers, rows, button }) => {
       aria-label={description}
       css={{
         minWidth: "30rem",
+        maxWidth: "40rem",
         background: "$gray300",
       }}
+      shadow={false}
     >
       <NextUITable.Header columns={headers}>
         {(header) => (
