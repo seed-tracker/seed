@@ -30,7 +30,7 @@ const ScatterControls = ({ symptomList, toggleSymptom, maxMonths }) => {
       </section>
       <Row css={{display: "flex", alignItems: "baseline"}}>
         <Text h4>Most common symptoms:{" "}</Text>
-        <Button.Group color="primary" ghost>
+        <Button.Group color="primary" bordered ghost>
           {symptomList
             ? symptomList.length &&
               symptomList.map((s, i) => (

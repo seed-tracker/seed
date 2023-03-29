@@ -7,8 +7,8 @@ import { forceCollide, forceSimulation } from "d3-force";
 import { statsSlice, selectUserStats, getUserStats } from "../../store/statsSlice";
 import { foodGroupsSlice, fetchAllFoodGroups, selectFoodGroups } from "../../store/foodGroupsSlice";
 import * as d3 from "d3";
-import { HeaderText} from "../nextUI/"
-import { Container, Button, Text } from "@nextui-org/react";
+import { HeaderText } from "../nextUI/"
+import { Container, Text, Button } from "@nextui-org/react";
 
 const TopFoods = () => {
   const svgRef = useRef();
@@ -132,16 +132,16 @@ const TopFoods = () => {
      <Container>
         <HeaderText text="Your Top 10 Foods:" />
         <Container>
+          <Text h3>Legend:</Text>
+          <svg id="legend-top-foods" width="100%" height="250"></svg>
+        </Container>
+        <Container>
           <svg ref={svgRef} width="100%" height="600"></svg>
           <Button.Group color="primary" ghost>
             <Button onClick={handleGetAllTime} value="all">All</Button>
             <Button onClick={handleGetSixMonths} value="180">6 Months</Button>
             <Button onClick={handleGetOneYear} value="365">1 Year</Button>
           </Button.Group>
-        </Container>
-        <Container>
-          <Text h3>Legend:</Text>
-          <svg id="legend-top-foods" width="100%" height="250"></svg>
         </Container>
       </Container>
   );

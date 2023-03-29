@@ -148,11 +148,13 @@ const CirclePacking = () => {
   return (
     <section className="circlePackingChart">
       <Container>
+        <div>
+        <Text h3>Legend:</Text>
+        <svg id="legend-circle-packing" width="100%" height="250"></svg>
+        </div>
         <div id="graph-area">
           <svg ref={svgRef} width="1200" height="500"></svg>
         </div>
-        <Text h3>Legend:</Text>
-        <svg id="legend-circle-packing" width="100%" height="250"></svg>
       </Container>
     </section>
   );

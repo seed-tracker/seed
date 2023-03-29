@@ -123,16 +123,16 @@ const TopSymptoms = () => {
      <Container>
         <h1>Your top 5 symptoms:</h1>
         <div>
+          <h3>Legend:</h3>
+          <svg id="legend-lollipop" width="100%" height="250"></svg>
+        </div>
+        <div>
           <svg ref={svgRef} width="2000" height="500"></svg>
           <Button.Group color="primary" ghost>
             <Button type="button" onClick={handleGetAllTime} value="all">All</Button>
             <Button type="button" onClick={handleGetSixMonths} value="180">6 Months</Button>
             <Button type="button" onClick={handleGetOneYear} value="365">1 Year</Button>
           </Button.Group>
-        </div>
-        <div>
-          <h3>Legend:</h3>
-          <svg id="legend-lollipop" width="100%" height="250"></svg>
         </div>
     </Container>
   );
