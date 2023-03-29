@@ -7,13 +7,11 @@ export const fetchUserCorrelations = createAsyncThunk(
     try {
       const { data, status } = await apiClient.get("users/correlations/");
 
-      console.log(status);
-
       if (!data.length) return rejectWithValue("No data found");
 
       return data;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       if (err.status === 204) {
         return rejectWithValue("Not enough data");
       }
