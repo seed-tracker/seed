@@ -307,7 +307,7 @@ const ScatterPlot = () => {
 
   return (
     <>
-      <Container>
+      <Container css={{margin: "5rem 0"}}>
         <HeaderText text="Your Top Associations:"/>
 
         {allData && allData.length && allData[0].symptomData && (
