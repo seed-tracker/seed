@@ -4,14 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import { addSymptomEntry } from "../store/symptomSlice";
 import apiClient from "../config";
-import { Inputs, Button, Dropdown } from "./nextUI";
+import { Inputs, Button, Dropdown } from "./nextUI/index";
+import SuccessMessage from "./SuccessMessage";
 
 const SymptomForm = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [symptom, setSymptom] = useState("");
   const [severity, setSeverity] = useState("");
-  const [symptoms, setSymptoms] = useState(null);
+  const [symptoms, setSymptoms] = useState([]);
 
   const user = useSelector((state) => state.auth.me);
 
@@ -48,7 +49,7 @@ const SymptomForm = () => {
     try {
       const { data } = await apiClient.get("symptoms/");
       if (data) {
-        setSymptoms(data.map((sym) => sym["name"]));
+        setSymptoms(data.map((sym) => ({name:sym.name, key:sym.name})));
       }
     } catch (err) {
       console.error(err);
@@ -76,7 +77,15 @@ const SymptomForm = () => {
         />
         <div>
           <label htmlFor="symptoms">Select symptom(s):</label>
-          <select
+          <Dropdown
+            color={"#7A918Dcc"}
+            selectedKeys={symptom}
+            ariaLabel="Select Symptom Dropdown"
+            onChange={setSymptom}
+            items={symptoms}
+            defaultName={"How are you feeling?"}
+          />
+          {/* <select
             name="symptoms"
             value={symptom}
             onChange={(event) => setSymptom(event.target.value)}
@@ -88,7 +97,7 @@ const SymptomForm = () => {
                   {symptom}
                 </option>
               ))}
-          </select>
+          </select> */}
         </div>
         <label htmlFor="severity">
           Severity: {severity}
@@ -102,7 +111,7 @@ const SymptomForm = () => {
         </label>
         <Button
           text={"Add Entry"}
-          aria-label={"Submit Symptom Entry Form Button"}
+          arialabel={"Submit Symptom Entry Form Button"}
           type={"submit"}
         />
       </form>
