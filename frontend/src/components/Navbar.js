@@ -19,7 +19,12 @@ const NavigationBar = () => {
     dispatch(logout());
     navigate("/");
   };
-
+  /**
+   * Component for the Navbar
+   * @component is the navigation bar that has two views:
+   * If user is signed in: links to view profile & logout
+   * If visitor: links to Login or Sign up
+   */
   return (
     <Navbar
       isBordered
@@ -74,9 +79,9 @@ const NavigationBar = () => {
           <Navbar.Link href="/login">
             <Button
               size="md"
-              color="secondary"
+              color="success"
               borderRadius="50%"
-              css={{
+              /* css={{
                 backgroundColor: "#67c43f",
                 backgroundImage:
                   "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
@@ -85,7 +90,7 @@ const NavigationBar = () => {
                 "&:hover": {
                   backgroundPosition: "100% 0",
                 },
-              }}
+              }} */
             >
               Login
             </Button>
@@ -93,18 +98,17 @@ const NavigationBar = () => {
           <Navbar.Link href="/signup">
             <Button
               size="md"
-              color="secondary"
+              color="success"
               borderRadius="50%"
-              css={{
-                backgroundColor: "#67c43f",
-                backgroundImage:
-                  "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
+              /* css={{
+               backgroundColor: "#67c43f",
+                backgroundImage: "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
                 backgroundSize: "400% 400%",
                 transition: "background-position 0.8s ease-in-out",
                 "&:hover": {
                   backgroundPosition: "100% 0",
                 },
-              }}
+              }} */
             >
               Signup
             </Button>
