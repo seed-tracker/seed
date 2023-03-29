@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "../store/authSlice";
 import { me } from "../store/authSlice";
 import { Text, Navbar, Link, Button } from "@nextui-org/react";
+import { Link as Router } from "react-router-dom";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -45,8 +46,13 @@ const NavigationBar = () => {
       </Navbar.Brand>
       {isLoggedIn ? (
         <Navbar.Content>
-          <Navbar.Link href="/profile" as={Link}>
-            My Profile
+          <Navbar.Link as={Link}>
+            <Router
+              to="/profile"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              My Profile
+            </Router>
           </Navbar.Link>
           <Navbar.Item>
             <Button
@@ -67,13 +73,13 @@ const NavigationBar = () => {
         <Navbar.Content>
           <Navbar.Link href="/login">
             <Button
-            
               size="md"
               color="secondary"
               borderRadius="50%"
               css={{
                 backgroundColor: "#67c43f",
-                backgroundImage: "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
+                backgroundImage:
+                  "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
                 backgroundSize: "400% 400%",
                 transition: "background-position 0.4s ease-in-out",
                 "&:hover": {
@@ -90,8 +96,9 @@ const NavigationBar = () => {
               color="secondary"
               borderRadius="50%"
               css={{
-               backgroundColor: "#67c43f",
-                backgroundImage: "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
+                backgroundColor: "#67c43f",
+                backgroundImage:
+                  "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
                 backgroundSize: "400% 400%",
                 transition: "background-position 0.8s ease-in-out",
                 "&:hover": {

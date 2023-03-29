@@ -340,23 +340,3 @@ if __name__ == "__main__":
     else:
         find_correlations(input("Username? "))
 
-
-# WILL DELETE
-# THESE ARE SOME OF THE USERS WITH THE BEST DATA:
-
-# top users:
-# helloagain2, wanyi, deawdewd, lucy, graceshopper, harperamanda, michael99, donaldsonrobert, campbellfrances, ysullivan, oellis, churchmichael, yolanda56, kyoung, johnsonjesse, alexanderwilliams, gchen, ...
-#
-# [{'_id': 'annettejohnson', 'count': 1018}, {'_id': 'cruzsean', 'count': 981}, {'_id': 'amanda59', 'count': 832}, {'_id': 'kschneider', 'count': 783}, {'_id': 'victoria13', 'count': 748}, {'_id': 'michael99', 'count': 682}, {'_id': 'graceshopper', 'count': 682}, {'_id': 'johnsonjesse', 'count': 678}, {'_id': 'helloagain', 'count': 669}, {'_id': 'wanyi', 'count': 592}, {'_id': 'deawdewd', 'count': 541}, {'_id': 'yolanda56', 'count': 515}, {'_id': 'churchmichael', 'count': 510}, {'_id': 'gchen', 'count': 503}, {'_id': 'nicole34', 'count': 497}, {'_id': 'harperamanda', 'count': 489}, {'_id': 'lucy', 'count': 468}, {'_id': 'thompsonshelby', 'count': 413}, {'_id': 'judybooty', 'count': 405}, {'_id': 'warrenkelly', 'count': 402}]
-
-# WILL DELETE - PIPELINE TO FIND USERS WITH SUFFICIENT SYMPTOM COUNTS
-# pipeline_best_users = [
-#     {
-#         "$group": {
-#             "_id": "$username",
-#             "count": {"$sum": 1}
-#         }
-#     }, {"$sort": {"count": -1}}, {"$limit": 20}
-# ]
-
-# print([u for u in db.user_symptoms.aggregate(pipeline_best_users)])
