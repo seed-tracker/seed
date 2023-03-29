@@ -11,7 +11,7 @@ import TopFoods from "./graph/TopFoods";
 
 /**
  * Placeholder component for the userprofile page
- * @component shows "profile"
+ * @component shows "profile" if the user has logged enough entries to have data to show, otherwise, shows a randomly generated quote from an API
  */
 const Profile = () => {
   const dispatch = useDispatch();
