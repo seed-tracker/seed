@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../store/authSlice";
@@ -11,17 +11,18 @@ const Login = () => {
   const error = useSelector(selectError);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const handleLoginSubmit = async () => {
-    if (!username.length || !password.length) return;
-    await dispatch(login({ username, password }));
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    dispatch(login({ username, password }));
   };
 
-  const redirect = () => {
-    navigate("/profile");
-  };
+  useEffect(() => {
+    if (error) setLoading(false);
+  }, [error]);
 
   const inputs = [
     {
@@ -29,7 +30,7 @@ const Login = () => {
       required: true,
       value: username,
       onChange: (e) => setUsername(e.target.value),
-      helperText: "Username",
+      label: "Username",
     },
     {
       name: "password",
@@ -37,7 +38,7 @@ const Login = () => {
       required: true,
       value: password,
       onChange: (e) => setPassword(e.target.value),
-      helperText: "Password",
+      label: "Password",
     },
   ];
 
@@ -48,6 +49,7 @@ const Login = () => {
       description="Login form"
       onSubmit={handleLoginSubmit}
       error={error ? error.toString() : null}
+      loading={loading}
     />
   );
 };

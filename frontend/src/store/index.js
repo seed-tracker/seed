@@ -7,6 +7,7 @@ import allEntriesSlice from "./allEntriesSlice";
 import correlationsSlice from "./correlationsSlice";
 import statsSlice from "./statsSlice"
 import scatterSlice from "./scatterSlice";
+import foodGroupsSlice from "./foodGroupsSlice";
 
 // import created slices
 
@@ -18,7 +19,8 @@ const store = configureStore({
     correlations: correlationsSlice,
     scatter: scatterSlice,
     allEntries: allEntriesSlice,
-    stats: statsSlice
+    stats: statsSlice,
+    foodGroups: foodGroupsSlice
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
   devTools: true,

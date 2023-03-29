@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Text, Card, Container } from "@nextui-org/react";
 
 /**
  * Placeholder component for stats and facts
@@ -28,11 +29,21 @@ const StatsAndFacts = () => {
 
   return (
     <section>
-      <blockquote>
-        {quote ||
-          `"Never underestimate the power of good food. Eating delicious food can be a life-changing experience"`}
-        <p>{author || `-Shon Mehta`}</p>
-      </blockquote>
+      <Container justify="center" align="center">
+        <Card
+          css={{
+            mw: "70%",
+            margin: "3rem",
+            padding: "3rem",
+          }}
+        >
+          <Text size={30} color={"$secondary"} weight="bold">
+            {quote ||
+              `"Never underestimate the power of good food. Eating delicious food can be a life-changing experience"`}
+          </Text>
+          <Text size={20}>{author || `-Shon Mehta`}</Text>
+        </Card>
+      </Container>
     </section>
   );
 };

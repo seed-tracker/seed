@@ -42,7 +42,7 @@ export const login = createAsyncThunk(
       thunkAPI.dispatch(me());
     } catch (err) {
       if (err.response.data) {
-        return thunkAPI.rejectWithValue(err.response.data);
+        return thunkAPI.rejectWithValue(err.response.data.error);
       } else {
         return "There was an issue with your request.";
       }
@@ -65,7 +65,7 @@ export const signup = createAsyncThunk(
       thunkAPI.dispatch(me());
     } catch (err) {
       if (err.response.data) {
-        return thunkAPI.rejectWithValue(err.response.data);
+        return thunkAPI.rejectWithValue(err.response.data.error);
       } else {
         return "There was an issue with your request.";
       }
