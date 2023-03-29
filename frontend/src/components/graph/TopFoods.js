@@ -10,7 +10,7 @@ import {
 } from "../../store/statsSlice";
 import * as d3 from "d3";
 import { HeaderText } from "../nextUI/";
-import { Container, Text, Button } from "@nextui-org/react";
+import { Container, Text, Button, Row } from "@nextui-org/react";
 
 /**
  * This chart shows the user's top ten food groups eaten during a certain time period and a legend.
@@ -156,32 +156,35 @@ const TopFoods = () => {
       <Text h3>Legend:</Text>
       <svg id="legend-top-foods" width="950" height="220"></svg>
       <svg ref={svgRef} width="950" height="580"></svg>
-      <Button.Group color="primary" ghost>
-        <Button
-          onClick={handleGetAllTime}
-          type="button"
-          aria-label="Button to filter chart top foods view by all time"
-          value="all"
-        >
-          All Time
-        </Button>
-        <Button
-          onClick={handleGetSixMonths}
-          value="180"
-          type="button"
-          aria-label="Button to filter chart top foods view by six months"
-        >
-          6 Months
-        </Button>
-        <Button
-          onClick={handleGetOneYear}
-          value="365"
-          type="button"
-          aria-label="Button to filter chart top foods view by one year"
-        >
-          1 Year
-        </Button>
-      </Button.Group>
+      <Row>
+        <Button.Group color="primary" bordered ghost>
+          <Text h4>Filter data by:</Text>
+          <Button
+            onClick={handleGetAllTime}
+            type="button"
+            aria-label="Button to filter chart top foods view by all time"
+            value="all"
+          >
+            All Time
+          </Button>
+          <Button
+            onClick={handleGetSixMonths}
+            value="180"
+            type="button"
+            aria-label="Button to filter chart top foods view by six months"
+          >
+            6 Months
+          </Button>
+          <Button
+            onClick={handleGetOneYear}
+            value="365"
+            type="button"
+            aria-label="Button to filter chart top foods view by one year"
+          >
+            1 Year
+          </Button>
+        </Button.Group>
+      </Row>
     </Container>
   );
 };

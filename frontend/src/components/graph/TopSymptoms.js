@@ -10,7 +10,7 @@ import {
   getUserStats,
 } from "../../store/statsSlice";
 import * as d3 from "d3";
-import { Button, Container, Text } from "@nextui-org/react";
+import { Button, Container, Text, Row } from "@nextui-org/react";
 import { HeaderText } from "../nextUI";
 
 /**
@@ -161,32 +161,35 @@ const TopSymptoms = () => {
         css={{ margin: "2rem 0", display: "flex", flexDirection: "column" }}
       >
         <svg ref={svgRef} width="950" height="360"></svg>
-        <Button.Group color="primary" ghost>
-        <Button
-          onClick={handleGetAllTime}
-          type="button"
-          aria-label="Button to filter chart top symptoms view by all time"
-          value="all"
-        >
-          All Time
-        </Button>
-        <Button
-          onClick={handleGetSixMonths}
-          value="180"
-          type="button"
-          aria-label="Button to filter chart top symptoms view by six months"
-        >
-          6 Months
-        </Button>
-        <Button
-          onClick={handleGetOneYear}
-          value="365"
-          type="button"
-          aria-label="Button to filter chart top symptoms view by one year"
-        >
-          1 Year
-        </Button>
-        </Button.Group>
+        <Row>
+          <Button.Group color="primary" bordered ghost>
+            <Text h4>Filter data by:</Text>
+            <Button
+              onClick={handleGetAllTime}
+              type="button"
+              aria-label="Button to filter chart top symptoms view by all time"
+              value="all"
+            >
+              All Time
+            </Button>
+            <Button
+              onClick={handleGetSixMonths}
+              value="180"
+              type="button"
+              aria-label="Button to filter chart top symptoms view by six months"
+            >
+              6 Months
+            </Button>
+            <Button
+              onClick={handleGetOneYear}
+              value="365"
+              type="button"
+              aria-label="Button to filter chart top symptoms view by one year"
+            >
+              1 Year
+            </Button>
+          </Button.Group>
+        </Row>
       </Container>
     </Container>
   );
