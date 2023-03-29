@@ -1,31 +1,45 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../config";
 
+export const fetchUserCorrelations = createAsyncThunk(
+  "get user's correlations",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data, status } = await apiClient.get("users/correlations/");
 
-export const fetchUserCorrelations = createAsyncThunk("get user's correlations", async () => {
-  try {
-    const {data} = await apiClient.get("users/correlations/")
-    return data
-  } catch(err) {
-    console.log(err);
+      console.log(status);
+
+      if (!data.length) return rejectWithValue("No data found");
+
+      return data;
+    } catch (err) {
+      console.log(err);
+      if (err.status === 204) {
+        return rejectWithValue("Not enough data");
+      }
+      return rejectWithValue("There was an issue getting your data");
+    }
   }
-});
+);
 
 export const correlationsSlice = createSlice({
   name: "correlations",
-  initialState: [],
+  initialState: {
+    data: [],
+    error: null,
+  },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserCorrelations.fulfilled, (state, action) => {
-        return action.payload;
+        state.data = action.payload;
       })
       .addCase(fetchUserCorrelations.rejected, (state, action) => {
-        state.error = action.error;
-      })
-  }
+        state.error = action.payload;
+      });
+  },
 });
 
-export const selectUserCorrelations = (state) => state.correlations;
+export const selectUserCorrelations = (state) => state.correlations.data;
 
 export default correlationsSlice.reducer;

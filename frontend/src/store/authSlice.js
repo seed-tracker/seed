@@ -18,10 +18,10 @@ export const me = createAsyncThunk("auth/me", async (thunkAPI) => {
       return {};
     }
   } catch (err) {
-    if (err.response.data) {
+    if (err.response.data == "string") {
       return thunkAPI.rejectWithValue(err.response.data);
     } else {
-      return "There was an issue with your request.";
+      return thunkAPI.rejectWithValue("There was an issue with your request.");
     }
   }
 });
@@ -41,10 +41,12 @@ export const login = createAsyncThunk(
       window.localStorage.setItem(TOKEN, data.token);
       thunkAPI.dispatch(me());
     } catch (err) {
-      if (err.response.data) {
-        return thunkAPI.rejectWithValue(err.response.data.error);
+      if (typeof err.response.data == "string") {
+        return thunkAPI.rejectWithValue(err.response.data);
       } else {
-        return "There was an issue with your request.";
+        return thunkAPI.rejectWithValue(
+          "There was an issue with your request."
+        );
       }
     }
   }
@@ -64,10 +66,13 @@ export const signup = createAsyncThunk(
       window.localStorage.setItem(TOKEN, data.token);
       thunkAPI.dispatch(me());
     } catch (err) {
-      if (err.response.data) {
-        return thunkAPI.rejectWithValue(err.response.data.error);
+      console.error(err);
+      if (typeof err.response.data == "string") {
+        return thunkAPI.rejectWithValue(err.response.data);
       } else {
-        return "There was an issue with your request.";
+        return thunkAPI.rejectWithValue(
+          "There was an issue with your request."
+        );
       }
     }
   }

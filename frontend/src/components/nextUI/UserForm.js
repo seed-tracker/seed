@@ -6,6 +6,8 @@ import { Card, Text, Row, Container, Spacer } from "@nextui-org/react";
 import { Button, Inputs, HeaderText } from "./index";
 import { Link } from "react-router-dom";
 
+//NOTE TO LESTER: I'm trying to follow your advice on creating templates for things like user form, table, etc -- but this feels like a very strange way of doing it...I tried to use nextUI's "styled" function, but it wasn't working...let me know if I should rework this (as in not use a template or do something completely different). That applies to user form, table, and dropdown especially. Thanks! - Leah
+
 //inputs = {name, type, required, value, helperText, onChange}
 const UserForm = ({
   title,
@@ -18,9 +20,12 @@ const UserForm = ({
 }) => {
   return (
     <form onSubmit={onSubmit}>
-      <Container fluid justify="center" align="center" aria-label={description}>
+      <Container justify="center" align="center" aria-label={description}>
         <Spacer y={2} />
-        <Card css={{ mw: "50%", padding: "3rem" }} aria-label={description}>
+        <Card
+          css={{ padding: "3rem", width: "50rem", ml: "0" }}
+          aria-label={description}
+        >
           <HeaderText text={title} />
           {title === "Login" && (
             <Text css={{ color: "gray" }}>
@@ -38,7 +43,7 @@ const UserForm = ({
                 { name, type, required, value, onChange, helperText, label },
                 i
               ) => (
-                <>
+                <section key={i}>
                   <Row justify="center" align="center" key={i}>
                     <Inputs
                       name={name}
@@ -51,8 +56,8 @@ const UserForm = ({
                       label={label}
                     />
                   </Row>
-                  <Spacer justify="center" align="center" y={1} />
-                </>
+                  <Spacer justify="center" align="center" y={1.5} />
+                </section>
               )
             )}
             <Row justify="center" align="center">

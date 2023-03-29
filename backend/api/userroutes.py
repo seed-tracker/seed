@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from db import db
 from datetime import datetime, timedelta
 from api.auth_middleware import require_token
+from database.algo import find_correlations
 import bcrypt
 
 salt = bcrypt.gensalt(5)
@@ -129,6 +130,10 @@ def edit_profile(user):
 def get_user_correlations(user):
     try:
         username = user["username"]
+
+        # create new correlations
+        find_correlations(username)
+
         correlations = db.correlations.find({"username": username})
         correlations_list = []
         for correlation in correlations:
@@ -137,6 +142,6 @@ def get_user_correlations(user):
         if correlations_list:
             return correlations_list, 200
         else:
-            return "No correlations found", 404
+            return "No correlations found", 204
     except Exception as e:
         return "Error", 500

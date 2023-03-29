@@ -13,7 +13,7 @@ const SuccessMessage = ({ title, message, type, onClick }) => {
 
   return (
     <Container css={{ padding: "4rem" }} justify="center" align="center">
-      <Card css={{ maxWidth: "35rem", padding: "2rem" }}>
+      <Card css={{ maxWidth: "50rem", padding: "2rem" }}>
         <Card.Header>
           <Text h2>{title}</Text>
         </Card.Header>
@@ -27,6 +27,15 @@ const SuccessMessage = ({ title, message, type, onClick }) => {
               ariaLabel={`Add another ${type}`}
               onPress={onClick}
               text={`Add another ${type}`}
+              type="button"
+            />
+            <Spacer x={2} />
+            <Button
+              ariaLabel={`Add a ${type === "meal" ? "symptom" : "meal"}`}
+              onPress={() =>
+                navigate(type === "meal" ? "/add/symptom" : "/user/addFood")
+              }
+              text={`Add a ${type === "meal" ? "symptom" : "meal"}`}
               type="button"
             />
             <Spacer x={2} />
