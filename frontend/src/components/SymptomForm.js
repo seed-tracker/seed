@@ -100,9 +100,7 @@ const SymptomForm = () => {
       const { data } = await apiClient.get("user/symptoms/recent");
       if (data) {
         // setRecentSymptoms(data)
-        setRecentSymptoms(
-          data.map((symptom) => ({ name: symptom}))
-        );
+        setRecentSymptoms(data.map((symptom) => ({ name: symptom })));
       }
     } catch (err) {
       console.error(err);
@@ -160,7 +158,7 @@ const SymptomForm = () => {
                 button={{
                   buttonDescription: "Button to add a recent symptom",
                   text: "Add symptom",
-                  onPress: ((e) => setSymptom([e.name])),
+                  onPress: (e) => setSymptom([e.name]),
                 }}
               />
             </div>

@@ -16,9 +16,9 @@ const Table = ({ description, headers, rows, button }) => {
   return (
     <NextUITable
       aria-label={description}
+      headerLined={"true"}
       css={{
-        minWidth: "30rem",
-        background: "$gray300",
+        background: "#ffffff",
       }}
     >
       <NextUITable.Header columns={headers}>
@@ -37,6 +37,7 @@ const Table = ({ description, headers, rows, button }) => {
               ) : (
                 <NextUITable.Cell key={key}>
                   <Button
+                    color={"secondary"}
                     ariaLabel={buttonDescription}
                     text={text}
                     onPress={() => onPress(row)}
