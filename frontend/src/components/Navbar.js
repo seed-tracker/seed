@@ -75,43 +75,46 @@ const NavigationBar = () => {
         </Navbar.Content>
       ) : (
         <Navbar.Content>
-          <Navbar.Link href="/login">
-            <Button
+          
+            <Button onClick={()=>navigate("/login")}
               size="md"
-              color="success"
+              // color="success"
               borderRadius="50%"
-              /* css={{
+               css={{
                 backgroundColor: "#67c43f",
+                fontWeight: "bold",
                 backgroundImage:
-                  "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
+                  "radial-gradient(circle,  #5ca388 25%, #649b93 50%, #b4d3b2 100%)",
                 backgroundSize: "400% 400%",
                 transition: "background-position 0.4s ease-in-out",
                 "&:hover": {
                   backgroundPosition: "100% 0",
                 },
-              }} */
+                color: "$secondary"
+              }} 
             >
               Login
             </Button>
-          </Navbar.Link>
-          <Navbar.Link href="/signup">
-            <Button
+            <Button onClick={()=>navigate("/signup")}
               size="md"
-              color="success"
+              // color="success"
               borderRadius="50%"
-              /* css={{
+             css={{
                backgroundColor: "#67c43f",
-                backgroundImage: "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",
+               fontWeight: "bold",
+               backgroundImage:
+               "radial-gradient(circle,  #5ca388 25%, #649b93 50%, #b4d3b2 100%)",
+                // backgroundImage: "radial-gradient(circle, #609f67 25%, #c0b2d3 50%, #b4d3b2 100%)",
                 backgroundSize: "400% 400%",
                 transition: "background-position 0.8s ease-in-out",
                 "&:hover": {
                   backgroundPosition: "100% 0",
                 },
-              }} */
+                color: "$secondary"
+              }} 
             >
               Signup
             </Button>
-          </Navbar.Link>
         </Navbar.Content>
       )}
     </Navbar>
