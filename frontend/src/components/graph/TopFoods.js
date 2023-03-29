@@ -16,7 +16,8 @@ import { Container, Text, Button, Row } from "@nextui-org/react";
 /**
  * This chart shows the user's top ten food groups eaten during a certain time period and a legend.
  * The legend shows a color palette of the unique color associated with each of the food groups from the database.
- * @returns two <svg> elements: (1) the lollipop chart, (2) the legend for the chart
+ * @returns <svg> element: the lollipop chart
+ * @returns the legend for the chart
  * @returns three <button> elements: filter by (1) all time, (2) half a year, (3) 1 year
  */
 const TopFoods = () => {
@@ -41,6 +42,15 @@ const TopFoods = () => {
   const handleGetOneYear = async (oneYear) => {
     await dispatch(getUserStats(365));
   };
+
+  const colorPalette = ["#f44336", "#e81e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548", "#9e9e9e", "#607d8b", "#6d28f1", "#064e5f"]; // Define a color palette for the foods and map each food's group to a unique color
+  const foodsColors = {};
+  for (let i = 0; i < groupNames.length; i++) {
+    const foodName = groupNames[i];
+    const colorIndex = i % colorPalette.length;
+    foodsColors[foodName] = colorPalette[colorIndex];
+  }
+  console.log("foodsColors", foodsColors);
 
   useEffect(() => {
     const svg = select(svgRef.current);
@@ -94,14 +104,6 @@ const TopFoods = () => {
 
       g.append("g").call(yAxis);
 
-      const colorPalette = ["#f44336", "#e81e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548", "#9e9e9e", "#607d8b", "#6d28f1", "#064e5f"]; // Define a color palette for the foods and map each food's group to a unique color
-      const foodsColors = {};
-      for (let i = 0; i < groupNames.length; i++) {
-        const foodName = groupNames[i];
-        const colorIndex = i % colorPalette.length;
-        foodsColors[foodName] = colorPalette[colorIndex];
-      }
-
       g.selectAll("circle").data(topFoods).join("circle");
 
       for (let i = 0; i < topFoods.length; i++) {
@@ -122,37 +124,6 @@ const TopFoods = () => {
           }
         }
       }
-
-      const legend = d3.select("#legend-top-foods"); // Select the svg legend
-      const legendMargin = { top: 10, right: 10, bottom: 10, left: 10 };
-      const legendWidth = 950 - legendMargin.left - legendMargin.right;
-      const legendHeight = 300 - legendMargin.top - legendMargin.bottom;
-
-      legend
-        .append("g")
-        .selectAll("g") // Create a group for each circle and text pair in the legend
-        .data(Object.entries(foodsColors))
-        .join("g")
-        .attr(
-          "transform",
-          (d, i) => `translate(${i * 80 + legendMargin.left + legendMargin.right}, ${legendHeight / 4})`
-        )
-        .call((g) => {
-          g.append("circle") // Append circle element to each group
-            .attr("r", 12)
-            .attr("fill", (d) => d[1]);
-          g.append("text") // Append text element to each group
-            .attr("text-anchor", "end")
-            .attr("dy", 0)
-            .text((d) => d[0]);
-        });
-
-      legend
-        .selectAll("text") // Move text labels to appropriate location
-        .attr("transform", "rotate(-30)")
-        .attr("text-anchor", "end")
-        .attr("x", -5)
-        .attr("y", 30);
     }
   }, [data]);
 
@@ -160,7 +131,18 @@ const TopFoods = () => {
     <Container css={{ margin: "5rem 0" }}>
       <HeaderText text="Your Top 10 Foods:" />
       <Text h3>Legend:</Text>
-      <svg id="legend-top-foods" width="2000" height="220"></svg>
+
+      {Object.keys(foodsColors).map((foodName) => (
+        <Container
+          display="flex"
+          alignItems="center"
+          key={foodName}
+        >
+          <div style={{ backgroundColor: foodsColors[foodName], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
+          <Text h3>{foodName}</Text>
+        </Container>
+      ))}
+
       <svg ref={svgRef} width="950" height="580"></svg>
       <Row css={{ display: "flex", alignItems: "baseline" }}>
         <Text h4>Filter data by:</Text>
