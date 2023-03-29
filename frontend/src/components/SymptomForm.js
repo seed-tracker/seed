@@ -3,8 +3,8 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import apiClient from "../config";
-import {Text} from '@nextui-org/react';
-import { Inputs, Button, Dropdown } from "./nextUI/index";
+import { Text, Spacer } from "@nextui-org/react";
+import { Inputs, Button, Dropdown, Table, HeaderText } from "./nextUI/index";
 import SuccessMessage from "./SuccessMessage";
 
 const SymptomForm = () => {
@@ -13,8 +13,9 @@ const SymptomForm = () => {
   const [symptom, setSymptom] = useState("");
   const [severity, setSeverity] = useState("");
   const [symptoms, setSymptoms] = useState([]);
+  const [recentSymptoms, setRecentSymptoms] = useState([]);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const user = useSelector((state) => state.auth.me);
 
@@ -32,19 +33,19 @@ const SymptomForm = () => {
       }
 
       // send the request
-      const { status } = await apiClient.post(`user/symptoms/`,{
-          username: user.username,
-          date: date,
-          time: time,
-          symptom: symptom[0],
-          severity: severity,
-        });
+      const { status } = await apiClient.post(`user/symptoms/`, {
+        username: user.username,
+        date: date,
+        time: time,
+        symptom: symptom[0],
+        severity: severity,
+      });
 
       // if successful, reset the form and open the success message
       if (status === 201) {
         setSuccess(true);
         setError("");
-        dateTime()
+        dateTime();
         setSeverity("");
         setSymptom("");
       } else {
@@ -66,16 +67,17 @@ const SymptomForm = () => {
     dispatch(me());
   }, [dispatch]);
 
-// Set date & time to current. to be used on mount and after form submit (when resetting all fields)
-const dateTime = () => {
-  const today = new Date().toISOString();
+  // Set date & time to current. to be used on mount and after form submit (when resetting all fields)
+  const dateTime = () => {
+    const today = new Date().toISOString();
     setTime(today.substring(11, 16));
     setDate(today.substring(0, 10));
-}
+  };
 
   // fetch symptoms when the component mounts
   useEffect(() => {
     fetchSymptoms();
+    fetchRecentSymptoms();
     dateTime();
     setSeverity(5);
   }, []);
@@ -92,8 +94,22 @@ const dateTime = () => {
     }
   };
 
+  // fetch the most recent symptoms that user has inputted
+  const fetchRecentSymptoms = async () => {
+    try {
+      const { data } = await apiClient.get("user/symptoms/recent");
+      if (data) {
+        // setRecentSymptoms(data)
+        setRecentSymptoms(data.map((symptom) => ({ name: symptom })));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <main>
+      <HeaderText text="Add a symptom" />
       <form onSubmit={handleSymptomSubmit}>
         {!success ? (
           <>
@@ -116,14 +132,37 @@ const dateTime = () => {
             <div>
               <label htmlFor="symptoms">Select symptom(s):</label>
               <Dropdown
-                color={"#7A918Dcc"}
+                color={"#7A918D"}
+                css={{
+                  background:"#7a918d",
+                  padding:"1rem",
+                }}
                 selectedKeys={symptom}
                 ariaLabel="Select Symptom Dropdown"
-                onChange={({currentKey})=>setSymptom([currentKey])}
+                onChange={({ currentKey }) => setSymptom([currentKey])}
                 items={symptoms}
                 defaultName={"How are you feeling?"}
               />
+              </div>
+              <Spacer y={1} />
+              <div>
+              <Table
+              color="primary"
+              css={{padding:"1rem"}}
+                description="Recent symptoms table"
+                headers={[
+                  { key: "name", label: "Your recent symptoms" },
+                  { key: "button", label: "" },
+                ]}
+                rows={recentSymptoms}
+                button={{
+                  buttonDescription: "Button to add a recent symptom",
+                  text: "Add symptom",
+                  onPress: (e) => setSymptom([e.name]),
+                }}
+              />
             </div>
+            <Spacer y={1} />
             <label htmlFor="severity">
               Severity: {severity}
               <input
@@ -139,7 +178,7 @@ const dateTime = () => {
               arialabel={"Submit Symptom Entry Form Button"}
               type={"submit"}
             />
-            {error.length > 1 && <Text color='red'>{error}</Text>}
+            {error.length > 1 && <Text color="red">{error}</Text>}
           </>
         ) : (
           <SuccessMessage

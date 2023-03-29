@@ -85,7 +85,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
             width: "20vw",
             backgroundColor: "transparent",
           }}
-          vairant="flat"
+          variant="flat"
         >
           <Inputs
             label="Search for a food"

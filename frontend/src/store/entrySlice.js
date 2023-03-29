@@ -19,16 +19,17 @@ export const editProfile = createAsyncThunk(
 );
 
 // Thunk to to foods route for autocomplete React component
-export const autocompleteFood = createAsyncThunk("foods/autocomplete",
-async (query) => {
-  try{
-    // console.log(query)
-    const {data} = await apiClient.get(`foods/autocomplete?query=${query}`);
-    return data;
-  } catch (err) {
-    console.debug(err);
+export const autocompleteFood = createAsyncThunk(
+  "foods/autocomplete",
+  async (query) => {
+    try {
+      const { data } = await apiClient.get(`foods/autocomplete?query=${query}`);
+      return data;
+    } catch (err) {
+      console.error(err);
+    }
   }
-});
+);
 
 const entrySlice = createSlice({
   name: "entry",

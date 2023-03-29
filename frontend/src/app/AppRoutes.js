@@ -38,8 +38,9 @@ const AppRoutes = () => {
       {isLoggedIn ? (
         <Container
           display={"flex"}
-          wrap
-          justify={"space-between"}
+          wrap={"wrap"}
+          maxWidth={"100vw"}
+          align="center"
           css={{ margin: 0, padding: 0 }}
         >
           <Sidebar />

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "../store/authSlice";
 import { me } from "../store/authSlice";
 import { clearStore } from "../store";
-import { Text, Navbar, Link, Button } from "@nextui-org/react";
+import { Text, Navbar, Link, Button} from "@nextui-org/react";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -32,6 +32,7 @@ const NavigationBar = () => {
       maxWidth={"fluid"}
       variant="sticky"
       css={{
+        zIndex: 999,
         background: "transparent",
         color: "#444c38",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
@@ -59,10 +60,8 @@ const NavigationBar = () => {
           <Navbar.Item>
             <Button
               size="md"
-              flat
-              bordered
-              color="#7A918D"
-              css={{ backgroundColor: "#7A918Dcc" }}
+              color="primary"
+              css={{ background: "#7a918d" }}
               auto
               as={Link}
               onClick={logoutAndRedirectHome}

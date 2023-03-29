@@ -17,10 +17,6 @@ text {
   z-index: 1;
 }
 
-footer {
-  margin-top: 3rem;
-}
-
 .mainpage-center{
   background-image: url("greenmarble.jpeg");
   background-size: cover;
@@ -35,4 +31,12 @@ footer {
   backdrop-filter: blur(11.9px);
   -webkit-backdrop-filter: blur(11.9px);
   border: 1px solid rgba(41, 124, 76, 0.26);
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background-color: "#7a918d";
+}
+
+input[type="range"]::-moz-range-track {
+  background: "#7a918d";
 }

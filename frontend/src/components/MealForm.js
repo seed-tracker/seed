@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { me } from "../store/authSlice";
 import Autocomplete from "./Autocomplete";
 import apiClient from "../config";
-import { Grid, Row, Spacer, Text, Col } from "@nextui-org/react";
+import { Container, Row, Col, Spacer, Text } from "@nextui-org/react";
 import { Button, Table, Inputs, HeaderText } from "./nextUI/index";
 import SuccessMessage from "./SuccessMessage";
 
@@ -52,7 +52,6 @@ function MealForm() {
   const fetchRecentFoods = async () => {
     try {
       const { data } = await apiClient.get("meals/recent");
-
       //[{name, groups}, {name, groups}, ...]
       if (data) setRecentFoods(data);
     } catch (err) {
@@ -147,7 +146,7 @@ function MealForm() {
       <Table
         description="Added foods table"
         headers={[
-          { key: "name", label: "Current meal" },
+          { key: "name", label: "CURRENT MEAL" },
           { key: "button", label: "" },
         ]}
         rows={mealArray}
@@ -163,104 +162,106 @@ function MealForm() {
   return (
     <form onSubmit={handleSubmit}>
       {!success ? (
-        <Grid.Container
-          direction="row"
-          css={{ padding: "2rem" }}
-          justify="flex-start"
+        <Container
+          display={"flex"}
+          justify={"space-between"}
+          wrap={"wrap"}
+          css={{ margin: "2vw", width: "65vw" }}
         >
-          <Col>
-            <Row>
-              <Grid.Container
-                xs={6}
-                css={{
-                  padding: "3rem",
-                  maxWidth: "40rem",
+          <Container display={"flex"}>
+            <HeaderText text="Add a meal" />
+          </Container>
+          <Container
+            display={"flex"}
+            direction="column"
+            css={{
+              "@xs": {
+                margin: 0,
+                width: "100vw",
+              },
+              "@sm": {
+                flexDirection: "column",
+                maxWidth: "20vw",
+              },
+            }}
+          >
+            <Inputs
+              label="Entry Name"
+              type="text"
+              value={entryName}
+              onChange={handleNameChange}
+              required={true}
+              helperText="Required"
+            />
+            <Inputs
+              label="Date"
+              type="date"
+              value={date}
+              onChange={handleDateChange}
+              required={true}
+              helperText="Required"
+            />
+            <Inputs
+              label="Time"
+              type="time"
+              value={time}
+              onChange={handleTimeChange}
+              required={true}
+              helperText="Required"
+            />
+            <Autocomplete addFood={addFood} allGroups={allGroups} />
+          </Container>
+          {recentFoods && recentFoods.length > 0 && (
+            <Container
+              display={"flex"}
+              direction="column"
+              css={{ margin: 0, padding: 0, maxWidth: "30vw" }}
+            >
+              <Table
+                description="Recent foods table"
+                headers={[
+                  { key: "name", label: "YOUR RECENT FOODS" },
+                  { key: "button", label: "" },
+                ]}
+                rows={recentFoods}
+                button={{
+                  buttonDescription: "Button to add a recent food to the meal",
+                  text: "Add food",
+                  onPress: addFood,
                 }}
-                gap={4}
-              >
-                {" "}
-                <Grid xs={12}>
-                  <HeaderText text="Add a meal" />
-                </Grid>
-                <Grid xs={12}>
-                  <Inputs
-                    label="Entry Name"
-                    type="text"
-                    value={entryName}
-                    onChange={handleNameChange}
-                    required={true}
-                    helperText="Required"
-                  />
-                </Grid>
-                <Grid xs={12}>
-                  <Inputs
-                    label="Date"
-                    type="date"
-                    value={date}
-                    onChange={handleDateChange}
-                    required={true}
-                    helperText="Required"
-                  />
-                  <Inputs
-                    label="Time"
-                    type="time"
-                    value={time}
-                    onChange={handleTimeChange}
-                    required={true}
-                    helperText="Required"
-                  />
-                </Grid>
-                <Grid xs={12}>
-                  <Autocomplete addFood={addFood} allGroups={allGroups} />
-                </Grid>
-              </Grid.Container>
-              <Col>
-                <Grid>
-                  <Row css={{ minWidth: "35rem" }}>
-                    <AddedFoods />
-                  </Row>
-                  <Spacer y={1} />
-                  <Row>
-                    <Button
-                      text="Submit Meal"
-                      ariaLabel="Button to submit a meal"
-                      type="submit"
-                      loading={loading}
-                    />
-                  </Row>
-                  <Row>
-                    {error.length > 1 && <Text color="red">{error}</Text>}
-                  </Row>
-                </Grid>
-              </Col>
-            </Row>
-            {recentFoods && recentFoods.length > 0 && (
-              <Grid xs={12}>
-                <Table
-                  description="Recent foods table"
-                  headers={[
-                    { key: "name", label: "Your recent foods" },
-                    { key: "button", label: "" },
-                  ]}
-                  rows={recentFoods}
-                  button={{
-                    buttonDescription:
-                      "Button to add a recent food to the meal",
-                    text: "Add food",
-                    onPress: addFood,
-                  }}
-                />
-              </Grid>
-            )}
-          </Col>
-        </Grid.Container>
+              />
+              <Spacer y={1} />
+            </Container>
+          )}
+
+          <Container
+            display={"flex"}
+            direction={"column"}
+            alignItems={"center"}
+            css={{ margin: 0, padding: 0 }}
+          >
+            <AddedFoods />
+            <Spacer y={1} />
+            <Button
+              color={"secondary"}
+              text="Submit Meal"
+              ariaLabel="Button to submit a meal"
+              type="submit"
+              loading={loading}
+            />
+
+            {error.length > 1 && <Text color="red">{error}</Text>}
+          </Container>
+        </Container>
       ) : (
-        <SuccessMessage
-          title="Thanks for adding a meal!"
-          message="Every meal you add makes our predictions better."
-          type="meal"
-          onClick={() => setSuccess(false)}
-        />
+        <Container display={"flex"} css={{ margin: "5vh 15vw" }}>
+          <SuccessMessage
+            title="Thanks for adding a meal!"
+            message="Every meal you add makes our predictions better."
+            type="meal"
+            onClick={() => setSuccess(false)}
+          />
+        </Container>
       )}
     </form>
   );

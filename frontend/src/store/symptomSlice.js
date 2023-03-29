@@ -11,7 +11,7 @@ export const fetchAllSymptoms = createAsyncThunk(
       console.debug(err);
     }
   }
-)
+);
 
 export const symptomSlice = createSlice({
   name: "symptoms",
