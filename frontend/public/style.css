@@ -17,10 +17,6 @@ text {
   z-index: 1;
 }
 
-footer {
-  margin-top: 3rem;
-}
-
 .mainpage-center{
   background-image: url("greenmarble.jpeg");
   background-size: cover;
