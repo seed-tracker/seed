@@ -25,6 +25,7 @@ const NavigationBar = () => {
       maxWidth={"fluid"}
       variant="sticky"
       css={{
+        zIndex: 999,
         background: "transparent",
         color: "#444c38",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
@@ -67,7 +68,7 @@ const NavigationBar = () => {
         <Navbar.Content>
           <Navbar.Link href="/login">
             <Button
-            
+
               size="md"
               color="secondary"
               borderRadius="50%"

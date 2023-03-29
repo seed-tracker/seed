@@ -162,9 +162,9 @@ const TopFoods = () => {
       <Text h3>Legend:</Text>
       <svg id="legend-top-foods" width="2000" height="220"></svg>
       <svg ref={svgRef} width="950" height="580"></svg>
-      <Row>
+      <Row css={{ display: "flex", alignItems: "baseline" }}>
+        <Text h4>Filter data by:</Text>
         <Button.Group color="primary" bordered ghost>
-          <Text h4>Filter data by:</Text>
           <Button
             onClick={handleGetAllTime}
             type="button"
