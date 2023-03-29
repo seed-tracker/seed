@@ -162,15 +162,27 @@ const TopSymptoms = () => {
       >
         <svg ref={svgRef} width="950" height="360"></svg>
         <Button.Group color="primary" ghost>
-          <Button type="button" onClick={handleGetAllTime} value="all">
-            All
-          </Button>
-          <Button type="button" onClick={handleGetSixMonths} value="180">
-            6 Months
-          </Button>
-          <Button type="button" onClick={handleGetOneYear} value="365">
-            1 Year
-          </Button>
+          <Button
+            text="All"
+            onClick={handleGetAllTime}
+            type="button"
+            aria-label="Button to filter chart top symptoms view by all time"
+            value="all"
+          />
+          <Button
+            text="6 Months"
+            onClick={handleGetSixMonths}
+            value="180"
+            type="button"
+            aria-label="Button to filter chart top symptoms view by six months"
+          />
+          <Button
+            text="1 Year"
+            onClick={handleGetOneYear}
+            value="365"
+            type="button"
+            aria-label="Button to filter chart top foods symptoms by one year"
+          />
         </Button.Group>
       </Container>
     </Container>

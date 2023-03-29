@@ -28,20 +28,24 @@ const ScatterControls = ({ symptomList, toggleSymptom, maxMonths }) => {
           onChange={(e) => setSliderVal(Number(e.target.value))}
         />
       </section>
-      <Row css={{display: "flex", alignItems: "baseline"}}>
-        <Text h4>Most common symptoms:{" "}</Text>
+      <Row css={{ display: "flex", alignItems: "baseline" }}>
+        <Text h4>Most common symptoms: </Text>
         <Button.Group color="primary" bordered ghost>
           {symptomList
             ? symptomList.length &&
               symptomList.map((s, i) => (
-                <Button key={i} onClick={() => toggleSymptom(s)}>
+                <Button
+                  type="button"
+                  aria-label={`Button to filter chart view by ${s} symptom`}
+                  key={i}
+                  onClick={() => toggleSymptom(s)}
+                >
                   {s}
                 </Button>
               ))
             : null}
         </Button.Group>
       </Row>
-
     </section>
   );
 };
