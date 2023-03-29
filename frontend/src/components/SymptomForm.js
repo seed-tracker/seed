@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import apiClient from "../config";
-import { Text } from "@nextui-org/react";
+import { Text, Spacer } from "@nextui-org/react";
 import { Inputs, Button, Dropdown, Table, HeaderText } from "./nextUI/index";
 import SuccessMessage from "./SuccessMessage";
 
@@ -144,7 +144,7 @@ const SymptomForm = () => {
                 defaultName={"How are you feeling?"}
               />
               </div>
-              <br></br>
+              <Spacer y={1} />
               <div>
               <Table
               color="primary"
@@ -162,6 +162,7 @@ const SymptomForm = () => {
                 }}
               />
             </div>
+            <Spacer y={1} />
             <label htmlFor="severity">
               Severity: {severity}
               <input
