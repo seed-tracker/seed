@@ -1,3 +1,7 @@
+* {
+  /* border: 1px solid; */
+}
+
 @font-face{
   font-family: 'Lovechild';
   src: url(./Lovechild-Regular.otf)
@@ -23,7 +27,6 @@ text {
   z-index: 1;
 }
 
-
 @-webkit-keyframes pulse
     {
       0% {-webkit-transform: scale(1.0); opacity: 1;}
@@ -44,21 +47,3 @@ text {
 .topSymptomsChart {
   padding: 5rem;
 }
-
-.mainpage-center{
-  background-image: url("greenmarble.jpeg");
-  background-size: cover;
-  background-repeat: repeat;
-}
-
-.glassmorpheus{
- /* From https://css.glass */
-
-background: rgba(41, 124, 76, 0.23);
-border-radius: 16px;
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-backdrop-filter: blur(11.9px);
--webkit-backdrop-filter: blur(11.9px);
-border: 1px solid rgba(41, 124, 76, 0.26);
-}
-
