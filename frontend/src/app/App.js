@@ -32,7 +32,6 @@ const App = () => {
         success: "$links",
         red: "#ff4848",
         error: "$red",
-        backgroundAlpha: "#7a918dcc",
       },
       fonts: {
         sans: "sans-serif",

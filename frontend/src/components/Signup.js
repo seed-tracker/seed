@@ -24,9 +24,10 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    if (error) setLoading(false);
-  }, [error]);
+    if (error && loading) setLoading(false);
+  }, [error, loading]);
 
+  
   const inputs = [
     {
       name: "username",

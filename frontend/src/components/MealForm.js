@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { me } from "../store/authSlice";
 import Autocomplete from "./Autocomplete";
 import apiClient from "../config";
-import { Grid, Row, Spacer, Text } from "@nextui-org/react";
+import { Grid, Row, Spacer, Text, Col } from "@nextui-org/react";
 import { Button, Table, Inputs, HeaderText } from "./nextUI/index";
 import SuccessMessage from "./SuccessMessage";
 
@@ -163,50 +163,77 @@ function MealForm() {
   return (
     <form onSubmit={handleSubmit}>
       {!success ? (
-        <Grid.Container direction="row" css={{ padding: "2rem" }}>
-          <Grid.Container
-            xs={6}
-            css={{
-              padding: "3rem",
-              maxWidth: "40rem",
-            }}
-            gap={4}
-          >
-            {" "}
-            <Grid xs={12}>
-              <HeaderText text="Add a meal" />
-            </Grid>
-            <Grid xs={12}>
-              <Inputs
-                label="Entry Name"
-                type="text"
-                value={entryName}
-                onChange={handleNameChange}
-                required={true}
-                helperText="Required"
-              />
-            </Grid>
-            <Grid xs={12}>
-              <Inputs
-                label="Date"
-                type="date"
-                value={date}
-                onChange={handleDateChange}
-                required={true}
-                helperText="Required"
-              />
-              <Inputs
-                label="Time"
-                type="time"
-                value={time}
-                onChange={handleTimeChange}
-                required={true}
-                helperText="Required"
-              />
-            </Grid>
-            <Grid xs={12}>
-              <Autocomplete addFood={addFood} allGroups={allGroups} />
-            </Grid>
+        <Grid.Container
+          direction="row"
+          css={{ padding: "2rem" }}
+          justify="flex-start"
+        >
+          <Col>
+            <Row>
+              <Grid.Container
+                xs={6}
+                css={{
+                  padding: "3rem",
+                  maxWidth: "40rem",
+                }}
+                gap={4}
+              >
+                {" "}
+                <Grid xs={12}>
+                  <HeaderText text="Add a meal" />
+                </Grid>
+                <Grid xs={12}>
+                  <Inputs
+                    label="Entry Name"
+                    type="text"
+                    value={entryName}
+                    onChange={handleNameChange}
+                    required={true}
+                    helperText="Required"
+                  />
+                </Grid>
+                <Grid xs={12}>
+                  <Inputs
+                    label="Date"
+                    type="date"
+                    value={date}
+                    onChange={handleDateChange}
+                    required={true}
+                    helperText="Required"
+                  />
+                  <Inputs
+                    label="Time"
+                    type="time"
+                    value={time}
+                    onChange={handleTimeChange}
+                    required={true}
+                    helperText="Required"
+                  />
+                </Grid>
+                <Grid xs={12}>
+                  <Autocomplete addFood={addFood} allGroups={allGroups} />
+                </Grid>
+              </Grid.Container>
+              <Col>
+                <Grid>
+                  <Row css={{ minWidth: "35rem" }}>
+                    <AddedFoods />
+                  </Row>
+                  <Spacer y={1} />
+                  <Row>
+                    <Button
+                      text="Submit Meal"
+                      ariaLabel="Button to submit a meal"
+                      type="submit"
+                      loading={loading}
+                    />
+                  </Row>
+                  <Row>
+                    {error.length > 1 && <Text color="red">{error}</Text>}
+                  </Row>
+                </Grid>
+              </Col>
+            </Row>
             {recentFoods && recentFoods.length > 0 && (
               <Grid xs={12}>
                 <Table
@@ -225,22 +252,7 @@ function MealForm() {
                 />
               </Grid>
             )}
-          </Grid.Container>
-          <Grid>
-            <Row css={{ minWidth: "35rem" }}>
-              <AddedFoods />
-            </Row>
-            <Spacer y={1} />
-            <Row>
-              <Button
-                text="Submit Meal"
-                ariaLabel="Button to submit a meal"
-                type="submit"
-                loading={loading}
-              />
-            </Row>
-            <Row>{error.length > 1 && <Text color="red">{error}</Text>}</Row>
-          </Grid>
+          </Col>
         </Grid.Container>
       ) : (
         <SuccessMessage
