@@ -13,6 +13,7 @@ const Sidebar = () => {
       display={"flex"}
       css={{
         "@xs": {
+          textAlign: "left",
           margin: 0,
           padding: "1vw",
           flexDirection: "row",
