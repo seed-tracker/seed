@@ -9,12 +9,13 @@ import { statsSlice, selectUserStats, getUserStats } from "../../store/statsSlic
 import * as d3 from "d3";
 import { Button, Container } from "@nextui-org/react";
 
+
 const TopSymptoms = () => {
   const svgRef = useRef();
   const allSymptoms = useSelector(selectSymptoms);
   const dispatch = useDispatch()
   const data = useSelector(selectUserStats)
-  const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : []
+  const symptoms = data.symptoms? data.symptoms.slice(0, 5) : []
   const counts = symptoms ? symptoms.map((symptom) => symptom.count) : []
 
   useEffect(() => {
@@ -48,20 +49,44 @@ const TopSymptoms = () => {
         .domain([Math.max(...counts) * 2, 0])
         .range([height, 0]);
 
-      const xAxis = axisBottom(xScale);
+      const xAxis = axisBottom(xScale).tickSizeOuter(0);
       const yAxis = axisLeft(yScale).ticks(5);
 
+      // const xAxisLine = svg
+      //   .append("g")
+      //   .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
+      //   .attr("class", "x-axis")
+      //   .call(xAxis);
+      
       const xAxisLine = svg
-        .append("g")
-        .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
-        .call(xAxis);
+      .append("g")
+      .attr("transform", `translate(${margin.left}, ${margin.top * 2})`) // increase margin.top value to move x-axis down
+      .attr("class", "x-axis")
+      .call(xAxis);
+
+        xAxisLine.selectAll('text')
+        .on('click', (event, d) => {
+          svg.select('.x-axis')
+            .transition()
+            .duration(500)
+            .call(xAxis);
+        });
 
       const yAxisLine = svg
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
         .call(yAxis);
 
-        const g = svg.append("g").attr("transform", `translate(${margin.left * 2 + 7}, ${margin.top * 2})`);
+        svg.selectAll('.tick text')
+  .on('click', (event, d) => {
+    svg.select('.x-axis')
+      .transition()
+      .duration(500)
+      .call(xAxis)
+  })
+
+        //creating bar graph
+        const g = svg.append("g").attr("transform", `translate(${margin.left * 2.23 + 7}, ${margin.top * 2})`);
 
         const colorPalette = d3.schemeSet3;; // Define a color palette for the symptoms and map each symptom to a unique color
         const symptomColors = {};
