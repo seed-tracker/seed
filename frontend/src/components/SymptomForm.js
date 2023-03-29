@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import apiClient from "../config";
-import { Text } from "@nextui-org/react";
+import { Text, Spacer } from "@nextui-org/react";
 import { Inputs, Button, Dropdown, Table, HeaderText } from "./nextUI/index";
 import SuccessMessage from "./SuccessMessage";
 
@@ -134,7 +134,8 @@ const SymptomForm = () => {
               <Dropdown
                 color={"#7A918D"}
                 css={{
-                  background: "#7a918d",
+                  background:"#7a918d",
+                  padding:"1rem",
                 }}
                 selectedKeys={symptom}
                 ariaLabel="Select Symptom Dropdown"
@@ -142,8 +143,12 @@ const SymptomForm = () => {
                 items={symptoms}
                 defaultName={"How are you feeling?"}
               />
+              </div>
+              <Spacer y={1} />
+              <div>
               <Table
-                color="primary"
+              color="primary"
+              css={{padding:"1rem"}}
                 description="Recent symptoms table"
                 headers={[
                   { key: "name", label: "Your recent symptoms" },
@@ -157,6 +162,7 @@ const SymptomForm = () => {
                 }}
               />
             </div>
+            <Spacer y={1} />
             <label htmlFor="severity">
               Severity: {severity}
               <input
