@@ -76,8 +76,8 @@ const NavigationBar = () => {
         </Navbar.Content>
       ) : (
         <Navbar.Content>
-          <Navbar.Link href="/login">
-            <Button
+          
+            <Button onClick={()=>navigate("/login")}
               size="md"
               color="success"
               borderRadius="50%"
@@ -94,9 +94,7 @@ const NavigationBar = () => {
             >
               Login
             </Button>
-          </Navbar.Link>
-          <Navbar.Link href="/signup">
-            <Button
+            <Button onClick={()=>navigate("/signup")}
               size="md"
               color="success"
               borderRadius="50%"
@@ -112,7 +110,6 @@ const NavigationBar = () => {
             >
               Signup
             </Button>
-          </Navbar.Link>
         </Navbar.Content>
       )}
     </Navbar>
