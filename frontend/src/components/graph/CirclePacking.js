@@ -42,6 +42,14 @@ const CirclePacking = () => {
 
   const userSymptoms = datas.map((obj) => obj.symptom); // Get an array of the user's symptoms
 
+  const colorPalette = d3.schemeSet3; // Define a color palette for the symptoms and map each symptom to a unique color
+    const symptomColors = {};
+    for (let i = 0; i < symptoms.length; i++) {
+      const symptomName = symptoms[i].name;
+      const colorIndex = i % colorPalette.length;
+      symptomColors[symptomName] = colorPalette[colorIndex];
+    }
+
   const svgRef = useRef(); // allow the svg element to be accessed and manipulated in the React component using the current property of the svgRef object
 
   // Fetch all symptoms and user's correlations data from the store
@@ -65,44 +73,6 @@ const CirclePacking = () => {
           .hierarchy({ children: data }) // Create the hierarchy of nodes for the circle packing layout and sum the node values
           .sum((d) => d.value)
       );
-
-    const colorPalette = d3.schemeSet3; // Define a color palette for the symptoms and map each symptom to a unique color
-    const symptomColors = {};
-    for (let i = 0; i < symptoms.length; i++) {
-      const symptomName = symptoms[i].name;
-      const colorIndex = i % colorPalette.length;
-      symptomColors[symptomName] = colorPalette[colorIndex];
-    }
-
-    // Create the legend
-    const legend = d3.select("#legend-circle-packing"); // Create the legend
-    const legendHeight = +legend.attr("height");
-
-    legend
-      .append("g")
-      .selectAll("g") // Create a group for each circle-text pair in the legend
-      .data(Object.entries(symptomColors))
-      .join("g")
-      .attr(
-        "transform",
-        (d, i) => `translate(${i * 80 + 100}, ${legendHeight / 4})`
-      )
-      .call((g) => {
-        g.append("circle") // Append circle element to each group
-          .attr("r", 12)
-          .attr("fill", (d) => d[1]);
-        g.append("text") // Append text element to each group
-          .attr("text-anchor", "end")
-          .attr("y", 0)
-          .text((d) => d[0]);
-      });
-
-    legend
-      .selectAll("text") // Move text labels to appropriate location
-      .attr("transform", "rotate(-30)")
-      .attr("text-anchor", "middle")
-      .attr("x", -30)
-      .attr("y", 30);
 
     // Define the hierarchy of nodes and their attributes using the user's symptoms and their correlations
     const root = pack(
@@ -156,7 +126,16 @@ const CirclePacking = () => {
     <Container css={{ margin: "5rem 0" }}>
       <HeaderText text="Your Food Group and Symptom Relationships" />
       <Text h3>Legend:</Text>
-      <svg id="legend-circle-packing" width="950" height="150"></svg>
+      {Object.keys(symptomColors).map((symptomName) => (
+          <Container
+          display="flex"
+          alignItems="center"
+          key={symptomName}
+          >
+            <div style={{ backgroundColor: symptomColors[symptomName], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
+            <Text h3>{symptomName}</Text>
+        </Container>
+        ))}
       <svg ref={svgRef} width="950" height="500"></svg>
     </Container>
   );
