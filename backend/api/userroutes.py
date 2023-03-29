@@ -142,6 +142,6 @@ def get_user_correlations(user):
         if correlations_list:
             return correlations_list, 200
         else:
-            return "No correlations found", 404
+            return "No correlations found", 204
     except Exception as e:
         return "Error", 500
