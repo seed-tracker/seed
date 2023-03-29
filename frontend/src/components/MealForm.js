@@ -52,7 +52,6 @@ function MealForm() {
   const fetchRecentFoods = async () => {
     try {
       const { data } = await apiClient.get("meals/recent");
-
       //[{name, groups}, {name, groups}, ...]
       if (data) setRecentFoods(data);
     } catch (err) {

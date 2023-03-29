@@ -1,4 +1,4 @@
-import { Table as NextUITable } from "@nextui-org/react";
+import { Table as NextUITable, css } from "@nextui-org/react";
 import { Button } from "./index";
 
 //description (string) = aria label for the table
@@ -20,7 +20,6 @@ const Table = ({ description, headers, rows, button }) => {
       css={{
         background: "#ffffff",
       }}
-      shadow={false}
     >
       <NextUITable.Header columns={headers}>
         {(header) => (

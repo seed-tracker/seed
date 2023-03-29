@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../store/authSlice";
 import { me } from "../store/authSlice";
-import { Text, Navbar, Link, Button } from "@nextui-org/react";
+import { Text, Navbar, Link, Button} from "@nextui-org/react";
 import { Link as Router } from "react-router-dom";
 
 const NavigationBar = () => {
@@ -63,10 +63,8 @@ const NavigationBar = () => {
           <Navbar.Item>
             <Button
               size="md"
-              flat
-              bordered
-              color="#7A918D"
-              css={{ backgroundColor: "#7A918Dcc" }}
+              color="primary"
+              css={{ background: "#7a918d" }}
               auto
               as={Link}
               onClick={logoutAndRedirectHome}

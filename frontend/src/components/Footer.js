@@ -18,7 +18,7 @@ const Footer = () => {
           position: "relative",
           bottom: "0",
           backgroundColor: "rgb(77,93,83, 0.1)",
-          padding: "2rem 2rem 3rem 2rem",
+          padding: "1rem",
         }}
       >
         <Container
