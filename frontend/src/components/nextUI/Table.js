@@ -21,6 +21,7 @@ const Table = ({ description, headers, rows, button }) => {
         minWidth: "30rem",
         background: "#ffffff",
       }}
+      shadow={false}
     >
       <NextUITable.Header columns={headers}>
         {(header) => (

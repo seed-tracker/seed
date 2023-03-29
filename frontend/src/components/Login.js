@@ -21,8 +21,8 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (error) setLoading(false);
-  }, [error]);
+    if (error && loading) setLoading(false);
+  }, [error, loading]);
 
   const inputs = [
     {

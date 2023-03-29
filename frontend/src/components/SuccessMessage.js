@@ -35,6 +35,15 @@ const SuccessMessage = ({ title, message, type, onClick }) => {
             />
             <Spacer x={2} />
             <Button
+              ariaLabel={`Add a ${type === "meal" ? "symptom" : "meal"}`}
+              onPress={() =>
+                navigate(type === "meal" ? "/add/symptom" : "/user/addFood")
+              }
+              text={`Add a ${type === "meal" ? "symptom" : "meal"}`}
+              type="button"
+            />
+            <Spacer x={2} />
+            <Button
               ariaLabel="Go to profile"
               onPress={() => navigate("/profile")}
               text="Check out your profile"

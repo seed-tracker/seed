@@ -13,27 +13,12 @@ export const fetchAllSymptoms = createAsyncThunk(
   }
 )
 
-export const addSymptomEntry = createAsyncThunk(
-  "symptom/add",
-  async (symptomEntry) => {
-    try {
-      const { data } = await apiClient.post(`user/symptoms/`, symptomEntry);
-      return data;
-    } catch (err) {
-      console.error(err);
-    }
-  }
-);
-
 export const symptomSlice = createSlice({
   name: "symptoms",
   initialState: [],
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(addSymptomEntry.fulfilled, (state, action) => {
-      state.push(action.payload);
-    })
-    .addCase(fetchAllSymptoms.fulfilled, (state, action) => {
+    builder.addCase(fetchAllSymptoms.fulfilled, (state, action) => {
       return action.payload;
     });
   },
