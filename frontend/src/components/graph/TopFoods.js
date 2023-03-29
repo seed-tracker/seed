@@ -5,22 +5,17 @@ import { scaleBand, scaleLinear } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
 import { forceCollide, forceSimulation } from "d3-force";
 import { statsSlice, selectUserStats, getUserStats } from "../../store/statsSlice";
-import { foodGroupsSlice, fetchAllFoodGroups, selectFoodGroups } from "../../store/foodGroupsSlice";
 import * as d3 from "d3";
 
 const TopFoods = () => {
   const svgRef = useRef();
   const dispatch = useDispatch()
   const data = useSelector(selectUserStats)
-  const foodGroups = useSelector(selectFoodGroups)
-
-  const groupNames = foodGroups.data ? foodGroups.data.map((group) => group.name) : []
   const topFoods = data.foods ? data.foods.slice(0, 10) : []
   const counts = topFoods ? topFoods.map((food) => food.count) : []
 
   useEffect(() => {
     dispatch(getUserStats("all"))
-    dispatch(fetchAllFoodGroups())
   }, [dispatch])
 
   const handleGetAllTime = async (all) => {
@@ -69,13 +64,14 @@ const TopFoods = () => {
 
         const g = svg.append("g").attr("transform", `translate(${margin.left * 1.75}, ${margin.top * 2})`);
 
-        const colorPalette = ["#f44336", "#e81e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548", "#9e9e9e", "#607d8b", "#6d28f1", "#064e5f"]; // Define a color palette for the foods and map each food's group to a unique color
+        const colorPalette = d3.schemeSet3;; // Define a color palette for the symptoms and map each symptom to a unique color
         const foodsColors = {};
-          for (let i = 0; i < groupNames.length; i++) {
-            const groupName = groupNames[i];
-            const colorIndex = i % colorPalette.length;
-            foodsColors[groupName] = colorPalette[colorIndex];
-          }
+        for (let i = 0; i < topFoods.length; i++) {
+          const foodName = topFoods[i].name;
+          const colorIndex = i % colorPalette.length;
+          foodsColors[foodName] = colorPalette[colorIndex];
+        }
+
 
         const legend = d3.select("#legend-top-foods") // Create the legend
         const legendHeight = +legend.attr("height");
@@ -106,25 +102,23 @@ const TopFoods = () => {
           .attr("cx", d => xScale(d.name))
 
           for (let i = 0; i < topFoods.length; i++) {
-            const currentFood = topFoods[i];
-            const groupName = currentFood.groups[0];
             for (let j = 0; j < counts[i]; j++) {
                g.append("circle")
-                  .attr("cx", xScale(currentFood.name))
+                  .attr("cx", xScale(topFoods[i].name))
                   .attr("cy", yScale(j))
-                  .attr("fill", foodsColors[groupName])
+                  .attr("fill", foodsColors[topFoods[i].name])
                   .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
               if (j === counts[i] - 1) {
                 g.append("text")
-                  .attr("x", xScale(currentFood.name))
-                  .attr("y", yScale(j) - 20)
+                  .attr("x", xScale(topFoods[i].name))
+                  .attr("y", yScale(j) - 10)
                   .attr("text-anchor", "middle")
                   .text("Count: " + counts[i]);
               }
             }
           }
     }
-  }, [data, foodGroups]);
+  }, [data]);
 
   return (
      <section className="topFoodsChart">
