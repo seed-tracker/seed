@@ -153,32 +153,34 @@ const TopFoods = () => {
   return (
     <Container css={{ margin: "5rem 0" }}>
       <HeaderText text="Your Top 10 Foods:" />
-      {/* <Container css={{margin: "2rem 0"}}> */}
       <Text h3>Legend:</Text>
       <svg id="legend-top-foods" width="950" height="220"></svg>
       <svg ref={svgRef} width="950" height="580"></svg>
       <Button.Group color="primary" ghost>
         <Button
-          text="All"
           onClick={handleGetAllTime}
           type="button"
           aria-label="Button to filter chart top foods view by all time"
           value="all"
-        />
+        >
+          All Time
+        </Button>
         <Button
-          text="6 Months"
           onClick={handleGetSixMonths}
           value="180"
           type="button"
           aria-label="Button to filter chart top foods view by six months"
-        />
+        >
+          6 Months
+        </Button>
         <Button
-          text="1 Year"
           onClick={handleGetOneYear}
           value="365"
           type="button"
           aria-label="Button to filter chart top foods view by one year"
-        />
+        >
+          1 Year
+        </Button>
       </Button.Group>
     </Container>
   );
