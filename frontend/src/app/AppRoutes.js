@@ -39,7 +39,7 @@ const AppRoutes = () => {
               path="/user/symptom-entries"
               element={<SymptomEntryOverview />}
             />
-            <Route path="/*" element={<Home />} />
+            <Route path="/*" element={<Profile />} />
           </Routes>
         </>
       ) : (

@@ -75,7 +75,6 @@ def get_user_meals(user):
 @require_token
 def get_recent_foods(user):
     try:
-        print("getting recents...")
         username = user["username"]
 
         pipeline = [
@@ -105,8 +104,6 @@ def get_recent_foods(user):
         ]
 
         recent_foods = list(db.meals.aggregate(pipeline))
-
-        print(recent_foods)
 
         if not recent_foods:
             return "Foods not found", 204

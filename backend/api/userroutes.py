@@ -92,10 +92,23 @@ def edit_profile(user):
 
         set_dict = {"name": request_data["name"], "email": request_data["email"]}
 
-        if request_data["password"] and len(request_data["password"]) > 5:
-            set_dict["password"] = bcrypt.hashpw(
-                request_data["password"].encode("utf-8"), salt
+        if (
+            "password" in request_data
+            and len(request_data["password"]) > 1
+            and "newPassword" in request_data
+            and len(request_data["newPassword"]) >= 1
+        ):
+            password_checked = bcrypt.checkpw(
+                request_data["password"].encode("utf-8"),
+                user["password"].encode("utf-8"),
             )
+
+            if not password_checked:
+                return {"error": "Wrong password"}, 401
+
+            set_dict["password"] = bcrypt.hashpw(
+                request_data["newPassword"].encode("utf-8"), salt
+            ).decode("utf-8")
 
         # Find the user by their username and update their information
         updated_user = db.users.find_one_and_update(

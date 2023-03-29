@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { signup } from "../store/authSlice";
 import { selectError } from "../store/authSlice";
-import Inputs from "./nextUI/Inputs";
+import { UserForm } from "./nextUI";
 
 /**
   The Login component is used for Login
@@ -15,65 +14,77 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [birthdate, setBirthdate] = useState("");
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleRegisterSubmit = async (evt) => {
     evt.preventDefault();
-    await dispatch(
-      signup({ username, password, email, name: fullName, birthdate })
-    );
+    setLoading(true);
+    dispatch(signup({ username, password, email, name: fullName, birthdate }));
   };
 
-  const redirect = () => {
-    navigate("/profile");
-  };
+  useEffect(() => {
+    if (error) setLoading(false);
+  }, [error]);
+
+  const inputs = [
+    {
+      name: "username",
+      type: "text",
+      required: true,
+      value: username,
+      onChange: (e) => setUsername(e.target.value),
+      helperText: "required",
+      label: "Username",
+    },
+    {
+      name: "password",
+      type: "password",
+      required: true,
+      value: password,
+      onChange: (e) => setPassword(e.target.value),
+      helperText: `8 characters, 1 number, 1 uppercase character, 1 special character`,
+      label: "Password",
+      useRegex: true,
+    },
+    {
+      name: "email",
+      type: "email",
+      required: true,
+      value: email,
+      onChange: (e) => setEmail(e.target.value),
+      helperText: "required",
+      label: "Email",
+    },
+    {
+      name: "name",
+      type: "text",
+      required: true,
+      value: fullName,
+      onChange: (e) => setFullName(e.target.value),
+      helperText: "required",
+      label: "Full Name",
+    },
+    {
+      name: "birthdate",
+      type: "date",
+      required: true,
+      value: birthdate,
+      onChange: (e) => setBirthdate(e.target.value),
+      helperText: "required",
+      label: "Date of Birth",
+    },
+  ];
 
   return (
-    <form onSubmit={handleRegisterSubmit}>
-      <Inputs
-        type={"text"}
-        required={true}
-        label={"Username:"}
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        helperText={"required"}
-      />
-      <Inputs
-        type={"password"}
-        required={true}
-        label={"Password:"}
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        helperText={`required & format: 8 characters, at least 1 number, 1 uppercase character, 1 special character !@#$%^&*()`}
-      />
-      <Inputs
-        type={"email"}
-        required={true}
-        label={"Email:"}
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        helperText={"required"}
-      />
-      <Inputs
-        type={"text"}
-        required={true}
-        label={"Full Name:"}
-        value={fullName}
-        onChange={(e) => setFullName(e.target.value)}
-        helperText={"required"}
-      />
-      <Inputs
-        type={"date"}
-        label={"Date of Birth:"}
-        value={birthdate}
-        onChange={(e) => setBirthdate(e.target.value)}
-      />
-      <button type="submit" onSubmit={redirect}>
-        Create Account
-      </button>
-      {error && <div> {error.toString()} </div>}
-    </form>
+    <UserForm
+      title="Sign up"
+      inputs={inputs}
+      description="Sign up form"
+      onSubmit={handleRegisterSubmit}
+      error={error}
+      loading={loading}
+    />
   );
 };
 
