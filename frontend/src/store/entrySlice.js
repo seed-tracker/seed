@@ -13,7 +13,7 @@ export const editProfile = createAsyncThunk(
       });
       return data;
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   }
 );
@@ -26,7 +26,7 @@ async (query) => {
     const {data} = await apiClient.get(`foods/autocomplete?query=${query}`);
     return data;
   } catch (err) {
-    console.error(err);
+    console.debug(err);
   }
 });
 

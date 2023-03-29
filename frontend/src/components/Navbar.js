@@ -45,19 +45,15 @@ const NavigationBar = () => {
             margin: 0,
           }}
           color="$secondary"
+          onClick={() => navigate("/")}
         >
           SEED
         </Text>
       </Navbar.Brand>
       {isLoggedIn ? (
         <Navbar.Content>
-          <Navbar.Link as={Link}>
-            <Router
-              to="/profile"
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              My Profile
-            </Router>
+          <Navbar.Link onPress={() => navigate("/profile")}>
+            My Profile
           </Navbar.Link>
           <Navbar.Item>
             <Button
@@ -76,11 +72,12 @@ const NavigationBar = () => {
         </Navbar.Content>
       ) : (
         <Navbar.Content>
-          <Navbar.Link href="/login">
+          <Navbar.Link>
             <Button
               size="md"
               color="success"
               borderRadius="50%"
+              onPress={() => navigate("/login")}
               /* css={{
                 backgroundColor: "#67c43f",
                 backgroundImage:
@@ -95,11 +92,12 @@ const NavigationBar = () => {
               Login
             </Button>
           </Navbar.Link>
-          <Navbar.Link href="/signup">
+          <Navbar.Link>
             <Button
               size="md"
               color="success"
               borderRadius="50%"
+              onPress={() => navigate("/signup")}
               /* css={{
                backgroundColor: "#67c43f",
                 backgroundImage: "radial-gradient(circle, #C3C5C4 25%, #c0b2d3 50%, #b4d3b2 100%)",

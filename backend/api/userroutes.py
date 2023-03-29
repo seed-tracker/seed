@@ -90,7 +90,7 @@ def edit_profile(user):
         username = user["username"]
         request_data = request.get_json()
         if request_data is None:
-            return jsonify({"error": "Invalid request body"}), 400
+            return jsonify({"error": "Invalid request"}), 400
 
         set_dict = {"name": request_data["name"], "email": request_data["email"]}
 
@@ -106,7 +106,7 @@ def edit_profile(user):
             )
 
             if not password_checked:
-                return {"error": "Wrong password"}, 401
+                return jsonify({"message": "Wrong password"}), 401
 
             set_dict["password"] = bcrypt.hashpw(
                 request_data["newPassword"].encode("utf-8"), salt
@@ -140,9 +140,9 @@ def get_user_correlations(user):
         if correlations_list:
             return correlations_list, 200
         else:
-            return "No correlations found", 204
+            return jsonify({"message": "No correlations found"}), 204
     except Exception as e:
-        return "Error", 500
+        return jsonify({"message": "An error occured fetching the user's correlations"}), 500
 
 
 @users.route("/correlations/update", methods=["PUT"])
@@ -156,4 +156,4 @@ def update_user_correlations(user):
         return "Success!", 204
 
     except Exception as e:
-        return str(e), 500
+        return jsonify({"error": str(e)}), 500
