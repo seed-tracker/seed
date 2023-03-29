@@ -13,7 +13,7 @@ export const editProfile = createAsyncThunk(
       });
       return data;
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   }
 );

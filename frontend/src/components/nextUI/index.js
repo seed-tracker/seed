@@ -6,6 +6,21 @@ import UserForm from "./UserForm";
 import Table from "./Table";
 import Links from "./Links";
 import HeaderText from "./H2Text";
+import MealCard from "./MealCard";
+import Pagination from "./Pagination";
+import SymptomCard from "./SymptomCard";
+import PageLoading from "./PageLoading";
 
-export { Dropdown, Button, UserForm, Table, Inputs, Links, HeaderText };
-
+export {
+  Dropdown,
+  Button,
+  UserForm,
+  Table,
+  Inputs,
+  Links,
+  HeaderText,
+  MealCard,
+  Pagination,
+  SymptomCard,
+  PageLoading,
+};

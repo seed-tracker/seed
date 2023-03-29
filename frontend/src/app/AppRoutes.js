@@ -15,6 +15,7 @@ import Dashboard from "../components/Dashboard";
 import TopSymptoms from "../components/graph/TopSymptoms";
 import Sidebar from "../components/Sidebar";
 import { Container } from "@nextui-org/react";
+import apiClient from "../config";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
@@ -24,13 +25,21 @@ const AppRoutes = () => {
     dispatch(me());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (isLoggedIn) updateCorrelations();
+  }, [isLoggedIn]);
+
+  const updateCorrelations = async () => {
+    await apiClient.put("users/correlations/update");
+  };
+
   return (
-    <main>
+    <>
       {isLoggedIn ? (
         <Container
           display={"flex"}
           wrap={"wrap"}
-          maxWidth={"100vw"}
+          width={"100vw"}
           align="center"
           css={{ margin: 0, padding: 0 }}
         >
@@ -56,7 +65,7 @@ const AppRoutes = () => {
           <Route path="/*" element={<Home />} />
         </Routes>
       )}
-    </main>
+    </>
   );
 };
 

@@ -64,7 +64,7 @@ def get_user_meals(user):
             return {"count": total_meals, "meals": meals}, 200
         # if no meal list found return an error message
         else:
-            return f"No meals found for user {username}", 500
+            return f"No meals found for user {username}", 204
 
     except Exception as e:
         print("Error! ", str(e))

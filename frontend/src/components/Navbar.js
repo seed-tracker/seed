@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../store/authSlice";
 import { me } from "../store/authSlice";
-import { Text, Navbar, Link, Button} from "@nextui-org/react";
-import { Link as Router } from "react-router-dom";
+import { clearStore } from "../store";
+import { Text, Navbar, Link, Button } from "@nextui-org/react";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -17,6 +17,7 @@ const NavigationBar = () => {
 
   const logoutAndRedirectHome = () => {
     dispatch(logout());
+    dispatch(clearStore());
     navigate("/");
   };
   /**
@@ -46,19 +47,15 @@ const NavigationBar = () => {
             margin: 0,
           }}
           color="$secondary"
+          onClick={() => navigate("/")}
         >
           SEED
         </Text>
       </Navbar.Brand>
       {isLoggedIn ? (
         <Navbar.Content>
-          <Navbar.Link as={Link}>
-            <Router
-              to="/profile"
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              My Profile
-            </Router>
+          <Navbar.Link onPress={() => navigate("/profile")}>
+            My Profile
           </Navbar.Link>
           <Navbar.Item>
             <Button
@@ -75,12 +72,13 @@ const NavigationBar = () => {
         </Navbar.Content>
       ) : (
         <Navbar.Content>
-          
-            <Button onClick={()=>navigate("/login")}
+          <Navbar.Link>
+            <Button
               size="md"
               // color="success"
               borderRadius="50%"
-               css={{
+              onPress={() => navigate("/login")}
+              css={{
                 backgroundColor: "#67c43f",
                 fontWeight: "bold",
                 backgroundImage:
@@ -90,31 +88,34 @@ const NavigationBar = () => {
                 "&:hover": {
                   backgroundPosition: "100% 0",
                 },
-                color: "$secondary"
-              }} 
+                color: "$secondary",
+              }}
             >
               Login
             </Button>
-            <Button onClick={()=>navigate("/signup")}
+          </Navbar.Link>
+          <Navbar.Link href="/signup">
+            <Button
               size="md"
-              // color="success"
+              color="success"
               borderRadius="50%"
-             css={{
-               backgroundColor: "#67c43f",
-               fontWeight: "bold",
-               backgroundImage:
-               "radial-gradient(circle,  #5ca388 25%, #649b93 50%, #b4d3b2 100%)",
+              css={{
+                backgroundColor: "#67c43f",
+                fontWeight: "bold",
+                backgroundImage:
+                  "radial-gradient(circle,  #5ca388 25%, #649b93 50%, #b4d3b2 100%)",
                 // backgroundImage: "radial-gradient(circle, #609f67 25%, #c0b2d3 50%, #b4d3b2 100%)",
                 backgroundSize: "400% 400%",
                 transition: "background-position 0.8s ease-in-out",
                 "&:hover": {
                   backgroundPosition: "100% 0",
                 },
-                color: "$secondary"
-              }} 
+                color: "$secondary",
+              }}
             >
               Signup
             </Button>
+          </Navbar.Link>
         </Navbar.Content>
       )}
     </Navbar>

@@ -2,19 +2,25 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
-import Sidebar from "./Sidebar";
-import {HeaderText} from './nextUI/index';
+import {
+  HeaderText,
+  SymptomCard,
+  Pagination,
+  PageLoading,
+} from "./nextUI/index";
 import {
   fetchAllSymptomEntries,
-  selectAllSymptoms,
+  resetError,
   deleteSymptomEntry,
 } from "../store/allEntriesSlice";
 import { v4 as uuidv4 } from "uuid";
+import { Grid, Container } from "@nextui-org/react";
 
 function SymptomEntryOverview() {
   const [symptoms, setSymptoms] = useState([]);
   const [count, setCount] = useState(0);
-  const symptomEntries = useSelector(selectAllSymptoms);
+  const [loading, setLoading] = useState(true);
+  const { symptomEntries, error } = useSelector((state) => state.allEntries);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const maxPages = Math.ceil(count / 20);
@@ -25,6 +31,7 @@ function SymptomEntryOverview() {
   if (!page || isNaN(page)) page = 1;
 
   useEffect(() => {
+    dispatch(resetError());
     dispatch(fetchAllSymptomEntries(page));
     navigate(`/user/symptom-entries?page=${page}`);
   }, [dispatch, page]);
@@ -32,75 +39,76 @@ function SymptomEntryOverview() {
   useEffect(() => {
     setCount(symptomEntries.symptomCount);
     setSymptoms(symptomEntries.symptoms);
-  }, [symptomEntries]);
+    if (
+      (symptomEntries.symptoms && symptomEntries.symptoms.length > 0) ||
+      (error && error.length)
+    )
+      setLoading(false);
+  }, [symptomEntries, error]);
 
-  const handlePageChange = (event) => {
-    if (event.target.value === "previous") {
-      page -= 1;
-      navigate(`/user/symptom-entries?page=${page}`);
-    } else if (event.target.value === "next") {
-      page += 1;
-      navigate(`/user/symptom-entries?page=${page}`);
-    }
+  const handlePageChange = (page) => {
+    navigate(`/user/symptom-entries?page=${page}`);
+    window.scrollTo(0, 0);
   };
 
   const handleEntryDelete = async (id) => {
-    await dispatch(deleteSymptomEntry(id));
-    await dispatch(fetchAllSymptomEntries(page));
+    dispatch(deleteSymptomEntry(id));
+    dispatch(fetchAllSymptomEntries(page));
   };
 
   return (
-    <main>
-      <HeaderText text='Past Symptom Entries' />
-      <aside>
-        {count < 500 && (
-          <p>
-            You've logged {count} <strong>symptom</strong> entries so far - keep
-            tracking for better results!
-          </p>
-        )}
-        {count >= 500 && (
-          <p>You've logged {count} entries so far. Keep up the good work!</p>
-        )}
-      </aside>
-      <ul>
-        {symptoms && symptoms.length
-          ? symptoms.map((symptom) => {
-              return (
-                <li key={uuidv4()}>
-                  <p>
-                    {new Date(symptom.datetime).toLocaleString("en-US", {
-                      dateStyle: "full",
-                      timeStyle: "long",
-                    })}
-                  </p>
-                  <p>{symptom.symptom}</p>
-                  <p>Severity: {symptom.severity}</p>
-                  <button onClick={() => handleEntryDelete(symptom._id)}>
-                    Delete
-                  </button>
-                </li>
-              );
-            })
-          : "No symptom entries to display"}
-      </ul>
-      <div>
-        {page > 1 && (
-          <button
-            value="previous"
-            onClick={(e) => handlePageChange(e, "previous")}
-          >
-            {`<<`}
-          </button>
-        )}
-        <p>{page}</p>
-        {page < maxPages && (
-          <button value="next" onClick={(e) => handlePageChange(e, "next")}>
-            {`>>`}
-          </button>
-        )}
-      </div>
-    </main>
+    <Container css={{ padding: "3rem", maxWidth: "65rem" }}>
+      {loading ? (
+        <PageLoading text="We're fetching your symptoms..." />
+      ) : (
+        <main>
+          <HeaderText text="Past Symptom Entries" />
+          <aside>
+            {count < 500 && count > 0 && (
+              <p>
+                You've logged <strong>{count} symptoms</strong> so far - keep
+                tracking for better results!
+              </p>
+            )}
+            {count >= 500 && (
+              <p>
+                You've logged <strong>{count} symptoms</strong> so far. Keep up
+                the good work!
+              </p>
+            )}
+          </aside>
+          {symptoms && symptoms.length ? (
+            <section>
+              <Grid.Container gap={3}>
+                {symptoms.map((symptom) => {
+                  return (
+                    <Grid
+                      xs={2}
+                      key={uuidv4()}
+                      css={{ minWidth: "18rem", maxWidth: "25rem" }}
+                    >
+                      <SymptomCard
+                        symptom={symptom}
+                        onPress={handleEntryDelete}
+                      />
+                    </Grid>
+                  );
+                })}
+              </Grid.Container>
+              {maxPages > 1 && (
+                <Pagination
+                  page={page}
+                  totalPages={maxPages}
+                  onChange={handlePageChange}
+                />
+              )}
+            </section>
+          ) : (
+            "No symptom entries to display"
+          )}
+        </main>
+      )}
+    </Container>
   );
 }
 
