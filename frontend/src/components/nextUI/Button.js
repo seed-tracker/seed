@@ -26,7 +26,7 @@ const Button = ({
       disabled={disabled || loading}
       onPress={onPress}
       type={type || "button"}
-      css={{ maxWidth: "10rem" }}
+      css={{ maxWidth: "10rem", background: "#7a918d" }}
     >
       {!loading ? (
         text
