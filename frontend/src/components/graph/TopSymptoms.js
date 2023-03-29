@@ -13,7 +13,7 @@ const TopSymptoms = () => {
   const allSymptoms = useSelector(selectSymptoms);
   const dispatch = useDispatch()
   const data = useSelector(selectUserStats)
-  const symptoms = data.symptoms
+  const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : []
   const counts = symptoms ? symptoms.map((symptom) => symptom.count) : []
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const TopSymptoms = () => {
           const colorIndex = i % colorPalette.length;
           symptomColors[symptomName] = colorPalette[colorIndex];
         }
-
+        console.log(symptomColors);
 
         const legend = d3.select("#legend-lollipop") // Create the legend
         const legendHeight = +legend.attr("height");
@@ -109,7 +109,7 @@ const TopSymptoms = () => {
               if (j === counts[i] - 1) {
                 g.append("text")
                   .attr("x", xScale(symptoms[i].name))
-                  .attr("y", yScale(j) - 10)
+                  .attr("y", yScale(j) - 20)
                   .attr("text-anchor", "middle")
                   .text("Count: " + counts[i]);
               }

@@ -4,7 +4,8 @@ import Button from "./Button";
 import Inputs from "./Inputs";
 import UserForm from "./UserForm";
 import Table from "./Table";
-import Link from "./Links";
+import Links from "./Links";
 import HeaderText from "./H2Text";
 
-export { Dropdown, Button, UserForm, Table, Inputs, Link, HeaderText };
+export { Dropdown, Button, UserForm, Table, Inputs, Links, HeaderText };
+
