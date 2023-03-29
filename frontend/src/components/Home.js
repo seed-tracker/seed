@@ -10,6 +10,7 @@ import { Container, Spacer } from "@nextui-org/react";
 const Home = () => {
   const dispatch = useDispatch();
 
+
   useEffect(() => {
     dispatch(me());
   }, [dispatch]);
