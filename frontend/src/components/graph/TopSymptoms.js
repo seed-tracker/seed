@@ -7,6 +7,7 @@ import { forceCollide, forceSimulation } from "d3-force";
 import { fetchAllSymptoms, selectSymptoms } from "../../store/symptomSlice";
 import { statsSlice, selectUserStats, getUserStats } from "../../store/statsSlice";
 import * as d3 from "d3";
+import { Button, Container } from "@nextui-org/react";
 
 const TopSymptoms = () => {
   const svgRef = useRef();
@@ -119,19 +120,21 @@ const TopSymptoms = () => {
   }, [data]);
 
   return (
-     <section className="topSymptomsChart">
+     <Container>
         <h1>Your top 5 symptoms:</h1>
         <div>
-          <svg ref={svgRef} width="2000" height="500"></svg>
-          <button type="button" onClick={handleGetAllTime} value="all">All</button>
-          <button type="button" onClick={handleGetSixMonths} value="180">6 Months</button>
-          <button type="button" onClick={handleGetOneYear} value="365">1 Year</button>
+          <h3>Legend:</h3>
+          <svg id="legend-lollipop" width="100%" height="250"></svg>
         </div>
         <div>
-          <h3>Legend:</h3>
-          <svg id="legend-lollipop" width="1400px" height="250"></svg>
+          <svg ref={svgRef} width="2000" height="500"></svg>
+          <Button.Group color="primary" ghost>
+            <Button type="button" onClick={handleGetAllTime} value="all">All</Button>
+            <Button type="button" onClick={handleGetSixMonths} value="180">6 Months</Button>
+            <Button type="button" onClick={handleGetOneYear} value="365">1 Year</Button>
+          </Button.Group>
         </div>
-      </section>
+    </Container>
   );
 };
 
