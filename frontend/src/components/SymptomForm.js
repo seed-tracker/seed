@@ -97,6 +97,7 @@ const SymptomForm = () => {
             min="0"
             max="10"
             value={severity}
+            className="slider"
             onChange={(event) => setSeverity(event.target.value)}
           />
         </label>
