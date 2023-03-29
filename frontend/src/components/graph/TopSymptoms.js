@@ -161,9 +161,9 @@ const TopSymptoms = () => {
         css={{ margin: "2rem 0", display: "flex", flexDirection: "column" }}
       >
         <svg ref={svgRef} width="950" height="360"></svg>
-        <Row>
+        <Row css={{ display: "flex", alignItems: "baseline" }}>
+          <Text h4>Filter data by:</Text>
           <Button.Group color="primary" bordered ghost>
-            <Text h4>Filter data by:</Text>
             <Button
               onClick={handleGetAllTime}
               type="button"

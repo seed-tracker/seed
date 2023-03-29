@@ -19,15 +19,14 @@ const Footer = () => {
           padding: "2rem 2rem 3rem 2rem",
         }}
       >
-        <Container>
-          <Row justify="center">
+        <Container css={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
             <Col span={2}>
               <Row>
                 <Text h1 css={{fontFamily: "Lovechild"}} color="$secondary">SEED</Text>
               </Row>
-              <Row>
+              <Row css={{display: "flex", flexWrap: "wrap"}}>
                 <Text>Follow Us:</Text>
-                <Links href={"instagram.com"} text={"Instagram"} />
+                <Links css={{display: "block"}} href={"instagram.com"} text={"Instagram"} />
                 <Links href={"twitter.com"} text={"Twitter"} />
               </Row>
               <Spacer y={1}/>
@@ -39,7 +38,7 @@ const Footer = () => {
               </Row>
             </Col>
             <Spacer x={2}/>
-            <Col span={5}>
+            <Col span={4}>
               <Text h3 color="#4D5D53">
                 Our Mission
               </Text>
@@ -54,7 +53,7 @@ const Footer = () => {
               </Text>
             </Col>
             <Spacer x={2}/>
-            <Col span={5}>
+            <Col span={4}>
               <Text h3 color="#444c38">
                 Medical Advice Disclaimer
               </Text>
@@ -72,7 +71,6 @@ const Footer = () => {
                 </strong>
               </Text>
             </Col>
-          </Row>
         </Container>
       </Container>
     </footer>
