@@ -21,11 +21,21 @@ const UserForm = ({
   return (
     <form onSubmit={onSubmit}>
       <Container justify="center" align="center" aria-label={description}>
-        <Spacer y={2} />
         <Card
-          css={{ padding: "3rem", width: "50rem", ml: "0" }}
+          css={{
+            "@xs": {
+              margin: 0,
+              padding: 0,
+              minWidth: "100vw",
+            },
+            "@sm": {
+              margin: "2vw",
+              minWidth: "50vw",
+            },
+          }}
           aria-label={description}
         >
+          <Spacer y={2} />
           <HeaderText text={title} />
           {title === "Login" && (
             <Text css={{ color: "gray" }}>
@@ -78,8 +88,8 @@ const UserForm = ({
               </Row>
             )}
           </Card.Body>
+          <Spacer y={2} />
         </Card>
-        <Spacer y={7} />
       </Container>
     </form>
   );

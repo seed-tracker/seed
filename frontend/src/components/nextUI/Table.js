@@ -18,7 +18,6 @@ const Table = ({ description, headers, rows, button }) => {
       aria-label={description}
       headerLined={"true"}
       css={{
-        minWidth: "30rem",
         background: "#ffffff",
       }}
       shadow={false}

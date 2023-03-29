@@ -167,7 +167,7 @@ function MealForm() {
           display={"flex"}
           justify={"space-between"}
           wrap={"wrap"}
-          css={{ margin: "2rem" }}
+          css={{ margin: "2vw", width: "65vw" }}
         >
           <Container display={"flex"}>
             <HeaderText text="Add a meal" />
@@ -175,7 +175,16 @@ function MealForm() {
           <Container
             display={"flex"}
             direction="column"
-            css={{ maxWidth: "20vw", margin: 0 }}
+            css={{
+              "@xs": {
+                margin: 0,
+                width: "100vw",
+              },
+              "@sm": {
+                flexDirection: "column",
+                maxWidth: "20vw",
+              },
+            }}
           >
             <Inputs
               label="Entry Name"

@@ -20,17 +20,26 @@ const Footer = () => {
         }}
       >
         <Container>
-          <Row justify="center">
+          <Row
+            css={{
+              "@xs": {
+                direction: "column",
+              },
+            }}
+            justify="center"
+          >
             <Col span={2}>
               <Row>
-                <Text h1 css={{fontFamily: "Lovechild"}} color="$secondary">SEED</Text>
+                <Text h1 css={{ fontFamily: "Lovechild" }} color="$secondary">
+                  SEED
+                </Text>
               </Row>
               <Row>
                 <Text>Follow Us:</Text>
                 <Links href={"instagram.com"} text={"Instagram"} />
                 <Links href={"twitter.com"} text={"Twitter"} />
               </Row>
-              <Spacer y={1}/>
+              <Spacer y={1} />
               <Row>
                 <Text size={14}>Privacy Policy</Text>
               </Row>
@@ -38,7 +47,7 @@ const Footer = () => {
                 <Text size={14}>Copyright &copy; 2023 Seed, Inc.</Text>
               </Row>
             </Col>
-            <Spacer x={2}/>
+            <Spacer x={2} />
             <Col span={5}>
               <Text h3 color="#4D5D53">
                 Our Mission
@@ -53,22 +62,23 @@ const Footer = () => {
                 </strong>
               </Text>
             </Col>
-            <Spacer x={2}/>
+            <Spacer x={2} />
             <Col span={5}>
               <Text h3 color="#444c38">
                 Medical Advice Disclaimer
               </Text>
               <Text size={14}>
-                This web site is provided for informational purposes only and does
-                not constitute providing medical advice or professional services.
-                The information provided should not be used for diagnosing or
-                treating a health problem or disease, and those seeking personal
-                medical advice should consult with a licensed physician. <br />
+                This web site is provided for informational purposes only and
+                does not constitute providing medical advice or professional
+                services. The information provided should not be used for
+                diagnosing or treating a health problem or disease, and those
+                seeking personal medical advice should consult with a licensed
+                physician. <br />
               </Text>
               <Text size={16}>
                 <strong>
-                  If you think you may have a medical emergency, call 911 or go to
-                  the nearest emergency room immediately.
+                  If you think you may have a medical emergency, call 911 or go
+                  to the nearest emergency room immediately.
                 </strong>
               </Text>
             </Col>

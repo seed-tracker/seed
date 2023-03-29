@@ -27,7 +27,13 @@ const AppRoutes = () => {
   return (
     <main>
       {isLoggedIn ? (
-        <Container display={"flex"} wrap css={{ margin: 0, padding: 0 }}>
+        <Container
+          display={"flex"}
+          wrap={"wrap"}
+          maxWidth={"100vw"}
+          align="center"
+          css={{ margin: 0, padding: 0 }}
+        >
           <Sidebar />
           <Routes>
             <Route path="/profile" element={<Profile />} />
