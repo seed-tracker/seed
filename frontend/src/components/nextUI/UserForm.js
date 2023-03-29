@@ -18,9 +18,12 @@ const UserForm = ({
 }) => {
   return (
     <form onSubmit={onSubmit}>
-      <Container fluid justify="center" align="center" aria-label={description}>
+      <Container justify="center" align="center" aria-label={description}>
         <Spacer y={2} />
-        <Card css={{ mw: "50%", padding: "3rem" }} aria-label={description}>
+        <Card
+          css={{ padding: "3rem", width: "50rem", ml: "0" }}
+          aria-label={description}
+        >
           <HeaderText text={title} />
           {title === "Login" && (
             <Text css={{ color: "gray" }}>
