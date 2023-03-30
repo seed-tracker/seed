@@ -307,42 +307,53 @@ const ScatterPlot = () => {
           <HeaderText text="Your Top Associations" />
 
           {allData && allData.length && allData[0].symptomData && (
-            <ScatterControls
-              symptomList={allData.map(({ symptomData }) => symptomData.name)}
-              toggleSymptom={toggleSymptom}
-              maxMonths={maxMonths}
-            />
-            <Row justify="center" align="center">
-              <Button.Group vertical bordered>
-                {legend?.slice(1).map(({ name, color }, i) => {
-                  return (
-                    <>
-                      <Row justify="flex-end">
-                        <Text css={{ color: color }}>{name}</Text>
-                        <Spacer x={0.5} />
-                        <Switch
-                          key={i}
-                          className="legendSwitch"
-                          size="md"
-                          bordered
-                          checked={[...currentFoods, ...currentGroups].includes(
-                            name
-                          )}
-                          onChange={() => toggleLine(name)}
-                        />
-                      </Row>
-                      <Spacer y={0.7} />
-                    </>
-                  );
-                })}
-              </Button.Group>
+            <Container>
+              <Row justify="center">
+                <ScatterControls
+                  symptomList={allData.map(
+                    ({ symptomData }) => symptomData.name
+                  )}
+                  toggleSymptom={toggleSymptom}
+                  maxMonths={maxMonths}
+                  currentSymptom={currentSymptom}
+                />
+              </Row>
+              <Row justify="center" align="center">
+                <Button.Group vertical bordered>
+                  {legend?.slice(1).map(({ name, color }, i) => {
+                    return (
+                      <>
+                        <Row justify="flex-end">
+                          <Text css={{ color: color }}>{name}</Text>
+                          <Spacer x={0.5} />
+                          <Switch
+                            key={i}
+                            className="legendSwitch"
+                            size="md"
+                            bordered
+                            checked={[
+                              ...currentFoods,
+                              ...currentGroups,
+                            ].includes(name)}
+                            onChange={() => toggleLine(name)}
+                          />
+                        </Row>
+                        <Spacer y={0.7} />
+                      </>
+                    );
+                  })}
+                </Button.Group>
 
-              <svg ref={svgRef} style={{ margin: "90px" }}></svg>
-            </Row>
-                
-        )}
-      </Container>
-
+                <svg
+                  ref={svgRef}
+                  style={{ margin: "90px", marginRight: "5rem" }}
+                ></svg>
+              </Row>
+            </Container>
+          )}
+        </Container>
+      )}
+    </Container>
   );
 };
 

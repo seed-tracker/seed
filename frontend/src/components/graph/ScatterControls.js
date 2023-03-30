@@ -4,7 +4,12 @@ import * as d3 from "d3";
 import { fetchScatterData } from "../../store/scatterSlice";
 import { Text, Button, Row } from "@nextui-org/react";
 
-const ScatterControls = ({ symptomList, toggleSymptom, maxMonths }) => {
+const ScatterControls = ({
+  symptomList,
+  toggleSymptom,
+  maxMonths,
+  currentSymptom,
+}) => {
   const [sliderVal, setSliderVal] = useState(maxMonths);
 
   return (
@@ -33,16 +38,22 @@ const ScatterControls = ({ symptomList, toggleSymptom, maxMonths }) => {
         <Button.Group color="primary" bordered ghost>
           {symptomList
             ? symptomList.length &&
-              symptomList.map((s, i) => (
-                <Button
-                  type="button"
-                  aria-label={`Button to filter chart view by ${s} symptom`}
-                  key={i}
-                  onClick={() => toggleSymptom(s)}
-                >
-                  {s}
-                </Button>
-              ))
+              symptomList.map((s, i) => {
+                let css = {};
+                if (s === currentSymptom)
+                  css = { backgroundColor: "black", color: "white" };
+                return (
+                  <Button
+                    type="button"
+                    aria-label={`Button to filter chart view by ${s} symptom`}
+                    key={i}
+                    onClick={() => toggleSymptom(s)}
+                    css={css}
+                  >
+                    {s}
+                  </Button>
+                );
+              })
             : null}
         </Button.Group>
       </Row>
