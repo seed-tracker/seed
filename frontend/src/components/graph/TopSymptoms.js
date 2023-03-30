@@ -70,7 +70,7 @@ const TopSymptoms = () => {
       const yScale = scaleLinear().domain([Math.max(...counts) * 2, 0]).range([height, 0]);
       const xAxis = axisBottom(xScale).tickSizeOuter(0);
       const yAxis = axisLeft(yScale).ticks(5);
-      
+
 
 
 
@@ -89,7 +89,7 @@ const TopSymptoms = () => {
         .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
         .call(yAxis); // make the y-axis
 
-        
+
       svg.selectAll(".tick text").on("click", (event, d) => {
         svg.select(".x-axis").transition().duration(500).call(xAxis);
       });
@@ -145,25 +145,21 @@ const TopSymptoms = () => {
   return (
     <Container
       css={{ margin: "2rem 0", padding: "2rem" }}
-      className="glassmorpheus"
+      className="glassmorpheus-graph"
     >
-      <HeaderText text="Your top 5 symptoms:" />
-      <Text h3>Legend:</Text>
-      <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
-        {symptoms.map((symptomName) => (
-          <>
-            <div
-              style={{
-                backgroundColor: symptomColors[symptomName.name],
-                width: "1rem",
-                height: "1rem",
-                padding: "1rem",
-                margin: "0 0.5rem 0 2rem",
-                borderRadius: "1rem",
-              }}
-            ></div>
-            <Text h3>{symptomName.name}</Text>
-          </>
+       <HeaderText text="Your top 5 symptoms:" />
+      <Container css={{ margin: "2rem 0" }}>
+        <Text h4>Legend:</Text>
+        {symptoms.map((symptomName, i) => (
+          <Container
+          shadow
+          display="flex"
+          alignItems="center"
+          key={i + 1}
+          >
+            <div style={{ backgroundColor: symptomColors[symptomName.name], padding: "0.8rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
+            <Text h4>{symptomName.name}</Text>
+        </Container>
         ))}
       </Container>
       <Container
