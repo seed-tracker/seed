@@ -42,15 +42,13 @@ const TopSymptoms = () => {
 
   const handleGetAllTime = async (all) => {
     await dispatch(getUserStats("all"));
-
+    const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
   };
   const handleGetSixMonths = async (halfYear) => {
     await dispatch(getUserStats(180));
-
   };
   const handleGetOneYear = async (oneYear) => {
     await dispatch(getUserStats(365));
-
   };
 
   useEffect(() => {
@@ -72,7 +70,7 @@ const TopSymptoms = () => {
 
       const xAxisLine = svg
         .append("g")
-        .attr("transform", `translate(0, ${margin.top * 2})`)
+        .attr("transform", `translate(${margin.left * 2}, ${margin.top * 2})`)
         .attr("class", "x-axis")
         .call(xAxis); // make the x-axis
 
@@ -82,7 +80,7 @@ const TopSymptoms = () => {
 
       const yAxisLine = svg
         .append("g")
-        .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
+        .attr("transform", `translate(${(margin.left * 2)}, ${margin.top * 2})`)
         .call(yAxis); // make the y-axis
         yAxisLine.selectAll(".tick line")
         .remove(); 
@@ -106,18 +104,17 @@ const TopSymptoms = () => {
         .append("g")
         .attr(
           "transform",
-          `translate(${xScale.bandwidth() / 2}, ${margin.top * 2})`
+          `translate(${xScale.bandwidth() / 2 + (margin.left * 2)}, ${margin.top * 2})`
         );
 
       if (symptoms && symptoms.length > 0) {
-        // y axis label
-        g.append("text")
-          .attr("x", -(height/2))
-          .attr("y", -60)
-          .attr("font-size", "10px")
+        svg.append("text")
+          .attr("x", (height / 2))
+          .attr("y", margin.left)
+          .attr("font-size", "20px")
           .attr("text-anchor", "middle")
           .attr("transform", "rotate(-90)")
-          .text("Times Logged");
+          .text("Times Eaten and Logged");
       }
 
       g.selectAll("circle")
@@ -125,6 +122,7 @@ const TopSymptoms = () => {
         .join("circle")
         .attr("cx", (d) => xScale(d.name))
         .attr("cy", (d) => yScale(d.count));
+
       for (let i = 0; i < symptoms.length; i++) {
         for (let j = 0; j < counts[i]; j++) {
           g.append("circle")
