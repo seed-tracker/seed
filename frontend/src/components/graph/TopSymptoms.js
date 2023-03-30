@@ -122,19 +122,16 @@ const TopSymptoms = () => {
   }, [data]);
 
   return (
-    <Container css={{ margin: "5rem 0" }}
-    className="glassmorpheus"
-    >
-      
+    <Container css={{ margin: "5rem 0" }} className="glassmorpheus">
       <HeaderText text="Your top 5 symptoms:" />
       <Container css={{ margin: "2rem 0" }}>
         <Text h3>Legend:</Text>
         {symptoms.map((symptomName) => (
           <Container
-          shadow
-          display="flex"
-          alignItems="center"
-          key={symptomName}
+            shadow
+            display="flex"
+            alignItems="center"
+            key={symptomName}
           >
             <div style={{ backgroundColor: symptomColors[symptomName.name], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
             <Text h3>{symptomName.name}</Text>
