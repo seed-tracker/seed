@@ -9,7 +9,7 @@ import StatsAndFacts from "./StatsAndFacts";
 import { fetchUserCorrelations } from "../store/correlationsSlice";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { Container, Text, Button } from "@nextui-org/react";
-import { PageLoading } from "./nextUI";
+import { PageLoading, HeaderText } from "./nextUI";
 
 /**
  * Placeholder component for the userprofile page
@@ -30,9 +30,6 @@ const Profile = () => {
   useEffect(() => {
     dispatch(fetchUserCorrelations());
     setLoading(true);
-    const idx = Math.floor(Math.random() * 4);
-    const graphToShow = graphArray[idx];
-    navigate(`${graphToShow}`);
   }, [dispatch]);
 
   const { data: correlationsLoaded, error } = useSelector(
@@ -40,8 +37,13 @@ const Profile = () => {
   );
 
   useEffect(() => {
-    if (error || correlationsLoaded.length > 1) {
+    if (error || correlationsLoaded.length) {
       setLoading(false);
+      if (correlationsLoaded.length) {
+        const idx = Math.floor(Math.random() * 4);
+        const graphToShow = graphArray[idx];
+        navigate(`${graphToShow}`);
+      }
     }
   }, [correlationsLoaded, error]);
 
@@ -110,13 +112,13 @@ const Profile = () => {
               display={"flex"}
               justify="center"
               align="center"
-              css={{ margin: 0, padding: 0, maxWidth: "72vw" }}
+              css={{ margin: "2rem", padding: 0, maxWidth: "72vw" }}
             >
               {error === "No data found" && (
-                <Text>
-                  We don't have enough data to create associations yet, but keep
-                  logging!
-                </Text>
+                <HeaderText
+                  text=" We don't have enough data to create associations yet, but keep
+                logging!"
+                />
               )}
               <StatsAndFacts />
             </Container>

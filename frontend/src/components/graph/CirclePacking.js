@@ -96,8 +96,10 @@ const CirclePacking = () => {
 
     function getNodeLabel(node) {
       const name = node.data.name;
-      const parts = name.split(" ");
-      return parts.join(" ");
+      if (name) {
+        const parts = name.split(" ");
+        return parts.join(" ");
+      }
     }
 
     const leaf = svg // Select all groups and bind them to the data for the leaf nodes of the tree
@@ -125,7 +127,7 @@ const CirclePacking = () => {
       .selectAll("text")
       .style("word-break", "break-word")
       .style("justify-content", "center");
-  }, [userSymptoms, result]);
+  }, [result]);
 
   return (
     <Container
