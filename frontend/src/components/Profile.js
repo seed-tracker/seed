@@ -72,13 +72,15 @@ const Profile = () => {
               color="primary"
               bordered
               ghost
-              css={{ margin: "1rem" }}
+              css={{
+                margin: "1rem",
+                maxWidth: "67vw",
+              }}
             >
               <Button
                 onClick={() => navigate("/circle-packing")}
                 type="button"
                 aria-label="Button to show the Food/Symptom Relationships graph"
-                value="all"
               >
                 Food/Symptom Relationships
               </Button>
@@ -86,7 +88,6 @@ const Profile = () => {
                 onClick={() => navigate("/scatter-plot")}
                 type="button"
                 aria-label="Button to show the top associations graph"
-                value="all"
               >
                 Top Associations
               </Button>
@@ -94,7 +95,6 @@ const Profile = () => {
                 onClick={() => navigate("/top-foods")}
                 type="button"
                 aria-label="Button to show the top foods graph"
-                value="all"
               >
                 Top Foods
               </Button>
@@ -102,7 +102,6 @@ const Profile = () => {
                 onClick={() => navigate("/top-symptoms")}
                 type="button"
                 aria-label="Button to show the top symptoms graph"
-                value="all"
               >
                 Top Symptoms
               </Button>
