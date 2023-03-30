@@ -19,7 +19,7 @@ const Home = () => {
       <Container css={{ minHeight: "100vh", paddingTop: "12em" }}>
         {/* <h2>Welcome to Seed</h2> */}
         <Container
-          className="glassmorpheus"
+          className="glassmorpheus-graph"
           css={{ maxWidth: "60%", padding: "2em", borderRadius: "2em" }}
         >
           <p className="description" style={{ marginTop: "1em" }}>
