@@ -1,6 +1,6 @@
-@font-face{
-  font-family: 'Lovechild';
-  src: url(./Lovechild-Regular.otf)
+@font-face {
+  font-family: "Lovechild";
+  src: url(./Lovechild-Regular.otf);
 }
 
 body {
@@ -22,15 +22,25 @@ text {
   z-index: 1;
 }
 
-.mainpage-center{
+.mainpage-center {
   background-image: url("greenmarble.jpeg");
   background-size: cover;
   background-repeat: repeat;
 }
 
-.glassmorpheus{
- /* From https://css.glass */
+.glassmorpheus {
+  /* From https://css.glass */
   background: rgba(41, 124, 76, 0.23);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(11.9px);
+  -webkit-backdrop-filter: blur(11.9px);
+  border: 1px solid rgba(41, 124, 76, 0.26);
+}
+
+.glassmorpheus-graph {
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.708);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(11.9px);

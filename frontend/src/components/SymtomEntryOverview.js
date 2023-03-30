@@ -57,11 +57,26 @@ function SymptomEntryOverview() {
   };
 
   return (
-    <Container css={{ padding: "3rem", maxWidth: "65rem" }}>
+    <Container
+      css={{
+        "@xs": {
+          margin: 0,
+          padding: "1vw",
+          textAlign: "center",
+          maxWidth: "100vw",
+        },
+        "@sm": {
+          margin: 0,
+          padding: "3vw",
+          flexDirection: "column",
+          maxWidth: "69vw",
+        },
+      }}
+    >
       {loading ? (
         <PageLoading text="We're fetching your symptoms..." />
       ) : (
-        <main>
+        <>
           <HeaderText text="Past Symptom Entries" />
           <aside>
             {count < 500 && count > 0 && (
@@ -78,15 +93,11 @@ function SymptomEntryOverview() {
             )}
           </aside>
           {symptoms && symptoms.length ? (
-            <section>
-              <Grid.Container gap={3}>
+            <>
+              <Grid.Container gap={3} justify="flex-start" align="flex-end">
                 {symptoms.map((symptom) => {
                   return (
-                    <Grid
-                      xs={2}
-                      key={uuidv4()}
-                      css={{ minWidth: "18rem", maxWidth: "25rem" }}
-                    >
+                    <Grid xs={4} key={uuidv4()} css={{ minWidth: "16rem" }}>
                       <SymptomCard
                         symptom={symptom}
                         onPress={handleEntryDelete}
@@ -102,11 +113,11 @@ function SymptomEntryOverview() {
                   onChange={handlePageChange}
                 />
               )}
-            </section>
+            </>
           ) : (
             "No symptom entries to display"
           )}
-        </main>
+        </>
       )}
     </Container>
   );

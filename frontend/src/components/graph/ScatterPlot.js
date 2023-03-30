@@ -133,10 +133,10 @@ const ScatterPlot = () => {
     svg.text("");
 
     svg
-      .attr("width", width)
+      .attr("width", "auto")
       .attr("height", height)
       .style("overflow", "visible")
-      .style("margin-top", "100px");
+      .style("margin-top", "3rem");
 
     const labels = [currentSymptom, ...currentFoods, ...currentGroups];
     //make a color range
@@ -293,15 +293,20 @@ const ScatterPlot = () => {
   }, [allData, currentFoods, currentGroups, currentSymptom]);
 
   return (
-    <>
-      <Container
-        className="glassmorpheus"
-        css={{ margin: "5rem 0", backgroundColor: "white" }}
-      >
-        {allData && allData.length > 0 && allData[0].symptomData && (
-          <Container css={{ margin: "5rem 0" }} className="contain">
-            <HeaderText text="Your Top Associations:" />
+    <Container
+      className="glassmorpheus-graph"
+      css={{ margin: "2rem 0", maxWidth: "90vw" }}
+    >
+      {allData && allData.length > 0 && allData[0].symptomData && (
+        <Container
+          display={"flex"}
+          justify="center"
+          align="center"
+          css={{ margin: "2rem 0" }}
+        >
+          <HeaderText text="Your Top Associations" />
 
+          {allData && allData.length && allData[0].symptomData && (
             <ScatterControls
               symptomList={allData.map(({ symptomData }) => symptomData.name)}
               toggleSymptom={toggleSymptom}
@@ -334,10 +339,10 @@ const ScatterPlot = () => {
 
               <svg ref={svgRef} style={{ margin: "90px" }}></svg>
             </Row>
-          </Container>
+                
         )}
       </Container>
-    </>
+
   );
 };
 
