@@ -3,24 +3,30 @@ import apiClient from "../config";
 
 export const fetchAllMealEntries = createAsyncThunk(
   "user/fetchMeals",
-  async (page) => {
+  async (page, { rejectWithValue }) => {
     try {
       const { data } = await apiClient.get(`meals/user?page=${page}`);
+      if (!data.meals || !data.meals.length)
+        return rejectWithValue("No meals found");
+
       return data;
     } catch (err) {
-      console.error(err);
+      return rejectWithValue("An error occurred");
     }
   }
 );
 
 export const fetchAllSymptomEntries = createAsyncThunk(
   "user/fetchSymptoms",
-  async (page) => {
+  async (page, { rejectWithValue }) => {
     try {
       const { data } = await apiClient.get(`user/symptoms?page=${page}`);
+      if (!data.symptoms || !data.symptoms.length)
+        return rejectWithValue("No symptoms found");
+
       return data;
     } catch (err) {
-      console.error(err);
+      return rejectWithValue("An error occurred");
     }
   }
 );
@@ -73,6 +79,12 @@ const allEntriesSlice = createSlice({
       symptomCount: 0,
       symptoms: [],
     },
+    error: null,
+  },
+  reducers: {
+    resetError(state, action) {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAllMealEntries.fulfilled, (state, action) => {
@@ -83,10 +95,18 @@ const allEntriesSlice = createSlice({
       state.symptomEntries.symptomCount = action.payload.count;
       state.symptomEntries.symptoms = action.payload.symptoms;
     });
+    builder.addCase(fetchAllSymptomEntries.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+    builder.addCase(fetchAllMealEntries.rejected, (state, action) => {
+      state.error = action.payload;
+    });
   },
 });
 
 export const selectAllMeals = (state) => state.allEntries.mealEntries;
 export const selectAllSymptoms = (state) => state.allEntries.symptomEntries;
+
+export const { resetError } = allEntriesSlice.actions;
 
 export default allEntriesSlice.reducer;

@@ -4,16 +4,18 @@ import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import {
   fetchAllMealEntries,
-  selectAllMeals,
+  resetError,
   deleteMealEntry,
 } from "../store/allEntriesSlice";
 import { v4 as uuidv4 } from "uuid";
-import {HeaderText} from './nextUI/index';
+import { HeaderText, MealCard, Pagination, PageLoading } from "./nextUI/index";
+import { Grid, Container } from "@nextui-org/react";
 
 function MealEntryOverview() {
   const [meals, setMeals] = useState([]);
   const [count, setCount] = useState(0);
-  const mealEntries = useSelector(selectAllMeals);
+  const [loading, setLoading] = useState(true);
+  const { mealEntries, error } = useSelector((state) => state.allEntries);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const maxPages = Math.ceil(count / 20);
@@ -24,6 +26,7 @@ function MealEntryOverview() {
   if (!page || isNaN(page)) page = 1;
 
   useEffect(() => {
+    dispatch(resetError());
     dispatch(fetchAllMealEntries(page));
     navigate(`/user/meal-entries?page=${page}`);
   }, [dispatch, page]);
@@ -31,80 +34,73 @@ function MealEntryOverview() {
   useEffect(() => {
     setCount(mealEntries.mealCount);
     setMeals(mealEntries.meals);
-  }, [mealEntries]);
+    if (
+      (mealEntries.meals && mealEntries.meals.length > 0) ||
+      (error && error.length)
+    )
+      setLoading(false);
+  }, [mealEntries, error]);
 
-  const handlePageChange = (event) => {
-    if (event.target.value === "previous") {
-      page -= 1;
-      navigate(`/user/meal-entries?page=${page}`);
-    } else if (event.target.value === "next") {
-      page += 1;
-      navigate(`/user/meal-entries?page=${page}`);
-    }
+  const handlePageChange = (page) => {
+    navigate(`/user/meal-entries?page=${page}`);
+    window.scrollTo(0, 0);
   };
 
   const handleEntryDelete = async (id) => {
-    await dispatch(deleteMealEntry(id));
-    await dispatch(fetchAllMealEntries(page));
+    dispatch(deleteMealEntry(id));
+    dispatch(fetchAllMealEntries(page));
   };
 
   return (
-    <main>
-      <HeaderText text="Past Meal Entries" />
-      <aside>
-        {count < 500 && (
-          <p>
-            You've logged {count} <strong>meal</strong> entries so far - keep
-            tracking for better results!
-          </p>
-        )}
-        {count >= 500 && (
-          <p>
-            You've logged {count} <strong>meal</strong> entries so far. Keep up
-            the good work!
-          </p>
-        )}
-      </aside>
-      <ul>
-        {meals && meals.length
-          ? meals.map((meal) => {
-              return (
-                <li key={uuidv4()}>
-                  <p>
-                    {new Date(meal.datetime).toLocaleString("en-US", {
-                      dateStyle: "full",
-                      timeStyle: "long",
-                    })}
-                  </p>
-                  <p>{meal.entry_name}</p>
-                  <p>Food Groups: {meal.groups?.join(", ")}</p>
-                  <p>Foods: {meal.foods?.join(", ")}</p>
-                  <button onClick={() => handleEntryDelete(meal._id)}>
-                    Delete
-                  </button>
-                </li>
-              );
-            })
-          : "No entries to display"}
-      </ul>
-
-      <div>
-        {page > 1 && (
-          <button
-            value="previous"
-            onClick={(e) => handlePageChange(e, "previous")}
-          >
-            {`<<`}
-          </button>
-        )}
-        <p>{page}</p>
-        {page < maxPages && (
-          <button value="next" onClick={(e) => handlePageChange(e, "next")}>
-            {`>>`}
-          </button>
-        )}
-      </div>
-    </main>
+    <Container
+      justify="flex-end"
+      align="flex-end"
+      css={{ padding: "2rem", width: "75vw", mr: "0" }}
+    >
+      {loading ? (
+        <PageLoading text="Loading..." />
+      ) : (
+        <>
+          <HeaderText text="Past Meal Entries" />
+          <aside>
+            {count < 500 && count > 0 && (
+              <p>
+                You've logged <strong>{count} meals</strong> so far - keep
+                tracking for better results!
+              </p>
+            )}
+            {count >= 500 && (
+              <p>
+                You've logged <strong>{count} meals</strong> so far. Keep up the
+                good work!
+              </p>
+            )}
+          </aside>
+          {meals && meals.length ? (
+            <>
+              <Grid.Container gap={3} justify="flex-end" align="flex-end">
+                {meals.map((meal) => {
+                  return (
+                    <Grid xs={4} key={uuidv4()} css={{ minWidth: "20rem" }}>
+                      <MealCard meal={meal} onPress={handleEntryDelete} />
+                    </Grid>
+                  );
+                })}
+              </Grid.Container>
+              {maxPages > 1 && (
+                <Pagination
+                  page={page}
+                  totalPages={maxPages}
+                  onChange={handlePageChange}
+                />
+              )}
+            </>
+          ) : (
+            "No entries to display"
+          )}
+        </>
+      )}
+    </Container>
   );
 }
 

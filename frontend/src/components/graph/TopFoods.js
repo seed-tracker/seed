@@ -128,7 +128,8 @@ const TopFoods = () => {
   }, [data]);
 
   return (
-    <Container css={{ margin: "5rem 0" }}>
+    <Container css={{ margin: "5rem 0" }}
+    className="glassmorpheus">
       <HeaderText text="Your Top 10 Foods:" />
       <Text h3>Legend:</Text>
 

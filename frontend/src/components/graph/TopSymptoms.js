@@ -28,14 +28,13 @@ const TopSymptoms = () => {
   const counts = symptoms ? symptoms.map((symptom) => symptom.count) : [];
 
   const colorPalette = d3.schemeSet3; // Define a color palette for the symptoms and map each symptom to a unique color
-      const symptomColors = {};
-      for (let i = 0; i < allSymptoms.length; i++) {
-        const symptomName = allSymptoms[i].name;
-        const colorIndex = i % colorPalette.length;
-        symptomColors[symptomName] = colorPalette[colorIndex];
-      }
-  console.log(symptomColors)
-  console.log(symptoms)
+
+  const symptomColors = {};
+  for (let i = 0; i < allSymptoms.length; i++) {
+    const symptomName = allSymptoms[i].name;
+    const colorIndex = i % colorPalette.length;
+    symptomColors[symptomName] = colorPalette[colorIndex];
+  }
 
   useEffect(() => {
     dispatch(getUserStats("all"));
@@ -123,12 +122,16 @@ const TopSymptoms = () => {
   }, [data]);
 
   return (
-    <Container css={{ margin: "5rem 0" }}>
+    <Container css={{ margin: "5rem 0" }}
+    className="glassmorpheus"
+    >
+      
       <HeaderText text="Your top 5 symptoms:" />
       <Container css={{ margin: "2rem 0" }}>
         <Text h3>Legend:</Text>
         {symptoms.map((symptomName) => (
           <Container
+          shadow
           display="flex"
           alignItems="center"
           key={symptomName}
