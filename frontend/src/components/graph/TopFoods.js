@@ -35,10 +35,6 @@ const TopFoods = () => {
   const topFoods = data.foods ? data.foods.slice(0, 10) : [];
 
   const counts = topFoods ? topFoods.map((food) => food.count) : [];
-  useEffect(() => {
-    dispatch(getUserStats("all"));
-    dispatch(fetchAllFoodGroups());
-  }, [dispatch]);
 
   const handleGetAllTime = async (all) => {
     await dispatch(getUserStats("all"));
@@ -49,6 +45,10 @@ const TopFoods = () => {
   const handleGetOneYear = async (oneYear) => {
     await dispatch(getUserStats(365));
   };
+
+  useEffect(() => {
+    console.log("mounting!");
+  }, []);
 
   const colorPalette = [
     "#f44336",
@@ -150,10 +150,7 @@ const TopFoods = () => {
   }, [data]);
 
   return (
-    <Container
-      css={{ margin: "2rem 0", padding: "2rem" }}
-      className="glassmorpheus-graph"
-    >
+    <>
       <HeaderText text="Your Top 10 Foods" />
 
       <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
@@ -224,7 +221,7 @@ const TopFoods = () => {
           </Button.Group>
         </Container>
       </Container>
-    </Container>
+    </>
   );
 };
 
