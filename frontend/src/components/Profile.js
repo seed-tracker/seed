@@ -30,6 +30,9 @@ const Profile = () => {
   useEffect(() => {
     dispatch(fetchUserCorrelations());
     setLoading(true);
+    const idx = Math.floor(Math.random() * 4);
+    const graphToShow = graphArray[idx];
+    navigate(`${graphToShow}`);
   }, [dispatch]);
 
   const { data: correlationsLoaded, error } = useSelector(
@@ -39,9 +42,6 @@ const Profile = () => {
   useEffect(() => {
     if (error || correlationsLoaded.length > 1) {
       setLoading(false);
-      const idx = Math.floor(Math.random() * 4);
-      const graphToShow = graphArray[idx];
-      navigate(`${graphToShow}`);
     }
   }, [correlationsLoaded, error]);
 

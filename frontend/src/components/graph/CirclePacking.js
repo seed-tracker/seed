@@ -125,11 +125,11 @@ const CirclePacking = () => {
       .selectAll("text")
       .style("word-break", "break-word")
       .style("justify-content", "center");
-  }, [symptoms, userSymptoms, result]);
+  }, [userSymptoms, result]);
 
   return (
     <Container
-      css={{ margin: "5rem 0", padding: "2rem" }}
+      css={{ margin: "2rem 0", padding: "2rem" }}
       className="glassmorpheus-graph"
     >
       <HeaderText text="Your Food Group and Symptom Relationships" />
