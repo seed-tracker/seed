@@ -57,11 +57,19 @@ const AppRoutes = () => {
           </Routes>
         </Container>
       ) : (
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/*" element={<Home />} />
-        </Routes>
+        <Container
+          fluid
+          responsive={"false"}
+          margin={0}
+          padding={0}
+          className="mainpage-center"
+        >
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/*" element={<Home />} />
+          </Routes>
+        </Container>
       )}
     </>
   );
