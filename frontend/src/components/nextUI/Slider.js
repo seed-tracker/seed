@@ -65,7 +65,7 @@ const Slider = ({ min, max, value, onChange }) => {
       step={1}
       tooltip='on'
       tooltipPlacement='bottom'
-      variant='secondary'
+      variant='primary'
     />
   );
 };
