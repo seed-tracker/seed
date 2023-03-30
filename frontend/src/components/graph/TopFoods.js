@@ -160,16 +160,6 @@ const TopFoods = () => {
       <HeaderText text="Your Top 10 Foods:" />
       <Text h3>Legend:</Text>
 
-      {/* {Object.keys(foodsColors).map((foodName) => (
-        <Container
-          display="flex"
-          alignItems="center"
-          key={foodName}
-        >
-          <div style={{ backgroundColor: foodsColors[foodName], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
-          <Text h3>{foodName}</Text>
-        </Container>
-      ))} */}
       <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
         {topFoods
           .filter(

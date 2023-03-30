@@ -312,12 +312,13 @@ const ScatterPlot = () => {
         >
           <HeaderText text="Your Top Associations:" />
 
-          <ScatterControls
-            symptomList={allData.map(({ symptomData }) => symptomData.name)}
-            toggleSymptom={toggleSymptom}
-            maxMonths={maxMonths}
-          />
-
+          {allData && allData.length && allData[0].symptomData && (
+            <ScatterControls
+              symptomList={allData.map(({ symptomData }) => symptomData.name)}
+              toggleSymptom={toggleSymptom}
+              maxMonths={maxMonths}
+            />
+          )}
           <svg ref={svgRef} style={{ margin: "3rem" }}></svg>
         </Container>
       )}
