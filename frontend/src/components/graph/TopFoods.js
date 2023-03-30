@@ -14,8 +14,8 @@ import {
   selectFoodGroups,
 } from "../../store/foodGroupsSlice";
 import * as d3 from "d3";
-import { HeaderText } from "../nextUI/";
-import { Container, Text, Button, Row } from "@nextui-org/react";
+import { HeaderText, Button } from "../nextUI/";
+import { Container, Text, Row } from "@nextui-org/react";
 
 /**
  * This chart shows the user's top ten food groups eaten during a certain time period and a legend.
@@ -194,34 +194,30 @@ const TopFoods = () => {
         justify={"center"}
       >
         <svg ref={svgRef} width="950" height="580"></svg>
-        <Container display="flex" alignItems="center" justify="center">
+        <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
           <Text h4>Filter data by</Text>
-          <Button.Group color="primary" bordered ghost>
             <Button
               onClick={handleGetAllTime}
               type="button"
               aria-label="Button to filter chart top foods view by all time"
-              value="all"
-            >
-              All Time
-            </Button>
+              size="sm"
+              text="All Time"
+            />
             <Button
               onClick={handleGetSixMonths}
               value="180"
               type="button"
               aria-label="Button to filter chart top foods view by six months"
-            >
-              6 Months
-            </Button>
+              size="sm"
+              text="6 Months"
+            />
             <Button
               onClick={handleGetOneYear}
-              value="365"
               type="button"
+              size="sm"
               aria-label="Button to filter chart top foods view by one year"
-            >
-              1 Year
-            </Button>
-          </Button.Group>
+              text="1 Year"
+            />
         </Container>
       </Container>
     </Container>
