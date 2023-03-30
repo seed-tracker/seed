@@ -10,6 +10,7 @@ import { Container, Spacer } from "@nextui-org/react";
 const Sidebar = () => {
   return (
     <Container
+      className="glassmorpheus-graph"
       display={"flex"}
       css={{
         "@xs": {
@@ -19,13 +20,15 @@ const Sidebar = () => {
           flexDirection: "row",
           textAlign: "left",
           maxWidth: "100vw",
+          position: "sticky",
+          top: "7rem",
         },
         "@sm": {
-          margin: 0,
-          padding: "3vw",
+          marginTop: "4vh",
+          padding: "2vw",
           flexDirection: "column",
           maxWidth: "18vw",
-          height: "80vh",
+          height: "fit-content",
         },
       }}
     >
