@@ -127,12 +127,12 @@ const CirclePacking = () => {
     className="glassmorpheus">
       <HeaderText text="Your Food Group and Symptom Relationships" />
       <Text h3>Legend:</Text>
-      
-      {Object.keys(symptomColors).map((symptomName) => (
+
+      {Object.keys(symptomColors).map((symptomName, i) => (
           <Container
           display="flex"
           alignItems="center"
-          key={symptomName}
+          key={i + 1}
           >
             <div style={{ backgroundColor: symptomColors[symptomName], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
             <Text h3>{symptomName}</Text>

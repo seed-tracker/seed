@@ -315,6 +315,7 @@ const ScatterPlot = () => {
           <svg ref={svgRef} style={{ margin: "90px" }}></svg>
         </Container>
       )}
+      </Container>
     </>
   );
 };
