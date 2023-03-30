@@ -300,7 +300,7 @@ const ScatterPlot = () => {
 
   return (
     <Container
-      className="glassmorpheus"
+      className="glassmorpheus-graph"
       css={{ margin: "2rem 0", maxWidth: "90vw" }}
     >
       {allData && allData.length > 0 && allData[0].symptomData && (

@@ -135,7 +135,7 @@ const TopSymptoms = () => {
   return (
     <Container
       css={{ margin: "2rem 0", padding: "2rem" }}
-      className="glassmorpheus"
+      className="glassmorpheus-graph"
     >
       <HeaderText text="Your top 5 symptoms:" />
       <Text h3>Legend:</Text>

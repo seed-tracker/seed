@@ -7,9 +7,9 @@ import TopSymptoms from "./graph/TopSymptoms";
 import TopFoods from "./graph/TopFoods";
 import StatsAndFacts from "./StatsAndFacts";
 import { fetchUserCorrelations } from "../store/correlationsSlice";
-
-import { Container, Text } from "@nextui-org/react";
-import { PageLoading, Dropdown } from "./nextUI";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { Container, Text, Button } from "@nextui-org/react";
+import { PageLoading } from "./nextUI";
 
 /**
  * Placeholder component for the userprofile page
@@ -19,12 +19,14 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   const graphArray = [
-    <ScatterPlot />,
-    <CirclePacking />,
-    <TopSymptoms />,
-    <TopFoods />,
+    "/scatter-plot",
+    "/circle-packing",
+    "/top-symptoms",
+    "/top-foods",
   ];
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(fetchUserCorrelations());
     setLoading(true);
@@ -37,6 +39,9 @@ const Profile = () => {
   useEffect(() => {
     if (error || correlationsLoaded.length > 1) {
       setLoading(false);
+      const idx = Math.floor(Math.random() * 4);
+      const graphToShow = graphArray[idx];
+      navigate(`${graphToShow}`);
     }
   }, [correlationsLoaded, error]);
 
@@ -61,13 +66,45 @@ const Profile = () => {
       ) : (
         <>
           {correlationsLoaded && correlationsLoaded.length > 0 ? (
-            <>
-              <h1>
-                Need to add dropdown menu for users to select from other graph
-                options
-              </h1>
-              {graphArray[Math.floor(Math.random() * 5)]}
-            </>
+            <Button.Group
+              color="primary"
+              bordered
+              ghost
+              css={{ margin: "1rem" }}
+            >
+              <Button
+                onClick={() => navigate("/circle-packing")}
+                type="button"
+                aria-label="Button to show the Food/Symptom Relationships graph"
+                value="all"
+              >
+                Food/Symptom Relationships
+              </Button>
+              <Button
+                onClick={() => navigate("/scatter-plot")}
+                type="button"
+                aria-label="Button to show the top associations graph"
+                value="all"
+              >
+                Top Associations
+              </Button>
+              <Button
+                onClick={() => navigate("/top-foods")}
+                type="button"
+                aria-label="Button to show the top foods graph"
+                value="all"
+              >
+                Top Foods
+              </Button>
+              <Button
+                onClick={() => navigate("/top-symptoms")}
+                type="button"
+                aria-label="Button to show the top symptoms graph"
+                value="all"
+              >
+                Top Symptoms
+              </Button>
+            </Button.Group>
           ) : (
             <Container
               display={"flex"}
@@ -86,6 +123,12 @@ const Profile = () => {
           )}
         </>
       )}
+      <Routes>
+        <Route path="/circle-packing" element={<CirclePacking />} />
+        <Route path="/scatter-plot" element={<ScatterPlot />} />
+        <Route path="/top-foods" element={<TopFoods />} />
+        <Route path="/top-symptoms" element={<TopSymptoms />} />
+      </Routes>
     </Container>
   );
 };
