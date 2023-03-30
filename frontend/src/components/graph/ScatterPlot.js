@@ -325,6 +325,6 @@ const ScatterPlot = () => {
       )}
     </Container>
   );
-};
-
+        }
+  
 export default ScatterPlot;
