@@ -148,8 +148,8 @@ def get_monthly_data(user):
             {
                 "$project": {
                     "symptom": 1,
-                    "top_foods": {"name": 1},
-                    "top_groups": {"name": 1},
+                    "top_foods": {"name": 1, "lift": 1},
+                    "top_groups": {"name": 1, "lift": 1},
                     "_id": 0,
                 }
             },
