@@ -299,8 +299,10 @@ const ScatterPlot = () => {
   }, [allData, currentFoods, currentGroups, currentSymptom]);
 
   return (
-      <Container className="glassmorpheus" css={{margin: "5rem 0"}}>
-        <HeaderText text="Your Top Associations:"/>
+    <Container
+      className="glassmorpheus-graph"
+      css={{ margin: "2rem 0", maxWidth: "90vw" }}
+    >
       {allData && allData.length > 0 && allData[0].symptomData && (
         <Container
           display={"flex"}
@@ -310,18 +312,18 @@ const ScatterPlot = () => {
         >
           <HeaderText text="Your Top Associations:" />
 
-        {allData && allData.length && allData[0].symptomData && (
-          <ScatterControls
-            symptomList={allData.map(({ symptomData }) => symptomData.name)}
-            toggleSymptom={toggleSymptom}
-            maxMonths={maxMonths}
-          />
-        )}
+          {allData && allData.length && allData[0].symptomData && (
+            <ScatterControls
+              symptomList={allData.map(({ symptomData }) => symptomData.name)}
+              toggleSymptom={toggleSymptom}
+              maxMonths={maxMonths}
+            />
+          )}
           <svg ref={svgRef} style={{ margin: "3rem" }}></svg>
         </Container>
       )}
     </Container>
   );
-        }
-  
+};
+
 export default ScatterPlot;

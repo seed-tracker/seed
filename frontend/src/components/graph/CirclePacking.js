@@ -129,7 +129,7 @@ const CirclePacking = () => {
   return (
     <Container
       css={{ margin: "5rem 0", padding: "2rem" }}
-      className="glassmorpheus"
+      className="glassmorpheus-graph"
     >
       <HeaderText text="Your Food Group and Symptom Relationships" />
       <Text h3>Legend:</Text>
