@@ -4,7 +4,14 @@ import * as d3 from "d3";
 import { fetchScatterData } from "../../store/scatterSlice";
 import ScatterControls from "./ScatterControls";
 import { HeaderText } from "../nextUI";
-import { Container } from "@nextui-org/react";
+import {
+  Container,
+  Button,
+  Spacer,
+  Switch,
+  Text,
+  Row,
+} from "@nextui-org/react";
 
 const ScatterPlot = () => {
   const dispatch = useDispatch();
@@ -14,6 +21,19 @@ const ScatterPlot = () => {
   const [dateRange, setDateRange] = useState([]);
   const [currentFoods, setCurrentFoods] = useState([]);
   const [currentGroups, setCurrentGroups] = useState([]);
+  const [legend, setLegend] = useState([]);
+  const [colorPalette, setColorPalette] = useState([
+    "#DC050C",
+    "#882E72",
+    "#eb38bf",
+    "#1965B0",
+    "#7BAFDE",
+    "#1B7837",
+    "#90C987",
+    "#E8601C",
+    "#DDAA33",
+  ]);
+
   const svgRef = useRef();
 
   useEffect(() => {
@@ -92,6 +112,15 @@ const ScatterPlot = () => {
     return text.split(" ").join("_").split(",").join("_");
   };
 
+  const toggleLine = (name) => {
+    const nodes = d3.selectAll(`.${makeKey(name)}`);
+
+    if (!nodes) return;
+
+    // Change the opacity: from 0 to 1 or from 1 to 0
+    nodes.transition().style("opacity", nodes.style("opacity") == 1 ? 0 : 1);
+  };
+
   // set up container, scaling, axis, labeling, data
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
@@ -110,14 +139,16 @@ const ScatterPlot = () => {
       .style("margin-top", "100px");
 
     const labels = [currentSymptom, ...currentFoods, ...currentGroups];
+    //make a color range
+    const colors = d3.scaleOrdinal().domain(labels).range(colorPalette);
 
     const { symptomData, groupData, foodData } = allData.find(
       ({ symptomData }) => symptomData.name === currentSymptom
     );
 
-    const data = [symptomData, ...groupData, ...foodData];
+    const data = [symptomData, ...foodData, ...groupData];
+    setLegend(data.map(({ name }) => ({ name: name, color: colors(name) })));
 
-    //working on this:
     const max_y = data.reduce(
       (max, { values }) =>
         Math.max(
@@ -126,10 +157,6 @@ const ScatterPlot = () => {
         ),
       0
     );
-
-    //make a color range
-    //we probably want to change this for better accessibility:
-    const colors = d3.scaleOrdinal().domain(labels).range(d3.schemeSet2);
 
     const x = d3.scaleTime().domain(dateRange).range([0, width]);
     const axis = d3.axisBottom(x).ticks(6);
@@ -148,7 +175,7 @@ const ScatterPlot = () => {
       .x((d) => x(d.date))
       .y((d) => y(d.count));
 
-    const clip = svg
+    svg
       .append("defs")
       .append("svg:clipPath")
       .attr("id", "clip")
@@ -218,38 +245,6 @@ const ScatterPlot = () => {
       );
 
     svg
-      .selectAll("myLegend")
-      .data(data.slice(1))
-      .enter()
-      .append("g")
-      .append("text")
-      .attr("x", 700)
-      .attr("y", function (d, i) {
-        return 30 + i * 20;
-      })
-      .text(function (d) {
-        return d.name;
-      })
-      .style("fill", function (d) {
-        return colors(d.name);
-      })
-      .style("font-size", 10)
-      .on("click", function (d) {
-        // is the element currently visible ?
-
-        if (d === undefined || !d || !d.target.textContent) return;
-
-        const nodes = d3.selectAll(`.${makeKey(d.target.textContent)}`);
-
-        if (!nodes) return;
-
-        // Change the opacity: from 0 to 1 or from 1 to 0
-        nodes
-          .transition()
-          .style("opacity", nodes.style("opacity") == 1 ? 0 : 1);
-      });
-
-    svg
       .append("text")
       .attr("text-anchor", "end")
       .attr("transform", "rotate(-90)")
@@ -294,15 +289,17 @@ const ScatterPlot = () => {
       setDateRange(newRange);
     };
 
-    d3.selectAll(".slider").on("click", updateAxis);
+    d3.selectAll(".slider").on("change", updateAxis);
   }, [allData, currentFoods, currentGroups, currentSymptom]);
 
   return (
     <>
-      <Container className="glassmorpheus" css={{ margin: "5rem 0" }}>
-        <HeaderText text="Your Top Associations:" />
+      <Container
+        className="glassmorpheus"
+        css={{ margin: "5rem 0", backgroundColor: "white" }}
+      >
         {allData && allData.length > 0 && allData[0].symptomData && (
-          <Container css={{ margin: "5rem 0" }}>
+          <Container css={{ margin: "5rem 0" }} className="contain">
             <HeaderText text="Your Top Associations:" />
 
             <ScatterControls
@@ -310,8 +307,33 @@ const ScatterPlot = () => {
               toggleSymptom={toggleSymptom}
               maxMonths={maxMonths}
             />
+            <Row justify="center" align="center">
+              <Button.Group vertical bordered>
+                {legend?.slice(1).map(({ name, color }, i) => {
+                  return (
+                    <>
+                      <Row justify="flex-end">
+                        <Text css={{ color: color }}>{name}</Text>
+                        <Spacer x={0.5} />
+                        <Switch
+                          key={i}
+                          className="legendSwitch"
+                          size="md"
+                          bordered
+                          checked={[...currentFoods, ...currentGroups].includes(
+                            name
+                          )}
+                          onChange={() => toggleLine(name)}
+                        />
+                      </Row>
+                      <Spacer y={0.7} />
+                    </>
+                  );
+                })}
+              </Button.Group>
 
-            <svg ref={svgRef} style={{ margin: "90px" }}></svg>
+              <svg ref={svgRef} style={{ margin: "90px" }}></svg>
+            </Row>
           </Container>
         )}
       </Container>
