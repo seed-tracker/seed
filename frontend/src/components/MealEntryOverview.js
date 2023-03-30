@@ -53,9 +53,20 @@ function MealEntryOverview() {
 
   return (
     <Container
-      justify="flex-end"
-      align="flex-end"
-      css={{ padding: "2rem", width: "75vw", mr: "0" }}
+      css={{
+        "@xs": {
+          margin: 0,
+          padding: "1vw",
+          textAlign: "center",
+          maxWidth: "100vw",
+        },
+        "@sm": {
+          margin: 0,
+          padding: "3vw",
+          flexDirection: "column",
+          maxWidth: "68vw",
+        },
+      }}
     >
       {loading ? (
         <PageLoading text="Loading..." />
@@ -78,7 +89,7 @@ function MealEntryOverview() {
           </aside>
           {meals && meals.length ? (
             <>
-              <Grid.Container gap={3} justify="flex-end" align="flex-end">
+              <Grid.Container gap={3} justify="flex-start" align="flex-end">
                 {meals.map((meal) => {
                   return (
                     <Grid xs={4} key={uuidv4()} css={{ minWidth: "20rem" }}>

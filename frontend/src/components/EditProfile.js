@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { UserForm } from "./nextUI";
 import { me } from "../store/authSlice";
-import apiClient from "../config";
+import apiClient from "../client";
 
 function EditProfile() {
   const [name, setName] = useState("");

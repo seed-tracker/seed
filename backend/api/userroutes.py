@@ -41,6 +41,14 @@ def get_user(user):
 @users.route("/addMeal", methods=["POST"])
 @require_token
 def add_entry(user):
+    """Adds a meal to the database
+
+    Returns
+    -------
+
+        success or error message/status
+    """
+
     try:
         username = user["username"]
         entry_name = request.json.get("entry_name") or "Breakfast"
@@ -86,6 +94,13 @@ def add_entry(user):
 @users.route("/editProfile", methods=["PUT"])
 @require_token
 def edit_profile(user):
+    """Edits a user's name and/or email and/or password
+
+    Returns
+    -------
+    string
+        user data
+    """
     try:
         username = user["username"]
         request_data = request.get_json()
@@ -100,6 +115,7 @@ def edit_profile(user):
             and "newPassword" in request_data
             and len(request_data["newPassword"]) >= 1
         ):
+            # check if the password is correct before changing it
             password_checked = bcrypt.checkpw(
                 request_data["password"].encode("utf-8"),
                 user["password"].encode("utf-8"),
@@ -142,9 +158,12 @@ def get_user_correlations(user):
         else:
             return jsonify({"message": "No correlations found"}), 204
     except Exception as e:
-        return jsonify({"message": "An error occured fetching the user's correlations"}), 500
+        return (
+            jsonify({"message": "An error occured fetching the user's correlations"}),
+            500,
+        )
 
-
+# re-run the algorithm (when app mounts) to update correlations
 @users.route("/correlations/update", methods=["PUT"])
 @require_token
 def update_user_correlations(user):
