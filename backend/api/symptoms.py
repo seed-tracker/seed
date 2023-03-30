@@ -12,7 +12,6 @@ def get_symptoms():
     try:
         symptoms = db.symptoms.find()
 
-        # turn the object ids into strings
         symptoms_list = [
             {key: str(symptom[key]) for key in symptom} for symptom in symptoms
         ]

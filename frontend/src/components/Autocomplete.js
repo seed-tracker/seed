@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import apiClient from "../config";
+import apiClient from "../client";
 import { Card, Row, Grid, Spacer } from "@nextui-org/react";
 import { Button, Dropdown, Inputs } from "./nextUI";
 

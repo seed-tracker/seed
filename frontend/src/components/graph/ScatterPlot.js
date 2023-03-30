@@ -299,22 +299,22 @@ const ScatterPlot = () => {
 
   return (
     <>
-      <Container className="glassmorpheus" css={{margin: "5rem 0"}}
-      >
-        <HeaderText text="Your Top Associations:"/>
-      {allData && allData.length > 0 && allData[0].symptomData && (
-        <Container css={{ margin: "5rem 0" }}>
-          <HeaderText text="Your Top Associations:" />
+      <Container className="glassmorpheus" css={{ margin: "5rem 0" }}>
+        <HeaderText text="Your Top Associations:" />
+        {allData && allData.length > 0 && allData[0].symptomData && (
+          <Container css={{ margin: "5rem 0" }}>
+            <HeaderText text="Your Top Associations:" />
 
-          <ScatterControls
-            symptomList={allData.map(({ symptomData }) => symptomData.name)}
-            toggleSymptom={toggleSymptom}
-            maxMonths={maxMonths}
-          />
+            <ScatterControls
+              symptomList={allData.map(({ symptomData }) => symptomData.name)}
+              toggleSymptom={toggleSymptom}
+              maxMonths={maxMonths}
+            />
 
-          <svg ref={svgRef} style={{ margin: "90px" }}></svg>
-        </Container>
-      )}
+            <svg ref={svgRef} style={{ margin: "90px" }}></svg>
+          </Container>
+        )}
+      </Container>
     </>
   );
 };

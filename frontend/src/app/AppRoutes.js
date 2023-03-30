@@ -15,7 +15,7 @@ import Dashboard from "../components/Dashboard";
 import TopSymptoms from "../components/graph/TopSymptoms";
 import Sidebar from "../components/Sidebar";
 import { Container } from "@nextui-org/react";
-import apiClient from "../config";
+import apiClient from "../client";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
