@@ -26,8 +26,6 @@ const TopSymptoms = () => {
   const data = useSelector(selectUserStats);
   const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
   const counts = symptoms ? symptoms.map((symptom) => symptom.count) : [];
-  const [timeline, setTimeline] = useState("all");
-  const [xDomain, setXDomain] = useState([]);
   const colorPalette = d3.schemeSet3; // Define a color palette for the symptoms and map each symptom to a unique color
 
   const symptomColors = {};
@@ -44,18 +42,15 @@ const TopSymptoms = () => {
 
   const handleGetAllTime = async (all) => {
     await dispatch(getUserStats("all"));
-    setTimeline("all");
-    const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
-    const xDomain = symptoms.map((symptom) => symptom.name);
-    setXDomain(xDomain);
+
   };
   const handleGetSixMonths = async (halfYear) => {
     await dispatch(getUserStats(180));
-    setTimeline("sixMonths");
+
   };
   const handleGetOneYear = async (oneYear) => {
     await dispatch(getUserStats(365));
-    setTimeline("oneYear");
+
   };
 
   useEffect(() => {
@@ -89,19 +84,23 @@ const TopSymptoms = () => {
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
         .call(yAxis); // make the y-axis
+        yAxisLine.selectAll(".tick line")
+        .remove(); 
+        // yAxisLine.selectAll(".tick text")
+        // yAxisLine
+        // .selectAll(".tick text")
+        // .style("writing-mode", null)
+        // .attr("transform", "translate(-20, 0) rotate(-45)");
 
+        yAxisLine.selectAll(".tick text")
+  .attr("x", "-24")
+  .style("text-anchor", "end")
+  .attr("dy", "-0.2em");
+        yAxisLine.select(".domain").attr("transform", `translate(-${margin.left}, 0)`);
       svg.selectAll(".tick text").on("click", (event, d) => {
         svg.select(".x-axis").transition().duration(500).call(xAxis);
       });
 
-      let gX;
-      if (timeline === "all") {
-        gX = margin.left * 2.23 + width / 6.3;
-      } else if (timeline === "sixMonths") {
-        gX = margin.left * 2.23 + width / 6.3;
-      } else if (timeline === "oneYear") {
-        gX = margin.left * 2.23 + width / 6.3;
-      }
       // Create lollipop chart
       const g = svg
         .append("g")
@@ -113,9 +112,9 @@ const TopSymptoms = () => {
       if (symptoms && symptoms.length > 0) {
         // y axis label
         g.append("text")
-          .attr("x", -(height / 2))
-          .attr("y", -102)
-          .attr("font-size", "20px")
+          .attr("x", -(height/2))
+          .attr("y", -60)
+          .attr("font-size", "10px")
           .attr("text-anchor", "middle")
           .attr("transform", "rotate(-90)")
           .text("Times Logged");
