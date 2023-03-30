@@ -120,8 +120,8 @@ const ScatterPlot = () => {
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
-    const width = 700;
-    const height = 400;
+    const width = 500;
+    const height = 300;
 
     const svg = d3.select(svgRef.current);
 
@@ -289,63 +289,63 @@ const ScatterPlot = () => {
 
   return (
     <Container
-      className="glassmorpheus-graph"
-      css={{ margin: "2rem 0", maxWidth: "90vw" }}
+      display={"flex"}
+      css={{ width: "100%" }}
+      justify="center"
+      align="center"
     >
       {allData && allData.length > 0 && allData[0].symptomData && (
-        <Container
-          display={"flex"}
-          justify="center"
-          align="center"
-          css={{ margin: "2rem 0" }}
-        >
+        <Container>
           <HeaderText text="Your Top Associations" />
+          <>
+            <Row justify="center">
+              <ScatterControls
+                symptomList={allData.map(({ symptomData }) => symptomData.name)}
+                toggleSymptom={toggleSymptom}
+                maxMonths={maxMonths}
+                currentSymptom={currentSymptom}
+              />
+            </Row>
+            <Row align="center">
+              <Button.Group vertical bordered>
+                {legend?.slice(1).map(({ name, color }, i) => {
+                  return (
+                    <>
+                      <Row justify="flex-end">
+                        <Text
+                          size={15}
+                          css={{
+                            color: color,
+                            width: "5rem",
+                            textAlign: "right",
+                          }}
+                        >
+                          {name}
+                        </Text>
+                        <Spacer x={0.5} />
+                        <Switch
+                          key={i}
+                          className="legendSwitch"
+                          size="sm"
+                          bordered
+                          checked={[...currentFoods, ...currentGroups].includes(
+                            name
+                          )}
+                          onChange={() => toggleLine(name)}
+                        />
+                      </Row>
+                      <Spacer y={0.7} />
+                    </>
+                  );
+                })}
+              </Button.Group>
 
-          {allData && allData.length && allData[0].symptomData && (
-            <Container>
-              <Row justify="center">
-                <ScatterControls
-                  symptomList={allData.map(
-                    ({ symptomData }) => symptomData.name
-                  )}
-                  toggleSymptom={toggleSymptom}
-                  maxMonths={maxMonths}
-                  currentSymptom={currentSymptom}
-                />
-              </Row>
-              <Row justify="center" align="center">
-                <Button.Group vertical bordered>
-                  {legend?.slice(1).map(({ name, color }, i) => {
-                    return (
-                      <>
-                        <Row justify="flex-end">
-                          <Text css={{ color: color }}>{name}</Text>
-                          <Spacer x={0.5} />
-                          <Switch
-                            key={i}
-                            className="legendSwitch"
-                            size="md"
-                            bordered
-                            checked={[
-                              ...currentFoods,
-                              ...currentGroups,
-                            ].includes(name)}
-                            onChange={() => toggleLine(name)}
-                          />
-                        </Row>
-                        <Spacer y={0.7} />
-                      </>
-                    );
-                  })}
-                </Button.Group>
-
-                <svg
-                  ref={svgRef}
-                  style={{ margin: "90px", marginRight: "5rem" }}
-                ></svg>
-              </Row>
-            </Container>
-          )}
+              <svg
+                ref={svgRef}
+                style={{ margin: "8rem", marginRight: "0" }}
+              ></svg>
+            </Row>
+          </>
         </Container>
       )}
     </Container>

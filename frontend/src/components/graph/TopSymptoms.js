@@ -141,10 +141,7 @@ const TopSymptoms = () => {
   }, [data]);
 
   return (
-    <Container
-      css={{ margin: "2rem 0", padding: "2rem" }}
-      className="glassmorpheus-graph"
-    >
+    <>
       <HeaderText text="Your top 5 symptoms" />
       <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
         {symptoms.map((symptomName, i) => (
@@ -208,7 +205,7 @@ const TopSymptoms = () => {
           </Button.Group>
         </Container>
       </Container>
-    </Container>
+    </>
   );
 };
 

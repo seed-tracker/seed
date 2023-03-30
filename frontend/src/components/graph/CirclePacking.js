@@ -123,10 +123,7 @@ const CirclePacking = () => {
   }, [result]);
 
   return (
-    <Container
-      css={{ margin: "2rem 0", padding: "2rem" }}
-      className="glassmorpheus-graph"
-    >
+    <>
       <HeaderText text="Your Food Group and Symptom Relationships" />
 
       <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
@@ -156,7 +153,7 @@ const CirclePacking = () => {
 
         <svg ref={svgRef} width="950" height="500"></svg>
       </Container>
-    </Container>
+    </>
   );
 };
 

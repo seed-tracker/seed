@@ -49,6 +49,7 @@ const ScatterControls = ({
                     key={i}
                     onClick={() => toggleSymptom(s)}
                     css={css}
+                    size="xs"
                   >
                     {s}
                   </Button>
