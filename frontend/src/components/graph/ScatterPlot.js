@@ -14,7 +14,6 @@ import {
 } from "@nextui-org/react";
 
 const ScatterPlot = () => {
-  const dispatch = useDispatch();
   const { data: chartData, maxMonths } = useSelector((state) => state.scatter);
   const [allData, setAllData] = useState([]);
   const [currentSymptom, setCurrentSymptom] = useState(null);
@@ -35,10 +34,6 @@ const ScatterPlot = () => {
   ]);
 
   const svgRef = useRef();
-
-  useEffect(() => {
-    dispatch(fetchScatterData());
-  }, [dispatch]);
 
   useEffect(() => {
     if (chartData && chartData.length) {

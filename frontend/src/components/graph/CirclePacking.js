@@ -17,7 +17,6 @@ import { HeaderText } from "../nextUI";
  * @returns two <svg> elements: (1) the circle packing chart, (2) the legend for the chart
  */
 const CirclePacking = () => {
-  const dispatch = useDispatch();
   const datas = useSelector(selectUserCorrelations);
   const symptoms = useSelector(selectSymptoms);
 
@@ -51,12 +50,6 @@ const CirclePacking = () => {
   }
 
   const svgRef = useRef(); // allow the svg element to be accessed and manipulated in the React component using the current property of the svgRef object
-
-  // Fetch all symptoms and user's correlations data from the store
-  useEffect(() => {
-    dispatch(fetchAllSymptoms());
-    dispatch(fetchUserCorrelations());
-  }, [dispatch]);
 
   // Create the circle packing chart and the legend
   useEffect(() => {

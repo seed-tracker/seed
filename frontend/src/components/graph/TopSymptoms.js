@@ -37,11 +37,6 @@ const TopSymptoms = () => {
     symptomColors[symptomName] = colorPalette[colorIndex];
   }
 
-  useEffect(() => {
-    dispatch(getUserStats("all"));
-    dispatch(fetchAllSymptoms());
-  }, [dispatch]);
-
   const handleGetAllTime = async (all) => {
     await dispatch(getUserStats("all"));
     setTimeline("all");

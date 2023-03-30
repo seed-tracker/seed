@@ -10,13 +10,17 @@ import { fetchUserCorrelations } from "../store/correlationsSlice";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { Container, Text, Button } from "@nextui-org/react";
 import { PageLoading, HeaderText } from "./nextUI";
-
+import { fetchAllSymptoms } from "../store/symptomSlice";
+import { fetchScatterData } from "../store/scatterSlice";
+import { getUserStats } from "../store/statsSlice";
+import { fetchAllFoodGroups } from "../store/foodGroupsSlice";
 /**
  * Placeholder component for the userprofile page
  * @component shows "profile" if the user has logged enough entries to have data to show, otherwise, shows a randomly generated quote from an API
  */
 const Profile = () => {
   const [loading, setLoading] = useState(true);
+  const [pageIdx, setPageIdx] = useState(0);
 
   const graphArray = [
     "/scatter-plot",
@@ -28,13 +32,21 @@ const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
-    dispatch(fetchUserCorrelations());
     setLoading(true);
+    dispatch(fetchUserCorrelations());
+    dispatch(fetchAllSymptoms());
+    dispatch(fetchScatterData());
+    dispatch(getUserStats("all"));
+    dispatch(fetchAllFoodGroups());
   }, [dispatch]);
 
   const { data: correlationsLoaded, error } = useSelector(
     (state) => state.correlations
   );
+
+  useEffect(() => {
+    console.log("mounting!!!");
+  }, []);
 
   useEffect(() => {
     if (error || correlationsLoaded.length) {
@@ -92,7 +104,7 @@ const Profile = () => {
                 Top Associations
               </Button>
               <Button
-                onClick={() => navigate("/top-foods")}
+                onClick={() => setTopFoods(true)}
                 type="button"
                 aria-label="Button to show the top foods graph"
               >
@@ -127,9 +139,10 @@ const Profile = () => {
       <Routes>
         <Route path="/circle-packing" element={<CirclePacking />} />
         <Route path="/scatter-plot" element={<ScatterPlot />} />
-        <Route path="/top-foods" element={<TopFoods />} />
+        {/* <Route path="/top-foods" element={<TopFoods />} /> */}
         <Route path="/top-symptoms" element={<TopSymptoms />} />
       </Routes>
+      {topFoods && <TopFoods />}
     </Container>
   );
 };
