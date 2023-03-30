@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import apiClient from "../config";
+import apiClient from "../client";
 
 export const fetchAllFoodGroups = createAsyncThunk(
-  "get/allFoodGroups",
+  "foodGroups/fetch",
   async () => {
     try {
       const { data } = await apiClient.get("groups/");

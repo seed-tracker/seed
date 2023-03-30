@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import ScatterPlot from "./graph/ScatterPlot";
-import StatsAndFacts from "./StatsAndFacts";
-import {
-  fetchUserCorrelations,
-  selectUserCorrelations,
-} from "../store/correlationsSlice";
+import CirclePacking from "./graph/CirclePacking";
+import TopSymptoms from "./graph/TopSymptoms";
 import TopFoods from "./graph/TopFoods";
-import { Loading, Container, Text } from "@nextui-org/react";
-import { PageLoading } from "./nextUI";
+import StatsAndFacts from "./StatsAndFacts";
+import { fetchUserCorrelations } from "../store/correlationsSlice";
+
+import { Container, Text } from "@nextui-org/react";
+import { PageLoading, Dropdown } from "./nextUI";
 
 /**
  * Placeholder component for the userprofile page
@@ -18,6 +18,12 @@ import { PageLoading } from "./nextUI";
 const Profile = () => {
   const [loading, setLoading] = useState(true);
 
+  const graphArray = [
+    <ScatterPlot />,
+    <CirclePacking />,
+    <TopSymptoms />,
+    <TopFoods />,
+  ];
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUserCorrelations());
@@ -35,23 +41,39 @@ const Profile = () => {
   }, [correlationsLoaded, error]);
 
   return (
-    <Container fluid>
+    <Container
+      display={"flex"}
+      justify="center"
+      align="center"
+      wrap={"wrap"}
+      css={{
+        "@xs": {
+          margin: 0,
+          width: "100vw",
+        },
+        "@sm": {
+          maxWidth: "67vw",
+        },
+      }}
+    >
       {loading ? (
         <PageLoading text="Getting your results..." />
       ) : (
         <>
           {correlationsLoaded && correlationsLoaded.length > 0 ? (
             <>
-              <ScatterPlot />
-              <TopFoods />
-              <section>{!correlationsLoaded && <TopFoods />}</section>
+              <h1>
+                Need to add dropdown menu for users to select from other graph
+                options
+              </h1>
+              {graphArray[Math.floor(Math.random() * 5)]}
             </>
           ) : (
             <Container
-              fluid
+              display={"flex"}
               justify="center"
               align="center"
-              style={{ marginTop: "3rem" }}
+              css={{ margin: 0, padding: 0, maxWidth: "72vw" }}
             >
               {error === "No data found" && (
                 <Text>

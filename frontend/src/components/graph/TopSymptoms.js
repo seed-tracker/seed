@@ -107,6 +107,17 @@ const TopSymptoms = () => {
       .append("g")
       .attr("transform", `translate(${xScale.bandwidth()/2}, ${margin.top * 2})`);
 
+      if (symptoms && symptoms.length > 0) {
+        // y axis label
+        g.append("text")
+          .attr("x", -(height / 2))
+          .attr("y", -102)
+          .attr("font-size", "20px")
+          .attr("text-anchor", "middle")
+          .attr("transform", "rotate(-90)")
+          .text("Times Logged");
+      }
+
       g.selectAll("circle")
         .data(symptoms)
         .join("circle")
@@ -132,30 +143,37 @@ const TopSymptoms = () => {
   }, [data]);
 
   return (
-    <Container css={{ margin: "5rem 0" }}
-    className="glassmorpheus"
+    <Container
+      css={{ margin: "2rem 0", padding: "2rem" }}
+      className="glassmorpheus"
     >
-      
       <HeaderText text="Your top 5 symptoms:" />
-      <Container css={{ margin: "2rem 0" }}>
-        <Text h3>Legend:</Text>
+      <Text h3>Legend:</Text>
+      <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
         {symptoms.map((symptomName) => (
-          <Container
-          shadow
-          display="flex"
-          alignItems="center"
-          key={symptomName}
-          >
-            <div style={{ backgroundColor: symptomColors[symptomName.name], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
+          <>
+            <div
+              style={{
+                backgroundColor: symptomColors[symptomName.name],
+                width: "1rem",
+                height: "1rem",
+                padding: "1rem",
+                margin: "0 0.5rem 0 2rem",
+                borderRadius: "1rem",
+              }}
+            ></div>
             <Text h3>{symptomName.name}</Text>
-        </Container>
+          </>
         ))}
       </Container>
       <Container
-        css={{ margin: "2rem 0", display: "flex", flexDirection: "column" }}
+        display={"flex"}
+        direction={"column"}
+        alignItems={"center"}
+        justify={"center"}
       >
         <svg ref={svgRef} width="950" height="360"></svg>
-        <Row css={{ display: "flex", alignItems: "baseline" }}>
+        <Container display="flex" alignItems="center" justify="center">
           <Text h4>Filter data by:</Text>
           <Button.Group color="primary" bordered ghost>
             <Button
@@ -183,7 +201,7 @@ const TopSymptoms = () => {
               1 Year
             </Button>
           </Button.Group>
-        </Row>
+        </Container>
       </Container>
     </Container>
   );
