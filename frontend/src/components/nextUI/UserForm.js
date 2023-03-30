@@ -2,9 +2,12 @@
 Login
 Sign up
 Edit Profile */
+import { useEffect } from "react";
 import { Card, Text, Row, Container, Spacer } from "@nextui-org/react";
 import { Button, Inputs, HeaderText } from "./index";
 import { Link } from "react-router-dom";
+import { resetError } from "../../store/authSlice";
+import { useDispatch } from "react-redux";
 
 //NOTE TO LESTER: I'm trying to follow your advice on creating templates for things like user form, table, etc -- but this feels like a very strange way of doing it...I tried to use nextUI's "styled" function, but it wasn't working...let me know if I should rework this (as in not use a template or do something completely different). That applies to user form, table, and dropdown especially. Thanks! - Leah
 
@@ -18,19 +21,28 @@ const UserForm = ({
   loading,
   useRegex,
 }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(resetError());
+  }, [dispatch]);
+
   return (
-    <form onSubmit={onSubmit}>
-      <Container justify="center" align="center" aria-label={description}>
+    <Container
+      justify="center"
+      align="center"
+      aria-label={description}
+      css={{ maxWidth: "50rem" }}
+    >
+      <form onSubmit={onSubmit}>
         <Card
           css={{
             "@xs": {
               margin: 0,
               padding: 0,
-              minWidth: "100vw",
             },
             "@sm": {
               margin: "2vw",
-              minWidth: "50vw",
             },
           }}
           aria-label={description}
@@ -90,8 +102,8 @@ const UserForm = ({
           </Card.Body>
           <Spacer y={2} />
         </Card>
-      </Container>
-    </form>
+      </form>
+    </Container>
   );
 };
 

@@ -157,7 +157,7 @@ const SymptomForm = () => {
                 rows={recentSymptoms}
                 button={{
                   buttonDescription: "Button to add a recent symptom",
-                  text: "Add symptom",
+                  text: "Select symptom",
                   onPress: (e) => setSymptom([e.name]),
                 }}
               />

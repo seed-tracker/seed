@@ -18,7 +18,7 @@ export const me = createAsyncThunk("auth/me", async (thunkAPI) => {
       return {};
     }
   } catch (err) {
-    if (err.response.data == "string") {
+    if (typeof err.response.data == "string") {
       return thunkAPI.rejectWithValue(err.response.data);
     } else {
       return thunkAPI.rejectWithValue("There was an issue with your request.");
@@ -41,6 +41,7 @@ export const login = createAsyncThunk(
       window.localStorage.setItem(TOKEN, data.token);
       thunkAPI.dispatch(me());
     } catch (err) {
+      console.debug(err);
       if (typeof err.response.data == "string") {
         return thunkAPI.rejectWithValue(err.response.data);
       } else {
@@ -66,7 +67,7 @@ export const signup = createAsyncThunk(
       window.localStorage.setItem(TOKEN, data.token);
       thunkAPI.dispatch(me());
     } catch (err) {
-      console.error(err);
+      console.debug(err);
       if (typeof err.response.data == "string") {
         return thunkAPI.rejectWithValue(err.response.data);
       } else {
@@ -96,6 +97,9 @@ export const authSlice = createSlice({
       state.me = {};
       state.error = null;
     },
+    resetError(state, action) {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(me.fulfilled, (state, action) => {
@@ -116,7 +120,7 @@ export const authSlice = createSlice({
 /*
  * logout reducer is exported to be useable on the frontend
  */
-export const { logout } = authSlice.actions;
+export const { logout, resetError } = authSlice.actions;
 
 /**
  * selector function that allows us to access state by dispatching an action to the store

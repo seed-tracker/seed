@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { signup } from "../store/authSlice";
-import { selectError } from "../store/authSlice";
+import { selectError, resetError } from "../store/authSlice";
 import { UserForm } from "./nextUI";
 
 /**
@@ -27,7 +27,6 @@ const Signup = () => {
     if (error && loading) setLoading(false);
   }, [error, loading]);
 
-  
   const inputs = [
     {
       name: "username",

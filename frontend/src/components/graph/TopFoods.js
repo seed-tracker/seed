@@ -27,6 +27,7 @@ const TopFoods = () => {
   const foodGroups = useSelector(selectFoodGroups);
   const groupNames = foodGroups.data ? foodGroups.data.map((group) => group.name) : [];
   const topFoods = data.foods ? data.foods.slice(0, 10) : [];
+
   const counts = topFoods ? topFoods.map((food) => food.count) : [];
   useEffect(() => {
     dispatch(getUserStats("all"));
@@ -50,7 +51,6 @@ const TopFoods = () => {
     const colorIndex = i % colorPalette.length;
     foodsColors[foodName] = colorPalette[colorIndex];
   }
-  console.log("foodsColors", foodsColors);
 
   useEffect(() => {
     const svg = select(svgRef.current);
@@ -94,7 +94,7 @@ const TopFoods = () => {
       const yAxis = axisLeft(yScale).ticks(5);
 
       g.append("g")
-        .attr("transform", `translate(-1, ${height})`)
+        .attr("transform", `translate(0, ${height})`)
         .call(xAxis)
         .selectAll("text")
         .attr("transform", "rotate(-45)")
@@ -111,7 +111,7 @@ const TopFoods = () => {
         const groupName = currentFood.groups[0];
         for (let j = 0; j < counts[i]; j++) {
            g.append("circle")
-              .attr("cx", xScale(currentFood.name) + (margin.left / 2) - margin.right)
+              .attr("cx", xScale(currentFood.name) + (margin.left / 2) - margin.right + 2)
               .attr("cy", -yScale(j) + height)
               .attr("fill", foodsColors[groupName])
               .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
@@ -128,11 +128,12 @@ const TopFoods = () => {
   }, [data]);
 
   return (
-    <Container css={{ margin: "5rem 0" }}>
+    <Container css={{ margin: "5rem 0" }}
+    className="glassmorpheus">
       <HeaderText text="Your Top 10 Foods:" />
       <Text h3>Legend:</Text>
 
-      {Object.keys(foodsColors).map((foodName) => (
+      {/* {Object.keys(foodsColors).map((foodName) => (
         <Container
           display="flex"
           alignItems="center"
@@ -140,6 +141,19 @@ const TopFoods = () => {
         >
           <div style={{ backgroundColor: foodsColors[foodName], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
           <Text h3>{foodName}</Text>
+        </Container>
+      ))} */}
+
+      {topFoods
+      .filter((foodObj, index, group) => group.findIndex(t => t.groups[0] === foodObj.groups[0]) === index)
+      .map((groupName) => (
+        <Container
+          display="flex"
+          alignItems="center"
+          key={groupName.groups[0]}
+          >
+            <div style={{ backgroundColor: foodsColors[groupName.groups[0]], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
+            <Text h3>{groupName.groups[0]}</Text>
         </Container>
       ))}
 

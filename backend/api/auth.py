@@ -1,5 +1,5 @@
 from api.auth_middleware import require_token
-from flask import Flask, request, Blueprint
+from flask import Flask, request, Blueprint, jsonify
 from db import db
 import bcrypt
 import jwt
@@ -11,6 +11,7 @@ secret = os.environ.get("JWT_SECRET")
 
 auth = Blueprint("auth", __name__)
 
+
 @auth.route("/login", methods=["POST"])
 def login():
     """Receives login data and verifies credentials allowing user to log in
@@ -21,30 +22,30 @@ def login():
         a dict of the encrypted token representing the user
     """
     try:
-        #receives data from frontend component
+        # receives data from frontend component
         req_data = request.get_json()
-        #finds user in the database
+        # finds user in the database
         user = db.users.find_one({"username": req_data["username"]})
-        #checks if user's provided password matches the hashed password in the database
+        # checks if user's provided password matches the hashed password in the database
         if user:
             password_checked = bcrypt.checkpw(
                 req_data["password"].encode("utf-8"), user["password"].encode("utf-8")
             )
-            #if passwords match returns the token
+            # if passwords match returns the token
             if password_checked:
                 return {
                     "token": jwt.encode(
                         {"username": req_data["username"]}, secret, algorithm="HS256"
                     )
                 }, 200
-            #if passwords do not match returns error
+            # if passwords do not match returns error
             else:
                 return "Password is not correct", 401
-        #if user is not found in database returns an error
+        # if user is not found in database returns an error
         else:
             return "User not found", 401
     except Exception as e:
-        return {"message": str(e), "error": "Authentication failed", "data": None}, 500
+        return "Authentication failed", 500
 
 
 @auth.route("/register", methods=["POST"])
@@ -57,14 +58,14 @@ def register():
         a dict of the encrypted token representing the user
     """
     try:
-        #receives data from frontend component
+        # receives data from frontend component
         req_data = request.get_json()
-        #tries to find user in the database
+        # tries to find user in the database
         user = db.users.find_one({"username": req_data["username"]})
-        #if user already exists in the database returns an error
+        # if user already exists in the database returns an error
         if user:
             return "Username taken", 401
-        #if user does not exist yet, creates a new user in the database and hashes the password
+        # if user does not exist yet, creates a new user in the database and hashes the password
         else:
             name = req_data["name"]
             username = req_data["username"]
@@ -87,18 +88,18 @@ def register():
                     "birthdate": birthdate,
                 }
             )
-            #once new user is created returns token representing the user
+            # once new user is created returns token representing the user
             if new_user:
                 return {
                     "token": jwt.encode(
                         {"username": username}, secret, algorithm="HS256"
                     )
                 }, 200
-            #otherwise returns an error
+            # otherwise returns an error
             else:
                 return "Could not create user", 401
     except Exception as e:
-        return {"message": str(e), "error": "Registration failed", "data": None}, 500
+        return "Registration failed", 500
 
 
 @auth.route("/me", methods=["GET"])
@@ -117,15 +118,11 @@ def authenticate(user):
         a dict of the user without the password
     """
     try:
-        #receives data from middleware, stringifies user id
+        # receives data from middleware, stringifies user id
         user["_id"] = str(user["_id"])
-        #removes password from user dict
+        # removes password from user dict
         user.pop("password")
-        #returns user
+        # returns user
         return user, 200
-    except:
-        return {
-            "message": str(e),
-            "error": "Authentification failed",
-            "data": None,
-        }, 401
+    except Exception as e:
+        return "Authentication failed", 401

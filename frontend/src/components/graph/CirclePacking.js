@@ -95,7 +95,11 @@ const CirclePacking = () => {
     );
 
     function getNodeLabel(node) {
-      return node.data.name;
+      // return node.data.name;
+      const name = node.data.name;
+      const parts = name.split(' '); 
+      return parts.join(' ');
+
     }
 
     const leaf = svg // Select all groups and bind them to the data for the leaf nodes of the tree
@@ -113,19 +117,23 @@ const CirclePacking = () => {
     leaf
       .append("foreignObject") // Add text labels to each leaf node, with the symptom name as the label text
       .attr("x", (d) => -d.r)
-      .attr("y", (d) => -d.r)
+      .attr("y", (d) => -d.r/2.2)
       .attr("width", (d) => d.r * 2)
       .attr("height", (d) => d.r * 2)
       .html((d) => getNodeLabel(d))
       .style("font-size", "12px")
       .style("display", "flex")
+      .selectAll("text")
+      .style("word-break", "break-word")
       .style("justify-content", "center");
   }, [symptoms, userSymptoms, result]);
 
   return (
-    <Container css={{ margin: "5rem 0" }}>
+    <Container css={{ margin: "5rem 0" }}
+    className="glassmorpheus">
       <HeaderText text="Your Food Group and Symptom Relationships" />
       <Text h3>Legend:</Text>
+      
       {Object.keys(symptomColors).map((symptomName) => (
           <Container
           display="flex"
