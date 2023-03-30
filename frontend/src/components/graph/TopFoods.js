@@ -133,17 +133,6 @@ const TopFoods = () => {
       <HeaderText text="Your Top 10 Foods:" />
       <Text h3>Legend:</Text>
 
-      {/* {Object.keys(foodsColors).map((foodName) => (
-        <Container
-          display="flex"
-          alignItems="center"
-          key={foodName}
-        >
-          <div style={{ backgroundColor: foodsColors[foodName], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
-          <Text h3>{foodName}</Text>
-        </Container>
-      ))} */}
-
       {topFoods
       .filter((foodObj, index, group) => group.findIndex(t => t.groups[0] === foodObj.groups[0]) === index)
       .map((groupName) => (
@@ -152,8 +141,8 @@ const TopFoods = () => {
           alignItems="center"
           key={groupName.groups[0]}
           >
-            <div style={{ backgroundColor: foodsColors[groupName.groups[0]], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
-            <Text h3>{groupName.groups[0]}</Text>
+            <div style={{ backgroundColor: foodsColors[groupName.groups[0]], padding: "0.8rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
+            <Text h4>{groupName.groups[0]}</Text>
         </Container>
       ))}
 

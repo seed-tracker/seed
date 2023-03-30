@@ -128,7 +128,7 @@ const TopSymptoms = () => {
 
       <HeaderText text="Your top 5 symptoms:" />
       <Container css={{ margin: "2rem 0" }}>
-        <Text h3>Legend:</Text>
+        <Text h4>Legend:</Text>
         {symptoms.map((symptomName, i) => (
           <Container
           shadow
@@ -136,8 +136,8 @@ const TopSymptoms = () => {
           alignItems="center"
           key={i + 1}
           >
-            <div style={{ backgroundColor: symptomColors[symptomName.name], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
-            <Text h3>{symptomName.name}</Text>
+            <div style={{ backgroundColor: symptomColors[symptomName.name], padding: "0.8rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
+            <Text h4>{symptomName.name}</Text>
         </Container>
         ))}
       </Container>

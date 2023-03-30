@@ -95,11 +95,9 @@ const CirclePacking = () => {
     );
 
     function getNodeLabel(node) {
-      // return node.data.name;
       const name = node.data.name;
-      const parts = name.split(' '); 
-      return parts.join(' ');
-
+      const parts = name.split(" ");
+      return parts.join(" ");
     }
 
     const leaf = svg // Select all groups and bind them to the data for the leaf nodes of the tree
@@ -134,11 +132,11 @@ const CirclePacking = () => {
       <HeaderText text="Your Food Group and Symptom Relationships" />
       <Text h3>Legend:</Text>
 
-      {Object.keys(symptomColors).map((symptomName, i) => (
+      {Object.keys(result).map((symptomName) => (
           <Container
           display="flex"
           alignItems="center"
-          key={i + 1}
+          key={symptomName}
           >
             <div style={{ backgroundColor: symptomColors[symptomName], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
             <Text h3>{symptomName}</Text>
