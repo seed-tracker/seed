@@ -10,7 +10,7 @@ import MealCard from "./MealCard";
 import Pagination from "./Pagination";
 import SymptomCard from "./SymptomCard";
 import PageLoading from "./PageLoading";
-import Slider from './Slider';
+import Slider from "./Slider";
 
 export {
   Dropdown,
@@ -24,5 +24,5 @@ export {
   Pagination,
   SymptomCard,
   PageLoading,
-  Slider
+  Slider,
 };

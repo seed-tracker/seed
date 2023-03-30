@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import apiClient from "../client";
 import { Text, Spacer, Container } from "@nextui-org/react";
-import { Inputs, Button, Dropdown, Table, HeaderText } from "./nextUI/index";
+import { Inputs, Button, Dropdown, Table, HeaderText, Slider } from "./nextUI";
 import SuccessMessage from "./SuccessMessage";
 
 const SymptomForm = () => {
@@ -196,13 +196,20 @@ const SymptomForm = () => {
           >
             <label htmlFor="severity">
               Severity: {severity}
-              <input
+              <Slider
+                min={0}
+                max={10}
+                value={severity}
+                // defaultValue={severity}
+                onChange={(event) => setSeverity(event.target.value)}
+              />
+              {/* <input
                 type="range"
                 min="0"
                 max="10"
                 value={severity}
                 onChange={(event) => setSeverity(event.target.value)}
-              />
+              /> */}
             </label>
             <Spacer y={2} />
             <Button
