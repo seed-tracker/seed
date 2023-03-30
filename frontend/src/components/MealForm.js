@@ -168,7 +168,7 @@ function MealForm() {
           wrap={"wrap"}
           css={{ margin: "2vw", width: "65vw" }}
         >
-          <Container display={"flex"}>
+          <Container display={"flex"} justify={"center"}>
             <HeaderText text="Add a meal" />
           </Container>
           <Container
