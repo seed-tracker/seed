@@ -26,8 +26,8 @@ const TopSymptoms = () => {
   const data = useSelector(selectUserStats);
   const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
   const counts = symptoms ? symptoms.map((symptom) => symptom.count) : [];
-  const [timeline, setTimeline] = useState("all")
-   const [xDomain, setXDomain] = useState([]);
+  const [timeline, setTimeline] = useState("all");
+  const [xDomain, setXDomain] = useState([]);
   const colorPalette = d3.schemeSet3; // Define a color palette for the symptoms and map each symptom to a unique color
 
   const symptomColors = {};
@@ -66,13 +66,14 @@ const TopSymptoms = () => {
     const height = 60 - margin.top - margin.bottom;
 
     if (symptoms && symptoms.length > 0) {
-      const xScale = scaleBand().domain(symptoms.map((symptom) => symptom.name)).range([0, width]);
-      const yScale = scaleLinear().domain([Math.max(...counts) * 2, 0]).range([height, 0]);
+      const xScale = scaleBand()
+        .domain(symptoms.map((symptom) => symptom.name))
+        .range([0, width]);
+      const yScale = scaleLinear()
+        .domain([Math.max(...counts) * 2, 0])
+        .range([height, 0]);
       const xAxis = axisBottom(xScale).tickSizeOuter(0);
       const yAxis = axisLeft(yScale).ticks(5);
-      
-
-
 
       const xAxisLine = svg
         .append("g")
@@ -89,7 +90,6 @@ const TopSymptoms = () => {
         .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
         .call(yAxis); // make the y-axis
 
-        
       svg.selectAll(".tick text").on("click", (event, d) => {
         svg.select(".x-axis").transition().duration(500).call(xAxis);
       });
@@ -104,8 +104,11 @@ const TopSymptoms = () => {
       }
       // Create lollipop chart
       const g = svg
-      .append("g")
-      .attr("transform", `translate(${xScale.bandwidth()/2}, ${margin.top * 2})`);
+        .append("g")
+        .attr(
+          "transform",
+          `translate(${xScale.bandwidth() / 2}, ${margin.top * 2})`
+        );
 
       if (symptoms && symptoms.length > 0) {
         // y axis label
@@ -147,19 +150,30 @@ const TopSymptoms = () => {
       css={{ margin: "2rem 0", padding: "2rem" }}
       className="glassmorpheus-graph"
     >
-       <HeaderText text="Your top 5 symptoms:" />
-      <Container css={{ margin: "2rem 0" }}>
-        <Text h4>Legend:</Text>
+      <HeaderText text="Your top 5 symptoms" />
+      <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
         {symptoms.map((symptomName, i) => (
-          <Container
-          shadow
-          display="flex"
-          alignItems="center"
-          key={i + 1}
+          <div
+            style={{
+              display: "flex",
+              width: "auto",
+              wrap: "nowrap",
+              align: "center",
+              padding: "2rem 0",
+            }}
           >
-            <div style={{ backgroundColor: symptomColors[symptomName.name], padding: "0.8rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
-            <Text h4>{symptomName.name}</Text>
-        </Container>
+            <div
+              style={{
+                backgroundColor: symptomColors[symptomName.name],
+                width: "1rem",
+                height: "1rem",
+                padding: "0.8rem",
+                margin: "0 0.5rem 0 2rem",
+                borderRadius: "1rem",
+              }}
+            ></div>
+            <Text h5>{symptomName.name}</Text>
+          </div>
         ))}
       </Container>
       <Container
@@ -170,7 +184,7 @@ const TopSymptoms = () => {
       >
         <svg ref={svgRef} width="950" height="360"></svg>
         <Container display="flex" alignItems="center" justify="center">
-          <Text h4>Filter data by:</Text>
+          <Text h4>Filter data by</Text>
           <Button.Group color="primary" bordered ghost>
             <Button
               onClick={handleGetAllTime}

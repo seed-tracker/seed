@@ -310,7 +310,7 @@ const ScatterPlot = () => {
           align="center"
           css={{ margin: "2rem 0" }}
         >
-          <HeaderText text="Your Top Associations:" />
+          <HeaderText text="Your Top Associations" />
 
           {allData && allData.length && allData[0].symptomData && (
             <ScatterControls
