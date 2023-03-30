@@ -24,8 +24,10 @@ text {
 
 .mainpage-center {
   background-image: url("greenmarble.jpeg");
+
+  width: 100vw;
   background-size: cover;
-  background-repeat: repeat;
+  background-repeat: no-repeat;
 }
 
 .glassmorpheus {
@@ -40,7 +42,7 @@ text {
 
 .glassmorpheus-graph {
   /* From https://css.glass */
-  background: rgba(255, 255, 255, 0.708);
+  background: rgba(255, 255, 255, 0.6);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(11.9px);

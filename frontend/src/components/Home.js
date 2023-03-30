@@ -10,13 +10,12 @@ import { Container, Spacer } from "@nextui-org/react";
 const Home = () => {
   const dispatch = useDispatch();
 
-
   useEffect(() => {
     dispatch(me());
   }, [dispatch]);
 
   return (
-    <main className="mainpage-center">
+    <main>
       <Container css={{ minHeight: "100vh", paddingTop: "12em" }}>
         {/* <h2>Welcome to Seed</h2> */}
         <Container
