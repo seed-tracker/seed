@@ -43,12 +43,12 @@ const CirclePacking = () => {
   const userSymptoms = datas.map((obj) => obj.symptom); // Get an array of the user's symptoms
 
   const colorPalette = d3.schemeSet3; // Define a color palette for the symptoms and map each symptom to a unique color
-    const symptomColors = {};
-    for (let i = 0; i < symptoms.length; i++) {
-      const symptomName = symptoms[i].name;
-      const colorIndex = i % colorPalette.length;
-      symptomColors[symptomName] = colorPalette[colorIndex];
-    }
+  const symptomColors = {};
+  for (let i = 0; i < symptoms.length; i++) {
+    const symptomName = symptoms[i].name;
+    const colorIndex = i % colorPalette.length;
+    symptomColors[symptomName] = colorPalette[colorIndex];
+  }
 
   const svgRef = useRef(); // allow the svg element to be accessed and manipulated in the React component using the current property of the svgRef object
 
@@ -97,9 +97,8 @@ const CirclePacking = () => {
     function getNodeLabel(node) {
       // return node.data.name;
       const name = node.data.name;
-      const parts = name.split(' '); 
-      return parts.join(' ');
-
+      const parts = name.split(" ");
+      return parts.join(" ");
     }
 
     const leaf = svg // Select all groups and bind them to the data for the leaf nodes of the tree
@@ -117,7 +116,7 @@ const CirclePacking = () => {
     leaf
       .append("foreignObject") // Add text labels to each leaf node, with the symptom name as the label text
       .attr("x", (d) => -d.r)
-      .attr("y", (d) => -d.r/2.2)
+      .attr("y", (d) => -d.r / 2.2)
       .attr("width", (d) => d.r * 2)
       .attr("height", (d) => d.r * 2)
       .html((d) => getNodeLabel(d))
@@ -129,22 +128,28 @@ const CirclePacking = () => {
   }, [symptoms, userSymptoms, result]);
 
   return (
-    <Container css={{ margin: "5rem 0" }}
-    className="glassmorpheus">
+    <Container
+      css={{ margin: "5rem 0", padding: "2rem" }}
+      className="glassmorpheus"
+    >
       <HeaderText text="Your Food Group and Symptom Relationships" />
       <Text h3>Legend:</Text>
-      
-      {Object.keys(symptomColors).map((symptomName) => (
-          <Container
-          display="flex"
-          alignItems="center"
-          key={symptomName}
-          >
-            <div style={{ backgroundColor: symptomColors[symptomName], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
+      <Container css={{ maxWidth: "100%" }}>
+        {Object.keys(symptomColors).map((symptomName) => (
+          <Container display="flex" alignItems="center" key={symptomName}>
+            <div
+              style={{
+                backgroundColor: symptomColors[symptomName],
+                padding: "1rem",
+                marginRight: "1rem",
+                borderRadius: "1rem",
+              }}
+            ></div>
             <Text h3>{symptomName}</Text>
-        </Container>
+          </Container>
         ))}
-      <svg ref={svgRef} width="950" height="500"></svg>
+        <svg ref={svgRef} width="950" height="500"></svg>
+      </Container>
     </Container>
   );
 };

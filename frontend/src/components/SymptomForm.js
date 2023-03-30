@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import apiClient from "../client";
-import { Text, Spacer } from "@nextui-org/react";
+import { Text, Spacer, Container } from "@nextui-org/react";
 import { Inputs, Button, Dropdown, Table, HeaderText } from "./nextUI/index";
 import SuccessMessage from "./SuccessMessage";
 
@@ -108,11 +108,32 @@ const SymptomForm = () => {
   };
 
   return (
-    <main>
-      <HeaderText text="Add a symptom" />
-      <form onSubmit={handleSymptomSubmit}>
-        {!success ? (
-          <>
+    <form onSubmit={handleSymptomSubmit}>
+      {!success ? (
+        <Container
+          display={"flex"}
+          justify={"space-between"}
+          wrap={"wrap"}
+          css={{ margin: "2vw", width: "65vw" }}
+        >
+          {" "}
+          <Container display={"flex"} justify={"center"}>
+            <HeaderText text="Add a symptom" />
+          </Container>
+          <Container
+            display={"flex"}
+            direction="column"
+            css={{
+              "@xs": {
+                margin: 0,
+                width: "100vw",
+              },
+              "@sm": {
+                flexDirection: "column",
+                maxWidth: "20vw",
+              },
+            }}
+          >
             <Inputs
               type={"date"}
               required={true}
@@ -129,40 +150,50 @@ const SymptomForm = () => {
               onChange={(event) => setTime(event.target.value)}
               helperText={"required"}
             />
-            <div>
-              <label htmlFor="symptoms">Select symptom(s):</label>
-              <Dropdown
-                color={"#7A918D"}
-                css={{
-                  background: "#7a918d",
-                  padding: "1rem",
-                }}
-                selectedKeys={symptom}
-                ariaLabel="Select Symptom Dropdown"
-                onChange={({ currentKey }) => setSymptom([currentKey])}
-                items={symptoms}
-                defaultName={"How are you feeling?"}
-              />
-            </div>
-            <Spacer y={1} />
-            <div>
-              <Table
-                color="primary"
-                css={{ padding: "1rem" }}
-                description="Recent symptoms table"
-                headers={[
-                  { key: "name", label: "Your recent symptoms" },
-                  { key: "button", label: "" },
-                ]}
-                rows={recentSymptoms}
-                button={{
-                  buttonDescription: "Button to add a recent symptom",
-                  text: "Select symptom",
-                  onPress: (e) => setSymptom([e.name]),
-                }}
-              />
-            </div>
-            <Spacer y={1} />
+
+            <label htmlFor="symptoms">Select symptom(s):</label>
+            <Dropdown
+              color={"#7A918D"}
+              css={{
+                background: "#7a918d",
+                padding: "1rem",
+              }}
+              selectedKeys={symptom}
+              ariaLabel="Select Symptom Dropdown"
+              onChange={({ currentKey }) => setSymptom([currentKey])}
+              items={symptoms}
+              defaultName={"How are you feeling?"}
+            />
+          </Container>
+          <Spacer y={1} />
+          <Container
+            display={"flex"}
+            direction="column"
+            css={{ margin: 0, padding: 0, maxWidth: "30vw" }}
+          >
+            <Table
+              color="primary"
+              css={{ padding: "1rem" }}
+              description="Recent symptoms table"
+              headers={[
+                { key: "name", label: "Your recent symptoms" },
+                { key: "button", label: "" },
+              ]}
+              rows={recentSymptoms}
+              button={{
+                buttonDescription: "Button to add a recent symptom",
+                text: "Select symptom",
+                onPress: (e) => setSymptom([e.name]),
+              }}
+            />
+            <Spacer y={2} />
+          </Container>
+          <Container
+            display={"flex"}
+            direction={"column"}
+            alignItems={"center"}
+            css={{ margin: 0, padding: 0 }}
+          >
             <label htmlFor="severity">
               Severity: {severity}
               <input
@@ -173,23 +204,27 @@ const SymptomForm = () => {
                 onChange={(event) => setSeverity(event.target.value)}
               />
             </label>
+            <Spacer y={2} />
             <Button
               text={"Add Entry"}
               arialabel={"Submit Symptom Entry Form Button"}
               type={"submit"}
             />
-            {error.length > 1 && <Text color="red">{error}</Text>}
-          </>
-        ) : (
+            <Spacer y={1} />
+          </Container>
+          {error.length > 1 && <Text color="red">{error}</Text>}
+        </Container>
+      ) : (
+        <Container display={"flex"} css={{ margin: "5vh 15vw" }}>
           <SuccessMessage
             title="Thanks for adding a symptom!"
             message="Every symptom you add makes our predictions better."
             type="symptom"
             onClick={() => setSuccess(false)}
           />
-        )}
-      </form>
-    </main>
+        </Container>
+      )}
+    </form>
   );
 };
 

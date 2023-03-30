@@ -104,10 +104,10 @@ const ScatterPlot = () => {
     svg.text("");
 
     svg
-      .attr("width", width)
+      .attr("width", "auto")
       .attr("height", height)
       .style("overflow", "visible")
-      .style("margin-top", "100px");
+      .style("margin-top", "3rem");
 
     const labels = [currentSymptom, ...currentFoods, ...currentGroups];
 
@@ -233,7 +233,8 @@ const ScatterPlot = () => {
       .style("fill", function (d) {
         return colors(d.name);
       })
-      .style("font-size", 10)
+      .style("font-size", 12)
+      .attr("cursor", "pointer")
       .on("click", function (d) {
         // is the element currently visible ?
 
@@ -298,24 +299,29 @@ const ScatterPlot = () => {
   }, [allData, currentFoods, currentGroups, currentSymptom]);
 
   return (
-    <>
-      <Container className="glassmorpheus" css={{ margin: "5rem 0" }}>
-        <HeaderText text="Your Top Associations:" />
-        {allData && allData.length > 0 && allData[0].symptomData && (
-          <Container css={{ margin: "5rem 0" }}>
-            <HeaderText text="Your Top Associations:" />
+    <Container
+      className="glassmorpheus"
+      css={{ margin: "2rem 0", maxWidth: "90vw" }}
+    >
+      {allData && allData.length > 0 && allData[0].symptomData && (
+        <Container
+          display={"flex"}
+          justify="center"
+          align="center"
+          css={{ margin: "2rem 0" }}
+        >
+          <HeaderText text="Your Top Associations:" />
 
-            <ScatterControls
-              symptomList={allData.map(({ symptomData }) => symptomData.name)}
-              toggleSymptom={toggleSymptom}
-              maxMonths={maxMonths}
-            />
+          <ScatterControls
+            symptomList={allData.map(({ symptomData }) => symptomData.name)}
+            toggleSymptom={toggleSymptom}
+            maxMonths={maxMonths}
+          />
 
-            <svg ref={svgRef} style={{ margin: "90px" }}></svg>
-          </Container>
-        )}
-      </Container>
-    </>
+          <svg ref={svgRef} style={{ margin: "3rem" }}></svg>
+        </Container>
+      )}
+    </Container>
   );
 };
 
