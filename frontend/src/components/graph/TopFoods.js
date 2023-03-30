@@ -157,8 +157,7 @@ const TopFoods = () => {
       css={{ margin: "2rem 0", padding: "2rem" }}
       className="glassmorpheus-graph"
     >
-      <HeaderText text="Your Top 10 Foods:" />
-      <Text h3>Legend:</Text>
+      <HeaderText text="Your Top 10 Foods" />
 
       <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
         {topFoods
@@ -168,19 +167,27 @@ const TopFoods = () => {
               index
           )
           .map((groupName) => (
-            <>
+            <div
+              style={{
+                display: "flex",
+                width: "auto",
+                wrap: "nowrap",
+                align: "center",
+                padding: "2rem 0",
+              }}
+            >
               <div
                 style={{
                   backgroundColor: foodsColors[groupName.groups[0]],
                   width: "1rem",
                   height: "1rem",
-                  padding: "1rem",
+                  padding: "0.8rem",
                   margin: "0 0.5rem 0 2rem",
                   borderRadius: "1rem",
                 }}
               ></div>
-              <Text h3>{groupName.groups[0]}</Text>
-            </>
+              <Text h5>{groupName.groups[0]}</Text>
+            </div>
           ))}
       </Container>
       <Container
@@ -191,7 +198,7 @@ const TopFoods = () => {
       >
         <svg ref={svgRef} width="950" height="580"></svg>
         <Container display="flex" alignItems="center" justify="center">
-          <Text h4>Filter data by:</Text>
+          <Text h4>Filter data by</Text>
           <Button.Group color="primary" bordered ghost>
             <Button
               onClick={handleGetAllTime}

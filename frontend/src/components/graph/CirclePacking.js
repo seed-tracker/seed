@@ -120,6 +120,7 @@ const CirclePacking = () => {
       .attr("height", (d) => d.r * 2)
       .html((d) => getNodeLabel(d))
       .style("font-size", "12px")
+      .style("font-weight", "bold")
       .style("display", "flex")
       .selectAll("text")
       .style("word-break", "break-word")
@@ -132,22 +133,32 @@ const CirclePacking = () => {
       className="glassmorpheus-graph"
     >
       <HeaderText text="Your Food Group and Symptom Relationships" />
-      <Text h3>Legend:</Text>
 
-      <Container css={{ maxWidth: "100%" }}>
-        {Object.keys(symptomColors).map((symptomName) => (
-          <Container display="flex" alignItems="center" key={symptomName}>
+      <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
+        {Object.keys(result).map((symptomName) => (
+          <div
+            style={{
+              display: "flex",
+              width: "auto",
+              wrap: "nowrap",
+              align: "center",
+              padding: "2rem 0",
+            }}
+          >
             <div
               style={{
                 backgroundColor: symptomColors[symptomName],
-                padding: "1rem",
-                marginRight: "1rem",
+                width: "1rem",
+                height: "1rem",
+                padding: "0.8rem",
+                margin: "0 0.5rem 0 2rem",
                 borderRadius: "1rem",
               }}
             ></div>
-            <Text h3>{symptomName}</Text>
-          </Container>
+            <Text h5>{symptomName}</Text>
+          </div>
         ))}
+
         <svg ref={svgRef} width="950" height="500"></svg>
       </Container>
     </Container>
