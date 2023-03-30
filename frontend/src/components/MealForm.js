@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { me } from "../store/authSlice";
 import Autocomplete from "./Autocomplete";
-import apiClient from "../config";
+import apiClient from "../client";
 import { Container, Row, Col, Spacer, Text } from "@nextui-org/react";
 import { Button, Table, Inputs, HeaderText } from "./nextUI/index";
 import SuccessMessage from "./SuccessMessage";

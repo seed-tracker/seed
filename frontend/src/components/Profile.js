@@ -45,7 +45,16 @@ const Profile = () => {
       display={"flex"}
       justify="center"
       align="center"
-      css={{ margin: 0, padding: 0, maxWidth: "72vw" }}
+      wrap={"wrap"}
+      css={{
+        "@xs": {
+          margin: 0,
+          width: "100vw",
+        },
+        "@sm": {
+          maxWidth: "67vw",
+        },
+      }}
     >
       {loading ? (
         <PageLoading text="Getting your results..." />

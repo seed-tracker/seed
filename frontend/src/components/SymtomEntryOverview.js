@@ -69,7 +69,7 @@ function SymptomEntryOverview() {
           margin: 0,
           padding: "3vw",
           flexDirection: "column",
-          maxWidth: "73vw",
+          maxWidth: "69vw",
         },
       }}
     >
@@ -97,7 +97,7 @@ function SymptomEntryOverview() {
               <Grid.Container gap={3} justify="flex-start" align="flex-end">
                 {symptoms.map((symptom) => {
                   return (
-                    <Grid xs={2} key={uuidv4()} css={{ minWidth: "16rem" }}>
+                    <Grid xs={4} key={uuidv4()} css={{ minWidth: "16rem" }}>
                       <SymptomCard
                         symptom={symptom}
                         onPress={handleEntryDelete}

@@ -13,7 +13,7 @@ import MealEntryOverview from "../components/MealEntryOverview";
 import SymptomEntryOverview from "../components/SymtomEntryOverview";
 import Sidebar from "../components/Sidebar";
 import { Container } from "@nextui-org/react";
-import apiClient from "../config";
+import apiClient from "../client";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
