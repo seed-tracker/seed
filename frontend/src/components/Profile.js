@@ -9,7 +9,7 @@ import StatsAndFacts from "./StatsAndFacts";
 import { fetchUserCorrelations } from "../store/correlationsSlice";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { Container, Text, Button } from "@nextui-org/react";
-import { PageLoading } from "./nextUI";
+import { PageLoading, HeaderText } from "./nextUI";
 
 /**
  * Placeholder component for the userprofile page
@@ -37,11 +37,13 @@ const Profile = () => {
   );
 
   useEffect(() => {
-    if (error || correlationsLoaded.length > 1) {
+    if (error || correlationsLoaded.length) {
       setLoading(false);
-      const idx = Math.floor(Math.random() * 4);
-      const graphToShow = graphArray[idx];
-      navigate(`${graphToShow}`);
+      if (correlationsLoaded.length) {
+        const idx = Math.floor(Math.random() * 4);
+        const graphToShow = graphArray[idx];
+        navigate(`${graphToShow}`);
+      }
     }
   }, [correlationsLoaded, error]);
 
@@ -70,13 +72,15 @@ const Profile = () => {
               color="primary"
               bordered
               ghost
-              css={{ margin: "1rem" }}
+              css={{
+                margin: "1rem",
+                maxWidth: "67vw",
+              }}
             >
               <Button
                 onClick={() => navigate("/circle-packing")}
                 type="button"
                 aria-label="Button to show the Food/Symptom Relationships graph"
-                value="all"
               >
                 Food/Symptom Relationships
               </Button>
@@ -84,7 +88,6 @@ const Profile = () => {
                 onClick={() => navigate("/scatter-plot")}
                 type="button"
                 aria-label="Button to show the top associations graph"
-                value="all"
               >
                 Top Associations
               </Button>
@@ -92,7 +95,6 @@ const Profile = () => {
                 onClick={() => navigate("/top-foods")}
                 type="button"
                 aria-label="Button to show the top foods graph"
-                value="all"
               >
                 Top Foods
               </Button>
@@ -100,7 +102,6 @@ const Profile = () => {
                 onClick={() => navigate("/top-symptoms")}
                 type="button"
                 aria-label="Button to show the top symptoms graph"
-                value="all"
               >
                 Top Symptoms
               </Button>
@@ -110,13 +111,13 @@ const Profile = () => {
               display={"flex"}
               justify="center"
               align="center"
-              css={{ margin: 0, padding: 0, maxWidth: "72vw" }}
+              css={{ margin: "2rem", padding: 0, maxWidth: "72vw" }}
             >
               {error === "No data found" && (
-                <Text>
-                  We don't have enough data to create associations yet, but keep
-                  logging!
-                </Text>
+                <HeaderText
+                  text=" We don't have enough data to create associations yet, but keep
+                logging!"
+                />
               )}
               <StatsAndFacts />
             </Container>

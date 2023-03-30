@@ -43,7 +43,7 @@ const AppRoutes = () => {
         >
           <Sidebar />
           <Routes>
-            <Route path="/profile/*" element={<Profile />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/add/symptom" element={<SymptomForm />} />
             <Route path="/user/addFood" element={<MealForm />}></Route>
             <Route path="/user/edit-profile" element={<EditProfile />}></Route>
