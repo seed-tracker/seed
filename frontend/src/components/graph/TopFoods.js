@@ -107,7 +107,7 @@ const TopFoods = () => {
 
       const yScale = scaleLinear()
         .domain([Math.max(...counts) * 2, 0])
-        .range([height, 0]);
+        .range([0, height]);
 
       const xAxis = axisBottom(xScale);
       const yAxis = axisLeft(yScale).ticks(5);
@@ -129,21 +129,18 @@ const TopFoods = () => {
         const currentFood = topFoods[i];
         const groupName = currentFood.groups[0];
         for (let j = 0; j < counts[i]; j++) {
-          g.append("circle")
-            .attr(
-              "cx",
-              xScale(currentFood.name) + margin.left / 2 - margin.right + 2
-            )
-            .attr("cy", -yScale(j) + height)
-            .attr("fill", foodsColors[groupName])
-            .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
+           g.append("circle")
+              .attr("cx", xScale(currentFood.name) + (margin.left / 2) - margin.right + 2)
+              .attr("cy", yScale(j))
+              .attr("fill", foodsColors[groupName])
+              .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
           if (j === counts[i] - 1) {
             g.append("text")
               .attr(
                 "x",
                 xScale(currentFood.name) + margin.left / 2 - margin.right
               )
-              .attr("y", -yScale(j) + height - 20)
+              .attr("y", yScale(j) - 20)
               .attr("text-anchor", "middle")
               .text("Count: " + counts[i]);
           }
