@@ -95,7 +95,6 @@ const CirclePacking = () => {
     );
 
     function getNodeLabel(node) {
-      // return node.data.name;
       const name = node.data.name;
       const parts = name.split(" ");
       return parts.join(" ");
@@ -134,6 +133,7 @@ const CirclePacking = () => {
     >
       <HeaderText text="Your Food Group and Symptom Relationships" />
       <Text h3>Legend:</Text>
+
       <Container css={{ maxWidth: "100%" }}>
         {Object.keys(symptomColors).map((symptomName) => (
           <Container display="flex" alignItems="center" key={symptomName}>

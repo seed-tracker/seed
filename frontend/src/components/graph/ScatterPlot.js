@@ -299,10 +299,8 @@ const ScatterPlot = () => {
   }, [allData, currentFoods, currentGroups, currentSymptom]);
 
   return (
-    <Container
-      className="glassmorpheus"
-      css={{ margin: "2rem 0", maxWidth: "90vw" }}
-    >
+      <Container className="glassmorpheus" css={{margin: "5rem 0"}}>
+        <HeaderText text="Your Top Associations:"/>
       {allData && allData.length > 0 && allData[0].symptomData && (
         <Container
           display={"flex"}
@@ -319,7 +317,6 @@ const ScatterPlot = () => {
             maxMonths={maxMonths}
           />
         )}
-
           <svg ref={svgRef} style={{ margin: "3rem" }}></svg>
         </Container>
       )}
