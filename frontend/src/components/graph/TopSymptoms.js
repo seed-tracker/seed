@@ -34,6 +34,8 @@ const TopSymptoms = () => {
         const colorIndex = i % colorPalette.length;
         symptomColors[symptomName] = colorPalette[colorIndex];
       }
+  console.log(symptomColors)
+  console.log(symptoms)
 
   useEffect(() => {
     dispatch(getUserStats("all"));
@@ -125,14 +127,14 @@ const TopSymptoms = () => {
       <HeaderText text="Your top 5 symptoms:" />
       <Container css={{ margin: "2rem 0" }}>
         <Text h3>Legend:</Text>
-        {Object.keys(symptomColors).map((symptomName) => (
+        {symptoms.map((symptomName) => (
           <Container
           display="flex"
           alignItems="center"
           key={symptomName}
           >
-            <div style={{ backgroundColor: symptomColors[symptomName], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
-            <Text h3>{symptomName}</Text>
+            <div style={{ backgroundColor: symptomColors[symptomName.name], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
+            <Text h3>{symptomName.name}</Text>
         </Container>
         ))}
       </Container>
