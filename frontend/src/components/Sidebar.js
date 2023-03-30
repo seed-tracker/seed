@@ -17,6 +17,7 @@ const Sidebar = () => {
           margin: 0,
           padding: "1vw",
           flexDirection: "row",
+          textAlign: "left",
           maxWidth: "100vw",
         },
         "@sm": {

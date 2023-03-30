@@ -94,11 +94,12 @@ const NavigationBar = () => {
               Login
             </Button>
           </Navbar.Link>
-          <Navbar.Link href="/signup">
+          <Navbar.Link>
             <Button
               size="md"
               color="success"
               borderRadius="50%"
+              onPress={() => navigate("/signup")}
               css={{
                 backgroundColor: "#67c43f",
                 fontWeight: "bold",
