@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { select } from "d3-selection";
 import { scaleBand, scaleLinear } from "d3-scale";
@@ -26,7 +26,8 @@ const TopSymptoms = () => {
   const data = useSelector(selectUserStats);
   const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
   const counts = symptoms ? symptoms.map((symptom) => symptom.count) : [];
-
+  const [timeline, setTimeline] = useState("all");
+  const [xDomain, setXDomain] = useState([]);
   const colorPalette = d3.schemeSet3; // Define a color palette for the symptoms and map each symptom to a unique color
 
   const symptomColors = {};
@@ -43,12 +44,18 @@ const TopSymptoms = () => {
 
   const handleGetAllTime = async (all) => {
     await dispatch(getUserStats("all"));
+    setTimeline("all");
+    const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
+    const xDomain = symptoms.map((symptom) => symptom.name);
+    setXDomain(xDomain);
   };
   const handleGetSixMonths = async (halfYear) => {
     await dispatch(getUserStats(180));
+    setTimeline("sixMonths");
   };
   const handleGetOneYear = async (oneYear) => {
     await dispatch(getUserStats(365));
+    setTimeline("oneYear");
   };
 
   useEffect(() => {
@@ -59,20 +66,18 @@ const TopSymptoms = () => {
     const height = 60 - margin.top - margin.bottom;
 
     if (symptoms && symptoms.length > 0) {
-      const xScale = scaleBand() // Define x-axis values
+      const xScale = scaleBand()
         .domain(symptoms.map((symptom) => symptom.name))
         .range([0, width]);
-
-      const yScale = scaleLinear() // Define y-axis values
+      const yScale = scaleLinear()
         .domain([Math.max(...counts) * 2, 0])
         .range([height, 0]);
-
       const xAxis = axisBottom(xScale).tickSizeOuter(0);
-      const yAxis = axisLeft(yScale).ticks(5); // Number of tick marks on y-axis
+      const yAxis = axisLeft(yScale).ticks(5);
 
       const xAxisLine = svg
         .append("g")
-        .attr("transform", `translate(${margin.left}, ${margin.top * 2})`)
+        .attr("transform", `translate(0, ${margin.top * 2})`)
         .attr("class", "x-axis")
         .call(xAxis); // make the x-axis
 
@@ -89,19 +94,38 @@ const TopSymptoms = () => {
         svg.select(".x-axis").transition().duration(500).call(xAxis);
       });
 
+      let gX;
+      if (timeline === "all") {
+        gX = margin.left * 2.23 + width / 6.3;
+      } else if (timeline === "sixMonths") {
+        gX = margin.left * 2.23 + width / 6.3;
+      } else if (timeline === "oneYear") {
+        gX = margin.left * 2.23 + width / 6.3;
+      }
       // Create lollipop chart
       const g = svg
         .append("g")
         .attr(
           "transform",
-          `translate(${margin.left * 2.23 + 7}, ${margin.top * 2})`
+          `translate(${xScale.bandwidth() / 2}, ${margin.top * 2})`
         );
+
+      if (symptoms && symptoms.length > 0) {
+        // y axis label
+        g.append("text")
+          .attr("x", -(height / 2))
+          .attr("y", -102)
+          .attr("font-size", "20px")
+          .attr("text-anchor", "middle")
+          .attr("transform", "rotate(-90)")
+          .text("Times Logged");
+      }
 
       g.selectAll("circle")
         .data(symptoms)
         .join("circle")
-        .attr("cx", (d) => xScale(d.name));
-
+        .attr("cx", (d) => xScale(d.name))
+        .attr("cy", (d) => yScale(d.count));
       for (let i = 0; i < symptoms.length; i++) {
         for (let j = 0; j < counts[i]; j++) {
           g.append("circle")
@@ -122,31 +146,45 @@ const TopSymptoms = () => {
   }, [data]);
 
   return (
-    <Container css={{ margin: "5rem 0" }}
-    className="glassmorpheus"
+    <Container
+      css={{ margin: "2rem 0", padding: "2rem" }}
+      className="glassmorpheus-graph"
     >
-      
-      <HeaderText text="Your top 5 symptoms:" />
-      <Container css={{ margin: "2rem 0" }}>
-        <Text h3>Legend:</Text>
-        {symptoms.map((symptomName) => (
-          <Container
-          shadow
-          display="flex"
-          alignItems="center"
-          key={symptomName}
+      <HeaderText text="Your top 5 symptoms" />
+      <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
+        {symptoms.map((symptomName, i) => (
+          <div
+            style={{
+              display: "flex",
+              width: "auto",
+              wrap: "nowrap",
+              align: "center",
+              padding: "2rem 0",
+            }}
           >
-            <div style={{ backgroundColor: symptomColors[symptomName.name], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
-            <Text h3>{symptomName.name}</Text>
-        </Container>
+            <div
+              style={{
+                backgroundColor: symptomColors[symptomName.name],
+                width: "1rem",
+                height: "1rem",
+                padding: "0.8rem",
+                margin: "0 0.5rem 0 2rem",
+                borderRadius: "1rem",
+              }}
+            ></div>
+            <Text h5>{symptomName.name}</Text>
+          </div>
         ))}
       </Container>
       <Container
-        css={{ margin: "2rem 0", display: "flex", flexDirection: "column" }}
+        display={"flex"}
+        direction={"column"}
+        alignItems={"center"}
+        justify={"center"}
       >
         <svg ref={svgRef} width="950" height="360"></svg>
-        <Row css={{ display: "flex", alignItems: "baseline" }}>
-          <Text h4>Filter data by:</Text>
+        <Container display="flex" alignItems="center" justify="center">
+          <Text h4>Filter data by</Text>
           <Button.Group color="primary" bordered ghost>
             <Button
               onClick={handleGetAllTime}
@@ -173,7 +211,7 @@ const TopSymptoms = () => {
               1 Year
             </Button>
           </Button.Group>
-        </Row>
+        </Container>
       </Container>
     </Container>
   );

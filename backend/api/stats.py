@@ -8,13 +8,17 @@ from dateutil.relativedelta import relativedelta
 stats = Blueprint("stats", __name__)
 
 
-# /stats?days=numberorall
-# get a users most eaten foods, food groups and symptoms over a certain number of days
 @stats.route("", methods=["GET"])
 @require_token
 def get_user_foods(user):
+    """Fetches the user's most recorded foods, food groups and symptoms over a given time period
+
+    Returns
+    -------
+    dict
+        a dict with the foods, groups, symptoms, username, number of meals
+    """
     try:
-        # get the username, found through the auth middleware
         username = user["username"]
         if not user:
             return "Not authorized", 401
@@ -63,7 +67,6 @@ def get_user_foods(user):
                     {"$project": {"_id": 0}},
                 ]
 
-            # parse the mongodb cursor
             return [meal for meal in db.meals.aggregate(pipeline)]
 
         # count = number of times that symptom has occured in the given time period
@@ -117,11 +120,16 @@ def get_user_foods(user):
         }, 500
 
 
-# /stats/monthly?months=# (default = 12)
-# get a user's monthly symptom count
 @stats.route("/monthly", methods=["GET"])
 @require_token
 def get_monthly_data(user):
+    """Aggregates data on user's symptom and meal entries grouped by month
+
+    Returns
+    -------
+    dict
+        a dict with the data and time range
+    """
     try:
         # get username from auth middleware
         username = user["username"]
@@ -149,7 +157,6 @@ def get_monthly_data(user):
 
         correlations = list(db.correlations.aggregate(pipeline))
 
-        # if none found, return error
         if not correlations or len(correlations) < 1:
             return "Insufficient data", 404
 

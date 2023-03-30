@@ -43,12 +43,12 @@ const CirclePacking = () => {
   const userSymptoms = datas.map((obj) => obj.symptom); // Get an array of the user's symptoms
 
   const colorPalette = d3.schemeSet3; // Define a color palette for the symptoms and map each symptom to a unique color
-    const symptomColors = {};
-    for (let i = 0; i < symptoms.length; i++) {
-      const symptomName = symptoms[i].name;
-      const colorIndex = i % colorPalette.length;
-      symptomColors[symptomName] = colorPalette[colorIndex];
-    }
+  const symptomColors = {};
+  for (let i = 0; i < symptoms.length; i++) {
+    const symptomName = symptoms[i].name;
+    const colorIndex = i % colorPalette.length;
+    symptomColors[symptomName] = colorPalette[colorIndex];
+  }
 
   const svgRef = useRef(); // allow the svg element to be accessed and manipulated in the React component using the current property of the svgRef object
 
@@ -95,11 +95,11 @@ const CirclePacking = () => {
     );
 
     function getNodeLabel(node) {
-      // return node.data.name;
       const name = node.data.name;
-      const parts = name.split(' '); 
-      return parts.join(' ');
-
+      if (name) {
+        const parts = name.split(" ");
+        return parts.join(" ");
+      }
     }
 
     const leaf = svg // Select all groups and bind them to the data for the leaf nodes of the tree
@@ -117,34 +117,52 @@ const CirclePacking = () => {
     leaf
       .append("foreignObject") // Add text labels to each leaf node, with the symptom name as the label text
       .attr("x", (d) => -d.r)
-      .attr("y", (d) => -d.r/2.2)
+      .attr("y", (d) => -d.r / 2.2)
       .attr("width", (d) => d.r * 2)
       .attr("height", (d) => d.r * 2)
       .html((d) => getNodeLabel(d))
       .style("font-size", "12px")
+      .style("font-weight", "bold")
       .style("display", "flex")
       .selectAll("text")
       .style("word-break", "break-word")
       .style("justify-content", "center");
-  }, [symptoms, userSymptoms, result]);
+  }, [result]);
 
   return (
-    <Container css={{ margin: "5rem 0" }}
-    className="glassmorpheus">
+    <Container
+      css={{ margin: "2rem 0", padding: "2rem" }}
+      className="glassmorpheus-graph"
+    >
       <HeaderText text="Your Food Group and Symptom Relationships" />
-      <Text h3>Legend:</Text>
-      
-      {Object.keys(symptomColors).map((symptomName) => (
-          <Container
-          display="flex"
-          alignItems="center"
-          key={symptomName}
+
+      <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
+        {Object.keys(result).map((symptomName) => (
+          <div
+            style={{
+              display: "flex",
+              width: "auto",
+              wrap: "nowrap",
+              align: "center",
+              padding: "2rem 0",
+            }}
           >
-            <div style={{ backgroundColor: symptomColors[symptomName], padding: "1rem", marginRight: "1rem", borderRadius: "1rem" }}></div>
-            <Text h3>{symptomName}</Text>
-        </Container>
+            <div
+              style={{
+                backgroundColor: symptomColors[symptomName],
+                width: "1rem",
+                height: "1rem",
+                padding: "0.8rem",
+                margin: "0 0.5rem 0 2rem",
+                borderRadius: "1rem",
+              }}
+            ></div>
+            <Text h5>{symptomName}</Text>
+          </div>
         ))}
-      <svg ref={svgRef} width="950" height="500"></svg>
+
+        <svg ref={svgRef} width="950" height="500"></svg>
+      </Container>
     </Container>
   );
 };

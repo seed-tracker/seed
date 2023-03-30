@@ -11,11 +11,9 @@ import MealForm from "../components/MealForm";
 import EditProfile from "../components/EditProfile";
 import MealEntryOverview from "../components/MealEntryOverview";
 import SymptomEntryOverview from "../components/SymtomEntryOverview";
-import Dashboard from "../components/Dashboard";
-import TopSymptoms from "../components/graph/TopSymptoms";
 import Sidebar from "../components/Sidebar";
 import { Container } from "@nextui-org/react";
-import apiClient from "../config";
+import apiClient from "../client";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
@@ -46,11 +44,11 @@ const AppRoutes = () => {
           <Sidebar />
           <Routes>
             <Route path="/profile" element={<Profile />} />
-            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/add/symptom" element={<SymptomForm />} />
             <Route path="/user/addFood" element={<MealForm />}></Route>
             <Route path="/user/edit-profile" element={<EditProfile />}></Route>
             <Route path="/user/meal-entries" element={<MealEntryOverview />} />
+
             <Route
               path="/user/symptom-entries"
               element={<SymptomEntryOverview />}
