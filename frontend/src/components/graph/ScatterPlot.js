@@ -15,6 +15,7 @@ import {
 
 const ScatterPlot = () => {
   const { data: chartData, maxMonths } = useSelector((state) => state.scatter);
+  const { data: corrData } = useSelector((state) => state.correlations);
   const [allData, setAllData] = useState([]);
   const [currentSymptom, setCurrentSymptom] = useState(null);
   const [dateRange, setDateRange] = useState([]);
@@ -36,13 +37,15 @@ const ScatterPlot = () => {
   const svgRef = useRef();
 
   useEffect(() => {
-    if (chartData && chartData.length) {
+    if (chartData && chartData.length && corrData && corrData.length) {
       formatData();
     }
   }, [chartData]);
 
   const formatData = () => {
     const formattedData = chartData.map((d) => {
+      const ranked = corrData.find((corr) => corr.symptom == d["symptom"]);
+      console.log(ranked.top_foods, corrData);
       return {
         symptomData: {
           name: d["symptom"],
@@ -51,8 +54,8 @@ const ScatterPlot = () => {
             date: createDate(month),
           })),
         },
-        foodData: formatFoods(d["top_foods"]),
-        groupData: formatFoods(d["top_groups"]),
+        foodData: formatFoods(d["top_foods"], ranked.top_foods),
+        groupData: formatFoods(d["top_groups"], ranked.top_groups),
       };
     });
 
@@ -75,14 +78,20 @@ const ScatterPlot = () => {
   const createDate = (data) =>
     d3.timeParse("%m/%Y")(`${data["month"]}/${data["year"]}`);
 
-  const formatFoods = (data) => {
-    return data.map((food) => ({
-      name: food["_id"],
-      values: food["months"].map((d) => ({
-        count: d["count"],
-        date: createDate(d),
-      })),
-    }));
+  const formatFoods = (data, ranked) => {
+    if (!ranked) return [];
+
+    return ranked.map(({ name, lift }) => {
+      const foundFood = data.find((f) => f["_id"] === name);
+      return {
+        name,
+        lift,
+        values: foundFood["months"].map((d) => ({
+          count: d["count"],
+          date: createDate(d),
+        })),
+      };
+    });
   };
 
   const toggleSymptom = (symptom) => {
@@ -290,7 +299,7 @@ const ScatterPlot = () => {
   return (
     <Container
       display={"flex"}
-      css={{ width: "100%" }}
+      css={{ width: "100%", minHeight: "25rem" }}
       justify="center"
       align="center"
     >
