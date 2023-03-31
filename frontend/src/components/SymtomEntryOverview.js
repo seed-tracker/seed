@@ -52,8 +52,9 @@ function SymptomEntryOverview() {
   };
 
   const handleEntryDelete = async (id) => {
-    dispatch(deleteSymptomEntry(id));
-    dispatch(fetchAllSymptomEntries(page));
+    await dispatch(deleteSymptomEntry(id));
+    await dispatch(fetchAllSymptomEntries(page));
+    navigate(`/user/symptom-entries?page=${page}`);
   };
 
   return (
