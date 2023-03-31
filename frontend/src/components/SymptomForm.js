@@ -45,8 +45,8 @@ const SymptomForm = () => {
       if (status === 201) {
         setSuccess(true);
         setError("");
-        dateTime();
-        setSeverity("");
+        dateTime("");
+        setSeverity(5);
         setSymptom("");
       } else {
         setError(

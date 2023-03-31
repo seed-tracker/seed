@@ -8,17 +8,17 @@ const TOKEN = "token";
  * @returns authentication confirmation
  * @catches error if database request goes wrong
  */
-export const me = createAsyncThunk("auth/me", async (thunkAPI) => {
+export const me = createAsyncThunk("auth/me", async (_, thunkAPI) => {
   const token = window.localStorage.getItem(TOKEN);
   try {
     if (token) {
       const { data } = await apiClient.get("auth/me");
       return data;
     } else {
-      return {};
+      return thunkAPI.rejectWithValue("User is not logged in");
     }
   } catch (err) {
-    if (typeof err.response.data == "string") {
+    if (err.response && typeof err.response.data == "string") {
       return thunkAPI.rejectWithValue(err.response.data);
     } else {
       return thunkAPI.rejectWithValue("There was an issue with your request.");
