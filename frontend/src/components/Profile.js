@@ -7,7 +7,6 @@ import TopSymptoms from "./graph/TopSymptoms";
 import TopFoods from "./graph/TopFoods";
 import StatsAndFacts from "./StatsAndFacts";
 import { fetchUserCorrelations } from "../store/correlationsSlice";
-import { Route, Routes, useNavigate } from "react-router-dom";
 import { Container, Text, Button } from "@nextui-org/react";
 import { PageLoading, HeaderText } from "./nextUI";
 import { fetchAllSymptoms } from "../store/symptomSlice";
@@ -30,15 +29,7 @@ const Profile = () => {
     (state) => state.correlations
   );
 
-  const graphArray = [
-    "/scatter-plot",
-    "/circle-packing",
-    "/top-symptoms",
-    "/top-foods",
-  ];
-
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -50,17 +41,8 @@ const Profile = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("mounting!!!");
-  }, []);
-
-  useEffect(() => {
     if (error || correlationsLoaded.length) {
       setLoading(false);
-      if (correlationsLoaded.length) {
-        const idx = Math.floor(Math.random() * 4);
-        const graphToShow = graphArray[idx];
-        navigate(`${graphToShow}`);
-      }
     }
   }, [correlationsLoaded, error]);
 
@@ -85,23 +67,17 @@ const Profile = () => {
 
   return (
     <Container
-      display={"flex"}
+      display="flex"
       justify="center"
       align="center"
-      wrap={"wrap"}
       css={{
         "@xs": {
           margin: 0,
-          width: "100vw",
+          maxWidth: "100vw",
         },
         "@sm": {
-          maxWidth: "70vw",
-          minWidht: "40vw",
+          maxWidth: "80vw",
           margin: 0,
-          position: "absolute",
-          top: "5rem",
-          right: "3vw",
-          marginBottom: "10rem",
         },
       }}
     >
@@ -110,46 +86,67 @@ const Profile = () => {
       ) : (
         <>
           {correlationsLoaded && correlationsLoaded.length > 0 ? (
-            <>
-           <Button
-  onClick={() => setGraphIdx(0)}
-  type="button"
-  aria-label="Button to show the top associations graph"
-  css={{ ...getCss(0), ...buttonMargin }}
->
-  Top Associations
-</Button>
-<Button
-  onClick={() => setGraphIdx(1)}
-  type="button"
-  aria-label="Button to show the Food/Symptom Relationships graph"
-  css={{ ...getCss(1), ...buttonMargin }}
->
-  Food/Symptom Relationships
-</Button>
-<Button
-  onClick={() => setGraphIdx(2)}
-  type="button"
-  aria-label="Button to show the top foods graph"
-  css={{ ...getCss(2), ...buttonMargin }}
->
-  Top Foods
-</Button>
-<Button
-  onClick={() => setGraphIdx(3)}
-  type="button"
-  aria-label="Button to show the top symptoms graph"
-  css={{ ...getCss(3), ...buttonMargin }}
->
-  Top Symptoms
-  Top Symptoms
-</Button>
+            <Container
+              display="flex"
+              direction="column"
+              justify="center"
+              align="center"
+              css={{
+                "@xs": {
+                  margin: 0,
+                  width: "100vw",
+                },
+                "@sm": { margin: "2rem 0", alignSelf: "flex-end" },
+              }}
+            >
+              <Button.Group
+                color="primary"
+                bordered
+                ghost
+                css={{
+                  margin: "1rem",
+                  alignSelf: "center",
+                }}
+              >
+                {scatterData && scatterData.length > 0 && (
+                  <Button
+                    onClick={() => setGraphIdx(0)}
+                    type="button"
+                    aria-label="Button to show the top associations graph"
+                    css={getCss(0)}
+                  >
+                    Top Associations
+                  </Button>
+                )}
+                <Button
+                  onClick={() => setGraphIdx(1)}
+                  type="button"
+                  aria-label="Button to show the Food/Symptom Relationships graph"
+                  css={getCss(1)}
+                >
+                  Food/Symptom Relationships
+                </Button>
+                <Button
+                  onClick={() => setGraphIdx(2)}
+                  type="button"
+                  aria-label="Button to show the top foods graph"
+                  css={getCss(2)}
+                >
+                  Top Foods
+                </Button>
+                <Button
+                  onClick={() => setGraphIdx(3)}
+                  type="button"
+                  aria-label="Button to show the top symptoms graph"
+                  css={getCss(3)}
+                >
+                  Top Symptoms
+                </Button>
+              </Button.Group>
               <Card
                 className="glassmorpheus-graph"
                 css={{
-                  width: "70vw",
-                  marginTop: "2rem",
-                  marginBottom: "5rem",
+                  width: "auto",
                   padding: "1rem",
                 }}
               >
@@ -166,7 +163,7 @@ const Profile = () => {
                   <TopSymptoms />
                 </section>
               </Card>
-            </>
+            </Container>
           ) : (
             <Container
               display={"flex"}

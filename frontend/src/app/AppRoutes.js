@@ -34,12 +34,11 @@ const AppRoutes = () => {
   return (
     <>
       {isLoggedIn ? (
-        <Container className="bookend"
-          display={"flex"}
-          wrap={"wrap"}
-          width={"100vw"}
-          align="center"
-          css={{ margin: 0, padding: 0}}
+        <Container
+          fluid
+          responsive={"false"}
+          display="flex"
+          css={{ margin: 0, padding: 0 }}
         >
           <Sidebar />
           <Routes>
@@ -60,8 +59,7 @@ const AppRoutes = () => {
         <Container
           fluid
           responsive={"false"}
-          margin={0}
-          padding={0}
+          css={{ margin: 0, padding: 0 }}
           className="mainpage-center"
         >
           <Routes>
