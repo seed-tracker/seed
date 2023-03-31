@@ -5,7 +5,7 @@ Edit Profile */
 import { useEffect } from "react";
 import { Card, Text, Row, Container, Spacer } from "@nextui-org/react";
 import { Button, Inputs, HeaderText } from "./index";
-import { Link } from "react-router-dom";
+import { Links } from "./index";
 import { resetError } from "../../store/authSlice";
 import { useDispatch } from "react-redux";
 
@@ -32,17 +32,20 @@ const UserForm = ({
       justify="center"
       align="center"
       aria-label={description}
-      css={{ maxWidth: "50rem" }}
+      css={{ maxWidth: "50rem", padding: "4vh 0" }}
     >
       <form onSubmit={onSubmit}>
         <Card
           css={{
+            background: "rgba(255, 255, 255, 0.7)",
+            borderRadius: "16px",
+            boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(11.9px)",
+            webkitBackdropFilter: "blur(11.9px)",
+            border: "1px solid rgba(41, 124, 76, 0.26)",
             "@xs": {
               margin: 0,
               padding: 0,
-            },
-            "@sm": {
-              margin: "2vw",
             },
           }}
           aria-label={description}
@@ -51,12 +54,14 @@ const UserForm = ({
           <HeaderText text={title} />
           {title === "Login" && (
             <Text css={{ color: "gray" }}>
-              Don't have an account yet? <Link to="/signup">Sign up here!</Link>
+              Don't have an account yet?{" "}
+              <Links href={"/signup"} text={"Sign up here!"}></Links>
             </Text>
           )}
           {title === "Sign up" && (
             <Text css={{ color: "gray" }}>
-              Have an account already? <Link to="/login">Log in here!</Link>
+              Have an account already?{" "}
+              <Links href={"/login"} text={"Log in here!"}></Links>
             </Text>
           )}
           <Card.Body>

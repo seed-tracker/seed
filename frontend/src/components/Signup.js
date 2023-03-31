@@ -71,7 +71,6 @@ const Signup = () => {
       required: true,
       value: birthdate,
       onChange: (e) => setBirthdate(e.target.value),
-      helperText: "required",
       label: "Date of Birth",
     },
   ];
