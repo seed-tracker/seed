@@ -67,10 +67,20 @@ const Profile = () => {
   const getDisplay = (idx) => {
     return idx === graphIdx ? "" : "none";
   };
+  const buttonMargin = { marginRight: "0.5rem" };
 
   const getCss = (idx) => {
-    if (idx === graphIdx) return { backgroundColor: "black", color: "white" };
-    return {};
+    if (idx === graphIdx) {
+      return {
+        backgroundColor: "#7a918d",
+        color: "white",
+      };
+    } else {
+      return {
+        backgroundColor: "#7a918d",
+        color: "white",
+      };
+    }
   };
 
   return (
@@ -101,50 +111,39 @@ const Profile = () => {
         <>
           {correlationsLoaded && correlationsLoaded.length > 0 ? (
             <>
-              <Button.Group
-                color="primary"
-                bordered
-                ghost
-                css={{
-                  margin: "1rem",
-                  maxWidth: "67vw",
-                }}
-              >
-                {scatterData && scatterData.length > 0 && (
-                  <Button
-                    onClick={() => setGraphIdx(0)}
-                    type="button"
-                    aria-label="Button to show the top associations graph"
-                    css={getCss(0)}
-                  >
-                    Top Associations
-                  </Button>
-                )}
-                <Button
-                  onClick={() => setGraphIdx(1)}
-                  type="button"
-                  aria-label="Button to show the Food/Symptom Relationships graph"
-                  css={getCss(1)}
-                >
-                  Food/Symptom Relationships
-                </Button>
-                <Button
-                  onClick={() => setGraphIdx(2)}
-                  type="button"
-                  aria-label="Button to show the top foods graph"
-                  css={getCss(2)}
-                >
-                  Top Foods
-                </Button>
-                <Button
-                  onClick={() => setGraphIdx(3)}
-                  type="button"
-                  aria-label="Button to show the top symptoms graph"
-                  css={getCss(3)}
-                >
-                  Top Symptoms
-                </Button>
-              </Button.Group>
+           <Button
+  onClick={() => setGraphIdx(0)}
+  type="button"
+  aria-label="Button to show the top associations graph"
+  css={{ ...getCss(0), ...buttonMargin }}
+>
+  Top Associations
+</Button>
+<Button
+  onClick={() => setGraphIdx(1)}
+  type="button"
+  aria-label="Button to show the Food/Symptom Relationships graph"
+  css={{ ...getCss(1), ...buttonMargin }}
+>
+  Food/Symptom Relationships
+</Button>
+<Button
+  onClick={() => setGraphIdx(2)}
+  type="button"
+  aria-label="Button to show the top foods graph"
+  css={{ ...getCss(2), ...buttonMargin }}
+>
+  Top Foods
+</Button>
+<Button
+  onClick={() => setGraphIdx(3)}
+  type="button"
+  aria-label="Button to show the top symptoms graph"
+  css={{ ...getCss(3), ...buttonMargin }}
+>
+  Top Symptoms
+  Top Symptoms
+</Button>
               <Card
                 className="glassmorpheus-graph"
                 css={{
