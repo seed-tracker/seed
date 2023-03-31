@@ -20,8 +20,6 @@ const Sidebar = () => {
           flexDirection: "row",
           textAlign: "left",
           maxWidth: "100vw",
-          position: "sticky",
-          top: "7rem",
         },
         "@sm": {
           marginTop: "4vh",
@@ -29,6 +27,8 @@ const Sidebar = () => {
           flexDirection: "column",
           maxWidth: "18vw",
           height: "fit-content",
+          position: "sticky",
+          top: "7rem",
         },
       }}
     >

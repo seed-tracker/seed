@@ -10,8 +10,8 @@ import {
   getUserStats,
 } from "../../store/statsSlice";
 import * as d3 from "d3";
-import { Button, Container, Text, Row } from "@nextui-org/react";
-import { HeaderText } from "../nextUI";
+import { Container, Text, Row } from "@nextui-org/react";
+import { HeaderText, Button } from "../nextUI";
 
 /**
  * This chart shows the user's top five symptoms with the highest counts during a certain time period and a legend.
@@ -77,7 +77,19 @@ const TopSymptoms = () => {
         .append("g")
         .attr("transform", `translate(${(margin.left * 2)}, ${margin.top * 2})`)
         .call(yAxis); // make the y-axis
+        yAxisLine.selectAll(".tick line")
+        .remove(); 
+        // yAxisLine.selectAll(".tick text")
+        // yAxisLine
+        // .selectAll(".tick text")
+        // .style("writing-mode", null)
+        // .attr("transform", "translate(-20, 0) rotate(-45)");
 
+        yAxisLine.selectAll(".tick text")
+  .attr("x", "-24")
+  .style("text-anchor", "end")
+  .attr("dy", "-0.2em");
+        yAxisLine.select(".domain").attr("transform", `translate(-${margin.left}, 0)`);
       svg.selectAll(".tick text").on("click", (event, d) => {
         svg.select(".x-axis").transition().duration(500).call(xAxis);
       });
@@ -159,35 +171,32 @@ const TopSymptoms = () => {
         alignItems={"center"}
         justify={"center"}
       >
-        <svg ref={svgRef} width="950" height="360"></svg>
-        <Container display="flex" alignItems="center" justify="center">
+        <svg ref={svgRef}  preserveAspectRatio="xMaxYMid meet" viewBox="0 0 950 360"></svg>
+        <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
           <Text h4>Filter data by</Text>
-          <Button.Group color="primary" bordered ghost>
             <Button
               onClick={handleGetAllTime}
               type="button"
+              text="All Time"
+              size="sm"
               aria-label="Button to filter chart top symptoms view by all time"
-              value="all"
-            >
-              All Time
-            </Button>
+            />
             <Button
               onClick={handleGetSixMonths}
               value="180"
               type="button"
+              size="sm"
               aria-label="Button to filter chart top symptoms view by six months"
-            >
-              6 Months
-            </Button>
+              text="6 Months"
+            />
             <Button
               onClick={handleGetOneYear}
               value="365"
               type="button"
               aria-label="Button to filter chart top symptoms view by one year"
-            >
-              1 Year
-            </Button>
-          </Button.Group>
+              size="sm"
+              text="1 Year"
+            />
         </Container>
       </Container>
     </>
