@@ -17,7 +17,6 @@ import { HeaderText } from "../nextUI";
  * @returns two <svg> elements: (1) the circle packing chart, (2) the legend for the chart
  */
 const CirclePacking = () => {
-  const dispatch = useDispatch();
   const datas = useSelector(selectUserCorrelations);
   const symptoms = useSelector(selectSymptoms);
 
@@ -51,12 +50,6 @@ const CirclePacking = () => {
   }
 
   const svgRef = useRef(); // allow the svg element to be accessed and manipulated in the React component using the current property of the svgRef object
-
-  // Fetch all symptoms and user's correlations data from the store
-  useEffect(() => {
-    dispatch(fetchAllSymptoms());
-    dispatch(fetchUserCorrelations());
-  }, [dispatch]);
 
   // Create the circle packing chart and the legend
   useEffect(() => {
@@ -130,10 +123,7 @@ const CirclePacking = () => {
   }, [result]);
 
   return (
-    <Container
-      css={{ margin: "2rem 0", padding: "2rem" }}
-      className="glassmorpheus-graph"
-    >
+    <>
       <HeaderText text="Your Food Group and Symptom Relationships" />
 
       <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
@@ -163,7 +153,7 @@ const CirclePacking = () => {
 
         <svg ref={svgRef} width="950" height="500"></svg>
       </Container>
-    </Container>
+    </>
   );
 };
 

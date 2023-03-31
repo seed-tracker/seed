@@ -10,13 +10,25 @@ import { fetchUserCorrelations } from "../store/correlationsSlice";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { Container, Text, Button } from "@nextui-org/react";
 import { PageLoading, HeaderText } from "./nextUI";
-
+import { fetchAllSymptoms } from "../store/symptomSlice";
+import { fetchScatterData } from "../store/scatterSlice";
+import { getUserStats } from "../store/statsSlice";
+import { fetchAllFoodGroups } from "../store/foodGroupsSlice";
+import { Card } from "@nextui-org/react";
 /**
  * Placeholder component for the userprofile page
  * @component shows "profile" if the user has logged enough entries to have data to show, otherwise, shows a randomly generated quote from an API
  */
 const Profile = () => {
   const [loading, setLoading] = useState(true);
+  const [graphIdx, setGraphIdx] = useState(0);
+
+  const { data: scatterData, error: scatterError } = useSelector(
+    (state) => state.scatter
+  );
+  const { data: correlationsLoaded, error } = useSelector(
+    (state) => state.correlations
+  );
 
   const graphArray = [
     "/scatter-plot",
@@ -27,14 +39,19 @@ const Profile = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   useEffect(() => {
-    dispatch(fetchUserCorrelations());
     setLoading(true);
+    dispatch(fetchUserCorrelations());
+    dispatch(fetchAllSymptoms());
+    dispatch(fetchScatterData());
+    dispatch(getUserStats("all"));
+    dispatch(fetchAllFoodGroups());
   }, [dispatch]);
 
-  const { data: correlationsLoaded, error } = useSelector(
-    (state) => state.correlations
-  );
+  useEffect(() => {
+    console.log("mounting!!!");
+  }, []);
 
   useEffect(() => {
     if (error || correlationsLoaded.length) {
@@ -46,6 +63,15 @@ const Profile = () => {
       }
     }
   }, [correlationsLoaded, error]);
+
+  const getDisplay = (idx) => {
+    return idx === graphIdx ? "" : "none";
+  };
+
+  const getCss = (idx) => {
+    if (idx === graphIdx) return { backgroundColor: "black", color: "white" };
+    return {};
+  };
 
   return (
     <Container
@@ -59,7 +85,13 @@ const Profile = () => {
           width: "100vw",
         },
         "@sm": {
-          maxWidth: "67vw",
+          maxWidth: "70vw",
+          minWidht: "40vw",
+          margin: 0,
+          position: "absolute",
+          top: "5rem",
+          right: "3vw",
+          marginBottom: "10rem",
         },
       }}
     >
@@ -68,44 +100,74 @@ const Profile = () => {
       ) : (
         <>
           {correlationsLoaded && correlationsLoaded.length > 0 ? (
-            <Button.Group
-              color="primary"
-              bordered
-              ghost
-              css={{
-                margin: "1rem",
-                maxWidth: "67vw",
-              }}
-            >
-              <Button
-                onClick={() => navigate("/circle-packing")}
-                type="button"
-                aria-label="Button to show the Food/Symptom Relationships graph"
+            <>
+              <Button.Group
+                color="primary"
+                bordered
+                ghost
+                css={{
+                  margin: "1rem",
+                  maxWidth: "67vw",
+                }}
               >
-                Food/Symptom Relationships
-              </Button>
-              <Button
-                onClick={() => navigate("/scatter-plot")}
-                type="button"
-                aria-label="Button to show the top associations graph"
+                {scatterData && scatterData.length > 0 && (
+                  <Button
+                    onClick={() => setGraphIdx(0)}
+                    type="button"
+                    aria-label="Button to show the top associations graph"
+                    css={getCss(0)}
+                  >
+                    Top Associations
+                  </Button>
+                )}
+                <Button
+                  onClick={() => setGraphIdx(1)}
+                  type="button"
+                  aria-label="Button to show the Food/Symptom Relationships graph"
+                  css={getCss(1)}
+                >
+                  Food/Symptom Relationships
+                </Button>
+                <Button
+                  onClick={() => setGraphIdx(2)}
+                  type="button"
+                  aria-label="Button to show the top foods graph"
+                  css={getCss(2)}
+                >
+                  Top Foods
+                </Button>
+                <Button
+                  onClick={() => setGraphIdx(3)}
+                  type="button"
+                  aria-label="Button to show the top symptoms graph"
+                  css={getCss(3)}
+                >
+                  Top Symptoms
+                </Button>
+              </Button.Group>
+              <Card
+                className="glassmorpheus-graph"
+                css={{
+                  width: "70vw",
+                  marginTop: "2rem",
+                  marginBottom: "5rem",
+                  padding: "1rem",
+                }}
               >
-                Top Associations
-              </Button>
-              <Button
-                onClick={() => navigate("/top-foods")}
-                type="button"
-                aria-label="Button to show the top foods graph"
-              >
-                Top Foods
-              </Button>
-              <Button
-                onClick={() => navigate("/top-symptoms")}
-                type="button"
-                aria-label="Button to show the top symptoms graph"
-              >
-                Top Symptoms
-              </Button>
-            </Button.Group>
+                <section style={{ display: getDisplay(0) }}>
+                  <ScatterPlot />
+                </section>
+                <section style={{ display: getDisplay(1) }}>
+                  <CirclePacking />
+                </section>
+                <section style={{ display: getDisplay(2) }}>
+                  <TopFoods />
+                </section>
+                <section style={{ display: getDisplay(3) }}>
+                  <TopSymptoms />
+                </section>
+              </Card>
+            </>
           ) : (
             <Container
               display={"flex"}
@@ -124,12 +186,6 @@ const Profile = () => {
           )}
         </>
       )}
-      <Routes>
-        <Route path="/circle-packing" element={<CirclePacking />} />
-        <Route path="/scatter-plot" element={<ScatterPlot />} />
-        <Route path="/top-foods" element={<TopFoods />} />
-        <Route path="/top-symptoms" element={<TopSymptoms />} />
-      </Routes>
     </Container>
   );
 };
