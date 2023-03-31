@@ -13,6 +13,10 @@ const ScatterControls = ({
 }) => {
   const [sliderVal, setSliderVal] = useState(maxMonths);
 
+  const handleButtonClick = (symptom) => {
+    toggleSymptom(symptom);
+  };
+
   return (
     <section>
       <Text h4>
@@ -26,7 +30,7 @@ const ScatterControls = ({
       </Text>
       <section>
         <Slider
-        value={sliderVal}
+          value={sliderVal}
           min={3}
           max={maxMonths || 3}
           tooltip="off"
@@ -34,30 +38,41 @@ const ScatterControls = ({
           onChange={(e) => setSliderVal(Number(e.target.value))}
         />
       </section>
-      <Row css={{ display: "flex", alignItems: "baseline" }}>
-        <Text h4>Most common symptoms </Text>
-        <Button.Group color="primary" bordered ghost>
-          {symptomList
-            ? symptomList.length &&
+      <Row css={{ display: "flex", alignItems: "baseline", flexWrap: "wrap" }}>
+        <Text h4 css={{ marginRight: "10px" }}>Most common symptoms </Text>
+        {symptomList ? (
+          <div style={{ display: "flex" }}>
+            {symptomList.length &&
               symptomList.map((s, i) => {
                 let css = {};
                 if (s === currentSymptom)
-                  css = { backgroundColor: "black", color: "white" };
+                  css = { backgroundColor: "#5b6c61", color: "white" };
                 return (
                   <Button
                     type="button"
                     aria-label={`Button to filter chart view by ${s} symptom`}
                     key={i}
-                    onClick={() => toggleSymptom(s)}
-                    css={css}
+                    onClick={() => handleButtonClick(s)}
+                    css={{
+                      backgroundColor: "#7a918d",
+                      borderColor: "#7a918d",
+                    
+                      ...css,
+                      marginRight: "10px",
+                      marginBottom: "10px",
+                      "&:active": {
+                        backgroundColor: "#29524a"
+                      }
+                    }}
                     size="xs"
+                   
                   >
                     {s}
                   </Button>
                 );
-              })
-            : null}
-        </Button.Group>
+              })}
+          </div>
+        ) : null}
       </Row>
     </section>
   );
