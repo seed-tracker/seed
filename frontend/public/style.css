@@ -59,7 +59,9 @@ input[type="range"]::-moz-range-track {
 }
 
 .bookend{
-  background-image: url("shapes.png");
-  background-size: 100%;
+  background-image: url("more-shapes.png");
+  background-size: 150%;
+  margin: 0;
   background-repeat: no-repeat;
+  background-position: center;
 }
