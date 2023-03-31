@@ -75,7 +75,7 @@ const Home = () => {
         </h4>
 
         <h4>
-          Our intuitive interface and user-friendly design make it easy for
+          Our intuitive interface and user-friendly design makes it easy for
           anyone to use, regardless of their technical experience.
         </h4>
         <h4>

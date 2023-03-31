@@ -219,7 +219,7 @@ const ScatterPlot = () => {
       .selectAll("myLabels")
       .data(data)
       .join("g")
-      .append("text")
+      // .append("text")
       .datum((d) => {
         return { name: d.name, value: d.values[d.values.length - 1] };
       }) // keep only the last value of each time series
@@ -324,7 +324,9 @@ const ScatterPlot = () => {
                           {name}
                         </Text>
                         <Spacer x={0.5} />
-
+                        <Switch color="green" checkedColor="green"
+                         css={{
+                        }}
                           key={i}
                           className="legendSwitch"
                           size="sm"
