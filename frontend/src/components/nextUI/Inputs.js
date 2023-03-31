@@ -10,7 +10,7 @@ Edit Profile
 Add Symptom
 Add Food
  */
-import { Spacer, Input as NextUiInput } from "@nextui-org/react";
+import { Input as NextUiInput, Spacer } from "@nextui-org/react";
 
 function Inputs(inputProps) {
   const { required, type, label, helperText, value, onChange, useRegex } =
@@ -36,6 +36,14 @@ function Inputs(inputProps) {
           helperText={helperText && helperText}
           value={value}
           onChange={onChange}
+          css={{
+            "@xs": {
+              width: "90vw",
+            },
+            "@sm": {
+              width: "20vw",
+            },
+          }}
         />
         <Spacer y={1} />
       </>
@@ -47,15 +55,22 @@ function Inputs(inputProps) {
           bordered
           color="secondary"
           size="md"
-          width="20vw"
           type={type}
           required={required}
           label={label}
           helperText={helperText && helperText}
           value={value}
           onChange={onChange}
+          css={{
+            "@xs": {
+              width: "90vw",
+            },
+            "@sm": {
+              width: "20vw",
+            },
+          }}
         />
-        <Spacer y={1} />
+        <Spacer y={1.5} />
       </>
     );
   }

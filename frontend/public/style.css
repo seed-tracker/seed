@@ -65,45 +65,58 @@ input[type="range"]::-moz-range-track {
 
 .bookend {
   background-image: url("seed-bg.png");
-  background-size: 100%;
+  background-size: 100vw auto;
   margin: 0;
   background-repeat: no-repeat;
+  background-position: center;
   background-attachment: fixed;
 }
 
-.nextui-switch--unchecked{
+.nextui-switch--unchecked {
   border-color: #7a918d !important;
 }
 
-.nextui-switch--checked{
+.nextui-switch--checked {
   background-color: #72c589cc !important;
 }
 
-.nextui-switch-circle{
+.nextui-switch-circle {
   background: #c2e6cd !important;
   border: #7a918d !important;
 }
 
-.nextui-dropdown-button{
-  color: #ffffff !important;
-  background: #7A918D !important;
+@media (max-width: 640px) {
+  .bookend {
+    background-size: auto 100vh;
+  }
+
+  .homehero {
+    background-image: none;
+    height: fit-content;
+    padding: 2rem;
+  }
 }
 
-.nextui-dropdown-menu{
+.nextui-dropdown-button {
+  color: #ffffff !important;
+  background: #7a918d !important;
+}
+
+.nextui-dropdown-menu {
   background: #5b6c61cc !important;
   background-color: #5b6c61cc !important;
   color: #ffffff !important;
 }
 
-.nextui-dropdown-item{
+.nextui-dropdown-item {
   color: #ffffff !important;
 }
 
-.nextui-button-text{
+.nextui-button-text {
   color: #ffffff !important;
 }
 
-th{
+th {
   color: #444c38 !important;
   font-size: small !important;
 }
