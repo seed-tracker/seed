@@ -26,7 +26,7 @@ export const autocompleteFood = createAsyncThunk(
       const { data } = await apiClient.get(`foods/autocomplete?query=${query}`);
       return data;
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   }
 );

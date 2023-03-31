@@ -8,7 +8,7 @@ export const fetchAllFoodGroups = createAsyncThunk(
       const { data } = await apiClient.get("groups/");
       return data;
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   }
 );

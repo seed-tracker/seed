@@ -11,7 +11,7 @@ export const fetchUserCorrelations = createAsyncThunk(
 
       return data;
     } catch (err) {
-      console.error(err);
+      console.debug(err);
       if (err.status === 204) {
         return rejectWithValue("Not enough data");
       }

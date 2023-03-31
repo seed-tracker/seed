@@ -34,7 +34,8 @@ const App = () => {
         red: "#ff4848",
         error: "$red",
         buttonBackground: "#7a918d",
-        neutral: '$buttonBackground'
+        neutral: "$buttonBackground",
+        switch: "#72c589",
       },
       fonts: {
         sans: "sans-serif",

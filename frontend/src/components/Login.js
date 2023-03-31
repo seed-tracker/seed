@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
-import { selectError, resetError } from "../store/authSlice";
+import { selectError } from "../store/authSlice";
 import { UserForm } from "./nextUI";
 /**
   The Login component is used for Login
@@ -18,6 +18,12 @@ const Login = () => {
     setLoading(true);
     dispatch(login({ username, password }));
   };
+
+  useEffect(() => {
+    setUsername("");
+    setPassword("");
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     if (error && loading) setLoading(false);

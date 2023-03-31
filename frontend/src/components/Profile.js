@@ -67,7 +67,7 @@ const Profile = () => {
 
   return (
     <Container
-      display="flex"
+      display={"flex"}
       justify="center"
       align="center"
       css={{
@@ -76,8 +76,12 @@ const Profile = () => {
           maxWidth: "100vw",
         },
         "@sm": {
-          maxWidth: "80vw",
+          maxWidth: "70vw",
+          minWidht: "40vw",
           margin: 0,
+          top: "5rem",
+          right: "3vw",
+          marginBottom: "10rem",
         },
       }}
     >

@@ -21,30 +21,31 @@ def login():
     dict
         a dict of the encrypted token representing the user
     """
+    print("login!!")
     try:
-        
         req_data = request.get_json()
-       
+
         user = db.users.find_one({"username": req_data["username"]})
         # checks if user's provided password matches the hashed password in the database
         if user:
             password_checked = bcrypt.checkpw(
                 req_data["password"].encode("utf-8"), user["password"].encode("utf-8")
             )
-           
+
             if password_checked:
                 return {
                     "token": jwt.encode(
                         {"username": req_data["username"]}, secret, algorithm="HS256"
                     )
                 }, 200
-           
+
             else:
                 return "Password is not correct", 401
-        
+
         else:
             return "User not found", 401
     except Exception as e:
+        print(str(e))
         return "Authentication failed", 500
 
 
@@ -58,14 +59,13 @@ def register():
         a dict of the encrypted token representing the user
     """
     try:
-     
         req_data = request.get_json()
-  
+
         user = db.users.find_one({"username": req_data["username"]})
-      
+
         if user:
             return "Username taken", 401
-      
+
         else:
             name = req_data["name"]
             username = req_data["username"]
@@ -88,14 +88,14 @@ def register():
                     "birthdate": birthdate,
                 }
             )
-    
+
             if new_user:
                 return {
                     "token": jwt.encode(
                         {"username": username}, secret, algorithm="HS256"
                     )
                 }, 200
-   
+
             else:
                 return "Could not create user", 401
     except Exception as e:
@@ -118,7 +118,6 @@ def authenticate(user):
         a dict of the user without the password
     """
     try:
-      
         user["_id"] = str(user["_id"])
 
         user.pop("password")
