@@ -33,14 +33,6 @@ const ScatterControls = ({
           className="slider"
           onChange={(e) => setSliderVal(Number(e.target.value))}
         />
-        {/* <input
-          type="range"
-          min="3"
-          max={maxMonths || 3}
-          className="slider"
-          step="1"
-          onChange={(e) => setSliderVal(Number(e.target.value))}
-        /> */}
       </section>
       <Row css={{ display: "flex", alignItems: "baseline" }}>
         <Text h4>Most common symptoms </Text>
