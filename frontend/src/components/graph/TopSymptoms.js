@@ -159,7 +159,7 @@ const TopSymptoms = () => {
         alignItems={"center"}
         justify={"center"}
       >
-        <svg ref={svgRef} width="950" height="360"></svg>
+        <svg ref={svgRef}  preserveAspectRatio="xMaxYMid meet" viewBox="0 0 950 360"></svg>
         <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
           <Text h4>Filter data by</Text>
             <Button
