@@ -70,3 +70,16 @@ input[type="range"]::-moz-range-track {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
+.nextui-switch--unchecked{
+  border-color: #7a918d !important;
+}
+
+.nextui-switch--checked{
+  background-color: #72c589cc !important;
+}
+
+.nextui-switch-circle{
+  background: #c2e6cd !important;
+  border: #7a918d !important;
+}
