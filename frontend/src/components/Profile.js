@@ -68,23 +68,16 @@ const Profile = () => {
   return (
     <Container
       display="flex"
-      // direction="row"
-
       justify="center"
       align="center"
       css={{
-        overflow:"auto",
         "@xs": {
           margin: 0,
           maxWidth: "100vw",
         },
         "@sm": {
-          maxWidth: "70vw",
-          minWidht: "40vw",
+          maxWidth: "80vw",
           margin: 0,
-          top: "5rem",
-          right: "3vw",
-          marginBottom: "10rem",
         },
       }}
     >
@@ -109,7 +102,8 @@ const Profile = () => {
               <Container
                 display="flex"
                 direction="row"
-                css={{ marginLeft: "8rem" }}
+                justify="center"
+                align="center"
               >
                 {scatterData && scatterData.length > 0 && (
                   <Button
@@ -150,6 +144,7 @@ const Profile = () => {
               <Card
                 className="glassmorpheus-graph"
                 css={{
+                  overflow: "auto",
                   width: "auto",
                   padding: "1rem",
                   marginTop: "1rem",
