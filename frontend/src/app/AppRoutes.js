@@ -59,8 +59,7 @@ const AppRoutes = () => {
         <Container
           fluid
           responsive={"false"}
-          margin={0}
-          padding={0}
+          css={{ margin: 0, padding: 0 }}
           className="mainpage-center"
         >
           <Routes>

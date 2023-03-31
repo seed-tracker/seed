@@ -25,6 +25,16 @@ text {
   background-repeat: no-repeat;
 }
 
+.homehero {
+  display: flex;
+  background-image: url("hero-img.png");
+  margin: 0;
+  padding: 0;
+  height: 95vh;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .glassmorpheus {
   /* From https://css.glass */
   background: rgba(41, 124, 76, 0.23);

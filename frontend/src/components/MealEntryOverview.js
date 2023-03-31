@@ -54,7 +54,6 @@ function MealEntryOverview() {
   return (
     <Container
       css={{
-        border: "1px solid black",
         "@xs": {
           margin: 0,
           padding: "1vw",
