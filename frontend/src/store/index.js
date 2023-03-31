@@ -36,7 +36,10 @@ export const clearStore = () => ({
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(
+      process.env.NODE_ENV === "development" ? logger : []
+    ),
   devTools: true,
 });
 

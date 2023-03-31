@@ -46,7 +46,7 @@ export const deleteSymptomEntry = createAsyncThunk(
       );
       return data;
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   }
 );
@@ -63,7 +63,7 @@ export const deleteMealEntry = createAsyncThunk(
       });
       return data;
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   }
 );

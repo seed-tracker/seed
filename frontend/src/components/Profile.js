@@ -50,10 +50,6 @@ const Profile = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("mounting!!!");
-  }, []);
-
-  useEffect(() => {
     if (error || correlationsLoaded.length) {
       setLoading(false);
       if (correlationsLoaded.length) {
@@ -75,22 +71,19 @@ const Profile = () => {
 
   return (
     <Container
-      display={"flex"}
       justify="center"
       align="center"
       wrap={"wrap"}
       css={{
         "@xs": {
           margin: 0,
-          width: "100vw",
+          maxWidth: "100vw",
         },
         "@sm": {
-          maxWidth: "70vw",
+          maxWidth: "68vw",
           minWidht: "40vw",
-          margin: 0,
-          position: "absolute",
-          top: "5rem",
-          right: "3vw",
+          position: "relative",
+          flexDirection: "column",
           marginBottom: "10rem",
         },
       }}
