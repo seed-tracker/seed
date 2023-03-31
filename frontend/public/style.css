@@ -13,11 +13,6 @@ body {
   /* background-color: #cfdbd1; */
 }
 
-footer {
-  max-width: "1200px";
-  margin: "0 auto";
-}
-
 text {
   z-index: 1;
 }
@@ -27,6 +22,16 @@ text {
 
   width: 100vw;
   background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.homehero {
+  display: flex;
+  background-image: url("hero-img.png");
+  margin: 0;
+  padding: 0;
+  height: 95vh;
+  background-position: center;
   background-repeat: no-repeat;
 }
 

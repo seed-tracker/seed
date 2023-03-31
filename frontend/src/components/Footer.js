@@ -15,11 +15,11 @@ const Footer = () => {
         fluid
         responsive={false}
         css={{
-          position: "fixed",
-          bottom: "0",
+          position: "relative",
+          bottom: 0,
           backgroundColor: "rgb(77,93,83, 0.1)",
           padding: "1rem",
-          marginTop: "10rem",
+          margin: 0,
         }}
       >
         <Container
