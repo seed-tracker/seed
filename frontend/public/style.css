@@ -83,3 +83,27 @@ input[type="range"]::-moz-range-track {
   background: #c2e6cd !important;
   border: #7a918d !important;
 }
+
+.nextui-dropdown-button{
+  color: #ffffff !important;
+  background: #7A918D !important;
+}
+
+.nextui-dropdown-menu{
+  background: #5b6c61cc !important;
+  background-color: #5b6c61cc !important;
+  color: #ffffff !important;
+}
+
+.nextui-dropdown-item{
+  color: #ffffff !important;
+}
+
+.nextui-button-text{
+  color: #ffffff !important;
+}
+
+th{
+  color: #444c38 !important;
+  font-size: small !important;
+}
