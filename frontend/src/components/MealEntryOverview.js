@@ -37,9 +37,13 @@ function MealEntryOverview() {
     if (
       (mealEntries.meals && mealEntries.meals.length > 0) ||
       (error && error.length)
-    )
+    ) {
       setLoading(false);
-  }, [mealEntries, error]);
+      if (error && error.length) {
+        setCount(0);
+      }
+    }
+  }, [mealEntries, error, meals, count]);
 
   const handlePageChange = (page) => {
     navigate(`/user/meal-entries?page=${page}`);
@@ -47,7 +51,7 @@ function MealEntryOverview() {
   };
 
   const handleEntryDelete = async (id) => {
-    dispatch(deleteMealEntry(id));
+    await dispatch(deleteMealEntry(id));
     dispatch(fetchAllMealEntries(page));
   };
 
@@ -107,7 +111,17 @@ function MealEntryOverview() {
               )}
             </>
           ) : (
-            "No entries to display"
+            <Container
+              display={"flex"}
+              justify="center"
+              align="center"
+              className="glassmorpheus-graph"
+              css={{ margin: "2rem", padding: "2rem", maxWidth: "72vw" }}
+            >
+              {error === "No meals found" && (
+                <HeaderText text="We don't have any meals recorded, start tracking!" />
+              )}
+            </Container>
           )}
         </>
       )}

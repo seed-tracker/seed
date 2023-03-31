@@ -39,7 +39,7 @@ const AppRoutes = () => {
           fluid
           responsive={"false"}
           display="flex"
-          css={{ margin: 0, padding: 0 }}
+          css={{ margin: 0, padding: 0, minHeight: "60vh" }}
         >
           <Sidebar />
           <Routes>

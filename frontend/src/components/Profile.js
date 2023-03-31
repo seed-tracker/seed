@@ -67,27 +67,17 @@ const Profile = () => {
 
   return (
     <Container
-
       display="flex"
-      // direction="row"
-
-      display={"flex"}
-
       justify="center"
       align="center"
       css={{
-        overflow:"auto",
         "@xs": {
           margin: 0,
           maxWidth: "100vw",
         },
         "@sm": {
-          maxWidth: "70vw",
-          minWidht: "40vw",
+          maxWidth: "80vw",
           margin: 0,
-          top: "5rem",
-          right: "3vw",
-          marginBottom: "10rem",
         },
       }}
     >
@@ -98,8 +88,7 @@ const Profile = () => {
           {correlationsLoaded && correlationsLoaded.length > 0 ? (
             <Container
               display="flex"
-              flex-wrap="wrap"
-              direction="row"
+              direction="column"
               justify="center"
               align="center"
               css={{
@@ -109,50 +98,56 @@ const Profile = () => {
                 },
                 "@sm": { margin: "2rem 0", alignSelf: "flex-end" },
               }}
-            ><Container display="flex" direction="row" css={{ marginLeft: "8rem" }}>
-              {scatterData && scatterData.length > 0 && (
-                
+            >
+              <Container
+                display="flex"
+                direction="row"
+                justify="center"
+                align="center"
+              >
+                {scatterData && scatterData.length > 0 && (
+                  <Button
+                    onClick={() => setGraphIdx(0)}
+                    type="button"
+                    aria-label="Button to show the top associations graph"
+                    css={{ ...getCss(0), ...buttonMargin }}
+                  >
+                    Top Associations
+                  </Button>
+                )}
                 <Button
-                  onClick={() => setGraphIdx(0)}
+                  onClick={() => setGraphIdx(1)}
                   type="button"
-                  aria-label="Button to show the top associations graph"
-                  css={{ ...getCss(0), ...buttonMargin }}
+                  aria-label="Button to show the Food/Symptom Relationships graph"
+                  css={{ ...getCss(1), ...buttonMargin }}
                 >
-                  Top Associations
+                  Food/Symptom Relationships
                 </Button>
-              )}
-              <Button
-                onClick={() => setGraphIdx(1)}
-                type="button"
-                aria-label="Button to show the Food/Symptom Relationships graph"
-                css={{ ...getCss(1), ...buttonMargin }}
-              >
-                Food/Symptom Relationships
-              </Button>
-              <Button
-                onClick={() => setGraphIdx(2)}
-                type="button"
-                aria-label="Button to show the top foods graph"
-                css={{ ...getCss(2), ...buttonMargin }}
-              >
-                Top Foods
-              </Button>
-              <Button
-                onClick={() => setGraphIdx(3)}
-                type="button"
-                aria-label="Button to show the top symptoms graph"
-                css={{ ...getCss(3), ...buttonMargin }}
-              >
-                Top Symptoms
-              </Button>
+                <Button
+                  onClick={() => setGraphIdx(2)}
+                  type="button"
+                  aria-label="Button to show the top foods graph"
+                  css={{ ...getCss(2), ...buttonMargin }}
+                >
+                  Top Foods
+                </Button>
+                <Button
+                  onClick={() => setGraphIdx(3)}
+                  type="button"
+                  aria-label="Button to show the top symptoms graph"
+                  css={{ ...getCss(3), ...buttonMargin }}
+                >
+                  Top Symptoms
+                </Button>
               </Container>
 
               <Card
                 className="glassmorpheus-graph"
                 css={{
+                  overflow: "auto",
                   width: "auto",
                   padding: "1rem",
-                  marginTop: "1rem"
+                  marginTop: "1rem",
                 }}
               >
                 <section style={{ display: getDisplay(0) }}>
