@@ -42,9 +42,13 @@ function SymptomEntryOverview() {
     if (
       (symptomEntries.symptoms && symptomEntries.symptoms.length > 0) ||
       (error && error.length)
-    )
+    ) {
       setLoading(false);
-  }, [symptomEntries, error]);
+      if (error && error.length) {
+        setCount(0);
+      }
+    }
+  }, [symptomEntries, error, symptoms, count]);
 
   const handlePageChange = (page) => {
     navigate(`/user/symptom-entries?page=${page}`);
@@ -53,8 +57,7 @@ function SymptomEntryOverview() {
 
   const handleEntryDelete = async (id) => {
     await dispatch(deleteSymptomEntry(id));
-    await dispatch(fetchAllSymptomEntries(page));
-    navigate(`/user/symptom-entries?page=${page}`);
+    dispatch(fetchAllSymptomEntries(page));
   };
 
   return (
@@ -93,7 +96,7 @@ function SymptomEntryOverview() {
               </p>
             )}
           </aside>
-          {symptoms && symptoms.length ? (
+          {symptoms && symptoms.length && !error ? (
             <>
               <Grid.Container gap={3} justify="flex-start" align="flex-end">
                 {symptoms.map((symptom) => {
@@ -116,7 +119,20 @@ function SymptomEntryOverview() {
               )}
             </>
           ) : (
-            "No symptom entries to display"
+            <Container
+              display={"flex"}
+              justify="center"
+              align="center"
+              className="glassmorpheus-graph"
+              css={{ margin: "2rem", padding: "2rem", maxWidth: "72vw" }}
+            >
+              {error === "No symptoms found" && (
+                <HeaderText
+                  text="We don't have any symptoms recorded, start
+                  tracking!"
+                />
+              )}
+            </Container>
           )}
         </>
       )}
