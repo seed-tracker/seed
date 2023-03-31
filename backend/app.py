@@ -21,14 +21,14 @@ app = Flask(__name__, static_folder="../frontend/build", static_url_path="")
 
 cors = CORS(app)
 
-app.register_blueprint(auth, url_prefix="/api/auth")
-app.register_blueprint(groups, url_prefix="/api/groups")
-app.register_blueprint(foods, url_prefix="/api/foods")
-app.register_blueprint(symptoms, url_prefix="/api/symptoms")
-app.register_blueprint(meals, url_prefix="/api/meals")
-app.register_blueprint(user_symptoms, url_prefix="/api/user/symptoms")
-app.register_blueprint(users, url_prefix="/api/users")
-app.register_blueprint(stats, url_prefix="/api/stats")
+app.register_blueprint(auth, url_prefix="/auth")
+app.register_blueprint(groups, url_prefix="/groups")
+app.register_blueprint(foods, url_prefix="/foods")
+app.register_blueprint(symptoms, url_prefix="/symptoms")
+app.register_blueprint(meals, url_prefix="/meals")
+app.register_blueprint(user_symptoms, url_prefix="/user/symptoms")
+app.register_blueprint(users, url_prefix="/users")
+app.register_blueprint(stats, url_prefix="/stats")
 
 
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
