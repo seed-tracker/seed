@@ -10,6 +10,7 @@ import scatterSlice from "./scatterSlice";
 import foodGroupsSlice from "./foodGroupsSlice";
 
 // import created slices
+const production = process.env.NODE_ENV === "production";
 
 const appReducer = combineReducers({
   auth: authSlice,
@@ -36,8 +37,9 @@ export const clearStore = () => ({
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
-  devTools: true,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(!production ? logger : []),
+  devTools: !production,
 });
 
 export default store;

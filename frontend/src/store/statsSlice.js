@@ -8,7 +8,7 @@ export const getUserStats = createAsyncThunk(
       const { data } = await apiClient.get(`/stats?days=${days}`);
       return data;
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   }
 );
