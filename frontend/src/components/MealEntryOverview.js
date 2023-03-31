@@ -64,7 +64,7 @@ function MealEntryOverview() {
           margin: 0,
           padding: "3vw",
           flexDirection: "column",
-          maxWidth: "68vw",
+          maxWidth: "80vw",
         },
       }}
     >

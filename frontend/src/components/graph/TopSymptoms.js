@@ -77,7 +77,19 @@ const TopSymptoms = () => {
         .append("g")
         .attr("transform", `translate(${(margin.left * 2)}, ${margin.top * 2})`)
         .call(yAxis); // make the y-axis
+        yAxisLine.selectAll(".tick line")
+        .remove(); 
+        // yAxisLine.selectAll(".tick text")
+        // yAxisLine
+        // .selectAll(".tick text")
+        // .style("writing-mode", null)
+        // .attr("transform", "translate(-20, 0) rotate(-45)");
 
+        yAxisLine.selectAll(".tick text")
+  .attr("x", "-24")
+  .style("text-anchor", "end")
+  .attr("dy", "-0.2em");
+        yAxisLine.select(".domain").attr("transform", `translate(-${margin.left}, 0)`);
       svg.selectAll(".tick text").on("click", (event, d) => {
         svg.select(".x-axis").transition().duration(500).call(xAxis);
       });
