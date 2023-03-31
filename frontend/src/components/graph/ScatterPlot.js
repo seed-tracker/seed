@@ -323,10 +323,7 @@ const ScatterPlot = () => {
                           {name}
                         </Text>
                         <Spacer x={0.5} />
-                        <Switch
-                          css={{
-                            display: "inline-flex",
-                          }}
+
                           key={i}
                           className="legendSwitch"
                           size="sm"
