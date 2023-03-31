@@ -200,16 +200,9 @@ const SymptomForm = () => {
                 min={0}
                 max={10}
                 value={severity}
-                // defaultValue={severity}
+                tooltip="on"
                 onChange={(event) => setSeverity(event.target.value)}
               />
-              {/* <input
-                type="range"
-                min="0"
-                max="10"
-                value={severity}
-                onChange={(event) => setSeverity(event.target.value)}
-              /> */}
             </label>
             <Spacer y={2} />
             <Button
