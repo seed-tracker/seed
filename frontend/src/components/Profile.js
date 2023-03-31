@@ -71,6 +71,7 @@ const Profile = () => {
       justify="center"
       align="center"
       css={{
+        overflow:"auto",
         "@xs": {
           margin: 0,
           maxWidth: "100vw",
