@@ -54,7 +54,6 @@ const Signup = () => {
       onChange: (e) => setPassword(e.target.value),
       helperText: `8 characters, 1 number, 1 uppercase character, 1 special character`,
       label: "Password",
-      useRegex: true,
     },
     {
       name: "email",
@@ -77,7 +76,7 @@ const Signup = () => {
     {
       name: "birthdate",
       type: "date",
-      required: true,
+      required: false,
       value: birthdate,
       onChange: (e) => setBirthdate(e.target.value),
       label: "Date of Birth",

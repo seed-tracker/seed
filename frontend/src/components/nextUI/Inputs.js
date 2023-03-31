@@ -16,19 +16,21 @@ function Inputs(inputProps) {
   const { required, type, label, helperText, value, onChange, useRegex } =
     inputProps;
 
-  if (type === "password") {
+  if (type.split(" ")[0] === "password") {
+    const pattern =
+      type.split(" ")[1] === "noregex"
+        ? ".{1,}"
+        : "^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*()]).{8,}$";
+
     return (
       <>
         <NextUiInput.Password
           bordered
           color="secondary"
           size="md"
-          pattern={
-            useRegex
-              ? "^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*()]).{8,}$"
-              : ".{1,}"
-          }
-          type={type}
+          width="20vw"
+          pattern={pattern}
+          type="password"
           required={required}
           label={label}
           helperText={helperText && helperText}
