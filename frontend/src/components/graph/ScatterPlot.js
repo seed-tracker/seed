@@ -284,7 +284,7 @@ const ScatterPlot = () => {
       setDateRange(newRange);
     };
 
-    d3.selectAll(".slider").on("change", updateAxis);
+    d3.selectAll('input[type="range"]').on("change", updateAxis);
   }, [allData, currentFoods, currentGroups, currentSymptom]);
 
   return (
