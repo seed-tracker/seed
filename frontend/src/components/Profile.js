@@ -67,7 +67,7 @@ const Profile = () => {
 
   return (
     <Container
-      display={"flex"}
+      display="flex"
       justify="center"
       align="center"
       css={{
@@ -76,12 +76,8 @@ const Profile = () => {
           maxWidth: "100vw",
         },
         "@sm": {
-          maxWidth: "70vw",
-          minWidht: "40vw",
+          maxWidth: "80vw",
           margin: 0,
-          top: "5rem",
-          right: "3vw",
-          marginBottom: "10rem",
         },
       }}
     >
@@ -103,21 +99,18 @@ const Profile = () => {
                 "@sm": { margin: "2rem 0", alignSelf: "flex-end" },
               }}
             >
-              <Button.Group
-                color="primary"
-                bordered
-                ghost
-                css={{
-                  margin: "1rem",
-                  alignSelf: "center",
-                }}
+              <Container
+                display="flex"
+                direction="row"
+                justify="center"
+                align="center"
               >
                 {scatterData && scatterData.length > 0 && (
                   <Button
                     onClick={() => setGraphIdx(0)}
                     type="button"
                     aria-label="Button to show the top associations graph"
-                    css={getCss(0)}
+                    css={{ ...getCss(0), ...buttonMargin }}
                   >
                     Top Associations
                   </Button>
@@ -126,7 +119,7 @@ const Profile = () => {
                   onClick={() => setGraphIdx(1)}
                   type="button"
                   aria-label="Button to show the Food/Symptom Relationships graph"
-                  css={getCss(1)}
+                  css={{ ...getCss(1), ...buttonMargin }}
                 >
                   Food/Symptom Relationships
                 </Button>
@@ -134,7 +127,7 @@ const Profile = () => {
                   onClick={() => setGraphIdx(2)}
                   type="button"
                   aria-label="Button to show the top foods graph"
-                  css={getCss(2)}
+                  css={{ ...getCss(2), ...buttonMargin }}
                 >
                   Top Foods
                 </Button>
@@ -142,16 +135,19 @@ const Profile = () => {
                   onClick={() => setGraphIdx(3)}
                   type="button"
                   aria-label="Button to show the top symptoms graph"
-                  css={getCss(3)}
+                  css={{ ...getCss(3), ...buttonMargin }}
                 >
                   Top Symptoms
                 </Button>
-              </Button.Group>
+              </Container>
+
               <Card
                 className="glassmorpheus-graph"
                 css={{
+                  overflow: "auto",
                   width: "auto",
                   padding: "1rem",
+                  marginTop: "1rem",
                 }}
               >
                 <section style={{ display: getDisplay(0) }}>

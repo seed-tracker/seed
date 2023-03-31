@@ -77,19 +77,7 @@ const TopSymptoms = () => {
         .append("g")
         .attr("transform", `translate(${(margin.left * 2)}, ${margin.top * 2})`)
         .call(yAxis); // make the y-axis
-        yAxisLine.selectAll(".tick line")
-        .remove(); 
-        // yAxisLine.selectAll(".tick text")
-        // yAxisLine
-        // .selectAll(".tick text")
-        // .style("writing-mode", null)
-        // .attr("transform", "translate(-20, 0) rotate(-45)");
 
-        yAxisLine.selectAll(".tick text")
-  .attr("x", "-24")
-  .style("text-anchor", "end")
-  .attr("dy", "-0.2em");
-        yAxisLine.select(".domain").attr("transform", `translate(-${margin.left}, 0)`);
       svg.selectAll(".tick text").on("click", (event, d) => {
         svg.select(".x-axis").transition().duration(500).call(xAxis);
       });
@@ -171,7 +159,11 @@ const TopSymptoms = () => {
         alignItems={"center"}
         justify={"center"}
       >
-        <svg ref={svgRef}  preserveAspectRatio="xMaxYMid meet" viewBox="0 0 950 360"></svg>
+        <Container
+          css={{position: "relative", overflow: "auto", "-webkit-overflow-scrolling": "touch"}}
+        >
+          <svg ref={svgRef} viewBox="0 0 750 350" width="900" height="360"></svg>
+        </Container>
         <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
           <Text h4>Filter data by</Text>
             <Button
