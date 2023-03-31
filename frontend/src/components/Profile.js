@@ -79,7 +79,6 @@ const Profile = () => {
           maxWidth: "70vw",
           minWidht: "40vw",
           margin: 0,
-          position: "absolute",
           top: "5rem",
           right: "3vw",
           marginBottom: "10rem",
