@@ -149,10 +149,6 @@ def get_user_correlations(user):
         username = user["username"]
 
         correlations = db.correlations.find({"username": username})
-
-        if not correlations:
-            return "Correlations not found", 204
-
         correlations_list = []
         for correlation in correlations:
             correlation["_id"] = str(correlation["_id"])
@@ -166,7 +162,6 @@ def get_user_correlations(user):
             jsonify({"message": "An error occured fetching the user's correlations"}),
             500,
         )
-
 
 # re-run the algorithm (when app mounts) to update correlations
 @users.route("/correlations/update", methods=["PUT"])
