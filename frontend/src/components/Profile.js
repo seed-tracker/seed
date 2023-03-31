@@ -1,19 +1,17 @@
+import { Button, Card, Container } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import ScatterPlot from "./graph/ScatterPlot";
-import CirclePacking from "./graph/CirclePacking";
-import TopSymptoms from "./graph/TopSymptoms";
-import TopFoods from "./graph/TopFoods";
-import StatsAndFacts from "./StatsAndFacts";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchUserCorrelations } from "../store/correlationsSlice";
-import { Container, Text, Button } from "@nextui-org/react";
-import { PageLoading, HeaderText } from "./nextUI";
-import { fetchAllSymptoms } from "../store/symptomSlice";
+import { fetchAllFoodGroups } from "../store/foodGroupsSlice";
 import { fetchScatterData } from "../store/scatterSlice";
 import { getUserStats } from "../store/statsSlice";
-import { fetchAllFoodGroups } from "../store/foodGroupsSlice";
-import { Card } from "@nextui-org/react";
+import { fetchAllSymptoms } from "../store/symptomSlice";
+import StatsAndFacts from "./StatsAndFacts";
+import CirclePacking from "./graph/CirclePacking";
+import ScatterPlot from "./graph/ScatterPlot";
+import TopFoods from "./graph/TopFoods";
+import TopSymptoms from "./graph/TopSymptoms";
+import { HeaderText, PageLoading } from "./nextUI";
 /**
  * Placeholder component for the userprofile page
  * @component shows "profile" if the user has logged enough entries to have data to show, otherwise, shows a randomly generated quote from an API
@@ -73,6 +71,7 @@ const Profile = () => {
         "@xs": {
           margin: 0,
           maxWidth: "100vw",
+          alignContent: "flex-start",
         },
         "@sm": {
           maxWidth: "80vw",
@@ -93,15 +92,21 @@ const Profile = () => {
               align="center"
               css={{
                 "@xs": {
+                  alignSelf: "flex-start",
                   margin: 0,
-                  width: "100vw",
+                  maxWidth: "100vw",
                 },
-                "@sm": { margin: "2rem 0", alignSelf: "flex-end" },
+                "@sm": {
+                  margin: "2rem 0",
+                  alignSelf: "flex-start",
+                  maxWidth: "90vw",
+                },
               }}
             >
               <Container
                 display="flex"
                 direction="row"
+                wrap="wrap"
                 justify="center"
                 align="center"
               >

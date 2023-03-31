@@ -1,16 +1,15 @@
+import { Button, Container } from "@nextui-org/react";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { me } from "../store/authSlice";
-import { Container, Button } from "@nextui-org/react";
-import { Links } from "./nextUI";
 import circlePacking from "../img/circle-packing.png";
+import mealForm from "../img/meal-form.png";
+import scatterPlot from "../img/scatter-plot.png";
+import symptomForm from "../img/symptom-form.png";
 import topFoods from "../img/top-foods.png";
 import topSymptoms from "../img/top-symptoms.png";
-import pastSymptoms from "../img/past-symptoms.png";
-import scatterPlot from "../img/scatter-plot.png";
-import mealForm from "../img/meal-form.png";
-import symptomForm from "../img/symptom-form.png";
+import { me } from "../store/authSlice";
+import { Links } from "./nextUI";
 
 /**
  * Component for the homepage
@@ -32,9 +31,6 @@ const Home = () => {
         display="flex"
         wrap={"wrap"}
         css={{
-          "@xs": {
-            paddingRight: "0",
-          },
           "@sm": {
             alignContent: "center",
             justifyContent: "flex-end",
@@ -42,7 +38,7 @@ const Home = () => {
           },
         }}
       >
-        <h2 style={{ fontSize: "5rem", color: "#444c38" }}>
+        <h2 style={{ fontSize: "10vh", color: "#444c38" }}>
           <span style={{ fontFamily: "Lovechild" }}>SEED</span> <br />
           No Roots <br />
           No Growth
@@ -50,19 +46,14 @@ const Home = () => {
       </Container>
       <Container
         fluid
+        className="glassmorpheus-graph"
         responsive={"false"}
         display="flex"
         direction="column"
         wrap={"wrap"}
         css={{
-          "@xs": {
-            padding: "1vw",
-          },
-          "@sm": {
-            padding: "5vw",
-          },
+          padding: "5vw",
         }}
-        className="glassmorpheus-graph"
       >
         <h4>
           Are you tired of struggling to determine which foods are causing you
@@ -126,12 +117,7 @@ const Home = () => {
         direction="column"
         wrap={"wrap"}
         css={{
-          "@xs": {
-            padding: "1vw",
-          },
-          "@sm": {
-            padding: "5vw",
-          },
+          padding: "5vw",
         }}
         className="glassmorpheus"
       >
@@ -155,27 +141,28 @@ const Home = () => {
             <Container
               display="flex"
               css={{
+                gap: "1rem",
                 "@xs": {
                   flexDirection: "column",
                   maxWidth: "90vw",
-                  justifyContent: "space-around",
                   padding: "1rem",
                 },
                 "@sm": {
                   flexDirection: "row",
+                  justifyContent: "space-around",
                   maxWidth: "90vw",
                 },
               }}
             >
               <img
-                style={{ height: "40vh" }}
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={mealForm}
                 alt={
                   "SEED's Add A Meal Form - showing options available during meal entry"
                 }
               />
               <img
-                style={{ height: "40vh" }}
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={symptomForm}
                 alt={
                   "SEED's Add A Symptom Form - showing options available during symptom entry"
@@ -225,7 +212,7 @@ const Home = () => {
               }}
             >
               <img
-                style={{ height: "40vh" }}
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={scatterPlot}
                 alt={
                   "SEED's Top Association Scatter Plot Graph - showing a demo vizualization"
@@ -251,7 +238,7 @@ const Home = () => {
               }}
             >
               <img
-                style={{ height: "40vh" }}
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={circlePacking}
                 alt={
                   "SEED's Top Association Circle Packing Graph - showing a demo vizualization"
@@ -274,7 +261,7 @@ const Home = () => {
               }}
             >
               <img
-                style={{ height: "40vh" }}
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={topFoods}
                 alt={
                   "SEED's Top Foods Lollipop Graph - showing a demo vizualization"
@@ -298,7 +285,7 @@ const Home = () => {
               }}
             >
               <img
-                style={{ height: "40vh" }}
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={topSymptoms}
                 alt={
                   "SEED's Top Symptoms Lollipop Graph - showing a demo vizualization"

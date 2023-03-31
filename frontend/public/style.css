@@ -68,6 +68,7 @@ input[type="range"]::-moz-range-track {
   background-size: 100vw auto;
   margin: 0;
   background-repeat: no-repeat;
+  background-position: center;
   background-attachment: fixed;
 }
 
@@ -82,4 +83,16 @@ input[type="range"]::-moz-range-track {
 .nextui-switch-circle {
   background: #c2e6cd !important;
   border: #7a918d !important;
+}
+
+@media (max-width: 640px) {
+  .bookend {
+    background-size: auto 100vh;
+  }
+
+  .homehero {
+    background-image: none;
+    height: fit-content;
+    padding: 2rem;
+  }
 }
