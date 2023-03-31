@@ -1,5 +1,5 @@
-# main entry point for backend
-# app combines all routes, implements CORS and runs server
+#main entry point for backend
+#app combines all routes, implements CORS and runs server
 from flask_cors import CORS
 from flask import Flask
 from dotenv import load_dotenv, find_dotenv
@@ -17,7 +17,7 @@ from api.auth import auth
 from api.meals import meals
 from api.stats import stats
 
-app = Flask(__name__, static_folder="./build", static_url_path="/")
+app = Flask(__name__)
 
 cors = CORS(app)
 
@@ -31,19 +31,8 @@ app.register_blueprint(users, url_prefix="/users")
 app.register_blueprint(stats, url_prefix="/stats")
 
 
+# to protect the app
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
-
-@app.route("/")
-def index():
-    return app.send_static_file("index.html")
-
-
-@app.errorhandler(404)
-def not_found(e):
-    return app.send_static_file("index.html")
-
-
 if __name__ == "__main__":
-    # app.run(port=5000, debug=True)
-    app.run(host="0.0.0.0", debug=False, post=os.environ.get("PORT", 80))
+    app.run(port=5000, debug=True)
