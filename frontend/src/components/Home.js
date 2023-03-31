@@ -1,8 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { me } from "../store/authSlice";
-import { Container, Image } from "@nextui-org/react";
-import { Links, HeaderText } from "./nextUI";
+import { Container, Button } from "@nextui-org/react";
+import { Links } from "./nextUI";
+import circlePacking from "../img/circle-packing.png";
+import topFoods from "../img/top-foods.png";
+import topSymptoms from "../img/top-symptoms.png";
+import pastSymptoms from "../img/past-symptoms.png";
+import scatterPlot from "../img/scatter-plot.png";
+import mealForm from "../img/meal-form.png";
+import symptomForm from "../img/symptom-form.png";
 
 /**
  * Component for the homepage
@@ -10,7 +18,7 @@ import { Links, HeaderText } from "./nextUI";
  */
 const Home = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(me());
   }, [dispatch]);
@@ -25,7 +33,7 @@ const Home = () => {
         wrap={"wrap"}
         css={{
           "@xs": {
-            paddingLeft: "0",
+            paddingRight: "0",
           },
           "@sm": {
             alignContent: "center",
@@ -40,108 +48,299 @@ const Home = () => {
           No Growth
         </h2>
       </Container>
-      <Container>
-        <p>
-          Are you tired of struggling to determine which foods are causing you
-          discomfort and negatively impacting your health? Our powerful tool is
-          here to make the process simple and straightforward. easily identify
-          patterns and narrow down potential food-based triggers
-          <span style={{ fontFamily: "Lovechild" }}>SEED</span> can help you
-          identify patterns and narrow down potential food based triggers.
-          Simply track your symptoms and food intake and see insights grow.
-        </p>
-        <p>
-          <strong>
-            Insights are associations/relations and are NOT medical advice.
-          </strong>
-        </p>
-        <p>
-          Our intuitive interface and user-friendly design make it easy for
-          anyone to use, regardless of their technical experience. Start feeling
-          your best and take the first step towards a healthier, happier you
-          today!
-        </p>
-      </Container>
-
-      <h2>Sign up today and get access to:</h2>
-      <ul>
-        <li>Intuitive Interface</li>
-
-        <li>Track your Symptoms & Food Intake</li>
-        <li>Choose from an array of data vizualizations</li>
-        <li>Scatter Plot/Top Associations</li>
-        <p>
-          A scatterplot graph is a visual representation of data that shows the
-          relationship between two variables. In this case, the graph is showing
-          the relationship between different foods eaten and the symptoms felt
-          by an individual. The horizontal axis of the graph represents the
-          different types of food consumed, while the vertical axis represents
-          the severity of symptoms experienced. Each point on the graph
-          represents a specific combination of food and symptoms. The
-          scatterplot allows you to easily see patterns and relationships
-          between the foods consumed and the symptoms felt. For example, if
-          there is a cluster of points in the upper right-hand corner of the
-          graph, this indicates that there may be a correlation between certain
-          foods and more severe symptoms. Conversely, if there are several
-          points clustered in the lower left-hand corner of the graph, this may
-          indicate that certain foods are not causing any significant symptoms.
-          Overall, the scatterplot graph is a powerful tool for visualizing the
-          relationship between different variables and can help individuals make
-          informed decisions about their diet and overall health.
-        </p>
-        <li>Circle Packing/Top Associations</li>
-        <li>Top 10 Tracked Foods</li>
-        <li>Top 5 Tracked Symptoms</li>
-        <li>No need for clunky spreadsheets</li>
-        <p>
-          Welcome to our innovative application designed to help you take
-          control of your health and identify potential food triggers that may
-          be causing discomfort and negative symptoms. Our team of expert
-          developers and health professionals have created this easy-to-use tool
-          with the goal of making it simple and straightforward for anyone to
-          track their diet and symptoms. Our application offers a powerful
-          solution for those who struggle to determine which foods are causing
-          them discomfort. By tracking your diet and any symptoms you
-          experience, our intuitive interface allows you to quickly identify
-          potential patterns and narrow down the foods that may be causing
-          issues. We understand the frustration of trial and error when it comes
-          to managing your diet and health. That's why we've designed our
-          application to take the guesswork out of the equation, helping you
-          make informed decisions about what you eat and how it impacts your
-          body. Our commitment to your health and well-being is at the heart of
-          everything we do. We believe that everyone deserves to feel their
-          best, and our application is designed to make that a reality. Join the
-          countless individuals who have taken control of their health with our
-          application. Start tracking your diet and symptoms today and take the
-          first step towards a healthier, happier you! How does it work? make
-          icons? Sign up today Track your meals and symptoms Get insights about
-          associations Plant your SEED today - SignUp Link -
-        </p>
-      </ul>
-
       <Container
         fluid
         responsive={"false"}
         display="flex"
+        direction="column"
         wrap={"wrap"}
-        css={{ alignItems: "center" }}
+        css={{
+          "@xs": {
+            padding: "1vw",
+          },
+          "@sm": {
+            padding: "5vw",
+          },
+        }}
+        className="glassmorpheus-graph"
+      >
+        <h4>
+          Are you tired of struggling to determine which foods are causing you
+          discomfort and negatively impacting your health?{" "}
+        </h4>
+        <h4>
+          <span style={{ fontFamily: "Lovechild" }}>SEED</span> is here to make
+          the process simple and straightforward &mdash; identify patterns and
+          narrow down potential food-based triggers!*{" "}
+        </h4>
+
+        <h4>
+          Our intuitive interface and user-friendly design make it easy for
+          anyone to use, regardless of their technical experience.
+        </h4>
+        <h4>
+          Start feeling your best and take the first step towards a healthier,
+          happier you today!
+        </h4>
+        <p>
+          <strong>
+            *Insights are associations/relations and are NOT medical advice.
+          </strong>
+        </p>
+        <Container
+          fluid
+          responsive={"false"}
+          display="flex"
+          justify="center"
+          wrap={"wrap"}
+          css={{
+            paddingTop: "2rem",
+            alignItems: "center",
+          }}
+        >
+          <strong>Created by</strong>{" "}
+          <Links href="https://www.linkedin.com/in/judylkuo/" text="Judy Kuo" />
+          |{" "}
+          <Links
+            href="https://www.linkedin.com/in/jolee-developer"
+            text="Jo Lee"
+          />
+          |{" "}
+          <Links href="https://www.linkedin.com/in/wanyi-ng/" text="Wanyi Ng" />
+          |{" "}
+          <Links
+            href="https://www.linkedin.com/in/ltreidler/"
+            text="Leah Treidler"
+          />{" "}
+          |{" "}
+          <Links
+            href="https://www.linkedin.com/in/vikwedel/"
+            text="Vik Wedel"
+          />
+        </Container>
+      </Container>
+      <Container
+        fluid
+        responsive={"false"}
+        display="flex"
+        direction="column"
+        wrap={"wrap"}
+        css={{
+          "@xs": {
+            padding: "1vw",
+          },
+          "@sm": {
+            padding: "5vw",
+          },
+        }}
+        className="glassmorpheus"
+      >
+        <h2>Sign up today and get access to:</h2>
+        <ul>
+          <li>
+            <h3>Intuitive Interface</h3>
+            <p>
+              We make tracking your meals and symptoms simple and
+              straightforward. With just a few clicks, you can easily log your
+              meals and any symptoms you experience, allowing you to quickly
+              identify potential patterns and narrow down the foods that may be
+              causing issues.
+            </p>
+            <p>
+              Say goodbye to the frustration of traditional food diaries and
+              symptom logs. With SEED's intuitive interface, tracking your diet
+              and health has never been easier. Start feeling your best and take
+              the first step towards a healthier, happier you with SEED.
+            </p>
+            <Container
+              display="flex"
+              css={{
+                "@xs": {
+                  flexDirection: "column",
+                  maxWidth: "90vw",
+                  justifyContent: "space-around",
+                  padding: "1rem",
+                },
+                "@sm": {
+                  flexDirection: "row",
+                  maxWidth: "90vw",
+                },
+              }}
+            >
+              <img
+                style={{ height: "40vh" }}
+                src={mealForm}
+                alt={
+                  "SEED's Add A Meal Form - showing options available during meal entry"
+                }
+              />
+              <img
+                style={{ height: "40vh" }}
+                src={symptomForm}
+                alt={
+                  "SEED's Add A Symptom Form - showing options available during symptom entry"
+                }
+              />
+            </Container>
+          </li>
+
+          <li>
+            {" "}
+            <h3>A Wide Range of Data Vizualizations</h3>
+            <p>
+              Our data visualization options allow you to easily analyze your
+              tracked data and identify potential associations between your
+              meals and symptoms. With a variety of visualization options to
+              choose from, you can customize your view to best suit your needs
+              and preferences.
+            </p>
+            <p>
+              Say goodbye to the frustration of traditional food diaries and
+              symptom logs. With SEED's intuitive interface, tracking your diet
+              and health has never been easier. Start feeling your best and take
+              the first step towards a healthier, happier you with SEED.
+            </p>
+            Choose from an array of data vizualizations
+          </li>
+          <li>
+            <h4>View Your Top Associations</h4>
+            <p>
+              Our scatter plot and circle packing graphs provide a powerful
+              visualization of your tracked data, allowing you to easily
+              identify the top associations between specific foods and symptoms.
+            </p>
+            <p>
+              The <strong>scatterplot graph </strong>displays a visual
+              representation of the relationship between different foods eaten
+              and symptoms felt, allowing you to easily identify potential
+              patterns and associations. This intuitive graph makes it easy to
+              determine which foods may be causing issues, and adjust your diet
+              accordingly.{" "}
+            </p>
+            <Container
+              display="flex"
+              css={{
+                justifyContent: "space-around",
+                padding: "1rem",
+              }}
+            >
+              <img
+                style={{ height: "40vh" }}
+                src={scatterPlot}
+                alt={
+                  "SEED's Top Association Scatter Plot Graph - showing a demo vizualization"
+                }
+              />
+            </Container>
+            <p>
+              The <strong>circle packing graph</strong> takes things a step
+              further, by visualizing the top associations between specific
+              foods and symptoms. This graph displays the most common food
+              triggers in a hierarchical format, allowing you to quickly see
+              which foods are most frequently associated with negative symptoms.
+              With SEED's scatterplot and circle packing graphs, you can take
+              control of your diet and health like never before. Say goodbye to
+              the frustration of trial and error, and make informed decisions
+              about what you eat with SEED.
+            </p>
+            <Container
+              display="flex"
+              css={{
+                justifyContent: "space-around",
+                padding: "1rem",
+              }}
+            >
+              <img
+                style={{ height: "40vh" }}
+                src={circlePacking}
+                alt={
+                  "SEED's Top Association Circle Packing Graph - showing a demo vizualization"
+                }
+              />
+            </Container>
+          </li>
+          <li>
+            <h4>View Your Top Tracked Foods & Symptoms</h4>
+            <p>
+              Our top tracked foods and symptoms graphs provide a comprehensive
+              overview of your diet and health, allowing you to easily see the
+              most frequently tracked foods and symptoms.
+            </p>
+            <Container
+              display="flex"
+              css={{
+                justifyContent: "space-around",
+                padding: "1rem",
+              }}
+            >
+              <img
+                style={{ height: "40vh" }}
+                src={topFoods}
+                alt={
+                  "SEED's Top Foods Lollipop Graph - showing a demo vizualization"
+                }
+              />
+            </Container>
+            <p>
+              With the <strong>top tracked foods graph</strong>, you can quickly
+              identify the foods you consume most frequently, and determine if
+              any of these foods are potential triggers for negative symptoms.
+            </p>
+            <p>
+              The <strong>top tracked symptoms graph</strong> provides a clear
+              overview of the most frequently tracked symptoms.
+            </p>
+            <Container
+              display="flex"
+              css={{
+                justifyContent: "space-around",
+                padding: "1rem",
+              }}
+            >
+              <img
+                style={{ height: "40vh" }}
+                src={topSymptoms}
+                alt={
+                  "SEED's Top Symptoms Lollipop Graph - showing a demo vizualization"
+                }
+              />
+            </Container>
+          </li>
+        </ul>
+      </Container>
+      <Container
+        fluid
+        responsive={"false"}
+        display="flex"
+        direction="column"
+        css={{ alignItems: "center", padding: "5rem", gap: "2rem" }}
         justify="center"
         className="glassmorpheus-graph"
       >
-        <strong>Created by</strong>{" "}
-        <Links href="https://www.linkedin.com/in/judylkuo/" text="Judy Kuo" />|{" "}
-        <Links
-          href="https://www.linkedin.com/in/jolee-developer"
-          text="Jo Lee"
-        />
-        | <Links href="https://www.linkedin.com/in/wanyi-ng/" text="Wanyi Ng" />
-        |{" "}
-        <Links
-          href="https://www.linkedin.com/in/ltreidler/"
-          text="Leah Treidler"
-        />{" "}
-        |{" "}
-        <Links href="https://www.linkedin.com/in/vikwedel/" text="Vik Wedel" />
+        <h2 style={{ color: "#444c38" }}>
+          Plant your <span style={{ fontFamily: "Lovechild" }}>SEED</span>{" "}
+          today!
+        </h2>
+        <Button
+          size="md"
+          color="success"
+          borderRadius="50%"
+          onPress={() => navigate("/signup")}
+          css={{
+            backgroundColor: "#67c43f",
+            fontWeight: "bold",
+            backgroundImage:
+              "radial-gradient(circle,  #5ca388 25%, #649b93 50%, #b4d3b2 100%)",
+            backgroundSize: "400% 400%",
+            transition: "background-position 0.8s ease-in-out",
+            "&:hover": {
+              backgroundPosition: "100% 0",
+            },
+            color: "$secondary",
+          }}
+        >
+          Signup
+        </Button>
       </Container>
     </>
   );
