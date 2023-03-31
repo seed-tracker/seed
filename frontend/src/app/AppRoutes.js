@@ -35,6 +35,7 @@ const AppRoutes = () => {
     <>
       {isLoggedIn ? (
         <Container
+          className="bookend"
           fluid
           responsive={"false"}
           display="flex"
@@ -60,7 +61,7 @@ const AppRoutes = () => {
           fluid
           responsive={"false"}
           css={{ margin: 0, padding: 0 }}
-          className="mainpage-center"
+          className="bookend"
         >
           <Routes>
             <Route path="/login" element={<Login />} />
