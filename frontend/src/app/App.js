@@ -3,6 +3,7 @@ import AppRoutes from "./AppRoutes";
 import NavigationBar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { NextUIProvider, createTheme } from "@nextui-org/react";
+// import 'frontend/public/slider.css';
 
 /**
  * Component for the main page structure

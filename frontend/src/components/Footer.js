@@ -15,7 +15,7 @@ const Footer = () => {
         fluid
         responsive={false}
         css={{
-          position: "relative",
+          position: "fixed",
           bottom: "0",
           backgroundColor: "rgb(77,93,83, 0.1)",
           padding: "1rem",
