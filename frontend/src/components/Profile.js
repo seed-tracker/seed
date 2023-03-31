@@ -78,6 +78,7 @@ const Profile = () => {
         "@sm": {
           maxWidth: "80vw",
           margin: 0,
+          alignContent: "flex-start",
         },
       }}
     >
