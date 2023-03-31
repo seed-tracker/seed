@@ -120,7 +120,7 @@ const ScatterPlot = () => {
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
-    const width = 500;
+    const width = 900;
     const height = 300;
 
     const svg = d3.select(svgRef.current);
@@ -128,10 +128,11 @@ const ScatterPlot = () => {
     svg.text("");
 
     svg
-      .attr("width", "auto")
+      // .attr("width", "auto")
+      .attr("width", 900)
       .attr("height", height)
-      .style("overflow", "visible")
-      .style("margin-top", "3rem");
+      // .style("overflow", "visible")
+      // .style("margin-top", "3rem");
 
     const labels = [currentSymptom, ...currentFoods, ...currentGroups];
     //make a color range
@@ -339,11 +340,16 @@ const ScatterPlot = () => {
                   );
                 })}
               </Button.Group>
-
-              <svg
-                ref={svgRef}
-                style={{ margin: "8rem", marginRight: "0" }}
-              ></svg>
+              <Container
+                css={{position: "relative", overflow: "auto", "-webkit-overflow-scrolling": "touch"}}
+              >
+                <svg
+                  ref={svgRef}
+                  viewBox="70 0 900 400"
+                  preserveAspectRatio="XMaxYMid meet"
+                  // style={{ margin: "8rem", marginRight: "0" }}
+                ></svg>
+              </Container>
             </Row>
           </>
         </Container>

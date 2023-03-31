@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { select } from "d3-selection";
+import { select, create } from "d3-selection";
 import { scaleBand, scaleLinear } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
 import {
@@ -77,11 +77,24 @@ const TopFoods = () => {
   }
 
   useEffect(() => {
-    const svg = select(svgRef.current);
+    const svg = select(svgRef.current)
+      // .style("position", "absolute")
+      // .style("pointer-events", "none");
     svg.selectAll("*").remove();
     const margin = { top: 10, right: 10, bottom: 130, left: 100 };
     const width = 950 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
+
+    const parent = create("div");
+    parent.append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .style("position", "absolute")
+        .style("pointer-events", "none")
+        .style("z-index", 1)
+        .style("overflow-x", "scroll")
+        .style("-webkit-overflow-scrolling", "touch")
+        .call(svg => svg.append("g"));
 
     const g = svg
       .append("g")
@@ -91,7 +104,7 @@ const TopFoods = () => {
       // y axis label
       g.append("text")
         .attr("x", -(height / 2))
-        .attr("y", -60)
+        .attr("y", -55)
         .attr("font-size", "20px")
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
@@ -189,7 +202,11 @@ const TopFoods = () => {
         alignItems={"center"}
         justify={"center"}
       >
-        <svg ref={svgRef} preserveAspectRatio="xMaxYMid meet" viewBox="0 0 950 580"></svg>
+        <Container
+          css={{position: "relative", overflow: "auto", "-webkit-overflow-scrolling": "touch"}}
+        >
+          <svg ref={svgRef} preserveAspectRatio="XMaxYmid meet" viewBox="0 0 950 550" width="950" height="580"></svg>
+        </Container>
         <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
           <Text h4>Filter data by</Text>
             <Button
