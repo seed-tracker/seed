@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as d3 from "d3";
 import { fetchScatterData } from "../../store/scatterSlice";
 import { Text, Button, Row } from "@nextui-org/react";
+import { Slider } from "../nextUI";
 
 const ScatterControls = ({
   symptomList,
@@ -24,14 +25,22 @@ const ScatterControls = ({
           : `${sliderVal} months`}
       </Text>
       <section>
-        <input
+        <Slider
+        value={sliderVal}
+          min={3}
+          max={maxMonths || 3}
+          tooltip="off"
+          className="slider"
+          onChange={(e) => setSliderVal(Number(e.target.value))}
+        />
+        {/* <input
           type="range"
           min="3"
           max={maxMonths || 3}
           className="slider"
           step="1"
           onChange={(e) => setSliderVal(Number(e.target.value))}
-        />
+        /> */}
       </section>
       <Row css={{ display: "flex", alignItems: "baseline" }}>
         <Text h4>Most common symptoms </Text>
