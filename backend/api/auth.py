@@ -45,6 +45,7 @@ def login():
         else:
             return "User not found", 401
     except Exception as e:
+        print(str(e))
         return "Authentication failed", 500
 
 

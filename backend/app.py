@@ -36,12 +36,12 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 @app.route("/")
 def index():
-    return app.send_static_file("index.html")
+    return "Hello World", 200
 
 
 @app.errorhandler(404)
 def not_found(e):
-    return app.send_static_file("index.html")
+    return "Not found", 404
 
 
 if __name__ == "__main__":
