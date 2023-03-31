@@ -14,7 +14,7 @@ export const fetchScatterData = createAsyncThunk(
 
       return { data: data.data, maxMonths: data.max_months };
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   }
 );

@@ -55,7 +55,7 @@ const SymptomForm = () => {
       }
       // navigate("/profile");
     } catch (error) {
-      console.error(error);
+      console.debug(error);
       setError(
         "There was a problem adding your symptom. Please try again later"
       );
@@ -90,7 +90,7 @@ const SymptomForm = () => {
         setSymptoms(data.map((sym) => ({ name: sym.name, key: sym.name })));
       }
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   };
 
@@ -103,7 +103,7 @@ const SymptomForm = () => {
         setRecentSymptoms(data.map((symptom) => ({ name: symptom })));
       }
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   };
 

@@ -21,7 +21,7 @@ const StatsAndFacts = () => {
         setQuote(`"${data[0].quote}"`);
         setAuthor(`-${data[0].author}`);
       } catch (err) {
-        console.error(err);
+        console.debug(err);
       }
     };
     getQuote();

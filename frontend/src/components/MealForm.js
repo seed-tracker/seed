@@ -44,7 +44,7 @@ function MealForm() {
         setAllGroups(data["data"]);
       }
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   };
 
@@ -55,7 +55,7 @@ function MealForm() {
       //[{name, groups}, {name, groups}, ...]
       if (data) setRecentFoods(data);
     } catch (err) {
-      console.error(err);
+      console.debug(err);
     }
   };
 
@@ -129,7 +129,7 @@ function MealForm() {
         );
       }
     } catch (error) {
-      console.error(error);
+      console.debug(error);
       setError("There was a problem adding your meal. Please try again later");
     }
   };
