@@ -49,10 +49,20 @@ const Profile = () => {
   const getDisplay = (idx) => {
     return idx === graphIdx ? "" : "none";
   };
+  const buttonMargin = { marginRight: "0.5rem" };
 
   const getCss = (idx) => {
-    if (idx === graphIdx) return { backgroundColor: "black", color: "white" };
-    return {};
+    if (idx === graphIdx) {
+      return {
+        backgroundColor: "#7a918d",
+        color: "white",
+      };
+    } else {
+      return {
+        backgroundColor: "#7a918d",
+        color: "white",
+      };
+    }
   };
 
   return (
