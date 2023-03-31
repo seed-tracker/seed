@@ -150,8 +150,11 @@ const CirclePacking = () => {
             <Text h5>{symptomName}</Text>
           </div>
         ))}
-
-        <svg ref={svgRef} width="950" height="500"></svg>
+        <Container
+          css={{position: "relative", overflow: "auto", "-webkit-overflow-scrolling": "touch"}}
+        >
+          <svg ref={svgRef} width="950" height="500"></svg>
+        </Container>
       </Container>
     </>
   );
