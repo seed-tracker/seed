@@ -117,11 +117,11 @@ const CirclePacking = () => {
     leaf
       .append("foreignObject") // Add text labels to each leaf node, with the symptom name as the label text
       .attr("x", (d) => -d.r)
-      .attr("y", (d) => -d.r / 2.2)
+      .attr("y", (d) => -d.r / 3.5)
       .attr("width", (d) => d.r * 2)
       .attr("height", (d) => d.r * 2)
       .html((d) => getNodeLabel(d))
-      .style("font-size", "12px")
+      .style("font-size", "13px")
       .style("font-weight", "bold")
       .style("display", "flex")
       .selectAll("text")
