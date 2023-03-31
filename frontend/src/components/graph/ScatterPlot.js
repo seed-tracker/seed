@@ -300,7 +300,7 @@ const ScatterPlot = () => {
   return (
     <Container
       display={"flex"}
-      css={{ width: "100%", minHeight: "25rem" }}
+      css={{ width: "100%", minHeight: "30rem" }}
       justify="center"
       align="center"
     >
