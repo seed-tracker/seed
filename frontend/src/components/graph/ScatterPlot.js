@@ -323,9 +323,7 @@ const ScatterPlot = () => {
                           {name}
                         </Text>
                         <Spacer x={0.5} />
-                        <Switch color="green" checkedColor="green"
-                         css={{
-                        }}
+
                           key={i}
                           className="legendSwitch"
                           size="sm"

@@ -46,10 +46,6 @@ const TopFoods = () => {
     await dispatch(getUserStats(365));
   };
 
-  useEffect(() => {
-    console.log("mounting!");
-  }, []);
-
   const colorPalette = [
     "#f44336",
     "#e81e63",
@@ -129,11 +125,14 @@ const TopFoods = () => {
         const currentFood = topFoods[i];
         const groupName = currentFood.groups[0];
         for (let j = 0; j < counts[i]; j++) {
-           g.append("circle")
-              .attr("cx", xScale(currentFood.name) + (margin.left / 2) - margin.right + 2)
-              .attr("cy", yScale(j))
-              .attr("fill", foodsColors[groupName])
-              .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
+          g.append("circle")
+            .attr(
+              "cx",
+              xScale(currentFood.name) + margin.left / 2 - margin.right + 2
+            )
+            .attr("cy", yScale(j))
+            .attr("fill", foodsColors[groupName])
+            .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
           if (j === counts[i] - 1) {
             g.append("text")
               .attr(
