@@ -11,6 +11,7 @@ import {
   Switch,
   Text,
   Row,
+  Col,
 } from "@nextui-org/react";
 
 const ScatterPlot = () => {
@@ -22,7 +23,7 @@ const ScatterPlot = () => {
   const [currentFoods, setCurrentFoods] = useState([]);
   const [currentGroups, setCurrentGroups] = useState([]);
   const [legend, setLegend] = useState([]);
-  const [colorPalette, setColorPalette] = useState([
+  const colorPalette = [
     "#DC050C",
     "#882E72",
     "#eb38bf",
@@ -32,7 +33,7 @@ const ScatterPlot = () => {
     "#90C987",
     "#E8601C",
     "#DDAA33",
-  ]);
+  ];
 
   const svgRef = useRef();
 
@@ -327,49 +328,48 @@ const ScatterPlot = () => {
                 <svg
                   ref={svgRef}
                   viewBox="50 0 700 360"
-                  // preserveAspectRatio="XMaxYMid meet"
-                  // style={{ margin: "8rem", marginRight: "0" }}
                 ></svg>
               </Container>
             </Row>
-            {/* <Button.Group bordered> */}
+            <Container>
+              <Row>
                 {legend?.slice(1).map(({ name, color }, i) => {
                   return (
-                    <Container css={{ display: "flex", flexDirection: "row"}}>
-                    {/* <> */}
-                      {/* <Row justify="flex-end"> */}
-                      <Container css={{ display: "flex", flexDirection: "row"}}>
-                        <Text
-                          size={15}
-                          css={{
-                            color: color,
-                            width: "5rem",
-                            textAlign: "right",
-                          }}
-                        >
-                          {name}
-                        </Text>
-                        <Spacer x={0.5} />
-                        <Switch
-                          color="green"
-                          checkedColor="green"
-                          key={i}
-                          className="legendSwitch"
-                          size="sm"
-                          bordered
-                          checked={[...currentFoods, ...currentGroups].includes(
-                            name
-                          )}
-                          onChange={() => toggleLine(name)}
-                          />
-                        </Container>
-                      {/* </Row> */}
-                      {/* <Spacer y={0.7} /> */}
-                    {/* // </> */}
-                      </Container>
+                    <Col
+                      css={{
+                        display: "flex",
+                        alignItems: "baseline",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <Text
+                        size={15}
+                        css={{
+                          color: color,
+                          width: "5rem",
+                          textAlign: "right",
+                        }}
+                      >
+                        {name}
+                      </Text>
+                      <Spacer x={0.5} />
+                      <Switch
+                        color="green"
+                        checkedColor="green"
+                        key={i}
+                        className="legendSwitch"
+                        size="sm"
+                        bordered
+                        checked={[...currentFoods, ...currentGroups].includes(
+                          name
+                        )}
+                        onChange={() => toggleLine(name)}
+                      />
+                    </Col>
                   );
                 })}
-              {/* </Button.Group> */}
+              </Row>
+            </Container>
           </>
         </Container>
       )}
