@@ -37,7 +37,7 @@ const TopSymptoms = () => {
 
   const handleGetAllTime = async (all) => {
     await dispatch(getUserStats("all"));
-    const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
+    // const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
   };
   const handleGetSixMonths = async (halfYear) => {
     await dispatch(getUserStats(180));
@@ -167,14 +167,15 @@ const TopSymptoms = () => {
         <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
           <Text h4>Filter data by</Text>
             <Button
-              onClick={handleGetAllTime}
+              onPress={handleGetAllTime}
+              value="all"
               type="button"
               text="All Time"
               size="sm"
               aria-label="Button to filter chart top symptoms view by all time"
             />
             <Button
-              onClick={handleGetSixMonths}
+              onPress={handleGetSixMonths}
               value="180"
               type="button"
               size="sm"
@@ -182,7 +183,7 @@ const TopSymptoms = () => {
               text="6 Months"
             />
             <Button
-              onClick={handleGetOneYear}
+              onPress={handleGetOneYear}
               value="365"
               type="button"
               aria-label="Button to filter chart top symptoms view by one year"

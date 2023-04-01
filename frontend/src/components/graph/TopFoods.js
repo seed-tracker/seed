@@ -151,7 +151,7 @@ const TopFoods = () => {
       .ease(easeElasticOut)
       .attr("r", 20);
       nodes.exit().remove()
-      
+
       g.selectAll("circle").data(topFoods).join("circle");
 
       for (let i = 0; i < topFoods.length; i++) {
@@ -229,14 +229,14 @@ const TopFoods = () => {
         <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
           <Text h4>Filter data by</Text>
             <Button
-              onClick={handleGetAllTime}
+              onPress={handleGetAllTime}
               type="button"
               aria-label="Button to filter chart top foods view by all time"
               size="sm"
               text="All Time"
             />
             <Button
-              onClick={handleGetSixMonths}
+              onPress={handleGetSixMonths}
               value="180"
               type="button"
               aria-label="Button to filter chart top foods view by six months"
@@ -244,7 +244,7 @@ const TopFoods = () => {
               text="6 Months"
             />
             <Button
-              onClick={handleGetOneYear}
+              onPress={handleGetOneYear}
               type="button"
               size="sm"
               aria-label="Button to filter chart top foods view by one year"
