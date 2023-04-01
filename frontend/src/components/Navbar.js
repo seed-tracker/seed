@@ -30,7 +30,7 @@ const NavigationBar = () => {
     <Navbar
       isBordered
       maxWidth={"fluid"}
-      variant="sticky"
+      variant="static"
       css={{
         zIndex: 999,
         background: "transparent",
@@ -71,53 +71,80 @@ const NavigationBar = () => {
           </Navbar.Item>
         </Navbar.Content>
       ) : (
-        <Navbar.Content>
-          <Navbar.Link>
-            <Button
-              size="md"
-              // color="success"
-              borderRadius="50%"
-              onPress={() => navigate("/login")}
-              css={{
-                backgroundColor: "#67c43f",
-                fontWeight: "bold",
-                backgroundImage:
-                  "radial-gradient(circle,  #5ca388 25%, #649b93 50%, #b4d3b2 100%)",
-                backgroundSize: "400% 400%",
-                transition: "background-position 0.4s ease-in-out",
-                "&:hover": {
-                  backgroundPosition: "100% 0",
-                },
-                color: "$secondary",
-              }}
-            >
-              Login
-            </Button>
-          </Navbar.Link>
-          <Navbar.Link>
-            <Button
-              size="md"
-              color="success"
-              borderRadius="50%"
-              onPress={() => navigate("/signup")}
-              css={{
-                backgroundColor: "#67c43f",
-                fontWeight: "bold",
-                backgroundImage:
-                  "radial-gradient(circle,  #5ca388 25%, #649b93 50%, #b4d3b2 100%)",
-                // backgroundImage: "radial-gradient(circle, #609f67 25%, #c0b2d3 50%, #b4d3b2 100%)",
-                backgroundSize: "400% 400%",
-                transition: "background-position 0.8s ease-in-out",
-                "&:hover": {
-                  backgroundPosition: "100% 0",
-                },
-                color: "$secondary",
-              }}
-            >
-              Signup
-            </Button>
-          </Navbar.Link>
-        </Navbar.Content>
+        <>
+          <Navbar.Toggle showIn="xs" />
+          <Navbar.Collapse disableAnimation>
+            <Navbar.CollapseItem>
+              <Link
+                color="secondary"
+                css={{
+                  minWidth: "100%",
+                }}
+                href="/login"
+              >
+                Login
+              </Link>
+            </Navbar.CollapseItem>
+            <Navbar.CollapseItem>
+              <Link
+                color="secondary"
+                css={{
+                  minWidth: "100%",
+                }}
+                href="/signup"
+              >
+                Signup
+              </Link>
+            </Navbar.CollapseItem>
+          </Navbar.Collapse>
+          <Navbar.Content hideIn="xs">
+            <Navbar.Link>
+              <Button
+                size="md"
+                // color="success"
+                borderRadius="50%"
+                onPress={() => navigate("/login")}
+                css={{
+                  backgroundColor: "#67c43f",
+                  fontWeight: "bold",
+                  backgroundImage:
+                    "radial-gradient(circle,  #5ca388 25%, #649b93 50%, #b4d3b2 100%)",
+                  backgroundSize: "400% 400%",
+                  transition: "background-position 0.4s ease-in-out",
+                  "&:hover": {
+                    backgroundPosition: "100% 0",
+                  },
+                  color: "$secondary",
+                }}
+              >
+                Login
+              </Button>
+            </Navbar.Link>
+            <Navbar.Link>
+              <Button
+                size="md"
+                color="success"
+                borderRadius="50%"
+                onPress={() => navigate("/signup")}
+                css={{
+                  backgroundColor: "#67c43f",
+                  fontWeight: "bold",
+                  backgroundImage:
+                    "radial-gradient(circle,  #5ca388 25%, #649b93 50%, #b4d3b2 100%)",
+                  // backgroundImage: "radial-gradient(circle, #609f67 25%, #c0b2d3 50%, #b4d3b2 100%)",
+                  backgroundSize: "400% 400%",
+                  transition: "background-position 0.8s ease-in-out",
+                  "&:hover": {
+                    backgroundPosition: "100% 0",
+                  },
+                  color: "$secondary",
+                }}
+              >
+                Signup
+              </Button>
+            </Navbar.Link>
+          </Navbar.Content>
+        </>
       )}
     </Navbar>
   );

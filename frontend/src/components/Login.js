@@ -39,7 +39,7 @@ const Login = () => {
     },
     {
       name: "password",
-      type: "password",
+      type: "password noregex",
       required: true,
       value: password,
       onChange: (e) => setPassword(e.target.value),

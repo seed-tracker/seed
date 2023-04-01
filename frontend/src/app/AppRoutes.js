@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { me } from "../store/authSlice";
+import { me, logout } from "../store/authSlice";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
 import Profile from "../components/Profile";
@@ -17,15 +17,26 @@ import apiClient from "../client";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => !!state.auth.me._id);
+  const { me: user, error } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     dispatch(me());
   }, [dispatch]);
 
   useEffect(() => {
-    if (isLoggedIn) updateCorrelations();
-  }, [isLoggedIn]);
+    if (user.username) {
+      updateCorrelations();
+      setLoading(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (error) {
+      setLoading(false);
+      logout();
+    }
+  }, [error]);
 
   const updateCorrelations = async () => {
     await apiClient.put("users/correlations/update");
@@ -33,42 +44,54 @@ const AppRoutes = () => {
 
   return (
     <>
-      {isLoggedIn ? (
-        <Container
-          className="bookend"
-          fluid
-          responsive={"false"}
-          display="flex"
-          css={{ margin: 0, padding: 0 }}
-        >
-          <Sidebar />
-          <Routes>
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/add/symptom" element={<SymptomForm />} />
-            <Route path="/user/addFood" element={<MealForm />}></Route>
-            <Route path="/user/edit-profile" element={<EditProfile />}></Route>
-            <Route path="/user/meal-entries" element={<MealEntryOverview />} />
-
-            <Route
-              path="/user/symptom-entries"
-              element={<SymptomEntryOverview />}
-            />
-            <Route path="/*" element={<Profile />} />
-          </Routes>
-        </Container>
+      {loading && !user.username ? (
+        <Home />
       ) : (
-        <Container
-          fluid
-          responsive={"false"}
-          css={{ margin: 0, padding: 0 }}
-          className="bookend"
-        >
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/*" element={<Home />} />
-          </Routes>
-        </Container>
+        <>
+          {user.username ? (
+            <Container
+              className="bookend"
+              fluid
+              responsive={"false"}
+              display="flex"
+              css={{ margin: 0, padding: 0, minHeight: "100vh" }}
+            >
+              <Sidebar />
+              <Routes>
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/add/symptom" element={<SymptomForm />} />
+                <Route path="/user/addFood" element={<MealForm />}></Route>
+                <Route
+                  path="/user/edit-profile"
+                  element={<EditProfile />}
+                ></Route>
+                <Route
+                  path="/user/meal-entries"
+                  element={<MealEntryOverview />}
+                />
+
+                <Route
+                  path="/user/symptom-entries"
+                  element={<SymptomEntryOverview />}
+                />
+                <Route path="/*" element={<Profile />} />
+              </Routes>
+            </Container>
+          ) : (
+            <Container
+              fluid
+              responsive={"false"}
+              css={{ margin: 0, padding: 0 }}
+              className="bookend"
+            >
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/*" element={<Home />} />
+              </Routes>
+            </Container>
+          )}
+        </>
       )}
     </>
   );

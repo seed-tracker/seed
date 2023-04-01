@@ -3,7 +3,6 @@ import AppRoutes from "./AppRoutes";
 import NavigationBar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { NextUIProvider, createTheme } from "@nextui-org/react";
-// import 'frontend/public/slider.css';
 
 /**
  * Component for the main page structure
@@ -35,7 +34,7 @@ const App = () => {
         error: "$red",
         buttonBackground: "#7a918d",
         neutral: "$buttonBackground",
-        switch: "#72c589",
+        switchColor: "#72c589",
       },
       fonts: {
         sans: "sans-serif",
