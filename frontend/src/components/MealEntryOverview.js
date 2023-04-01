@@ -92,7 +92,7 @@ function MealEntryOverview() {
               <Grid.Container gap={3} justify="flex-start" align="flex-end">
                 {meals.map((meal) => {
                   return (
-                    <Grid xs={4} key={uuidv4()} css={{ minWidth: "20rem" }}>
+                    <Grid xs={12} sm={6} md={4} key={uuidv4()}>
                       <MealCard meal={meal} onPress={handleEntryDelete} />
                     </Grid>
                   );

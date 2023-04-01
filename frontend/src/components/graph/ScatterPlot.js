@@ -219,7 +219,7 @@ const ScatterPlot = () => {
       .selectAll("myLabels")
       .data(data)
       .join("g")
-      // .append("text")
+      .append("text")
       .datum((d) => {
         return { name: d.name, value: d.values[d.values.length - 1] };
       }) // keep only the last value of each time series

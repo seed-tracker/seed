@@ -56,20 +56,44 @@ function SymptomEntryOverview() {
     dispatch(fetchAllSymptomEntries(page));
   };
 
+  const handleResize = () => {
+    if (window.innerWidth <= 640) {
+      setCardWidth("100%");
+      setCols(1);
+    } else if (window.innerWidth <= 1024) {
+      setCardWidth("47%");
+      setCols(2);
+    } else {
+      setCardWidth("30%");
+      setCols(3);
+    }
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const [cardWidth, setCardWidth] = useState("");
+  const [cols, setCols] = useState(3);
+
   return (
     <Container
       css={{
-        "@xs": {
-          margin: 0,
-          padding: "1vw",
-          textAlign: "center",
-          maxWidth: "100vw",
-        },
+        margin: 0,
+        padding: "1vw",
+        textAlign: "center",
+        maxWidth: "100vw",
         "@sm": {
-          margin: 0,
           padding: "3vw",
           flexDirection: "column",
           maxWidth: "69vw",
+        },
+        "@md": {
+          padding: "5vw",
         },
       }}
     >
@@ -85,16 +109,10 @@ function SymptomEntryOverview() {
                 tracking for better results!
               </p>
             )}
-            {count >= 500 && (
-              <p>
-                You've logged <strong>{count} symptoms</strong> so far. Keep up
-                the good work!
-              </p>
-            )}
           </aside>
           {symptoms && symptoms.length ? (
             <>
-              <Grid.Container gap={3} justify="flex-start" align="flex-end">
+              <Grid.Container gap={3} justify="center" align="flex-end">
                 {symptoms.map((symptom) => {
                   return (
                     <Grid xs={4} key={uuidv4()} css={{ minWidth: "16rem" }}>
