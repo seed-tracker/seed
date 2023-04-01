@@ -195,7 +195,7 @@ const SymptomForm = () => {
             css={{ margin: 0, padding: 0 }}
           >
             <label htmlFor="severity">
-              Severity: {severity}
+              <Text css={{textAlign:"center", letterSpacing:"$normal"}}>Severity:</Text>
               <Slider
                 min={0}
                 max={10}

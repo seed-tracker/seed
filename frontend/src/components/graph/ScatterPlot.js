@@ -335,6 +335,7 @@ const ScatterPlot = () => {
               <Row>
                 {legend?.slice(1).map(({ name, color }, i) => {
                   return (
+                    <>
                     <Col
                       css={{
                         display: "flex",
@@ -352,7 +353,9 @@ const ScatterPlot = () => {
                       >
                         {name}
                       </Text>
+                      </Col>
                       <Spacer x={0.5} />
+                      <Col>
                       <Switch
                         color="green"
                         checkedColor="green"
@@ -366,6 +369,7 @@ const ScatterPlot = () => {
                         onChange={() => toggleLine(name)}
                       />
                     </Col>
+                    </>
                   );
                 })}
               </Row>
