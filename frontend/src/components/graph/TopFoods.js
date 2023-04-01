@@ -109,7 +109,7 @@ const TopFoods = () => {
         .attr("font-size", "20px")
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
-        .text("Times Eaten and Logged");
+        .text("Times Logged");
 
       const xScale = scaleBand()
         .domain(topFoods.map((food) => food.name))
