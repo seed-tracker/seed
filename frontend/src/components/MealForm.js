@@ -29,8 +29,8 @@ function MealForm() {
   //fetch food groups when the component mounts
   useEffect(() => {
     const today = new Date().toISOString();
+    setTime(today.substring(11,16));
     setDate(today.substring(0, 10));
-
     fetchGroups();
     fetchRecentFoods();
   }, []);
