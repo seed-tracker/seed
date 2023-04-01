@@ -9,7 +9,7 @@ import { Links } from "./nextUI/index";
 const Sidebar = () => {
   return (
     <Container
-      className="glassmorpheus-graph"
+      className="glassmorpheus-graph1"
       display={"flex"}
       justify="space-around"
       css={{
