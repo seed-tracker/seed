@@ -97,7 +97,7 @@ const TopSymptoms = () => {
           .attr("font-size", "20px")
           .attr("text-anchor", "middle")
           .attr("transform", "rotate(-90)")
-          .text("Times Eaten and Logged");
+          .text("Times Logged");
       }
 
       g.selectAll("circle")
@@ -127,7 +127,7 @@ const TopSymptoms = () => {
 
   return (
     <>
-      <HeaderText text="Your top 5 symptoms" />
+      <HeaderText text="Your Top 5 Symptoms" />
       <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
         {symptoms.map((symptomName, i) => (
           <div

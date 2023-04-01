@@ -138,7 +138,7 @@ const ScatterPlot = () => {
 
     svg
       // .attr("width", "auto")
-      .attr("width", 800)
+      .attr("width", width)
       .attr("height", height);
     // .style("overflow", "visible")
     // .style("margin-top", "3rem");
@@ -224,30 +224,30 @@ const ScatterPlot = () => {
           : 0
       );
 
-    svg
-      .selectAll("myLabels")
-      .data(data)
-      .join("g")
-      .append("text")
-      .datum((d) => {
-        return { name: d.name, value: d.values[d.values.length - 1] };
-      }) // keep only the last value of each time series
-      .attr(
-        "transform",
-        (d) => `translate(${x(d.value.date)},${y(d.value.count)})`
-      ) // Put the text at the position of the last point
-      .attr("x", 12) // shift the text a bit more right
-      .attr("class", function (d) {
-        return makeKey(d.name);
-      })
-      .text((d) => d.name)
-      .style("fill", (d) => colors(d.name))
-      .style("font-size", 15)
-      .style("opacity", (d) =>
-        [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
-          ? 1
-          : 0
-      );
+    // svg
+    //   .selectAll("myLabels")
+    //   .data(data)
+    //   .join("g")
+    //   .append("text")
+    //   .datum((d) => {
+    //     return { name: d.name, value: d.values[d.values.length - 1] };
+    //   }) // keep only the last value of each time series
+    //   .attr(
+    //     "transform",
+    //     (d) => `translate(${x(d.value.date)},${y(d.value.count)})`
+    //   ) // Put the text at the position of the last point
+    //   .attr("x", 12) // shift the text a bit more right
+    //   .attr("class", function (d) {
+    //     return makeKey(d.name);
+    //   })
+    //   .text((d) => d.name)
+    //   .style("fill", (d) => colors(d.name))
+    //   .style("font-size", 15)
+    //   .style("opacity", (d) =>
+    //     [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
+    //       ? 1
+    //       : 0
+    //   );
 
     svg
       .append("text")
@@ -317,11 +317,28 @@ const ScatterPlot = () => {
               />
             </Row>
             <Row align="center">
-              <Button.Group vertical bordered>
+              <Container
+                css={{
+                  position: "relative",
+                  overflow: "auto",
+                  "-webkit-overflow-scrolling": "touch",
+                }}
+              >
+                <svg
+                  ref={svgRef}
+                  viewBox="50 0 700 360"
+                  // preserveAspectRatio="XMaxYMid meet"
+                  // style={{ margin: "8rem", marginRight: "0" }}
+                ></svg>
+              </Container>
+            </Row>
+            {/* <Button.Group bordered> */}
                 {legend?.slice(1).map(({ name, color }, i) => {
                   return (
-                    <>
-                      <Row justify="flex-end">
+                    <Container css={{ display: "flex", flexDirection: "row"}}>
+                    {/* <> */}
+                      {/* <Row justify="flex-end"> */}
+                      <Container css={{ display: "flex", flexDirection: "row"}}>
                         <Text
                           size={15}
                           css={{
@@ -344,28 +361,15 @@ const ScatterPlot = () => {
                             name
                           )}
                           onChange={() => toggleLine(name)}
-                        />
-                      </Row>
-                      <Spacer y={0.7} />
-                    </>
+                          />
+                        </Container>
+                      {/* </Row> */}
+                      {/* <Spacer y={0.7} /> */}
+                    {/* // </> */}
+                      </Container>
                   );
                 })}
-              </Button.Group>
-              <Container
-                css={{
-                  position: "relative",
-                  overflow: "auto",
-                  "-webkit-overflow-scrolling": "touch",
-                }}
-              >
-                <svg
-                  ref={svgRef}
-                  viewBox="70 0 900 400"
-                  preserveAspectRatio="XMaxYMid meet"
-                  // style={{ margin: "8rem", marginRight: "0" }}
-                ></svg>
-              </Container>
-            </Row>
+              {/* </Button.Group> */}
           </>
         </Container>
       )}
