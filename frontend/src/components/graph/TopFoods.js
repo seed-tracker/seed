@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { select, create } from "d3-selection";
 import { scaleBand, scaleLinear } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
+import { easeElasticOut } from "d3-ease";
 import {
   statsSlice,
   selectUserStats,
@@ -132,6 +133,26 @@ const TopFoods = () => {
 
       g.append("g").call(yAxis);
 
+      const nodes = g
+      .selectAll("circle")
+      .data(topFoods)
+
+      nodes
+      .enter()
+      .append("circle")
+      .attr("cx", (food) => xScale(food.name) + xScale.bandwidth() / 2)
+      .attr("cy", (food) => yScale(food.count))
+      .attr("r", 10)
+      .attr("fill",  (d)=>foodsColors[d.groups[0]])
+      .style("opacity", 0.3)
+      .transition()
+      .duration(1000)
+      .delay((d, i) => i * 1000)
+      .ease(easeElasticOut)
+      .attr("r", 20);
+      nodes.exit().remove()
+    
+      
       g.selectAll("circle").data(topFoods).join("circle");
 
       for (let i = 0; i < topFoods.length; i++) {
@@ -152,7 +173,7 @@ const TopFoods = () => {
                 "x",
                 xScale(currentFood.name) + margin.left / 2 - margin.right
               )
-              .attr("y", yScale(j) - 20)
+              .attr("y", yScale(j) - 30)
               .attr("text-anchor", "middle")
               .text("Count: " + counts[i]);
           }
