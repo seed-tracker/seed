@@ -15,6 +15,7 @@ import {
 
 const ScatterPlot = () => {
   const { data: chartData, maxMonths } = useSelector((state) => state.scatter);
+  const { data: corrData } = useSelector((state) => state.correlations);
   const [allData, setAllData] = useState([]);
   const [currentSymptom, setCurrentSymptom] = useState(null);
   const [dateRange, setDateRange] = useState([]);
@@ -36,13 +37,15 @@ const ScatterPlot = () => {
   const svgRef = useRef();
 
   useEffect(() => {
-    if (chartData && chartData.length) {
+    if (chartData && chartData.length && corrData && corrData.length) {
       formatData();
     }
   }, [chartData]);
 
   const formatData = () => {
     const formattedData = chartData.map((d) => {
+      const ranked = corrData.find((corr) => corr.symptom == d["symptom"]);
+      console.log(ranked.top_foods, corrData);
       return {
         symptomData: {
           name: d["symptom"],
@@ -51,8 +54,8 @@ const ScatterPlot = () => {
             date: createDate(month),
           })),
         },
-        foodData: formatFoods(d["top_foods"]),
-        groupData: formatFoods(d["top_groups"]),
+        foodData: formatFoods(d["top_foods"], ranked.top_foods),
+        groupData: formatFoods(d["top_groups"], ranked.top_groups),
       };
     });
 
@@ -75,14 +78,20 @@ const ScatterPlot = () => {
   const createDate = (data) =>
     d3.timeParse("%m/%Y")(`${data["month"]}/${data["year"]}`);
 
-  const formatFoods = (data) => {
-    return data.map((food) => ({
-      name: food["_id"],
-      values: food["months"].map((d) => ({
-        count: d["count"],
-        date: createDate(d),
-      })),
-    }));
+  const formatFoods = (data, ranked) => {
+    if (!ranked) return [];
+
+    return ranked.map(({ name, lift }) => {
+      const foundFood = data.find((f) => f["_id"] === name);
+      return {
+        name,
+        lift,
+        values: foundFood["months"].map((d) => ({
+          count: d["count"],
+          date: createDate(d),
+        })),
+      };
+    });
   };
 
   const toggleSymptom = (symptom) => {
@@ -120,7 +129,7 @@ const ScatterPlot = () => {
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
-    const width = 900;
+    const width = 800;
     const height = 300;
 
     const svg = d3.select(svgRef.current);
@@ -129,10 +138,10 @@ const ScatterPlot = () => {
 
     svg
       // .attr("width", "auto")
-      .attr("width", 900)
-      .attr("height", height)
-      // .style("overflow", "visible")
-      // .style("margin-top", "3rem");
+      .attr("width", 800)
+      .attr("height", height);
+    // .style("overflow", "visible")
+    // .style("margin-top", "3rem");
 
     const labels = [currentSymptom, ...currentFoods, ...currentGroups];
     //make a color range
@@ -291,7 +300,7 @@ const ScatterPlot = () => {
   return (
     <Container
       display={"flex"}
-      css={{ width: "100%" }}
+      css={{ width: "100%", minHeight: "30rem" }}
       justify="center"
       align="center"
     >
@@ -324,9 +333,9 @@ const ScatterPlot = () => {
                           {name}
                         </Text>
                         <Spacer x={0.5} />
-                        <Switch color="green" checkedColor="green"
-                         css={{
-                        }}
+                        <Switch
+                          color="green"
+                          checkedColor="green"
                           key={i}
                           className="legendSwitch"
                           size="sm"
@@ -343,7 +352,11 @@ const ScatterPlot = () => {
                 })}
               </Button.Group>
               <Container
-                css={{position: "relative", overflow: "auto", "-webkit-overflow-scrolling": "touch"}}
+                css={{
+                  position: "relative",
+                  overflow: "auto",
+                  "-webkit-overflow-scrolling": "touch",
+                }}
               >
                 <svg
                   ref={svgRef}

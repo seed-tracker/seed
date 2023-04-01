@@ -62,6 +62,7 @@ function MealForm() {
   //add a food to the meal array
   const addFood = (foodObj) => {
     setError("");
+    if (!foodObj.groups || !foodObj.name) return;
     setMealArray([...mealArray, foodObj]);
   };
 

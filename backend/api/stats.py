@@ -353,3 +353,4 @@ def get_food_data(type, array, username, min_date, delta):
     ]
 
     return list(db.meals.aggregate(pipeline))
+

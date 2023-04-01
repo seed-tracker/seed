@@ -1,7 +1,6 @@
+import { Container } from "@nextui-org/react";
 import React from "react";
-
 import { Links } from "./nextUI/index";
-import { Container, Spacer } from "@nextui-org/react";
 
 /**
  * Component for the sidebar
@@ -12,16 +11,18 @@ const Sidebar = () => {
     <Container
       className="glassmorpheus-graph1"
       display={"flex"}
+      justify="space-around"
       css={{
         "@xs": {
-          textAlign: "left",
+          gap: "1rem",
           margin: 0,
-          padding: "1vw",
+          flexWrap: "wrap",
           flexDirection: "row",
-          textAlign: "left",
           maxWidth: "100vw",
         },
         "@sm": {
+          gap: "1rem",
+          textAlign: "left",
           marginTop: "4vh",
           padding: "2vw",
           flexDirection: "column",
@@ -33,15 +34,12 @@ const Sidebar = () => {
       }}
     >
       <Links href={"/user/edit-profile"} text={"Edit Profile"} />
-      <Spacer y={0.5} />
+
       <Links href={"/user/symptom-entries"} text={"Past Symptom Entries"} />
-      <Spacer y={0.5} />
+
       <Links href={"/user/meal-entries"} text={"Past Meal Entries"} />
-      <Spacer y={0.5} />
 
       <Links href={"/add/symptom"} text={"Add Symptom Entry"} />
-
-      <Spacer y={0.5} />
 
       <Links href={"/user/addFood"} text={"Add Food Entry"} />
     </Container>

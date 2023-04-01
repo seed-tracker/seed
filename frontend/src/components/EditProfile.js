@@ -73,7 +73,7 @@ function EditProfile() {
     },
     {
       name: "verify password",
-      type: "password",
+      type: "password noregex",
       value: password,
       required: newPassword.length > 1,
       onChange: (e) => setPassword(e.target.value),
