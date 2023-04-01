@@ -57,6 +57,12 @@ const CirclePacking = () => {
     const width = +svg.attr("width");
     const height = +svg.attr("height");
 
+    const simulation = d3.forceSimulation()
+    .force("x", d3.forceX(width / 2).strength(0.05))
+    .force("y", d3.forceY(height / 2).strength(0.05))
+    .force("collide", d3.forceCollide().radius(d => d.r + 1).iterations(1))
+    .stop();
+
     
     const pack = (data) =>
       d3
@@ -96,17 +102,7 @@ const CirclePacking = () => {
       }
     }
 
-//     const filter = svg
-//   .append("filter")
-//   .attr("id", "drop-shadow")
-//   .attr("height", "130%");
-  
-// filter.append("feDropShadow")
-//   .attr("dx", "2")
-//   .attr("dy", "2")
-//   .attr("stdDeviation", "2")
-//   .attr("flood-color", "green")
-//   .attr("flood-opacity", "0.3");
+    
 
     const leaf = svg // Select all groups and bind them to the data for the leaf nodes of the tree
       .selectAll("g")
@@ -119,7 +115,12 @@ const CirclePacking = () => {
     .append("circle")
     .attr("fill", (d) => d.data.color)
     .attr("r", (d) => d.r)
-    .style("filter", "url(#drop-shadow)");
+    .on("mouseover", function (event, d) {
+      d3.select(this).transition().attr("r", d.r + 5);
+    })
+    .on("mouseout", function (event, d) {
+      d3.select(this).transition().attr("r", d.r);
+    });
 
     leaf
       .append("foreignObject") // Add text labels to each leaf node, with the symptom name as the label text

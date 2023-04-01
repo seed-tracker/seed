@@ -101,10 +101,15 @@ const TopSymptoms = () => {
       }
 
       g.selectAll("circle")
-        .data(symptoms)
-        .join("circle")
-        .attr("cx", (d) => xScale(d.name))
-        .attr("cy", (d) => yScale(d.count));
+      .data(symptoms)
+      .join("circle")
+      .attr("cx", (d) => xScale(d.name))
+      .attr("cy", (d) => yScale(d.count))
+      .attr("fill", (d) => symptomColors[d.name])
+      .attr("r", 2) // start with a radius of 2
+      .transition() // add a transition
+      .duration(110) // specify the duration of the animation in milliseconds
+      .attr("r", (d) => d.count > 0 ? 8 : 2); 
 
       for (let i = 0; i < symptoms.length; i++) {
         for (let j = 0; j < counts[i]; j++) {

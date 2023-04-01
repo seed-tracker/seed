@@ -35,6 +35,7 @@ const ScatterPlot = () => {
   ]);
 
   const svgRef = useRef();
+  const areaGradient = useRef();
 
   useEffect(() => {
     if (chartData && chartData.length && corrData && corrData.length) {
@@ -127,14 +128,39 @@ const ScatterPlot = () => {
 
   // set up container, scaling, axis, labeling, data
   useEffect(() => {
+
+
+
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
     const width = 800;
     const height = 300;
 
     const svg = d3.select(svgRef.current);
+  const areaGradient = svg
+    .append("defs")
+    .append("linearGradient")
+    .attr("id", "areaGradient")
+    .attr("x1", "0%")
+    .attr("y1", "0%")
+    .attr("x2", "0%")
+    .attr("y2", "100%")
+    // .attr("gradientTransform","rotate(-85)")
 
-    svg.text("");
+  areaGradient
+    .append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#21825C")
+    .attr("stop-opacity", .6);
+
+  areaGradient
+    .append("stop")
+    .attr("offset", "80%")
+    .attr("stop-color", "white")
+    .attr("stop-opacity", 0);
+
+  
+    // svg.selectAll("*").remove();
 
     svg
       // .attr("width", "auto")
@@ -249,6 +275,25 @@ const ScatterPlot = () => {
     //       : 0
     //   );
 
+    const xScale = d3
+  .scaleTime()
+  .domain(dateRange)
+  .range([60, width - 60]);
+
+
+const yScale = d3
+  .scaleLinear()
+  .domain([0, d3.max(symptomData.values, (d) => d.count)])
+  .range([height - 50, 20]);
+
+  //areas where linear gradient is applied
+    const area = d3
+    .area()
+    .x((d) => x(d.date))
+    .y0(height)
+    .y1((d) => yScale(d.count))
+    .curve(d3.curveMonotoneX);
+
     svg
       .append("text")
       .attr("text-anchor", "end")
@@ -263,6 +308,18 @@ const ScatterPlot = () => {
       .attr("x", width / 2)
       .attr("y", height + 40)
       .text("Months");
+
+
+      //areas where gradient applied
+      svg
+      .selectAll(".area")
+      .data(allData)
+      .join("path")
+      .attr("class", "area")
+      .attr("fill", "url(#areaGradient)") //linear gradient being added here--
+      .attr("d", (d) => area(d.symptomData.values))
+      // .attr("transform", `translate(${margin.left},${margin.top})`);
+  
 
     const updateAxis = ({ target }) => {
       let newStartDate = new Date(dateRange[1]);
@@ -335,10 +392,10 @@ const ScatterPlot = () => {
             {/* <Button.Group bordered> */}
                 {legend?.slice(1).map(({ name, color }, i) => {
                   return (
-                    <Container css={{ display: "flex", flexDirection: "row"}}>
+                    <Container flex row css={{ display: "flex", flexDirection: "row"}}>
                     {/* <> */}
                       {/* <Row justify="flex-end"> */}
-                      <Container css={{ display: "flex", flexDirection: "row"}}>
+                      <Container flex row css={{ display: "flex", flexDirection: "row"}}>
                         <Text
                           size={15}
                           css={{
