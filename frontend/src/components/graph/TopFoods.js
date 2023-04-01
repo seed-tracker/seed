@@ -151,7 +151,6 @@ const TopFoods = () => {
       .ease(easeElasticOut)
       .attr("r", 20);
       nodes.exit().remove()
-    
       
       g.selectAll("circle").data(topFoods).join("circle");
 
@@ -185,7 +184,6 @@ const TopFoods = () => {
   return (
     <>
       <HeaderText text="Your Top 10 Foods" />
-
       <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
         {topFoods
           .filter(
