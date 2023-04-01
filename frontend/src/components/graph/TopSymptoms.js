@@ -168,7 +168,6 @@ const TopSymptoms = () => {
           <Text h4>Filter data by</Text>
             <Button
               onPress={handleGetAllTime}
-              value="all"
               type="button"
               text="All Time"
               size="sm"
@@ -176,7 +175,6 @@ const TopSymptoms = () => {
             />
             <Button
               onPress={handleGetSixMonths}
-              value="180"
               type="button"
               size="sm"
               aria-label="Button to filter chart top symptoms view by six months"
@@ -184,7 +182,6 @@ const TopSymptoms = () => {
             />
             <Button
               onPress={handleGetOneYear}
-              value="365"
               type="button"
               aria-label="Button to filter chart top symptoms view by one year"
               size="sm"

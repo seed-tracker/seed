@@ -237,7 +237,6 @@ const TopFoods = () => {
             />
             <Button
               onPress={handleGetSixMonths}
-              value="180"
               type="button"
               aria-label="Button to filter chart top foods view by six months"
               size="sm"
