@@ -131,3 +131,7 @@ th {
   color: #444c38 !important;
   font-size: small !important;
 }
+
+.nextui-input-helper-text {
+  letter-spacing: normal !important;
+}
