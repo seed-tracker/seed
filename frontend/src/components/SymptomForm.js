@@ -176,7 +176,7 @@ const SymptomForm = () => {
               css={{ padding: "1rem" }}
               description="Recent symptoms table"
               headers={[
-                { key: "name", label: "Your recent symptoms" },
+                { key: "name", label: "YOUR RECENT SYMPTOMS" },
                 { key: "button", label: "" },
               ]}
               rows={recentSymptoms}
