@@ -183,16 +183,6 @@ const ScatterPlot = () => {
       .attr("x", 0)
       .attr("y", 0);
 
-    const defs = svg.append("defs");
-    const filter = defs.append("filter").attr("id", "glow");
-    filter
-      .append("feGaussianBlur")
-      .attr("stdDeviation", "3.5")
-      .attr("result", "coloredBlur");
-    const feMerge = filter.append("feMerge");
-    feMerge.append("feMergeNode").attr("in", "coloredBlur");
-    feMerge.append("feMergeNode").attr("in", "SourceGraphic");
-
     const lines = svg
       .selectAll("myLines")
       .data(data)
@@ -204,7 +194,6 @@ const ScatterPlot = () => {
       })
       .attr("clip-path", "url(#clip")
       .style("stroke-width", 4)
-      .style("filter", (d) => (currentSymptom === d.name ? "url(#glow)" : ""))
       .style("fill", "none")
       .style("opacity", (d) =>
         [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
@@ -244,10 +233,10 @@ const ScatterPlot = () => {
       .attr("class", function (d) {
         return makeKey(d.name);
       })
-      .text((d) => d.name)
+      .text((d) => (d.name.includes(currentSymptom) ? d.name : ""))
       .style("fill", (d) => colors(d.name))
       .style("font-size", 15)
-      .style("opacity", (d) => (currentSymptom.includes(d.name) ? 1 : 0))
+      .style("opacity", (d) => (d.name.includes(currentSymptom) ? 1 : 0))
       .call(wrap, 100);
 
     function wrap(text, width) {
@@ -331,18 +320,6 @@ const ScatterPlot = () => {
       xAxis.transition().duration(500).call(d3.axisBottom(x).ticks(6));
 
       setDateRange(newRange);
-
-      // areas
-      //   .data(allData)
-      //   .join("path")
-      //   .transition()
-      //   .duration(500)
-      //   .attr(
-      //     "d",
-      //     area(
-      //       symptomData.values.filter((symptom) => symptom.date >= newRange[0])
-      //     )
-      //   );
 
       dots
         .data(data)
