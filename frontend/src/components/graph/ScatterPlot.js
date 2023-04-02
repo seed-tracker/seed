@@ -45,7 +45,7 @@ const ScatterPlot = () => {
   const formatData = () => {
     const formattedData = chartData.map((d) => {
       const ranked = corrData.find((corr) => corr.symptom == d["symptom"]);
-      console.log(ranked.top_foods, corrData);
+
       return {
         symptomData: {
           name: d["symptom"],
@@ -300,12 +300,16 @@ const ScatterPlot = () => {
   return (
     <Container
       display={"flex"}
-      css={{ width: "100%", minHeight: "30rem" }}
-      justify="center"
-      align="center"
+      css={{ width: "100%", minHeight: "30rem", margin: 0, padding: 0 }}
+      justify="flex-start"
+      align="flex-start"
     >
       {allData && allData.length > 0 && allData[0].symptomData && (
-        <Container>
+        <Container
+          justify="flex-start"
+          align="flex-start"
+          css={{ margin: 0, padding: 0 }}
+        >
           <HeaderText text="Your Top Associations" />
           <>
             <Row justify="center">
@@ -316,12 +320,12 @@ const ScatterPlot = () => {
                 currentSymptom={currentSymptom}
               />
             </Row>
-            <Row align="center">
+            <Row align="center" justify="flex-end">
               <Button.Group vertical bordered>
                 {legend?.slice(1).map(({ name, color }, i) => {
                   return (
-                    <>
-                      <Row justify="flex-end">
+                    <div key={i}>
+                      <Row justify="flex-start" align="flex-start">
                         <Text
                           size={15}
                           css={{
@@ -347,7 +351,7 @@ const ScatterPlot = () => {
                         />
                       </Row>
                       <Spacer y={0.7} />
-                    </>
+                    </div>
                   );
                 })}
               </Button.Group>

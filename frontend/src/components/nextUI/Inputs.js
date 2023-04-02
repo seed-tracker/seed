@@ -36,6 +36,7 @@ function Inputs(inputProps) {
           helperText={helperText && helperText}
           value={value}
           onChange={onChange}
+          css={{ minWidth: "15rem" }}
         />
         <Spacer y={1} />
       </>
@@ -54,6 +55,7 @@ function Inputs(inputProps) {
           helperText={helperText && helperText}
           value={value}
           onChange={onChange}
+          css={{ minWidth: "15rem" }}
         />
         <Spacer y={1} />
       </>

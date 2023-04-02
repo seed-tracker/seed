@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import apiClient from "../client";
-import { Text, Spacer, Container } from "@nextui-org/react";
+import { Text, Spacer, Container, Grid } from "@nextui-org/react";
 import { Inputs, Button, Dropdown, Table, HeaderText, Slider } from "./nextUI";
 import SuccessMessage from "./SuccessMessage";
 
@@ -108,32 +108,21 @@ const SymptomForm = () => {
   };
 
   return (
-    <form onSubmit={handleSymptomSubmit}>
+    <form onSubmit={handleSymptomSubmit} className="symptomForm">
       {!success ? (
-        <Container
+        <Grid.Container
           display={"flex"}
-          justify={"space-between"}
+          justify={"center"}
           wrap={"wrap"}
+          alignItems="center"
           css={{ margin: "2vw", width: "65vw" }}
+          gap={2}
         >
           {" "}
-          <Container display={"flex"} justify={"center"}>
+          <Grid display={"flex"} justify={"center"} xs={12}>
             <HeaderText text="Add a symptom" />
-          </Container>
-          <Container
-            display={"flex"}
-            direction="column"
-            css={{
-              "@xs": {
-                margin: 0,
-                width: "100vw",
-              },
-              "@sm": {
-                flexDirection: "column",
-                maxWidth: "20vw",
-              },
-            }}
-          >
+          </Grid>
+          <Grid md={4} display={"flex"} direction="column">
             <Inputs
               type={"date"}
               required={true}
@@ -157,6 +146,7 @@ const SymptomForm = () => {
               css={{
                 background: "#7a918d",
                 padding: "1rem",
+                maxWidth: "10rem",
               }}
               selectedKeys={symptom}
               ariaLabel="Select Symptom Dropdown"
@@ -164,16 +154,19 @@ const SymptomForm = () => {
               items={symptoms}
               defaultName={"How are you feeling?"}
             />
-          </Container>
-          <Spacer y={1} />
-          <Container
+          </Grid>
+          <Spacer y={2} />
+          <Grid
             display={"flex"}
             direction="column"
-            css={{ margin: 0, padding: 0, maxWidth: "30vw" }}
+            css={{ margin: 0, padding: 0, maxWidth: "30vw", minWidth: "15rem" }}
+            lg={4}
+            md={5}
+            xs={7}
           >
             <Table
               color="primary"
-              css={{ padding: "1rem" }}
+              css={{ padding: "1rem", maxWidth: "20rem" }}
               description="Recent symptoms table"
               headers={[
                 { key: "name", label: "Your recent symptoms" },
@@ -182,12 +175,12 @@ const SymptomForm = () => {
               rows={recentSymptoms}
               button={{
                 buttonDescription: "Button to add a recent symptom",
-                text: "Select symptom",
+                text: "Select",
                 onPress: (e) => setSymptom([e.name]),
               }}
             />
             <Spacer y={2} />
-          </Container>
+          </Grid>
           <Container
             display={"flex"}
             direction={"column"}
@@ -213,7 +206,7 @@ const SymptomForm = () => {
             <Spacer y={1} />
           </Container>
           {error.length > 1 && <Text color="red">{error}</Text>}
-        </Container>
+        </Grid.Container>
       ) : (
         <Container display={"flex"} css={{ margin: "5vh 15vw" }}>
           <SuccessMessage

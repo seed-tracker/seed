@@ -14,6 +14,8 @@ import { fetchScatterData } from "../store/scatterSlice";
 import { getUserStats } from "../store/statsSlice";
 import { fetchAllFoodGroups } from "../store/foodGroupsSlice";
 import { Card } from "@nextui-org/react";
+import AssociationList from "./mobile/AssociationList";
+
 /**
  * Placeholder component for the userprofile page
  * @component shows "profile" if the user has logged enough entries to have data to show, otherwise, shows a randomly generated quote from an API
@@ -21,6 +23,13 @@ import { Card } from "@nextui-org/react";
 const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [graphIdx, setGraphIdx] = useState(0);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  //keep track of window width for switching to mobile views
+  window.addEventListener("resize", () => {
+    setWindowWidth(window.innerWidth);
+  });
 
   const { data: scatterData, error: scatterError } = useSelector(
     (state) => state.scatter
@@ -86,84 +95,91 @@ const Profile = () => {
       ) : (
         <>
           {correlationsLoaded && correlationsLoaded.length > 0 ? (
-            <Container
-              display="flex"
-              direction="column"
-              justify="center"
-              align="center"
-              css={{
-                "@xs": {
-                  margin: 0,
-                  width: "100vw",
-                },
-                "@sm": { margin: "2rem 0", alignSelf: "flex-end" },
-              }}
-            >
-              <Container
-                display="flex"
-                direction="row"
-                justify="center"
-                align="center"
-              >
-                {scatterData && scatterData.length > 0 && (
-                  <Button
-                    onClick={() => setGraphIdx(0)}
-                    type="button"
-                    aria-label="Button to show the top associations graph"
-                    css={{ ...getCss(0), ...buttonMargin }}
+            <>
+              {" "}
+              {windowWidth >= 600 ? (
+                <Container
+                  display="flex"
+                  direction="column"
+                  justify="center"
+                  align="center"
+                  css={{
+                    "@xs": {
+                      margin: 0,
+                      width: "100vw",
+                    },
+                    "@sm": { margin: "2rem 0", alignSelf: "flex-end" },
+                  }}
+                >
+                  <Container
+                    display="flex"
+                    direction="row"
+                    justify="center"
+                    align="center"
                   >
-                    Top Associations
-                  </Button>
-                )}
-                <Button
-                  onClick={() => setGraphIdx(1)}
-                  type="button"
-                  aria-label="Button to show the Food/Symptom Relationships graph"
-                  css={{ ...getCss(1), ...buttonMargin }}
-                >
-                  Food/Symptom Relationships
-                </Button>
-                <Button
-                  onClick={() => setGraphIdx(2)}
-                  type="button"
-                  aria-label="Button to show the top foods graph"
-                  css={{ ...getCss(2), ...buttonMargin }}
-                >
-                  Top Foods
-                </Button>
-                <Button
-                  onClick={() => setGraphIdx(3)}
-                  type="button"
-                  aria-label="Button to show the top symptoms graph"
-                  css={{ ...getCss(3), ...buttonMargin }}
-                >
-                  Top Symptoms
-                </Button>
-              </Container>
+                    {scatterData && scatterData.length > 0 && (
+                      <Button
+                        onClick={() => setGraphIdx(0)}
+                        type="button"
+                        aria-label="Button to show the top associations graph"
+                        css={{ ...getCss(0), ...buttonMargin }}
+                      >
+                        Top Associations
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => setGraphIdx(1)}
+                      type="button"
+                      aria-label="Button to show the Food/Symptom Relationships graph"
+                      css={{ ...getCss(1), ...buttonMargin }}
+                    >
+                      Food/Symptom Relationships
+                    </Button>
+                    <Button
+                      onClick={() => setGraphIdx(2)}
+                      type="button"
+                      aria-label="Button to show the top foods graph"
+                      css={{ ...getCss(2), ...buttonMargin }}
+                    >
+                      Top Foods
+                    </Button>
+                    <Button
+                      onClick={() => setGraphIdx(3)}
+                      type="button"
+                      aria-label="Button to show the top symptoms graph"
+                      css={{ ...getCss(3), ...buttonMargin }}
+                    >
+                      Top Symptoms
+                    </Button>
+                  </Container>
 
-              <Card
-                className="glassmorpheus-graph"
-                css={{
-                  overflow: "auto",
-                  width: "auto",
-                  padding: "1rem",
-                  marginTop: "1rem",
-                }}
-              >
-                <section style={{ display: getDisplay(0) }}>
-                  <ScatterPlot />
-                </section>
-                <section style={{ display: getDisplay(1) }}>
-                  <CirclePacking />
-                </section>
-                <section style={{ display: getDisplay(2) }}>
-                  <TopFoods />
-                </section>
-                <section style={{ display: getDisplay(3) }}>
-                  <TopSymptoms />
-                </section>
-              </Card>
-            </Container>
+                  <Card
+                    className="glassmorpheus-graph"
+                    css={{
+                      overflow: "auto",
+                      width: "auto",
+                      padding: "1rem",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <section style={{ display: getDisplay(0) }}>
+                      <ScatterPlot />
+                    </section>
+                    <section style={{ display: getDisplay(1) }}>
+                      <CirclePacking />
+                    </section>
+                    <section style={{ display: getDisplay(2) }}>
+                      <TopFoods />
+                    </section>
+                    <section style={{ display: getDisplay(3) }}>
+                      <TopSymptoms />
+                    </section>
+                  </Card>
+                </Container>
+              ) : (
+                <AssociationList />
+              )}
+            </>
           ) : (
             <Container
               display={"flex"}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Text, Container, Spacer, Row } from "@nextui-org/react";
+import { Card, Text, Container, Spacer, Row, Grid } from "@nextui-org/react";
 import { Button } from "./nextUI";
 import { useNavigate } from "react-router-dom";
 
@@ -26,29 +26,27 @@ const SuccessMessage = ({ title, message, type, onClick }) => {
         </Card.Header>
 
         <Card.Body>
-          <Row>
-            <Button
-              ariaLabel={`Add another ${type}`}
-              onPress={onClick}
-              text={`Add another ${type}`}
-              type="button"
-            />
-            <Spacer x={2} />
-            <Button
-              ariaLabel={`Add a ${type === "meal" ? "symptom" : "meal"}`}
-              onPress={() =>
-                navigate(type === "meal" ? "/add/symptom" : "/user/addFood")
-              }
-              text={`Add a ${type === "meal" ? "symptom" : "meal"}`}
-              type="button"
-            />
-            <Spacer x={2} />
-            <Button
-              ariaLabel="Go to profile"
-              onPress={() => navigate("/profile")}
-              text="Check out your profile"
-            />
-          </Row>
+          <Button
+            ariaLabel={`Add another ${type}`}
+            onPress={onClick}
+            text={`Add another ${type}`}
+            type="button"
+          />
+          <Spacer x={2} />
+          <Button
+            ariaLabel={`Add a ${type === "meal" ? "symptom" : "meal"}`}
+            onPress={() =>
+              navigate(type === "meal" ? "/add/symptom" : "/user/addFood")
+            }
+            text={`Add a ${type === "meal" ? "symptom" : "meal"}`}
+            type="button"
+          />
+          <Spacer x={2} />
+          <Button
+            ariaLabel="Go to profile"
+            onPress={() => navigate("/profile")}
+            text="Check out your profile"
+          />
         </Card.Body>
       </Card>
     </Container>

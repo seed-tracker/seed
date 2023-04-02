@@ -227,7 +227,7 @@ function MealForm() {
                 rows={recentFoods}
                 button={{
                   buttonDescription: "Button to add a recent food to the meal",
-                  text: "Add food",
+                  text: "Add",
                   onPress: addFood,
                 }}
               />
