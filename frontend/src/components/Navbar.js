@@ -93,7 +93,7 @@ const NavigationBar = () => {
                 }}
                 href="/signup"
               >
-                Signup
+                Join Now
               </Link>
             </Navbar.CollapseItem>
           </Navbar.Collapse>
@@ -140,7 +140,7 @@ const NavigationBar = () => {
                   color: "$secondary",
                 }}
               >
-                Signup
+                Join Now
               </Button>
             </Navbar.Link>
           </Navbar.Content>

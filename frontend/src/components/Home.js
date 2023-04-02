@@ -1,5 +1,5 @@
-import { Button, Container } from "@nextui-org/react";
-import React, { useEffect } from "react";
+import { Button, Container, Collapse } from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import circlePacking from "../img/circle-packing.png";
@@ -16,8 +16,16 @@ import { Links } from "./nextUI";
  * @component shows demo
  */
 const Home = () => {
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleCollapse = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   useEffect(() => {
     dispatch(me());
   }, [dispatch]);
@@ -124,20 +132,22 @@ const Home = () => {
         <h2>Sign up today and get access to:</h2>
         <ul>
           <li>
-            <h3>Intuitive Interface</h3>
-            <p>
-              We make tracking your meals and symptoms simple and
-              straightforward. With just a few clicks, you can easily log your
-              meals and any symptoms you experience, allowing you to quickly
-              identify potential patterns and narrow down the foods that may be
-              causing issues.
-            </p>
-            <p>
-              Say goodbye to the frustration of traditional food diaries and
-              symptom logs. With SEED's intuitive interface, tracking your diet
-              and health has never been easier. Start feeling your best and take
-              the first step towards a healthier, happier you with SEED.
-            </p>
+          {/* <h3 onClick={toggleCollapse}>Intuitive Interface</h3> */}
+<Collapse open={isOpen} title="Intuitive Interface">
+  <p>
+    We make tracking your meals and symptoms simple and
+    straightforward. With just a few clicks, you can easily log your
+    meals and any symptoms you experience, allowing you to quickly
+    identify potential patterns and narrow down the foods that may be
+    causing issues.
+  </p>
+  <p>
+    Say goodbye to the frustration of traditional food diaries and
+    symptom logs. With SEED's intuitive interface, tracking your diet
+    and health has never been easier. Start feeling your best and take
+    the first step towards a healthier, happier you with SEED.
+  </p>
+</Collapse>
             <Container
               display="flex"
               css={{
@@ -154,7 +164,7 @@ const Home = () => {
                 },
               }}
             >
-              <img
+              <img className="blobby"
                 style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={mealForm}
                 alt={
@@ -173,7 +183,8 @@ const Home = () => {
 
           <li>
             {" "}
-            <h3>A Wide Range of Data Vizualizations</h3>
+            <Collapse open={isOpen} title=" A Wide Range of Data Vizualizations">
+            {/* <h3>A Wide Range of Data Vizualizations</h3> */}
             <p>
               Our data visualization options allow you to easily analyze your
               tracked data and identify potential associations between your
@@ -187,7 +198,8 @@ const Home = () => {
               and health has never been easier. Start feeling your best and take
               the first step towards a healthier, happier you with SEED.
             </p>
-            Choose from an array of data vizualizations
+            </Collapse>
+           
           </li>
           <li>
             <h4>View Your Top Associations</h4>
@@ -326,7 +338,7 @@ const Home = () => {
             color: "$secondary",
           }}
         >
-          Signup
+          Join Now
         </Button>
       </Container>
     </>

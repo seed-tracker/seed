@@ -9,6 +9,7 @@ import * as d3 from "d3";
 import { Container, Text } from "@nextui-org/react";
 import { HeaderText } from "../nextUI";
 
+
 /**
  * This component displays a circle packing chart and a legend of the user's most associated food groups and symptoms
  * (as calculated by lift from fpGrowth algorithm).
@@ -16,6 +17,7 @@ import { HeaderText } from "../nextUI";
  * The user's symptoms are represented by the bubble's fill color, and the text on the bubble is the food group.
  * @returns two <svg> elements: (1) the circle packing chart, (2) the legend for the chart
  */
+
 const CirclePacking = () => {
   const datas = useSelector(selectUserCorrelations);
   const symptoms = useSelector(selectSymptoms);
@@ -51,11 +53,27 @@ const CirclePacking = () => {
 
   const svgRef = useRef(); // allow the svg element to be accessed and manipulated in the React component using the current property of the svgRef object
 
+
   // Create the circle packing chart and the legend
   useEffect(() => {
     const svg = d3.select(svgRef.current);
-    const width = +svg.attr("width");
-    const height = +svg.attr("height");
+     // Set the viewBox attribute
+     svg.attr("viewBox", "400 18 100 520");
+
+     // Set the width and height using CSS
+     svg.style("width", "100%");
+     svg.style("height", "100%");
+ 
+     const width = svg.node().getBoundingClientRect().width;
+     const height = svg.node().getBoundingClientRect().height;
+    // const width = +svg.attr("width");
+    // const height = +svg.attr("height");
+
+    const simulation = d3.forceSimulation()
+    .force("x", d3.forceX(width / 2).strength(0.05))
+    .force("y", d3.forceY(height / 2).strength(0.05))
+    .force("collide", d3.forceCollide().radius(d => d.r + 1).iterations(1))
+    .stop();
 
     
     const pack = (data) =>
@@ -96,17 +114,7 @@ const CirclePacking = () => {
       }
     }
 
-//     const filter = svg
-//   .append("filter")
-//   .attr("id", "drop-shadow")
-//   .attr("height", "130%");
-  
-// filter.append("feDropShadow")
-//   .attr("dx", "2")
-//   .attr("dy", "2")
-//   .attr("stdDeviation", "2")
-//   .attr("flood-color", "green")
-//   .attr("flood-opacity", "0.3");
+    
 
     const leaf = svg // Select all groups and bind them to the data for the leaf nodes of the tree
       .selectAll("g")
@@ -119,7 +127,12 @@ const CirclePacking = () => {
     .append("circle")
     .attr("fill", (d) => d.data.color)
     .attr("r", (d) => d.r)
-    .style("filter", "url(#drop-shadow)");
+    .on("mouseover", function (event, d) {
+      d3.select(this).transition().attr("r", d.r + 5);
+    })
+    .on("mouseout", function (event, d) {
+      d3.select(this).transition().attr("r", d.r);
+    });
 
     leaf
       .append("foreignObject") // Add text labels to each leaf node, with the symptom name as the label text
@@ -135,6 +148,7 @@ const CirclePacking = () => {
       .style("word-break", "break-word")
       .style("justify-content", "center");
   }, [result]);
+  
 
   return (
     <>
