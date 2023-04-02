@@ -2,7 +2,7 @@
 Login
 Sign up
 Edit Profile */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card, Text, Row, Container, Spacer } from "@nextui-org/react";
 import { Button, Inputs, HeaderText } from "./index";
 import { Links } from "./index";
@@ -22,6 +22,7 @@ const UserForm = ({
   useRegex,
 }) => {
   const dispatch = useDispatch();
+  const [validate, setValidate] = useState(false);
 
   useEffect(() => {
     dispatch(resetError());
@@ -43,6 +44,7 @@ const UserForm = ({
             backdropFilter: "blur(11.9px)",
             webkitBackdropFilter: "blur(11.9px)",
             border: "1px solid rgba(41, 124, 76, 0.26)",
+            maxWidth: "80vw",
             "@xs": {
               margin: 0,
               padding: 0,
@@ -81,6 +83,11 @@ const UserForm = ({
                       helperText={helperText}
                       useRegex={useRegex ? true : false}
                       label={label}
+                      status={
+                        required && validate && !value.length
+                          ? "error"
+                          : "default"
+                      }
                     />
                   </Row>
                   <Spacer justify="center" align="center" y={1.5} />
@@ -95,6 +102,7 @@ const UserForm = ({
                 align="center"
                 type="submit"
                 loading={loading}
+                onPress={() => setValidate(true)}
               />
             </Row>
             {error && (

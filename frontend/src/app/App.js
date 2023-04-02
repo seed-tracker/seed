@@ -37,13 +37,13 @@ const App = () => {
         switchColor: "#72c589",
       },
       fonts: {
-        sans: "'Euclid Regular', 'Euclid Medium', 'Eublid Bold', sans-serif"
+        sans: "'Euclid Regular', 'Euclid Medium', 'Eublid Bold', sans-serif",
       },
       fontWeights: {
         normal: 400,
         medium: 500,
         bold: 700,
-      }
+      },
     },
   });
   return (

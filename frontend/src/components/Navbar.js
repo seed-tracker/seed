@@ -87,6 +87,8 @@ const NavigationBar = () => {
                 color="secondary"
                 css={{
                   minWidth: "100%",
+                  textDecoration: "none",
+                  color: "$secondary",
                 }}
                 href="/login"
               >

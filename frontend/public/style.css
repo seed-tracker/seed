@@ -97,7 +97,7 @@ input[type="range"]::-moz-range-track {
 
 .bookend {
   background-image: url("seed-bg.png");
-  background-size: 100vw auto;
+  background-size: auto 100vh;
   margin: 0;
   background-repeat: no-repeat;
   background-position: center;
