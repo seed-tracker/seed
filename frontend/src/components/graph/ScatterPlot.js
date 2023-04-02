@@ -8,6 +8,7 @@ import {
   Switch,
   Text,
   Row,
+  Spacer
 } from "@nextui-org/react";
 
 const ScatterPlot = () => {
@@ -258,7 +259,7 @@ const ScatterPlot = () => {
           ? 1
           : 0
       );
-      
+
     svg
       .append("text")
       .attr("text-anchor", "end")
@@ -325,76 +326,119 @@ const ScatterPlot = () => {
       css={{ width: "100%", minHeight: "30rem" }}
       justify="center"
       align="center"
+      className="container top-associations"
     >
       {allData && allData.length > 0 && allData[0].symptomData && (
-        <Container>
-          <HeaderText text="Your Top Associations" />
-          <>
-            <Row justify="center">
-              <ScatterControls
-                symptomList={allData.map(({ symptomData }) => symptomData.name)}
-                toggleSymptom={toggleSymptom}
-                maxMonths={maxMonths}
-                currentSymptom={currentSymptom}
-              />
-            </Row>
-            <Row align="center">
-              <Container
-                css={{
-                  position: "relative",
-                  overflow: "auto",
-                  "-webkit-overflow-scrolling": "touch",
-                }}
-              >
-                <svg ref={svgRef} viewBox="50 0 700 360"></svg>
-              </Container>
-            </Row>
-            <Container
-              css={{
+        <>
+          <Container className="container scatter-controls" css={{
+            maxWidth: "60%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center"
+          }}>
+            <HeaderText text="Your Top Associations" />
+            <ScatterControls
+              symptomList={allData.map(({ symptomData }) => symptomData.name)}
+              toggleSymptom={toggleSymptom}
+              maxMonths={maxMonths}
+              currentSymptom={currentSymptom}
+            />
+          </Container>
+          <Container
+            className="svg-container"
+            css={{
+              position: "relative",
+              overflow: "auto",
+              "-webkit-overflow-scrolling": "touch",
+            }}
+          >
+            <svg ref={svgRef} viewBox="50 0 700 360"></svg>
+          </Container>
+          <Container
+            className="switches"
+            css={{
+              margin: "2rem 0",
+              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              "@xs": {
+                textAlign: "left",
+                display: "flex",
+                flexDirection: "column",
+              },
+              "@sm": {
+                textAlign: "left",
                 display: "flex",
                 flexDirection: "row",
-                wrap: "wrap",
-                padding: 0,
-                margin: "1rem",
-                alignContent: "center",
-                alignItems: "center",
                 justifyContent: "center",
-                gap: "1rem",
-                maxWidth: "100%",
-              }}
-            >
-              {legend?.slice(1).map(({ name, color }, i) => {
-                return (
-                  <>
-                    <Text
-                      size={15}
-                      css={{
-                        color: color,
-                        width: "8rem",
-                        textAlign: "right",
-                        margin: 0,
-                        padding: 0,
-                      }}
-                    >
-                      {name}
-                    </Text>
+                gap: "0.5rem",
+              },
+              "@md": {
+                textAlign: "left",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                gap: "0.5rem",
+              },
+              "@lg": {
+                textAlign: "left",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                gap: "0.5rem",
+              },
+            }}
+          >
+            {legend?.slice(1).map(({ name, color }, i) => {
+              return (
+                <>
+                  {/* <Col
+                    className="col"
+                    css={{
+                      display: "flex",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                    }}
+                  > */}
+                  <span
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "0.5rem",
+                    }}
+                  >
                     <Switch
                       color="green"
+                      checkedColor="green"
                       key={i}
-                      size="sm"
                       className="legendSwitch"
+                      size="sm"
                       bordered
                       checked={[...currentFoods, ...currentGroups].includes(
                         name
                       )}
                       onChange={() => toggleLine(name)}
                     />
-                  </>
-                );
-              })}
-            </Container>
-          </>
-        </Container>
+                    <Text
+                      size={15}
+                      css={{
+                        color: color,
+                        // marginLeft: "0.5rem",
+                        // width: "5rem",
+                        textAlign: "left",
+                      }}
+                    >
+                      {name}
+                    </Text>
+
+                    <Spacer x={2.5}></Spacer>
+                    {/* </Col> */}
+                  </span>
+                </>
+              );
+            })}
+          </Container>
+        </>
       )}
     </Container>
   );
