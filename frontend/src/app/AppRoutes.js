@@ -56,9 +56,14 @@ const AppRoutes = () => {
             <Container
               className="bookend"
               fluid
-              responsive={"false"}
+              responsive="false"
               display="flex"
-              css={{ margin: 0, padding: 0, minHeight: "100vh" }}
+              css={{
+                margin: 0,
+                padding: 0,
+                minHeight: "100vh",
+                width: "100vw",
+              }}
             >
               <Sidebar />
               <Routes>

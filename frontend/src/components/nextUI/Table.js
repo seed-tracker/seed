@@ -33,7 +33,8 @@ const Table = ({ description, headers, rows, button }) => {
         "@xs": {
           margin: 0,
           padding: 0,
-        }}}
+        },
+      }}
     >
       <NextUITable.Header columns={headers}>
         {(header) => (

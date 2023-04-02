@@ -15,6 +15,9 @@ const ScatterPlotMobile = ({ currentSymptom, item }) => {
   window.addEventListener("resize", () => {
     setWindowWidth(window.innerWidth);
   });
+  window.addEventListener("orientationchange", () => {
+    setWindowWidth(window.innerWidth);
+  });
 
   const colorPalette = ["#DC050C", "#882E72"];
 
@@ -137,6 +140,7 @@ const ScatterPlotMobile = ({ currentSymptom, item }) => {
     <Collapse.Group>
       <Collapse
         subtitle={showGraph ? "Close Graph" : "Show Graph"}
+        title=""
         css={{ fontSize: "$sm", fontWeight: "light" }}
         expanded={showGraph}
         onChange={() => setShowGraph(!showGraph)}

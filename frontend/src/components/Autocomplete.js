@@ -1,7 +1,14 @@
 import React, { useMemo, useState } from "react";
 import apiClient from "../client";
-import { Card, Row, Grid, Spacer } from "@nextui-org/react";
-import { Button, Dropdown, Inputs } from "./nextUI";
+import {
+  Card,
+  Row,
+  Grid,
+  Spacer,
+  Input,
+  Button as NextUIButton,
+} from "@nextui-org/react";
+import { Button, Dropdown } from "./nextUI";
 
 //autocomplete component for meal form
 const Autocomplete = ({ addFood, allGroups }) => {
@@ -87,29 +94,78 @@ const Autocomplete = ({ addFood, allGroups }) => {
           }}
           variant="flat"
         >
-          <Inputs
-            label="Search for a food"
-            type="text"
-            value={value}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            required={false}
-          />
+          <Card
+            css={{
+              backgroundColor: "transparent",
+              padding: "0.5rem",
+              cursor: "pointer",
+              margin: "0",
+            }}
+          >
+            <Input
+              aria-label="Search for a food"
+              value={value}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              required={false}
+              bordered
+              color="secondary"
+              size="md"
+              css={{
+                "@xs": {
+                  width: "90vw",
+                },
+                "@sm": {
+                  width: "20vw",
+                },
+                maxWidth: "25rem",
+                minWidth: "13rem",
+              }}
+            />
 
-          {value.length > 1 && !showDropdown ? (
-            <Card css={{ backgroundColor: "transparent", padding: "0.5rem", cursor: "pointer" }}>
-              {suggestions.map((suggestion, idx) => (
-                <Row key={idx} onClick={() => handleClick(idx)} className="suggestion">
-                  {" "}
-                  {suggestion.name}
-                </Row>
-              ))}
-              <Row onClick={() => setShowDropdown(true)} css={{ color: "red" }}>
-                {" "}
-                Add new food
-              </Row>
-            </Card>
-          ) : null}
+            {value.length > 1 && !showDropdown ? (
+              <NextUIButton.Group
+                color="secondary"
+                light
+                vertical
+                shadow
+                css={{
+                  margin: 0,
+                  border: "1px solid rgba(200, 210, 200 0.6)",
+                  backgroundColor: "rgba(240, 255, 240, 0.3)",
+                }}
+              >
+                {suggestions?.map((suggestion, idx) => (
+                  <NextUIButton
+                    css={{
+                      padding: 0,
+                      height: "1.8rem",
+                      borderRadius: 0,
+                      borderWidth: "0.1rem",
+                    }}
+                    key={idx}
+                    onPress={() => handleClick(idx)}
+                  >
+                    {suggestion.name}
+                  </NextUIButton>
+                ))}
+                <NextUIButton
+                  css={{
+                    padding: 0,
+                    height: "1.8rem",
+
+                    borderWidth: "0.1rem",
+                    backgroundColor: "$primary",
+                    opacity: "0.9",
+                    color: "white",
+                  }}
+                  onClick={() => setShowDropdown(true)}
+                >
+                  Add new food
+                </NextUIButton>
+              </NextUIButton.Group>
+            ) : null}
+          </Card>
         </section>
         <Spacer y={1} />
       </Grid>
@@ -148,6 +204,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
           </Grid>
         </>
       )}
+      <Spacer x={2} />
     </Grid.Container>
   );
 };

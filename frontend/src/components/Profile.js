@@ -28,6 +28,9 @@ const Profile = () => {
   window.addEventListener("resize", () => {
     setWindowWidth(window.innerWidth);
   });
+  window.addEventListener("orientationchange", () => {
+    setWindowWidth(window.innerWidth);
+  });
 
   const { data: scatterData, error: scatterError } = useSelector(
     (state) => state.scatter

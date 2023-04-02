@@ -100,8 +100,8 @@ const AssociationList = () => {
           <Grid xs={12} justify="center" align="center">
             <Text>Symptoms:</Text>
           </Grid>
-          {correlations.data?.map(({ symptom }) => (
-            <Grid xs={7} md={6} justify="center" align="center">
+          {correlations.data?.map(({ symptom }, i) => (
+            <Grid xs={7} md={6} justify="center" align="center" key={i}>
               <Button
                 color={symptom === currentSymptom ? "primary" : "white"}
                 onPress={() => setCurrentSymptom(symptom)}
@@ -130,11 +130,11 @@ const AssociationList = () => {
               </Grid>
             </>
           )}
-          {data.map((item) => {
+          {data.map((item, i) => {
             const { lift, avg_severity, total_count, name } = item;
 
             return (
-              <Grid xs={11}>
+              <Grid xs={11} key={i}>
                 <AssociationCard
                   name={name}
                   count={total_count}

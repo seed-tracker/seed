@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { me } from "../store/authSlice";
 import Autocomplete from "./Autocomplete";
 import apiClient from "../client";
-import { Container, Row, Col, Spacer, Text } from "@nextui-org/react";
+import { Container, Spacer, Text, Collapse } from "@nextui-org/react";
 import { Button, Table, Inputs, HeaderText } from "./nextUI/index";
 import SuccessMessage from "./SuccessMessage";
 
@@ -29,7 +29,7 @@ function MealForm() {
   //fetch food groups when the component mounts
   useEffect(() => {
     const today = new Date().toISOString();
-    setTime(today.substring(11,16));
+    setTime(today.substring(11, 16));
     setDate(today.substring(0, 10));
     fetchGroups();
     fetchRecentFoods();
@@ -161,13 +161,13 @@ function MealForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="entryForm">
       {!success ? (
         <Container
           display={"flex"}
           justify={"space-between"}
           wrap={"wrap"}
-          css={{ margin: "2vw", width: "65vw" }}
+          css={{ margin: "2vw", width: "90vw" }}
         >
           <Container display={"flex"} justify={"center"}>
             <HeaderText text="Add a meal" />
@@ -212,16 +212,18 @@ function MealForm() {
             />
             <Autocomplete addFood={addFood} allGroups={allGroups} />
           </Container>
-          {recentFoods && recentFoods.length > 0 && (
-            <Container
-              display={"flex"}
-              direction="column"
-              css={{ margin: 0, padding: 0, maxWidth: "30vw" }}
-            >
+          <Container
+            display={"flex"}
+            justify="center"
+            align="center"
+            direction="column"
+            css={{ margin: 0, padding: 0, maxWidth: "30vw" }}
+          >
+            {recentFoods && recentFoods.length > 0 && (
               <Table
                 description="Recent foods table"
                 headers={[
-                  { key: "name", label: "YOUR RECENT FOODS" },
+                  { key: "name", label: "Add a recent food" },
                   { key: "button", label: "" },
                 ]}
                 rows={recentFoods}
@@ -231,17 +233,12 @@ function MealForm() {
                   onPress: addFood,
                 }}
               />
-              <Spacer y={1} />
-            </Container>
-          )}
+            )}
+            <Spacer y={1} />
 
-          <Container
-            display={"flex"}
-            direction={"column"}
-            alignItems={"center"}
-            css={{ margin: 0, padding: 0 }}
-          >
+            <Spacer y={2} />
             <AddedFoods />
+
             <Spacer y={1} />
             <Button
               color={"secondary"}

@@ -43,7 +43,8 @@ function Inputs(inputProps) {
             "@sm": {
               width: "20vw",
             },
-            minWidth: "15rem",
+            maxWidth: "25rem",
+            minWidth: "13rem",
           }}
         />
         <Spacer y={1} />
@@ -69,7 +70,8 @@ function Inputs(inputProps) {
             "@sm": {
               width: "20vw",
             },
-            minWidth: "15rem",
+            maxWidth: "25rem",
+            minWidth: "13rem",
           }}
         />
         <Spacer y={1.5} />

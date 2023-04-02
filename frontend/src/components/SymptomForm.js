@@ -108,21 +108,26 @@ const SymptomForm = () => {
   };
 
   return (
-    <form onSubmit={handleSymptomSubmit} className="symptomForm">
+    <form onSubmit={handleSymptomSubmit} className="entryForm">
       {!success ? (
         <Grid.Container
-          display={"flex"}
-          justify={"center"}
-          wrap={"wrap"}
+          display="flex"
+          justify="center"
+          wrap="wrap"
           alignItems="center"
-          css={{ margin: "2vw", width: "65vw" }}
+          css={{ margin: "2vw" }}
           gap={2}
         >
           {" "}
-          <Grid display={"flex"} justify={"center"} xs={12}>
+          <Grid display="flex" justify="center" xs={12}>
             <HeaderText text="Add a symptom" />
           </Grid>
-          <Grid md={4} display={"flex"} direction="column">
+          <Grid
+            md={2}
+            display="flex"
+            direction="column"
+            css={{ minWidth: "15rem" }}
+          >
             <Inputs
               type={"date"}
               required={true}
@@ -132,17 +137,17 @@ const SymptomForm = () => {
               helperText={"required"}
             />
             <Inputs
-              type={"time"}
+              type="time"
               required={true}
-              label={"Time:"}
+              label="Time:"
               value={time}
               onChange={(event) => setTime(event.target.value)}
-              helperText={"required"}
+              helperText="required"
             />
 
             <label htmlFor="symptoms">Select symptom(s):</label>
             <Dropdown
-              color={"#7A918D"}
+              color="#7A918D"
               css={{
                 background: "#7a918d",
                 padding: "1rem",
@@ -152,7 +157,7 @@ const SymptomForm = () => {
               ariaLabel="Select Symptom Dropdown"
               onChange={({ currentKey }) => setSymptom([currentKey])}
               items={symptoms}
-              defaultName={"How are you feeling?"}
+              defaultName="How are you feeling?"
             />
           </Grid>
           <Spacer y={2} />
@@ -161,7 +166,7 @@ const SymptomForm = () => {
             direction="column"
             css={{ margin: 0, padding: 0, maxWidth: "30vw", minWidth: "15rem" }}
             lg={4}
-            md={5}
+            md={3}
             xs={7}
           >
             <Table
@@ -182,13 +187,15 @@ const SymptomForm = () => {
             <Spacer y={2} />
           </Grid>
           <Container
-            display={"flex"}
-            direction={"column"}
-            alignItems={"center"}
+            display="flex"
+            direction="column"
+            alignItems="center"
             css={{ margin: 0, padding: 0 }}
           >
             <label htmlFor="severity">
-              <Text css={{textAlign:"center", letterSpacing:"$normal"}}>Severity:</Text>
+              <Text css={{ textAlign: "center", letterSpacing: "$normal" }}>
+                Severity:
+              </Text>
               <Slider
                 min={0}
                 max={10}
@@ -199,16 +206,16 @@ const SymptomForm = () => {
             </label>
             <Spacer y={2} />
             <Button
-              text={"Add Entry"}
-              arialabel={"Submit Symptom Entry Form Button"}
-              type={"submit"}
+              text="Add Entry"
+              arialabel="Submit Symptom Entry Form Button"
+              type="submit"
             />
             <Spacer y={1} />
           </Container>
           {error.length > 1 && <Text color="red">{error}</Text>}
         </Grid.Container>
       ) : (
-        <Container display={"flex"} css={{ margin: "5vh 15vw" }}>
+        <Container display="flex" css={{ margin: "5vh 15vw" }}>
           <SuccessMessage
             title="Thanks for adding a symptom!"
             message="Every symptom you add makes our predictions better."

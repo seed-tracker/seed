@@ -134,24 +134,22 @@ const TopFoods = () => {
 
       g.append("g").call(yAxis);
 
-      const nodes = g
-      .selectAll("circle")
-      .data(topFoods)
+      const nodes = g.selectAll("circle").data(topFoods);
 
       nodes
-      .enter()
-      .append("circle")
-      .attr("cx", (food) => xScale(food.name) + xScale.bandwidth() / 2)
-      .attr("cy", (food) => yScale(food.count))
-      .attr("r", 10)
-      .attr("fill",  (d)=>foodsColors[d.groups[0]])
-      .style("opacity", 0.3)
-      .transition()
-      .duration(1000)
-      .delay((d, i) => i * 1000)
-      .ease(easeElasticOut)
-      .attr("r", 20);
-      nodes.exit().remove()
+        .enter()
+        .append("circle")
+        .attr("cx", (food) => xScale(food.name) + xScale.bandwidth() / 2)
+        .attr("cy", (food) => yScale(food.count))
+        .attr("r", 10)
+        .attr("fill", (d) => foodsColors[d.groups[0]])
+        .style("opacity", 0.3)
+        .transition()
+        .duration(1000)
+        .delay((d, i) => i * 1000)
+        .ease(easeElasticOut)
+        .attr("r", 20);
+      nodes.exit().remove();
 
       g.selectAll("circle").data(topFoods).join("circle");
 
@@ -266,10 +264,9 @@ const TopFoods = () => {
             aria-label="Button to filter chart top foods view by one year"
             text="1 Year"
           />
-
+        </Container>
       </Container>
-      </Container>
-      </>
+    </>
   );
 };
 
