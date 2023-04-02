@@ -1,7 +1,6 @@
+import { Container } from "@nextui-org/react";
 import React from "react";
-
 import { Links } from "./nextUI/index";
-import { Container, Spacer } from "@nextui-org/react";
 
 /**
  * Component for the sidebar
@@ -10,18 +9,20 @@ import { Container, Spacer } from "@nextui-org/react";
 const Sidebar = () => {
   return (
     <Container
-      className="glassmorpheus-graph"
+      className="glassmorpheus-graph1"
       display={"flex"}
+      justify="space-around"
       css={{
         "@xs": {
-          textAlign: "left",
+          gap: "1rem",
           margin: 0,
-          padding: "1vw",
+          flexWrap: "wrap",
           flexDirection: "row",
-          textAlign: "left",
           maxWidth: "100vw",
         },
         "@sm": {
+          gap: "1rem",
+          textAlign: "left",
           marginTop: "4vh",
           padding: "2vw",
           flexDirection: "column",
@@ -32,18 +33,29 @@ const Sidebar = () => {
         },
       }}
     >
-      <Links href={"/user/edit-profile"} text={"Edit Profile"} />
-      <Spacer y={0.5} />
-      <Links href={"/user/symptom-entries"} text={"Past Symptom Entries"} />
-      <Spacer y={0.5} />
-      <Links href={"/user/meal-entries"} text={"Past Meal Entries"} />
-      <Spacer y={0.5} />
+      <div style={{display: "flex", alignItems: "center"}}>
+        <span class="material-symbols-rounded">person</span>
+        <Links href={"/user/edit-profile"} text={"Edit Profile"} />
+      </div>
 
-      <Links href={"/add/symptom"} text={"Add Symptom Entry"} />
+      <div style={{display: "flex", alignItems: "center"}}>
+        <span class="material-symbols-rounded">diagnosis</span>
+        <Links href={"/user/symptom-entries"} text={"Past Symptom Entries"} />
+      </div>
 
-      <Spacer y={0.5} />
+      <div style={{display: "flex", alignItems: "center"}}>
+        <span class="material-symbols-rounded">restaurant</span>
+        <Links href={"/user/meal-entries"} text={"Past Meal Entries"} />
+      </div>
 
-      <Links href={"/user/addFood"} text={"Add Food Entry"} />
+      <div style={{display: "flex", alignItems: "center"}}>
+        <span class="material-symbols-rounded" style={{cursor: "pointer"}}>add</span>
+        <Links href={"/add/symptom"} text={"Add Symptom Entry"} />
+      </div>
+      <div style={{display: "flex", alignItems: "center"}}>
+        <span class="material-symbols-rounded" style={{cursor: "pointer"}}>add</span>
+        <Links href={"/user/addFood"} text={"Add Food Entry"} />
+      </div>
     </Container>
   );
 };

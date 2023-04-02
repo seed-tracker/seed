@@ -1,7 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as d3 from "d3";
-import { fetchScatterData } from "../../store/scatterSlice";
+import React, { useState } from "react";
 import { Text, Button, Row } from "@nextui-org/react";
 import { Slider } from "../nextUI";
 
@@ -39,7 +36,9 @@ const ScatterControls = ({
         />
       </section>
       <Row css={{ display: "flex", alignItems: "baseline", flexWrap: "wrap" }}>
-        <Text h4 css={{ marginRight: "10px" }}>Most common symptoms </Text>
+        <Text h4 css={{ marginRight: "10px" }}>
+          Most common symptoms{" "}
+        </Text>
         {symptomList ? (
           <div style={{ display: "flex" }}>
             {symptomList.length &&
@@ -52,20 +51,19 @@ const ScatterControls = ({
                     type="button"
                     aria-label={`Button to filter chart view by ${s} symptom`}
                     key={i}
-                    onClick={() => handleButtonClick(s)}
+                    onPress={() => handleButtonClick(s)}
                     css={{
                       backgroundColor: "#7a918d",
                       borderColor: "#7a918d",
-                    
+
                       ...css,
                       marginRight: "10px",
                       marginBottom: "10px",
                       "&:active": {
-                        backgroundColor: "#29524a"
-                      }
+                        backgroundColor: "#29524a",
+                      },
                     }}
                     size="xs"
-                   
                   >
                     {s}
                   </Button>

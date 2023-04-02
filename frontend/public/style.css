@@ -1,6 +1,28 @@
+* {
+  /* border: 1px solid #555555; */
+}
+
 @font-face {
   font-family: "Lovechild";
   src: url(./Lovechild-Regular.otf);
+}
+
+@font-face {
+  font-family: "Euclid";
+  src: url(./EuclidCircularB-Regular.otf);
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Euclid";
+  src: url(./EuclidCircularB-Medium.otf);
+  font-style: medium;
+}
+
+@font-face {
+  font-family: "Euclid";
+  src: url(./EuclidCircularB-Bold.otf);
+  font-style: bold;
 }
 
 body {
@@ -55,6 +77,16 @@ text {
   border: 1px solid rgba(41, 124, 76, 0.26);
 }
 
+.glassmorpheus-graph1{
+  /* From https://css.glass */
+  background: rgba(2, 80, 74, 0.31);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(2, 80, 74, 0.1);
+}
+
 input[type="range"]::-webkit-slider-runnable-track {
   background-color: "#7a918d";
 }
@@ -65,21 +97,72 @@ input[type="range"]::-moz-range-track {
 
 .bookend {
   background-image: url("seed-bg.png");
-  background-size: 100%;
+  background-size: 100vw auto;
   margin: 0;
   background-repeat: no-repeat;
+  background-position: center;
   background-attachment: fixed;
 }
 
-.nextui-switch--unchecked{
+.nextui-switch--unchecked {
   border-color: #7a918d !important;
 }
 
-.nextui-switch--checked{
+.nextui-switch--checked {
   background-color: #72c589cc !important;
 }
 
-.nextui-switch-circle{
+.nextui-switch-circle {
   background: #c2e6cd !important;
   border: #7a918d !important;
+}
+
+@media (max-width: 640px) {
+  .bookend {
+    background-size: auto 100vh;
+  }
+
+  .homehero {
+    background-image: none;
+    height: fit-content;
+    padding: 2rem;
+  }
+}
+
+.nextui-dropdown-button {
+  color: #ffffff !important;
+  background: #7a918d !important;
+}
+
+.nextui-dropdown-menu {
+  background: #5b6c61cc !important;
+  background-color: #5b6c61cc !important;
+  color: #ffffff !important;
+}
+
+.nextui-dropdown-item {
+  color: #ffffff !important;
+}
+
+.nextui-button-text {
+  color: #ffffff !important;
+}
+
+th {
+  color: #444c38 !important;
+  font-size: small !important;
+}
+
+.nextui-input-helper-text {
+  letter-spacing: normal !important;
+}
+
+.nextui-pagination-highlight--active {
+  background: #7a918d !important;
+  background-color: #7a918d !important;
+  color: #ffffff !important;
+}
+
+.material-symbols-rounded {
+  color: #7a918d;
 }

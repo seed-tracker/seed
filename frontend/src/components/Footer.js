@@ -44,10 +44,10 @@ const Footer = () => {
           <Text>Follow Us:</Text>
           <Links
             css={{ display: "block" }}
-            href={"instagram.com"}
+            href={"http://instagram.com"}
             text={"Instagram"}
           />
-          <Links href={"twitter.com"} text={"Twitter"} />
+          <Links href={"http://twitter.com"} text={"Twitter"} />
 
           <Spacer y={1} />
 
@@ -80,7 +80,7 @@ const Footer = () => {
           </Text>
           <Text size={16}>
             <strong>
-              Please remember that SEED does not provide medical advice!
+              {/* Please remember that SEED does not provide medical advice! */}
             </strong>
           </Text>
         </Container>
@@ -104,10 +104,9 @@ const Footer = () => {
             Medical Advice Disclaimer
           </Text>
           <Text size={14}>
-            This web site is provided for informational purposes only and does
-            not constitute providing medical advice or professional services.
-            The information provided should not be used for diagnosing or
-            treating a health problem or disease, and those seeking personal
+            This web site is intended for informational purposes only
+            and should not be used to diagnose, treat, cure, or 
+            prevent any disease. Those seeking personal
             medical advice should consult with a licensed physician. <br />
           </Text>
           <Text size={16}>

@@ -1,24 +1,31 @@
-import React, { useEffect } from "react";
+import { Button, Container, Collapse } from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { me } from "../store/authSlice";
-import { Container, Button } from "@nextui-org/react";
-import { Links } from "./nextUI";
 import circlePacking from "../img/circle-packing.png";
+import mealForm from "../img/meal-form.png";
+import scatterPlot from "../img/scatter-plot.png";
+import symptomForm from "../img/symptom-form.png";
 import topFoods from "../img/top-foods.png";
 import topSymptoms from "../img/top-symptoms.png";
-import pastSymptoms from "../img/past-symptoms.png";
-import scatterPlot from "../img/scatter-plot.png";
-import mealForm from "../img/meal-form.png";
-import symptomForm from "../img/symptom-form.png";
+import { me } from "../store/authSlice";
+import { Links } from "./nextUI";
 
 /**
  * Component for the homepage
  * @component shows demo
  */
 const Home = () => {
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleCollapse = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   useEffect(() => {
     dispatch(me());
   }, [dispatch]);
@@ -32,9 +39,6 @@ const Home = () => {
         display="flex"
         wrap={"wrap"}
         css={{
-          "@xs": {
-            paddingRight: "0",
-          },
           "@sm": {
             alignContent: "center",
             justifyContent: "flex-end",
@@ -42,7 +46,7 @@ const Home = () => {
           },
         }}
       >
-        <h2 style={{ fontSize: "5rem", color: "#444c38" }}>
+        <h2 style={{ fontSize: "10vh", color: "#444c38" }}>
           <span style={{ fontFamily: "Lovechild" }}>SEED</span> <br />
           No Roots <br />
           No Growth
@@ -50,19 +54,14 @@ const Home = () => {
       </Container>
       <Container
         fluid
+        className="glassmorpheus-graph"
         responsive={"false"}
         display="flex"
         direction="column"
         wrap={"wrap"}
         css={{
-          "@xs": {
-            padding: "1vw",
-          },
-          "@sm": {
-            padding: "5vw",
-          },
+          padding: "5vw",
         }}
-        className="glassmorpheus-graph"
       >
         <h4>
           Are you tired of struggling to determine which foods are causing you
@@ -75,7 +74,7 @@ const Home = () => {
         </h4>
 
         <h4>
-          Our intuitive interface and user-friendly design make it easy for
+          Our intuitive interface and user-friendly design makes it easy for
           anyone to use, regardless of their technical experience.
         </h4>
         <h4>
@@ -126,56 +125,54 @@ const Home = () => {
         direction="column"
         wrap={"wrap"}
         css={{
-          "@xs": {
-            padding: "1vw",
-          },
-          "@sm": {
-            padding: "5vw",
-          },
+          padding: "5vw",
         }}
         className="glassmorpheus"
       >
         <h2>Sign up today and get access to:</h2>
         <ul>
           <li>
-            <h3>Intuitive Interface</h3>
-            <p>
-              We make tracking your meals and symptoms simple and
-              straightforward. With just a few clicks, you can easily log your
-              meals and any symptoms you experience, allowing you to quickly
-              identify potential patterns and narrow down the foods that may be
-              causing issues.
-            </p>
-            <p>
-              Say goodbye to the frustration of traditional food diaries and
-              symptom logs. With SEED's intuitive interface, tracking your diet
-              and health has never been easier. Start feeling your best and take
-              the first step towards a healthier, happier you with SEED.
-            </p>
+          {/* <h3 onClick={toggleCollapse}>Intuitive Interface</h3> */}
+<Collapse open={isOpen} title="Intuitive Interface">
+  <p>
+    We make tracking your meals and symptoms simple and
+    straightforward. With just a few clicks, you can easily log your
+    meals and any symptoms you experience, allowing you to quickly
+    identify potential patterns and narrow down the foods that may be
+    causing issues.
+  </p>
+  <p>
+    Say goodbye to the frustration of traditional food diaries and
+    symptom logs. With SEED's intuitive interface, tracking your diet
+    and health has never been easier. Start feeling your best and take
+    the first step towards a healthier, happier you with SEED.
+  </p>
+</Collapse>
             <Container
               display="flex"
               css={{
+                gap: "1rem",
                 "@xs": {
                   flexDirection: "column",
                   maxWidth: "90vw",
-                  justifyContent: "space-around",
                   padding: "1rem",
                 },
                 "@sm": {
                   flexDirection: "row",
+                  justifyContent: "space-around",
                   maxWidth: "90vw",
                 },
               }}
             >
-              <img
-                style={{ height: "40vh" }}
+              <img className="blobby"
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={mealForm}
                 alt={
                   "SEED's Add A Meal Form - showing options available during meal entry"
                 }
               />
               <img
-                style={{ height: "40vh" }}
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={symptomForm}
                 alt={
                   "SEED's Add A Symptom Form - showing options available during symptom entry"
@@ -186,7 +183,8 @@ const Home = () => {
 
           <li>
             {" "}
-            <h3>A Wide Range of Data Vizualizations</h3>
+            <Collapse open={isOpen} title=" A Wide Range of Data Vizualizations">
+            {/* <h3>A Wide Range of Data Vizualizations</h3> */}
             <p>
               Our data visualization options allow you to easily analyze your
               tracked data and identify potential associations between your
@@ -200,7 +198,8 @@ const Home = () => {
               and health has never been easier. Start feeling your best and take
               the first step towards a healthier, happier you with SEED.
             </p>
-            Choose from an array of data vizualizations
+            </Collapse>
+           
           </li>
           <li>
             <h4>View Your Top Associations</h4>
@@ -225,7 +224,7 @@ const Home = () => {
               }}
             >
               <img
-                style={{ height: "40vh" }}
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={scatterPlot}
                 alt={
                   "SEED's Top Association Scatter Plot Graph - showing a demo vizualization"
@@ -251,7 +250,7 @@ const Home = () => {
               }}
             >
               <img
-                style={{ height: "40vh" }}
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={circlePacking}
                 alt={
                   "SEED's Top Association Circle Packing Graph - showing a demo vizualization"
@@ -274,7 +273,7 @@ const Home = () => {
               }}
             >
               <img
-                style={{ height: "40vh" }}
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={topFoods}
                 alt={
                   "SEED's Top Foods Lollipop Graph - showing a demo vizualization"
@@ -298,7 +297,7 @@ const Home = () => {
               }}
             >
               <img
-                style={{ height: "40vh" }}
+                style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={topSymptoms}
                 alt={
                   "SEED's Top Symptoms Lollipop Graph - showing a demo vizualization"
@@ -339,7 +338,7 @@ const Home = () => {
             color: "$secondary",
           }}
         >
-          Signup
+          Join Now
         </Button>
       </Container>
     </>
