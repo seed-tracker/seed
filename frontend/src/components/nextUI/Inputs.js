@@ -36,9 +36,6 @@ function Inputs(inputProps) {
           helperText={helperText && helperText}
           value={value}
           onChange={onChange}
-<<<<<<< HEAD
-          css={{ minWidth: "15rem" }}
-=======
           css={{
             "@xs": {
               width: "90vw",
@@ -46,8 +43,8 @@ function Inputs(inputProps) {
             "@sm": {
               width: "20vw",
             },
+            minWidth: "15rem",
           }}
->>>>>>> f5e474ac4c33f005a7ee41cc13a9327fa686d6a9
         />
         <Spacer y={1} />
       </>
@@ -65,9 +62,6 @@ function Inputs(inputProps) {
           helperText={helperText && helperText}
           value={value}
           onChange={onChange}
-<<<<<<< HEAD
-          css={{ minWidth: "15rem" }}
-=======
           css={{
             "@xs": {
               width: "90vw",
@@ -75,8 +69,8 @@ function Inputs(inputProps) {
             "@sm": {
               width: "20vw",
             },
+            minWidth: "15rem",
           }}
->>>>>>> f5e474ac4c33f005a7ee41cc13a9327fa686d6a9
         />
         <Spacer y={1.5} />
       </>

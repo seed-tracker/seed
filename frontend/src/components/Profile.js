@@ -5,7 +5,6 @@ import { fetchUserCorrelations } from "../store/correlationsSlice";
 import { fetchAllFoodGroups } from "../store/foodGroupsSlice";
 import { fetchScatterData } from "../store/scatterSlice";
 import { getUserStats } from "../store/statsSlice";
-import { Card } from "@nextui-org/react";
 import AssociationList from "./mobile/AssociationList";
 import { fetchAllSymptoms } from "../store/symptomSlice";
 import StatsAndFacts from "./StatsAndFacts";
@@ -98,59 +97,28 @@ const Profile = () => {
             <>
               {" "}
               {windowWidth >= 600 ? (
-
-            <Container
-              display="flex"
-              direction="column"
-              justify="center"
-              align="center"
-              css={{
-                "@xs": {
-                  alignSelf: "flex-start",
-                  margin: 0,
-                  maxWidth: "100vw",
-                },
-                "@sm": {
-                  margin: "2rem 0",
-                  alignSelf: "flex-start",
-                  maxWidth: "90vw",
-                },
-              }}
-            >
-              <Container
-                display="flex"
-                direction="row"
-                wrap="wrap"
-                justify="center"
-                align="center"
-              >
-                {scatterData && scatterData.length > 0 && (
-                  <Button
-                    onClick={() => setGraphIdx(0)}
-                    type="button"
-                    aria-label="Button to show the top associations graph"
-                    css={{ ...getCss(0), ...buttonMargin }}
-                  >
-                    Top Associations
-                  </Button>
-                )}
-                <Button
-                  onClick={() => setGraphIdx(1)}
-                  type="button"
-                  aria-label="Button to show the Food/Symptom Relationships graph"
-                  css={{ ...getCss(1), ...buttonMargin }}
-                >
-                  Food/Symptom Relationships
-                </Button>
-                <Button
-                  onClick={() => setGraphIdx(2)}
-                  type="button"
-                  aria-label="Button to show the top foods graph"
-                  css={{ ...getCss(2), ...buttonMargin }} /
+                <Container
+                  display="flex"
+                  direction="column"
+                  justify="center"
+                  align="center"
+                  css={{
+                    "@xs": {
+                      alignSelf: "flex-start",
+                      margin: 0,
+                      maxWidth: "100vw",
+                    },
+                    "@sm": {
+                      margin: "2rem 0",
+                      alignSelf: "flex-start",
+                      maxWidth: "90vw",
+                    },
+                  }}
                 >
                   <Container
                     display="flex"
                     direction="row"
+                    wrap="wrap"
                     justify="center"
                     align="center"
                   >
@@ -188,9 +156,7 @@ const Profile = () => {
                     >
                       Top Symptoms
                     </Button>
-                    </Container>
                   </Container>
-                  
 
                   <Card
                     className="glassmorpheus-graph"
@@ -214,7 +180,6 @@ const Profile = () => {
                       <TopSymptoms />
                     </section>
                   </Card>
-
                 </Container>
               ) : (
                 <AssociationList />
