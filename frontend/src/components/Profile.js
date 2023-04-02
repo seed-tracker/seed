@@ -21,32 +21,25 @@ import { HeaderText, PageLoading } from "./nextUI";
 const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [graphIdx, setGraphIdx] = useState(0);
-
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const isMobile = detectMobile();
-  console.log(isMobile);
-
-  //keep track of window width for switching to mobile views
-  window.addEventListener("resize", () => {
-    setWindowWidth(window.innerWidth);
-  });
-  window.addEventListener("orientationchange", () => {
-    setWindowWidth(window.innerWidth);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
   });
 
-  function detectMobile() {
-    const devices = [
-      /Android/i,
-      /webOS/i,
-      /iPhone/i,
-      /iPad/i,
-      /iPod/i,
-      /BlackBerry/i,
-      /Windows Phone/i,
-    ];
+  //keep track of window width for resizing the svg
+  useEffect(() => {
+    window.addEventListener("resize", updateSize);
+    window.addEventListener("orientationchange", updateSize);
 
-    return devices.some((device) => navigator.userAgent.match(device));
-  }
+    return () => {
+      window.removeEventListener("resize", updateSize);
+      window.removeEventListener("orientationchange", updateSize);
+    };
+  }, []);
+
+  const updateSize = () => {
+    setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+  };
 
   const { data: scatterData, error: scatterError } = useSelector(
     (state) => state.scatter
@@ -115,7 +108,7 @@ const Profile = () => {
           {correlationsLoaded && correlationsLoaded.length > 0 ? (
             <>
               {" "}
-              {windowWidth >= 600 ? (
+              {windowSize.width >= 750 ? (
                 <Container
                   display="flex"
                   direction="column"
@@ -187,7 +180,7 @@ const Profile = () => {
                     }}
                   >
                     <section style={{ display: getDisplay(0) }}>
-                      <ScatterPlot />
+                      <ScatterPlot windowSize={windowSize} />
                     </section>
                     <section style={{ display: getDisplay(1) }}>
                       <CirclePacking />
@@ -201,7 +194,7 @@ const Profile = () => {
                   </Card>
                 </Container>
               ) : (
-                <AssociationList />
+                <AssociationList windowSize={windowSize} />
               )}
             </>
           ) : (

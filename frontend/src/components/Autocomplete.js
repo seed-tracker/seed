@@ -7,6 +7,7 @@ import {
   Spacer,
   Input,
   Button as NextUIButton,
+  Text,
 } from "@nextui-org/react";
 import { Button, Dropdown } from "./nextUI";
 
@@ -100,7 +101,9 @@ const Autocomplete = ({ addFood, allGroups }) => {
               padding: "0.5rem",
               cursor: "pointer",
               margin: "0",
+              border: "0",
             }}
+            shadow={false}
           >
             <Input
               aria-label="Search for a food"
@@ -125,13 +128,13 @@ const Autocomplete = ({ addFood, allGroups }) => {
 
             {value.length > 1 && !showDropdown ? (
               <NextUIButton.Group
-                color="secondary"
                 light
                 vertical
                 shadow
+                ripple={true}
                 css={{
                   margin: 0,
-                  border: "1px solid rgba(200, 210, 200 0.6)",
+                  border: "1px solid rgba(200, 210, 200, 0.6)",
                   borderBottom: "0px",
                   borderRadius: "0",
                   backgroundColor: "rgba(240, 255, 240, 0.3)",
@@ -144,11 +147,12 @@ const Autocomplete = ({ addFood, allGroups }) => {
                       height: "1.8rem",
                       borderRadius: 0,
                       color: "#000000",
+                      border: "0px",
                     }}
                     key={idx}
                     onPress={() => handleClick(idx)}
                   >
-                    {suggestion.name}
+                    <Text color="black">{suggestion.name}</Text>
                   </NextUIButton>
                 ))}
                 <NextUIButton

@@ -5,15 +5,29 @@ import { useSelector } from "react-redux";
 import AssociationCard from "./AssociationCard";
 import ScatterPlotMobile from "./ScatterMobile";
 
-const AssociationList = () => {
+const AssociationList = ({ windowSize }) => {
   const { correlations } = useSelector((state) => state);
   const [currentSymptom, setCurrentSymptom] = useState("");
   const [showFoods, setShowFoods] = useState(true);
   const [showGroups, setShowGroups] = useState(false);
   const [data, setData] = useState([]);
-  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
 
-  window.addEventListener("resize", () => setScreenHeight(window.innerHeight));
+  function detectMobile() {
+    const devices = [
+      /Android/i,
+      /webOS/i,
+      /iPhone/i,
+      /iPad/i,
+      /iPod/i,
+      /BlackBerry/i,
+      /Windows Phone/i,
+    ];
+
+    return devices.some((device) => navigator.userAgent.match(device));
+  }
+
+  const isMobile = detectMobile();
+
   //initialize once correlations load
   useEffect(() => {
     //if the correlations are empty or already showing, return
@@ -93,7 +107,7 @@ const AssociationList = () => {
           <Grid>
             <HeaderText text="Your top associations" />
             <Text h4>Ordered by strongest relationship</Text>
-            {screenHeight >= 600 && (
+            {windowSize.height >= 750 && isMobile && (
               <Text>Turn your device sideways to see more detail!</Text>
             )}
           </Grid>
@@ -103,10 +117,12 @@ const AssociationList = () => {
           {correlations.data?.map(({ symptom }, i) => (
             <Grid xs={7} md={6} justify="center" align="center" key={i}>
               <Button
-                color={symptom === currentSymptom ? "primary" : "white"}
+                color={symptom === currentSymptom ? "primary" : "$white"}
                 onPress={() => setCurrentSymptom(symptom)}
               >
-                {symptom}
+                <Text color={symptom === currentSymptom ? "" : "black"}>
+                  {symptom}
+                </Text>
               </Button>
             </Grid>
           ))}
@@ -140,13 +156,13 @@ const AssociationList = () => {
                   count={total_count}
                   avg_severity={avg_severity}
                   symptom={currentSymptom}
+                  windowSize={windowSize}
                 />
               </Grid>
             );
           })}
           <Text h5 css={{ mt: "2rem" }}>
-            {screenHeight < 600 &&
-              "Login on a larger device to see more detail!"}
+            {!isMobile && "Login on a larger device to see more detail!"}
           </Text>
         </Grid.Container>
       ) : null}

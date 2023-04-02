@@ -3,9 +3,9 @@ import { useSelector } from "react-redux";
 import * as d3 from "d3";
 import ScatterControls from "./ScatterControls";
 import { HeaderText } from "../nextUI";
-import { Container, Switch, Text, Row, Spacer } from "@nextui-org/react";
+import { Container, Switch, Text, Spacer } from "@nextui-org/react";
 
-const ScatterPlot = () => {
+const ScatterPlot = ({ windowSize }) => {
   const { data: chartData, maxMonths } = useSelector((state) => state.scatter);
   const { data: corrData } = useSelector((state) => state.correlations);
   const [allData, setAllData] = useState([]);
@@ -121,20 +121,14 @@ const ScatterPlot = () => {
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
+    //const width = windowSize.width * 0.8;
     const width = 800;
     const height = 300;
 
     const svg = d3.select(svgRef.current);
     svg.text("");
 
-    // svg.selectAll("*").remove();
-
-    svg
-      // .attr("width", "auto")
-      .attr("width", width)
-      .attr("height", height);
-    // .style("overflow", "visible")
-    // .style("margin-top", "3rem");
+    svg.attr("width", width).attr("height", height);
 
     const labels = [currentSymptom, ...currentFoods, ...currentGroups];
     //make a color range
@@ -226,9 +220,7 @@ const ScatterPlot = () => {
       .join("path")
       .attr("d", (d) => line(d.values))
       .attr("stroke", (d) => colors(d.name))
-      .attr("class", function (d) {
-        return makeKey(d.name);
-      })
+      .attr("class", (d) => makeKey(d.name))
       .attr("clip-path", "url(#clip")
       .style("stroke-width", 4)
       .style("fill", "none")
@@ -243,23 +235,27 @@ const ScatterPlot = () => {
       .data(data)
       .join("g")
       .style("fill", (d) => colors(d.name))
-      .selectAll("myPoints")
-      .data((d) => d.values)
-      .join("circle")
-      .attr("r", 5)
-      .attr("stroke", "blue")
+      .attr("clip-path", "url(#clip)")
       .style("opacity", (d) =>
         [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
           ? 1
           : 0
-      );
+      )
+      .attr("class", (d) => makeKey(d.name))
+      .selectAll("myPoints")
+      .data((d) => d.values)
+      .join("circle")
+      .attr("cx", (d) => x(d.date))
+      .attr("cy", (d) => y(d.count))
+      .attr("r", 5)
+      .attr("stroke", "white");
 
     svg
       .append("text")
       .attr("text-anchor", "end")
       .attr("transform", "rotate(-90)")
       .attr("y", -40)
-      .attr("x", -height / 4)
+      .attr("x", -25)
       .text("Number of occurences per month");
 
     svg
@@ -293,16 +289,30 @@ const ScatterPlot = () => {
       //     )
       //   );
 
+      // const dots = svg
+      // .selectAll("myDots")
+      // .data(data)
+      // .join("g")
+      // .style("fill", (d) => colors(d.name))
+      // .style("opacity", (d) =>
+      //   [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
+      //     ? 1
+      //     : 0
+      // )
+      // .attr("class", (d) => makeKey(d.name))
+      // .selectAll("myPoints")
+      // .data((d) => d.values)
+      // .join("circle")
+      // .attr("cx", (d) => x(d.date))
+      // .attr("cy", (d) => y(d.count))
+      // .attr("r", 5)
+      // .attr("stroke", "white");
+
       dots
-        .data(data)
         .transition()
         .duration(500)
-        .attr("cx", function (d) {
-          return x(+d.date);
-        })
-        .attr("cy", function (d) {
-          return y(+d.count);
-        });
+        .attr("cx", (d) => x(+d.date))
+        .attr("cy", (d) => y(+d.count));
 
       lines
         .data(data)
@@ -312,7 +322,7 @@ const ScatterPlot = () => {
     };
 
     d3.selectAll('input[type="range"]').on("change", updateAxis);
-  }, [allData, currentFoods, currentGroups, currentSymptom]);
+  }, [allData, currentFoods, currentGroups, currentSymptom, windowSize]);
 
   return (
     <Container
@@ -349,7 +359,9 @@ const ScatterPlot = () => {
               "-webkit-overflow-scrolling": "touch",
             }}
           >
-            <svg ref={svgRef} viewBox="50 0 700 360"></svg>
+            <div className="dataViz">
+              <svg ref={svgRef} viewBox="50 0 700 360"></svg>
+            </div>
           </Container>
           <Container
             className="switches"

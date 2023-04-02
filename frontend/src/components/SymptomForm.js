@@ -118,7 +118,7 @@ const SymptomForm = () => {
           wrap="wrap"
           alignItems="center"
           css={{ margin: "2vw" }}
-          gap={2}
+          gap={4}
         >
           {" "}
           <Grid display="flex" justify="center" xs={12}>
@@ -165,7 +165,6 @@ const SymptomForm = () => {
               status={validate && !symptom.length ? "error" : "default"}
             />
           </Grid>
-          <Spacer y={2} />
           <Grid
             display={"flex"}
             direction="column"

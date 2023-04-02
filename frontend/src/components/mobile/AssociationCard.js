@@ -2,8 +2,13 @@ import { Card, Grid, Text, Button } from "@nextui-org/react";
 import ScatterPlotMobile from "./ScatterMobile";
 import { useState } from "react";
 
-const AssociationCard = ({ name, count, avg_severity, symptom }) => {
-  
+const AssociationCard = ({
+  name,
+  count,
+  avg_severity,
+  symptom,
+  windowSize,
+}) => {
   return (
     <Card>
       <Card.Header>
@@ -22,6 +27,7 @@ const AssociationCard = ({ name, count, avg_severity, symptom }) => {
       <ScatterPlotMobile
         currentSymptom={symptom}
         item={name}
+        windowSize={windowSize}
       />
     </Card>
   );

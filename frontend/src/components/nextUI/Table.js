@@ -34,6 +34,8 @@ const Table = ({ description, headers, rows, button }) => {
           margin: 0,
           padding: 0,
         },
+        minWidth: "15rem",
+        maxWidth: "50vw",
       }}
     >
       <NextUITable.Header columns={headers}>

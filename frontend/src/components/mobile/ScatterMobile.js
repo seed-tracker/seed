@@ -4,20 +4,11 @@ import * as d3 from "d3";
 import { Row, Collapse, Spacer, Text } from "@nextui-org/react";
 
 //scatter plot with only two lines, optimized for mobile view
-const ScatterPlotMobile = ({ currentSymptom, item }) => {
+const ScatterPlotMobile = ({ currentSymptom, item, windowSize }) => {
   const { data: chartData } = useSelector((state) => state.scatter);
   const [data, setData] = useState([]);
   const [dateRange, setDateRange] = useState([]);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [showGraph, setShowGraph] = useState(false);
-
-  //keep track of window width for resizing the svg
-  window.addEventListener("resize", () => {
-    setWindowWidth(window.innerWidth);
-  });
-  window.addEventListener("orientationchange", () => {
-    setWindowWidth(window.innerWidth);
-  });
 
   const colorPalette = ["#DC050C", "#882E72"];
 
@@ -79,7 +70,7 @@ const ScatterPlotMobile = ({ currentSymptom, item }) => {
     if (!data || !data.length) return;
 
     //base width, height on window size
-    const width = windowWidth * 0.55;
+    const width = windowSize.width * 0.55;
     const height = width * 0.7;
 
     const svg = d3.select(gRef.current);
@@ -134,7 +125,7 @@ const ScatterPlotMobile = ({ currentSymptom, item }) => {
       .style("stroke-width", 4)
       .style("fill", "none")
       .attr("transform", `translate(30, 20)`);
-  }, [data, windowWidth]);
+  }, [data, windowSize]);
 
   return (
     <Collapse.Group>

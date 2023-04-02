@@ -245,7 +245,7 @@ function MealForm() {
           {recentFoods && recentFoods.length > 0 && (
             <Container
               display={"flex"}
-              justify="center"
+              justify="flex-start"
               align="center"
               direction="column"
               css={{
