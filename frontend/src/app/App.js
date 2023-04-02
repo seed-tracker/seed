@@ -37,7 +37,7 @@ const App = () => {
         switchColor: "#72c589",
       },
       fonts: {
-        sans: "sans-serif",
+        sans: "Euclid Circular B",
       },
     },
   });

@@ -44,10 +44,10 @@ const Footer = () => {
           <Text>Follow Us:</Text>
           <Links
             css={{ display: "block" }}
-            href={"instagram.com"}
+            href={"http://instagram.com"}
             text={"Instagram"}
           />
-          <Links href={"twitter.com"} text={"Twitter"} />
+          <Links href={"http://twitter.com"} text={"Twitter"} />
 
           <Spacer y={1} />
 
