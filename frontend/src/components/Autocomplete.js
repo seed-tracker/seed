@@ -116,7 +116,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
                   width: "90vw",
                 },
                 "@sm": {
-                  width: "20vw",
+                  width: "25vw",
                 },
                 maxWidth: "25rem",
                 minWidth: "13rem",
@@ -132,6 +132,8 @@ const Autocomplete = ({ addFood, allGroups }) => {
                 css={{
                   margin: 0,
                   border: "1px solid rgba(200, 210, 200 0.6)",
+                  borderBottom: "0px",
+                  borderRadius: "0",
                   backgroundColor: "rgba(240, 255, 240, 0.3)",
                 }}
               >
@@ -141,7 +143,6 @@ const Autocomplete = ({ addFood, allGroups }) => {
                       padding: 0,
                       height: "1.8rem",
                       borderRadius: 0,
-                      borderWidth: "0.1rem",
                     }}
                     key={idx}
                     onPress={() => handleClick(idx)}

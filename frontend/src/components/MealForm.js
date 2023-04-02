@@ -212,18 +212,23 @@ function MealForm() {
             />
             <Autocomplete addFood={addFood} allGroups={allGroups} />
           </Container>
-          <Container
-            display={"flex"}
-            justify="center"
-            align="center"
-            direction="column"
-            css={{ margin: 0, padding: 0, maxWidth: "30vw" }}
-          >
-            {recentFoods && recentFoods.length > 0 && (
+          {recentFoods && recentFoods.length > 0 && (
+            <Container
+              display={"flex"}
+              justify="center"
+              align="center"
+              direction="column"
+              css={{
+                margin: 0,
+                padding: 0,
+                maxWidth: "50vw",
+                maxWidth: "20rem",
+              }}
+            >
               <Table
                 description="Recent foods table"
                 headers={[
-                  { key: "name", label: "Add a recent food" },
+                  { key: "name", label: "RECENT FOODS" },
                   { key: "button", label: "" },
                 ]}
                 rows={recentFoods}
@@ -233,9 +238,16 @@ function MealForm() {
                   onPress: addFood,
                 }}
               />
-            )}
-            <Spacer y={1} />
+              <Spacer y={1} />
+            </Container>
+          )}
 
+          <Container
+            display={"flex"}
+            direction={"column"}
+            alignItems={"center"}
+            css={{ margin: 0, padding: 0 }}
+          >
             <Spacer y={2} />
             <AddedFoods />
 
