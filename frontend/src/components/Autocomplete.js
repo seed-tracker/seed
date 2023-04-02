@@ -1,7 +1,15 @@
 import React, { useMemo, useState } from "react";
 import apiClient from "../client";
-import { Card, Row, Grid, Spacer } from "@nextui-org/react";
-import { Button, Dropdown, Inputs } from "./nextUI";
+import {
+  Card,
+  Row,
+  Grid,
+  Spacer,
+  Input,
+  Button as NextUIButton,
+  Text,
+} from "@nextui-org/react";
+import { Button, Dropdown } from "./nextUI";
 
 //autocomplete component for meal form
 const Autocomplete = ({ addFood, allGroups }) => {
@@ -87,29 +95,83 @@ const Autocomplete = ({ addFood, allGroups }) => {
           }}
           variant="flat"
         >
-          <Inputs
-            label="Search for a food"
-            type="text"
-            value={value}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            required={false}
-          />
+          <Card
+            css={{
+              backgroundColor: "transparent",
+              padding: "0.5rem",
+              cursor: "pointer",
+              margin: "0",
+              border: "0",
+            }}
+            shadow={false}
+          >
+            <Input
+              aria-label="Search for a food"
+              value={value}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              required={false}
+              bordered
+              color="secondary"
+              size="md"
+              css={{
+                "@xs": {
+                  width: "90vw",
+                },
+                "@sm": {
+                  width: "25vw",
+                },
+                maxWidth: "25rem",
+                minWidth: "13rem",
+              }}
+            />
 
-          {value.length > 1 && !showDropdown ? (
-            <Card css={{ backgroundColor: "transparent", padding: "0.5rem", cursor: "pointer" }}>
-              {suggestions.map((suggestion, idx) => (
-                <Row key={idx} onClick={() => handleClick(idx)} className="suggestion">
-                  {" "}
-                  {suggestion.name}
-                </Row>
-              ))}
-              <Row onClick={() => setShowDropdown(true)} css={{ color: "red" }}>
-                {" "}
-                Add new food
-              </Row>
-            </Card>
-          ) : null}
+            {value.length > 1 && !showDropdown ? (
+              <NextUIButton.Group
+                light
+                vertical
+                shadow
+                ripple={true}
+                css={{
+                  margin: 0,
+                  border: "1px solid rgba(200, 210, 200, 0.6)",
+                  borderBottom: "0px",
+                  borderRadius: "0",
+                  backgroundColor: "rgba(240, 255, 240, 0.3)",
+                }}
+              >
+                {suggestions?.map((suggestion, idx) => (
+                  <NextUIButton
+                    css={{
+                      padding: 0,
+                      height: "1.8rem",
+                      borderRadius: 0,
+                      color: "#000000",
+                      border: "0px",
+                    }}
+                    key={idx}
+                    onPress={() => handleClick(idx)}
+                  >
+                    <Text color="black">{suggestion.name}</Text>
+                  </NextUIButton>
+                ))}
+                <NextUIButton
+                  css={{
+                    padding: 0,
+                    height: "1.8rem",
+
+                    borderWidth: "0.1rem",
+                    backgroundColor: "$primary",
+                    opacity: "0.9",
+                    color: "white",
+                  }}
+                  onClick={() => setShowDropdown(true)}
+                >
+                  Add new food
+                </NextUIButton>
+              </NextUIButton.Group>
+            ) : null}
+          </Card>
         </section>
         <Spacer y={1} />
       </Grid>
@@ -125,6 +187,12 @@ const Autocomplete = ({ addFood, allGroups }) => {
               onChange={setSelectedGroups}
               defaultName="Choose a food group"
               items={allGroups.map(({ name }) => ({ name: name, key: name }))}
+              color="#7A918D"
+              css={{
+                background: "#7a918d",
+                padding: "1rem",
+                maxWidth: "10rem",
+              }}
             />
           </Grid>
           <Spacer y={1} />
@@ -148,6 +216,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
           </Grid>
         </>
       )}
+      <Spacer x={2} />
     </Grid.Container>
   );
 };

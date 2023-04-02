@@ -75,7 +75,7 @@ const TopSymptoms = () => {
 
       const yAxisLine = svg
         .append("g")
-        .attr("transform", `translate(${(margin.left * 2)}, ${margin.top * 2})`)
+        .attr("transform", `translate(${margin.left * 2}, ${margin.top * 2})`)
         .call(yAxis); // make the y-axis
 
       svg.selectAll(".tick text").on("click", (event, d) => {
@@ -87,12 +87,15 @@ const TopSymptoms = () => {
         .append("g")
         .attr(
           "transform",
-          `translate(${xScale.bandwidth() / 2 + (margin.left * 2)}, ${margin.top * 2})`
+          `translate(${xScale.bandwidth() / 2 + margin.left * 2}, ${
+            margin.top * 2
+          })`
         );
 
       if (symptoms && symptoms.length > 0) {
-        svg.append("text")
-          .attr("x", (height / 2))
+        svg
+          .append("text")
+          .attr("x", height / 2)
           .attr("y", margin.left)
           .attr("font-size", "20px")
           .attr("text-anchor", "middle")
@@ -205,11 +208,25 @@ const TopSymptoms = () => {
         justify={"center"}
       >
         <Container
-          css={{position: "relative", overflow: "auto", "-webkit-overflow-scrolling": "touch"}}
+          css={{
+            position: "relative",
+            overflow: "auto",
+            "-webkit-overflow-scrolling": "touch",
+          }}
         >
-          <svg ref={svgRef} viewBox="0 0 750 350" width="900" height="360"></svg>
+          <svg
+            ref={svgRef}
+            viewBox="0 0 750 350"
+            width="900"
+            height="360"
+          ></svg>
         </Container>
-        <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
+        <Container
+          display="flex"
+          alignItems="center"
+          justify="center"
+          css={{ gap: "1rem" }}
+        >
           <Text h4>Filter data by</Text>
             <Button
               onPress={handleGetAllTime}
@@ -232,6 +249,7 @@ const TopSymptoms = () => {
               size="sm"
               text="1 Year"
             />
+
         </Container>
       </Container>
     </>
