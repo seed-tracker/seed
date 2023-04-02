@@ -16,6 +16,7 @@ const SymptomForm = () => {
   const [recentSymptoms, setRecentSymptoms] = useState([]);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [validate, setValidate] = useState(false);
 
   const user = useSelector((state) => state.auth.me);
 
@@ -48,6 +49,7 @@ const SymptomForm = () => {
         dateTime("");
         setSeverity(5);
         setSymptom("");
+        setValidate(false);
       } else {
         setError(
           "There was an issue adding your symptom. Please try again later."
@@ -112,7 +114,7 @@ const SymptomForm = () => {
       {!success ? (
         <Grid.Container
           display="flex"
-          justify="center"
+          justify="space-around"
           wrap="wrap"
           alignItems="center"
           css={{ margin: "2vw" }}
@@ -135,6 +137,7 @@ const SymptomForm = () => {
               value={date}
               onChange={(event) => setDate(event.target.value)}
               helperText={"required"}
+              status={validate && !date.length ? "error" : "default"}
             />
             <Inputs
               type="time"
@@ -143,6 +146,7 @@ const SymptomForm = () => {
               value={time}
               onChange={(event) => setTime(event.target.value)}
               helperText="required"
+              status={validate && !time.length ? "error" : "default"}
             />
 
             <label htmlFor="symptoms">Select symptom(s):</label>
@@ -158,6 +162,7 @@ const SymptomForm = () => {
               onChange={({ currentKey }) => setSymptom([currentKey])}
               items={symptoms}
               defaultName="How are you feeling?"
+              status={validate && !symptom.length ? "error" : "default"}
             />
           </Grid>
           <Spacer y={2} />
@@ -209,6 +214,7 @@ const SymptomForm = () => {
               text="Add Entry"
               arialabel="Submit Symptom Entry Form Button"
               type="submit"
+              onPress={() => setValidate(true)}
             />
             <Spacer y={1} />
           </Container>

@@ -23,6 +23,8 @@ const Profile = () => {
   const [graphIdx, setGraphIdx] = useState(0);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const isMobile = detectMobile();
+  console.log(isMobile);
 
   //keep track of window width for switching to mobile views
   window.addEventListener("resize", () => {
@@ -31,6 +33,20 @@ const Profile = () => {
   window.addEventListener("orientationchange", () => {
     setWindowWidth(window.innerWidth);
   });
+
+  function detectMobile() {
+    const devices = [
+      /Android/i,
+      /webOS/i,
+      /iPhone/i,
+      /iPad/i,
+      /iPod/i,
+      /BlackBerry/i,
+      /Windows Phone/i,
+    ];
+
+    return devices.some((device) => navigator.userAgent.match(device));
+  }
 
   const { data: scatterData, error: scatterError } = useSelector(
     (state) => state.scatter

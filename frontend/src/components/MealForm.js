@@ -18,6 +18,7 @@ function MealForm() {
   const [allGroups, setAllGroups] = useState([]);
   const [recentFoods, setRecentFoods] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [validate, setValidate] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -87,7 +88,9 @@ function MealForm() {
   //submit the meal
   const handleSubmit = async (e) => {
     try {
+      setValidate(true);
       e.preventDefault();
+      console.log("submit");
 
       //set an error if the user hasn't added a food
       if (!mealArray.length) {
@@ -121,9 +124,11 @@ function MealForm() {
         setError("");
         setEntryName("");
         setMealArray([]);
-        setTime("");
-        setDate("");
+        const today = new Date().toISOString();
+        setTime(today.substring(11, 16));
+        setDate(today.substring(0, 10));
         setLoading(false);
+        setValidate(false);
       } else {
         setError(
           "There was an issue adding your meal. Please try again later."
@@ -193,6 +198,7 @@ function MealForm() {
               onChange={handleNameChange}
               required={true}
               helperText="Required"
+              status={validate && !entryName.length ? "error" : "default"}
             />
             <Inputs
               label="Date"
@@ -201,6 +207,7 @@ function MealForm() {
               onChange={handleDateChange}
               required={true}
               helperText="Required"
+              status={validate && !date.length ? "error" : "default"}
             />
             <Inputs
               label="Time"
@@ -209,8 +216,31 @@ function MealForm() {
               onChange={handleTimeChange}
               required={true}
               helperText="Required"
+              status={validate && !time.length ? "error" : "default"}
             />
             <Autocomplete addFood={addFood} allGroups={allGroups} />
+            <Container
+              display={"flex"}
+              direction={"column"}
+              alignItems={"center"}
+              css={{ margin: 0, padding: 0 }}
+            >
+              <Spacer y={2} />
+              <AddedFoods />
+
+              <Spacer y={1} />
+              <Button
+                color={"secondary"}
+                text="Submit Meal"
+                ariaLabel="Button to submit a meal"
+                type="submit"
+                loading={loading}
+                onPress={() => setValidate(true)}
+              />
+
+              {error.length > 1 && <Text color="red">{error}</Text>}
+              <Spacer y={2} />
+            </Container>
           </Container>
           {recentFoods && recentFoods.length > 0 && (
             <Container
@@ -241,27 +271,6 @@ function MealForm() {
               <Spacer y={1} />
             </Container>
           )}
-
-          <Container
-            display={"flex"}
-            direction={"column"}
-            alignItems={"center"}
-            css={{ margin: 0, padding: 0 }}
-          >
-            <Spacer y={2} />
-            <AddedFoods />
-
-            <Spacer y={1} />
-            <Button
-              color={"secondary"}
-              text="Submit Meal"
-              ariaLabel="Button to submit a meal"
-              type="submit"
-              loading={loading}
-            />
-
-            {error.length > 1 && <Text color="red">{error}</Text>}
-          </Container>
         </Container>
       ) : (
         <Container display={"flex"} css={{ margin: "5vh 15vw" }}>

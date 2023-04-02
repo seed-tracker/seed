@@ -143,6 +143,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
                       padding: 0,
                       height: "1.8rem",
                       borderRadius: 0,
+                      color: "#000000",
                     }}
                     key={idx}
                     onPress={() => handleClick(idx)}
@@ -182,6 +183,12 @@ const Autocomplete = ({ addFood, allGroups }) => {
               onChange={setSelectedGroups}
               defaultName="Choose a food group"
               items={allGroups.map(({ name }) => ({ name: name, key: name }))}
+              color="#7A918D"
+              css={{
+                background: "#7a918d",
+                padding: "1rem",
+                maxWidth: "10rem",
+              }}
             />
           </Grid>
           <Spacer y={1} />

@@ -16,7 +16,6 @@ import { Links } from "./nextUI";
  * @component shows demo
  */
 const Home = () => {
-  
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -132,22 +131,23 @@ const Home = () => {
         <h2>Sign up today and get access to:</h2>
         <ul>
           <li>
-          {/* <h3 onClick={toggleCollapse}>Intuitive Interface</h3> */}
-<Collapse open={isOpen} title="Intuitive Interface">
-  <p>
-    We make tracking your meals and symptoms simple and
-    straightforward. With just a few clicks, you can easily log your
-    meals and any symptoms you experience, allowing you to quickly
-    identify potential patterns and narrow down the foods that may be
-    causing issues.
-  </p>
-  <p>
-    Say goodbye to the frustration of traditional food diaries and
-    symptom logs. With SEED's intuitive interface, tracking your diet
-    and health has never been easier. Start feeling your best and take
-    the first step towards a healthier, happier you with SEED.
-  </p>
-</Collapse>
+            {/* <h3 onClick={toggleCollapse}>Intuitive Interface</h3> */}
+            <Collapse open={isOpen} title="Intuitive Interface">
+              <p>
+                We make tracking your meals and symptoms simple and
+                straightforward. With just a few clicks, you can easily log your
+                meals and any symptoms you experience, allowing you to quickly
+                identify potential patterns and narrow down the foods that may
+                be causing issues.
+              </p>
+              <p>
+                Say goodbye to the frustration of traditional food diaries and
+                symptom logs. With SEED's intuitive interface, tracking your
+                diet and health has never been easier. Start feeling your best
+                and take the first step towards a healthier, happier you with
+                SEED.
+              </p>
+            </Collapse>
             <Container
               display="flex"
               css={{
@@ -164,7 +164,8 @@ const Home = () => {
                 },
               }}
             >
-              <img className="blobby"
+              <img
+                className="blobby"
                 style={{ aspectRatio: "auto", maxHeight: "40vh" }}
                 src={mealForm}
                 alt={
@@ -183,23 +184,26 @@ const Home = () => {
 
           <li>
             {" "}
-            <Collapse open={isOpen} title=" A Wide Range of Data Vizualizations">
-            {/* <h3>A Wide Range of Data Vizualizations</h3> */}
-            <p>
-              Our data visualization options allow you to easily analyze your
-              tracked data and identify potential associations between your
-              meals and symptoms. With a variety of visualization options to
-              choose from, you can customize your view to best suit your needs
-              and preferences.
-            </p>
-            <p>
-              Say goodbye to the frustration of traditional food diaries and
-              symptom logs. With SEED's intuitive interface, tracking your diet
-              and health has never been easier. Start feeling your best and take
-              the first step towards a healthier, happier you with SEED.
-            </p>
+            <Collapse
+              open={isOpen}
+              title=" A Wide Range of Data Vizualizations"
+            >
+              {/* <h3>A Wide Range of Data Vizualizations</h3> */}
+              <p>
+                Our data visualization options allow you to easily analyze your
+                tracked data and identify potential associations between your
+                meals and symptoms. With a variety of visualization options to
+                choose from, you can customize your view to best suit your needs
+                and preferences.
+              </p>
+              <p>
+                Say goodbye to the frustration of traditional food diaries and
+                symptom logs. With SEED's intuitive interface, tracking your
+                diet and health has never been easier. Start feeling your best
+                and take the first step towards a healthier, happier you with
+                SEED.
+              </p>
             </Collapse>
-           
           </li>
           <li>
             <h4>View Your Top Associations</h4>
