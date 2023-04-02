@@ -44,7 +44,7 @@ const NavigationBar = () => {
           css={{
             fontFamily: "Lovechild",
             alignItems: "center",
-            margin: 0,
+            margin: ".5rem 0 0 0",
           }}
           color="$secondary"
           onClick={() => navigate("/")}

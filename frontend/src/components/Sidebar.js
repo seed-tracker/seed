@@ -33,15 +33,29 @@ const Sidebar = () => {
         },
       }}
     >
-      <Links href={"/user/edit-profile"} text={"Edit Profile"} />
+      <div style={{display: "flex", alignItems: "center"}}>
+        <span class="material-symbols-rounded">person</span>
+        <Links href={"/user/edit-profile"} text={"Edit Profile"} />
+      </div>
 
-      <Links href={"/user/symptom-entries"} text={"Past Symptom Entries"} />
+      <div style={{display: "flex", alignItems: "center"}}>
+        <span class="material-symbols-rounded">diagnosis</span>
+        <Links href={"/user/symptom-entries"} text={"Past Symptom Entries"} />
+      </div>
 
-      <Links href={"/user/meal-entries"} text={"Past Meal Entries"} />
+      <div style={{display: "flex", alignItems: "center"}}>
+        <span class="material-symbols-rounded">restaurant</span>
+        <Links href={"/user/meal-entries"} text={"Past Meal Entries"} />
+      </div>
 
-      <Links href={"/add/symptom"} text={"Add Symptom Entry"} />
-
-      <Links href={"/user/addFood"} text={"Add Food Entry"} />
+      <div style={{display: "flex", alignItems: "center"}}>
+        <span class="material-symbols-rounded" style={{cursor: "pointer"}}>add</span>
+        <Links href={"/add/symptom"} text={"Add Symptom Entry"} />
+      </div>
+      <div style={{display: "flex", alignItems: "center"}}>
+        <span class="material-symbols-rounded" style={{cursor: "pointer"}}>add</span>
+        <Links href={"/user/addFood"} text={"Add Food Entry"} />
+      </div>
     </Container>
   );
 };

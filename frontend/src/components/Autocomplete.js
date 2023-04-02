@@ -97,9 +97,9 @@ const Autocomplete = ({ addFood, allGroups }) => {
           />
 
           {value.length > 1 && !showDropdown ? (
-            <Card css={{ backgroundColor: "transparent", padding: "0.5rem" }}>
+            <Card css={{ backgroundColor: "transparent", padding: "0.5rem", cursor: "pointer" }}>
               {suggestions.map((suggestion, idx) => (
-                <Row key={idx} onClick={() => handleClick(idx)}>
+                <Row key={idx} onClick={() => handleClick(idx)} className="suggestion">
                   {" "}
                   {suggestion.name}
                 </Row>

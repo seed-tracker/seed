@@ -1,6 +1,28 @@
+* {
+  /* border: 1px solid #555555; */
+}
+
 @font-face {
   font-family: "Lovechild";
   src: url(./Lovechild-Regular.otf);
+}
+
+@font-face {
+  font-family: "Euclid";
+  src: url(./EuclidCircularB-Regular.otf);
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Euclid";
+  src: url(./EuclidCircularB-Medium.otf);
+  font-style: medium;
+}
+
+@font-face {
+  font-family: "Euclid";
+  src: url(./EuclidCircularB-Bold.otf);
+  font-style: bold;
 }
 
 body {
@@ -131,3 +153,16 @@ th {
   font-size: small !important;
 }
 
+.nextui-input-helper-text {
+  letter-spacing: normal !important;
+}
+
+.nextui-pagination-highlight--active {
+  background: #7a918d !important;
+  background-color: #7a918d !important;
+  color: #ffffff !important;
+}
+
+.material-symbols-rounded {
+  color: #7a918d;
+}
