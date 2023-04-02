@@ -18,6 +18,7 @@ import apiClient from "../client";
 const AppRoutes = () => {
   const dispatch = useDispatch();
   const { me: user, error } = useSelector((state) => state.auth);
+  const [hasUpdated, setHasUpdated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +27,10 @@ const AppRoutes = () => {
 
   useEffect(() => {
     if (user.username) {
-      updateCorrelations();
+      if (!hasUpdated) {
+        updateCorrelations();
+        setHasUpdated(true);
+      }
       setLoading(false);
     }
   }, [user]);
@@ -52,9 +56,14 @@ const AppRoutes = () => {
             <Container
               className="bookend"
               fluid
-              responsive={"false"}
+              responsive="false"
               display="flex"
-              css={{ margin: 0, padding: 0, minHeight: "100vh" }}
+              css={{
+                margin: 0,
+                padding: 0,
+                minHeight: "100vh",
+                width: "100vw",
+              }}
             >
               <Sidebar />
               <Routes>

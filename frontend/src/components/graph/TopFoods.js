@@ -78,24 +78,25 @@ const TopFoods = () => {
   }
 
   useEffect(() => {
-    const svg = select(svgRef.current)
-      // .style("position", "absolute")
-      // .style("pointer-events", "none");
+    const svg = select(svgRef.current);
+    // .style("position", "absolute")
+    // .style("pointer-events", "none");
     svg.selectAll("*").remove();
     const margin = { top: 10, right: 10, bottom: 130, left: 100 };
     const width = 950 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
 
     const parent = create("div");
-    parent.append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .style("position", "absolute")
-        .style("pointer-events", "none")
-        .style("z-index", 1)
-        .style("overflow-x", "scroll")
-        .style("-webkit-overflow-scrolling", "touch")
-        .call(svg => svg.append("g"));
+    parent
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .style("position", "absolute")
+      .style("pointer-events", "none")
+      .style("z-index", 1)
+      .style("overflow-x", "scroll")
+      .style("-webkit-overflow-scrolling", "touch")
+      .call((svg) => svg.append("g"));
 
     const g = svg
       .append("g")
@@ -133,24 +134,22 @@ const TopFoods = () => {
 
       g.append("g").call(yAxis);
 
-      const nodes = g
-      .selectAll("circle")
-      .data(topFoods)
+      const nodes = g.selectAll("circle").data(topFoods);
 
       nodes
-      .enter()
-      .append("circle")
-      .attr("cx", (food) => xScale(food.name) + xScale.bandwidth() / 2)
-      .attr("cy", (food) => yScale(food.count))
-      .attr("r", 10)
-      .attr("fill",  (d)=>foodsColors[d.groups[0]])
-      .style("opacity", 0.3)
-      .transition()
-      .duration(1000)
-      .delay((d, i) => i * 1000)
-      .ease(easeElasticOut)
-      .attr("r", 20);
-      nodes.exit().remove()
+        .enter()
+        .append("circle")
+        .attr("cx", (food) => xScale(food.name) + xScale.bandwidth() / 2)
+        .attr("cy", (food) => yScale(food.count))
+        .attr("r", 10)
+        .attr("fill", (d) => foodsColors[d.groups[0]])
+        .style("opacity", 0.3)
+        .transition()
+        .duration(1000)
+        .delay((d, i) => i * 1000)
+        .ease(easeElasticOut)
+        .attr("r", 20);
+      nodes.exit().remove();
 
       g.selectAll("circle").data(topFoods).join("circle");
 
@@ -222,33 +221,49 @@ const TopFoods = () => {
         justify={"center"}
       >
         <Container
-          css={{position: "relative", overflow: "auto", "-webkit-overflow-scrolling": "touch"}}
+          css={{
+            position: "relative",
+            overflow: "auto",
+            "-webkit-overflow-scrolling": "touch",
+          }}
         >
-          <svg ref={svgRef} preserveAspectRatio="XMaxYmid meet" viewBox="0 0 950 550" width="950" height="580"></svg>
+          <svg
+            ref={svgRef}
+            preserveAspectRatio="XMaxYmid meet"
+            viewBox="0 0 950 550"
+            width="950"
+            height="580"
+          ></svg>
         </Container>
-        <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
+        <Container
+          display="flex"
+          alignItems="center"
+          justify="center"
+          css={{ gap: "1rem" }}
+        >
           <Text h4>Filter data by</Text>
-            <Button
-              onPress={handleGetAllTime}
-              type="button"
-              aria-label="Button to filter chart top foods view by all time"
-              size="sm"
-              text="All Time"
-            />
-            <Button
-              onPress={handleGetSixMonths}
-              type="button"
-              aria-label="Button to filter chart top foods view by six months"
-              size="sm"
-              text="6 Months"
-            />
-            <Button
-              onPress={handleGetOneYear}
-              type="button"
-              size="sm"
-              aria-label="Button to filter chart top foods view by one year"
-              text="1 Year"
-            />
+          <Button
+            onPress={handleGetAllTime}
+            type="button"
+            aria-label="Button to filter chart top foods view by all time"
+            size="sm"
+            text="All Time"
+          />
+          <Button
+            onPress={handleGetSixMonths}
+            value="180"
+            type="button"
+            aria-label="Button to filter chart top foods view by six months"
+            size="sm"
+            text="6 Months"
+          />
+          <Button
+            onPress={handleGetOneYear}
+            type="button"
+            size="sm"
+            aria-label="Button to filter chart top foods view by one year"
+            text="1 Year"
+          />
         </Container>
       </Container>
     </>

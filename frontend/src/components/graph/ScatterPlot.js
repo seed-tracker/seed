@@ -1,17 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import * as d3 from "d3";
 import ScatterControls from "./ScatterControls";
 import { HeaderText } from "../nextUI";
-import {
-  Container,
-  Switch,
-  Text,
-  Row,
-  Spacer
-} from "@nextui-org/react";
+import { Container, Switch, Text, Spacer } from "@nextui-org/react";
 
-const ScatterPlot = () => {
+const ScatterPlot = ({ windowSize }) => {
   const { data: chartData, maxMonths } = useSelector((state) => state.scatter);
   const { data: corrData } = useSelector((state) => state.correlations);
   const [allData, setAllData] = useState([]);
@@ -127,20 +121,14 @@ const ScatterPlot = () => {
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
+    //const width = windowSize.width * 0.8;
     const width = 800;
     const height = 300;
 
     const svg = d3.select(svgRef.current);
     svg.text("");
 
-    // svg.selectAll("*").remove();
-
-    svg
-      // .attr("width", "auto")
-      .attr("width", width)
-      .attr("height", height);
-    // .style("overflow", "visible")
-    // .style("margin-top", "3rem");
+    svg.attr("width", width).attr("height", height);
 
     const labels = [currentSymptom, ...currentFoods, ...currentGroups];
     //make a color range
@@ -190,41 +178,41 @@ const ScatterPlot = () => {
       .attr("y", 0);
 
     //areas where linear gradient is applied
-    const area = d3
-      .area()
-      .x((d) => x(d.date))
-      .y0(height)
-      .y1((d) => y(d.count));
+    // const area = d3
+    //   .area()
+    //   .x((d) => x(d.date))
+    //   .y0(height)
+    //   .y1((d) => y(d.count));
 
-    const areaGradient = svg
-      .append("defs")
-      .append("linearGradient")
-      .attr("id", "areaGradient")
-      .attr("x1", "0%")
-      .attr("y1", "0%")
-      .attr("x2", "0%")
-      .attr("y2", "100%");
+    // const areaGradient = svg
+    //   .append("defs")
+    //   .append("linearGradient")
+    //   .attr("id", "areaGradient")
+    //   .attr("x1", "0%")
+    //   .attr("y1", "0%")
+    //   .attr("x2", "0%")
+    //   .attr("y2", "100%");
 
-    areaGradient
-      .append("stop")
-      .attr("offset", "0%")
-      .attr("stop-color", "red")
-      .attr("stop-opacity", 0.3)
-      .attr("gradientTransform", "rotate(-45)");
+    // areaGradient
+    //   .append("stop")
+    //   .attr("offset", "0%")
+    //   .attr("stop-color", "red")
+    //   .attr("stop-opacity", 0.3)
+    //   .attr("gradientTransform", "rotate(-45)");
 
-    areaGradient
-      .append("stop")
-      .attr("offset", "80%")
-      .attr("stop-color", "white")
-      .attr("stop-opacity", 0);
+    // areaGradient
+    //   .append("stop")
+    //   .attr("offset", "80%")
+    //   .attr("stop-color", "white")
+    //   .attr("stop-opacity", 0);
 
-    const areas = svg
-      .selectAll(".area")
-      .data(allData)
-      .join("path")
-      .attr("class", "area")
-      .attr("fill", "url(#areaGradient)") //linear gradient being added here--
-      .attr("d", area(symptomData.values));
+    // const areas = svg
+    //   .selectAll(".area")
+    //   .data(allData)
+    //   .join("path")
+    //   .attr("class", "area")
+    //   .attr("fill", "url(#areaGradient)") //linear gradient being added here--
+    //   .attr("d", area(symptomData.values));
 
     const lines = svg
       .selectAll("myLines")
@@ -232,9 +220,7 @@ const ScatterPlot = () => {
       .join("path")
       .attr("d", (d) => line(d.values))
       .attr("stroke", (d) => colors(d.name))
-      .attr("class", function (d) {
-        return makeKey(d.name);
-      })
+      .attr("class", (d) => makeKey(d.name))
       .attr("clip-path", "url(#clip")
       .style("stroke-width", 4)
       .style("fill", "none")
@@ -249,23 +235,27 @@ const ScatterPlot = () => {
       .data(data)
       .join("g")
       .style("fill", (d) => colors(d.name))
-      .selectAll("myPoints")
-      .data((d) => d.values)
-      .join("circle")
-      .attr("r", 5)
-      .attr("stroke", "blue")
+      .attr("clip-path", "url(#clip)")
       .style("opacity", (d) =>
         [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
           ? 1
           : 0
-      );
+      )
+      .attr("class", (d) => makeKey(d.name))
+      .selectAll("myPoints")
+      .data((d) => d.values)
+      .join("circle")
+      .attr("cx", (d) => x(d.date))
+      .attr("cy", (d) => y(d.count))
+      .attr("r", 5)
+      .attr("stroke", "white");
 
     svg
       .append("text")
       .attr("text-anchor", "end")
       .attr("transform", "rotate(-90)")
       .attr("y", -40)
-      .attr("x", -height / 4)
+      .attr("x", -25)
       .text("Number of occurences per month");
 
     svg
@@ -287,28 +277,42 @@ const ScatterPlot = () => {
 
       setDateRange(newRange);
 
-      areas
-        .data(allData)
-        .join("path")
-        .transition()
-        .duration(500)
-        .attr(
-          "d",
-          area(
-            symptomData.values.filter((symptom) => symptom.date >= newRange[0])
-          )
-        );
+      // areas
+      //   .data(allData)
+      //   .join("path")
+      //   .transition()
+      //   .duration(500)
+      //   .attr(
+      //     "d",
+      //     area(
+      //       symptomData.values.filter((symptom) => symptom.date >= newRange[0])
+      //     )
+      //   );
+
+      // const dots = svg
+      // .selectAll("myDots")
+      // .data(data)
+      // .join("g")
+      // .style("fill", (d) => colors(d.name))
+      // .style("opacity", (d) =>
+      //   [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
+      //     ? 1
+      //     : 0
+      // )
+      // .attr("class", (d) => makeKey(d.name))
+      // .selectAll("myPoints")
+      // .data((d) => d.values)
+      // .join("circle")
+      // .attr("cx", (d) => x(d.date))
+      // .attr("cy", (d) => y(d.count))
+      // .attr("r", 5)
+      // .attr("stroke", "white");
 
       dots
-        .data(data)
         .transition()
         .duration(500)
-        .attr("cx", function (d) {
-          return x(+d.date);
-        })
-        .attr("cy", function (d) {
-          return y(+d.count);
-        });
+        .attr("cx", (d) => x(+d.date))
+        .attr("cy", (d) => y(+d.count));
 
       lines
         .data(data)
@@ -318,7 +322,7 @@ const ScatterPlot = () => {
     };
 
     d3.selectAll('input[type="range"]').on("change", updateAxis);
-  }, [allData, currentFoods, currentGroups, currentSymptom]);
+  }, [allData, currentFoods, currentGroups, currentSymptom, windowSize]);
 
   return (
     <Container
@@ -330,12 +334,15 @@ const ScatterPlot = () => {
     >
       {allData && allData.length > 0 && allData[0].symptomData && (
         <>
-          <Container className="container scatter-controls" css={{
-            maxWidth: "60%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center"
-          }}>
+          <Container
+            className="container scatter-controls"
+            css={{
+              maxWidth: "60%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
             <HeaderText text="Your Top Associations" />
             <ScatterControls
               symptomList={allData.map(({ symptomData }) => symptomData.name)}
@@ -352,7 +359,9 @@ const ScatterPlot = () => {
               "-webkit-overflow-scrolling": "touch",
             }}
           >
-            <svg ref={svgRef} viewBox="50 0 700 360"></svg>
+            <div className="dataViz">
+              <svg ref={svgRef} viewBox="50 0 700 360"></svg>
+            </div>
           </Container>
           <Container
             className="switches"
@@ -391,50 +400,36 @@ const ScatterPlot = () => {
           >
             {legend?.slice(1).map(({ name, color }, i) => {
               return (
-                <>
-                  {/* <Col
-                    className="col"
+                <span
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "0.5rem",
+                  }}
+                  key={i}
+                >
+                  <Switch
+                    color="green"
+                    checkedColor="green"
+                    key={i}
+                    className="legendSwitch"
+                    size="sm"
+                    bordered
+                    checked={[...currentFoods, ...currentGroups].includes(name)}
+                    onChange={() => toggleLine(name)}
+                  />
+                  <Text
+                    size={15}
                     css={{
-                      display: "flex",
-                      alignItems: "center",
-                      flexWrap: "wrap",
-                    }}
-                  > */}
-                  <span
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: "0.5rem",
+                      color: color,
+                      textAlign: "left",
                     }}
                   >
-                    <Switch
-                      color="green"
-                      checkedColor="green"
-                      key={i}
-                      className="legendSwitch"
-                      size="sm"
-                      bordered
-                      checked={[...currentFoods, ...currentGroups].includes(
-                        name
-                      )}
-                      onChange={() => toggleLine(name)}
-                    />
-                    <Text
-                      size={15}
-                      css={{
-                        color: color,
-                        // marginLeft: "0.5rem",
-                        // width: "5rem",
-                        textAlign: "left",
-                      }}
-                    >
-                      {name}
-                    </Text>
+                    {name}
+                  </Text>
 
-                    <Spacer x={2.5}></Spacer>
-                    {/* </Col> */}
-                  </span>
-                </>
+                  <Spacer x={2.5}></Spacer>
+                </span>
               );
             })}
           </Container>
