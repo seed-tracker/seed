@@ -172,7 +172,18 @@ function MealForm() {
           display={"flex"}
           justify={"space-between"}
           wrap={"wrap"}
-          css={{ margin: "2vw", width: "90vw" }}
+          css={{
+            "@xs": {
+              margin: 0,
+              padding: 0,
+              maxWidth: "100vw",
+            },
+            "@sm": {
+              margin: "2vw",
+              padding: 0,
+              maxWidth: "90vw",
+            },
+          }}
         >
           <Container display={"flex"} justify={"center"}>
             <HeaderText text="Add a meal" />
@@ -183,6 +194,7 @@ function MealForm() {
             css={{
               "@xs": {
                 margin: 0,
+                padding: 0,
                 width: "100vw",
               },
               "@sm": {
@@ -246,13 +258,18 @@ function MealForm() {
             <Container
               display={"flex"}
               justify="flex-start"
-              align="center"
               direction="column"
               css={{
                 margin: 0,
                 padding: 0,
-                maxWidth: "50vw",
-                maxWidth: "20rem",
+                "@xs": {
+                  alignContent: "center",
+                  maxWidth: "100vw",
+                },
+                "@sm": {
+                  maxWidth: "50vw",
+                  alignContent: "flex-end",
+                },
               }}
             >
               <Table
