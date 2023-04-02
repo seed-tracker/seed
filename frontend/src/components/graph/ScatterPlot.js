@@ -1,15 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import * as d3 from "d3";
 import ScatterControls from "./ScatterControls";
 import { HeaderText } from "../nextUI";
-import {
-  Container,
-  Switch,
-  Text,
-  Row,
-  Spacer
-} from "@nextui-org/react";
+import { Container, Switch, Text, Row, Spacer } from "@nextui-org/react";
 
 const ScatterPlot = () => {
   const { data: chartData, maxMonths } = useSelector((state) => state.scatter);
@@ -189,42 +183,15 @@ const ScatterPlot = () => {
       .attr("x", 0)
       .attr("y", 0);
 
-    //areas where linear gradient is applied
-    const area = d3
-      .area()
-      .x((d) => x(d.date))
-      .y0(height)
-      .y1((d) => y(d.count));
-
-    const areaGradient = svg
-      .append("defs")
-      .append("linearGradient")
-      .attr("id", "areaGradient")
-      .attr("x1", "0%")
-      .attr("y1", "0%")
-      .attr("x2", "0%")
-      .attr("y2", "100%");
-
-    areaGradient
-      .append("stop")
-      .attr("offset", "0%")
-      .attr("stop-color", "red")
-      .attr("stop-opacity", 0.3)
-      .attr("gradientTransform", "rotate(-45)");
-
-    areaGradient
-      .append("stop")
-      .attr("offset", "80%")
-      .attr("stop-color", "white")
-      .attr("stop-opacity", 0);
-
-    const areas = svg
-      .selectAll(".area")
-      .data(allData)
-      .join("path")
-      .attr("class", "area")
-      .attr("fill", "url(#areaGradient)") //linear gradient being added here--
-      .attr("d", area(symptomData.values));
+    const defs = svg.append("defs");
+    const filter = defs.append("filter").attr("id", "glow");
+    filter
+      .append("feGaussianBlur")
+      .attr("stdDeviation", "3.5")
+      .attr("result", "coloredBlur");
+    const feMerge = filter.append("feMerge");
+    feMerge.append("feMergeNode").attr("in", "coloredBlur");
+    feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
     const lines = svg
       .selectAll("myLines")
@@ -237,6 +204,7 @@ const ScatterPlot = () => {
       })
       .attr("clip-path", "url(#clip")
       .style("stroke-width", 4)
+      .style("filter", (d) => (currentSymptom === d.name ? "url(#glow)" : ""))
       .style("fill", "none")
       .style("opacity", (d) =>
         [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
@@ -259,6 +227,83 @@ const ScatterPlot = () => {
           ? 1
           : 0
       );
+
+    svg
+      .selectAll("myLabels")
+      .data(data)
+      .join("g")
+      .append("text")
+      .datum((d) => {
+        return { name: d.name, value: d.values[d.values.length - 1] };
+      }) // keep only the last value of each time series
+      .attr(
+        "transform",
+        (d) => `translate(${x(d.value.date)},${y(d.value.count)})`
+      ) // Put the text at the position of the last point
+      .attr("x", 3) // shift the text a bit more right
+      .attr("class", function (d) {
+        return makeKey(d.name);
+      })
+      .text((d) => d.name)
+      .style("fill", (d) => colors(d.name))
+      .style("font-size", 15)
+      .style("opacity", (d) => (currentSymptom.includes(d.name) ? 1 : 0))
+      .call(wrap, 100);
+
+    function wrap(text, width) {
+      text.each(function () {
+        var text = d3.select(this),
+          textContent = text.text(),
+          tempWord = addBreakSpace(textContent).split(/\s+/),
+          x = text.attr("x"),
+          y = text.attr("y"),
+          dy = parseFloat(text.attr("dy") || 0),
+          tspan = text
+            .text(null)
+            .append("tspan")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("dy", dy + "em");
+
+        textContent = tempWord.join(" ");
+        var words = textContent.split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 1.1, // ems
+          spanContent,
+          breakChars = ["/", "&", "-"];
+        while ((word = words.pop())) {
+          line.push(word);
+          tspan.text(line.join(" "));
+          if (tspan.node().getComputedTextLength() > width) {
+            line.pop();
+            spanContent = line.join(" ");
+            breakChars.forEach(function (char) {
+              // Remove spaces trailing breakChars that were added above
+              spanContent = spanContent.replace(char + " ", char);
+            });
+            tspan.text(spanContent);
+            line = [word];
+            tspan = text
+              .append("tspan")
+              .attr("x", x)
+              .attr("y", y)
+              .attr("dy", ++lineNumber * lineHeight + dy + "em")
+              .text(word);
+          }
+        }
+      });
+
+      function addBreakSpace(inputString) {
+        var breakChars = ["/", "&", "-"];
+        breakChars.forEach(function (char) {
+          // Add a space after each break char for the function to use to determine line breaks
+          inputString = inputString.replace(char, char + " ");
+        });
+        return inputString;
+      }
+    }
 
     svg
       .append("text")
@@ -287,17 +332,17 @@ const ScatterPlot = () => {
 
       setDateRange(newRange);
 
-      areas
-        .data(allData)
-        .join("path")
-        .transition()
-        .duration(500)
-        .attr(
-          "d",
-          area(
-            symptomData.values.filter((symptom) => symptom.date >= newRange[0])
-          )
-        );
+      // areas
+      //   .data(allData)
+      //   .join("path")
+      //   .transition()
+      //   .duration(500)
+      //   .attr(
+      //     "d",
+      //     area(
+      //       symptomData.values.filter((symptom) => symptom.date >= newRange[0])
+      //     )
+      //   );
 
       dots
         .data(data)
@@ -330,12 +375,15 @@ const ScatterPlot = () => {
     >
       {allData && allData.length > 0 && allData[0].symptomData && (
         <>
-          <Container className="container scatter-controls" css={{
-            maxWidth: "60%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center"
-          }}>
+          <Container
+            className="container scatter-controls"
+            css={{
+              maxWidth: "60%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
             <HeaderText text="Your Top Associations" />
             <ScatterControls
               symptomList={allData.map(({ symptomData }) => symptomData.name)}

@@ -28,7 +28,6 @@ function Inputs(inputProps) {
           bordered
           color="secondary"
           size="md"
-          width="20vw"
           pattern={pattern}
           type="password"
           required={required}
@@ -45,7 +44,7 @@ function Inputs(inputProps) {
             },
           }}
         />
-        <Spacer y={1} />
+        <Spacer y={1.5} />
       </>
     );
   } else {
