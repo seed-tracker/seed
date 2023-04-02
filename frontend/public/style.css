@@ -56,14 +56,13 @@ text {
 }
 
 .glassmorpheus-graph1{
-/* From https://css.glass */
-/* From https://css.glass */
-background: rgba(137, 197, 184, 0.36);
-border-radius: 16px;
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-backdrop-filter: blur(5px);
--webkit-backdrop-filter: blur(5px);
-border: 1px solid rgba(137, 197, 184, 0.7);
+  /* From https://css.glass */
+  background: rgba(2, 80, 74, 0.31);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(2, 80, 74, 0.1);
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
@@ -131,3 +130,7 @@ th {
   color: #444c38 !important;
   font-size: small !important;
 }
+
+/* .blobby{
+  clip-path: url("clip.svg")
+} */

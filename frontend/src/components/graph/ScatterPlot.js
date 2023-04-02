@@ -1,13 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import * as d3 from "d3";
-import { fetchScatterData } from "../../store/scatterSlice";
 import ScatterControls from "./ScatterControls";
 import { HeaderText } from "../nextUI";
 import {
   Container,
-  Button,
-  Spacer,
   Switch,
   Text,
   Row,
@@ -46,7 +43,6 @@ const ScatterPlot = () => {
   const formatData = () => {
     const formattedData = chartData.map((d) => {
       const ranked = corrData.find((corr) => corr.symptom == d["symptom"]);
-      console.log(ranked.top_foods, corrData);
       return {
         symptomData: {
           name: d["symptom"],
@@ -128,38 +124,25 @@ const ScatterPlot = () => {
 
   // set up container, scaling, axis, labeling, data
   useEffect(() => {
-
-
-
+    
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
     const width = 800;
     const height = 300;
 
+    // const svg = d3.select(svgRef.current);
+ 
     const svg = d3.select(svgRef.current);
-  const areaGradient = svg
-    .append("defs")
-    .append("linearGradient")
-    .attr("id", "areaGradient")
-    .attr("x1", "0%")
-    .attr("y1", "0%")
-    .attr("x2", "0%")
-    .attr("y2", "100%")
-    // .attr("gradientTransform","rotate(-85)")
+    svg.text("");
+    // Set the viewBox attribute
+    svg.attr("viewBox", "280 0 200 340");
 
-  areaGradient
-    .append("stop")
-    .attr("offset", "0%")
-    .attr("stop-color", "#21825C")
-    .attr("stop-opacity", .6);
+    // Set the width and height using CSS
+    // svg.style("width", "100%");
+    // svg.style("height", "100%");
 
-  areaGradient
-    .append("stop")
-    .attr("offset", "80%")
-    .attr("stop-color", "white")
-    .attr("stop-opacity", 0);
-
-  
+    // const width = svg.node().getBoundingClientRect().width;
+    // const height = svg.node().getBoundingClientRect().height;
     // svg.selectAll("*").remove();
 
     svg
@@ -216,6 +199,43 @@ const ScatterPlot = () => {
       .attr("x", 0)
       .attr("y", 0);
 
+    //areas where linear gradient is applied
+    const area = d3
+      .area()
+      .x((d) => x(d.date))
+      .y0(height)
+      .y1((d) => y(d.count));
+
+    const areaGradient = svg
+      .append("defs")
+      .append("linearGradient")
+      .attr("id", "areaGradient")
+      .attr("x1", "0%")
+      .attr("y1", "0%")
+      .attr("x2", "0%")
+      .attr("y2", "100%");
+
+    areaGradient
+      .append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "red")
+      .attr("stop-opacity", 0.3)
+      .attr("gradientTransform", "rotate(-45)");
+
+    areaGradient
+      .append("stop")
+      .attr("offset", "80%")
+      .attr("stop-color", "white")
+      .attr("stop-opacity", 0);
+
+    const areas = svg
+      .selectAll(".area")
+      .data(allData)
+      .join("path")
+      .attr("class", "area")
+      .attr("fill", "url(#areaGradient)") //linear gradient being added here--
+      .attr("d", area(symptomData.values));
+
     const lines = svg
       .selectAll("myLines")
       .data(data)
@@ -249,51 +269,7 @@ const ScatterPlot = () => {
           ? 1
           : 0
       );
-
-    // svg
-    //   .selectAll("myLabels")
-    //   .data(data)
-    //   .join("g")
-    //   .append("text")
-    //   .datum((d) => {
-    //     return { name: d.name, value: d.values[d.values.length - 1] };
-    //   }) // keep only the last value of each time series
-    //   .attr(
-    //     "transform",
-    //     (d) => `translate(${x(d.value.date)},${y(d.value.count)})`
-    //   ) // Put the text at the position of the last point
-    //   .attr("x", 12) // shift the text a bit more right
-    //   .attr("class", function (d) {
-    //     return makeKey(d.name);
-    //   })
-    //   .text((d) => d.name)
-    //   .style("fill", (d) => colors(d.name))
-    //   .style("font-size", 15)
-    //   .style("opacity", (d) =>
-    //     [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
-    //       ? 1
-    //       : 0
-    //   );
-
-    const xScale = d3
-  .scaleTime()
-  .domain(dateRange)
-  .range([60, width - 60]);
-
-
-const yScale = d3
-  .scaleLinear()
-  .domain([0, d3.max(symptomData.values, (d) => d.count)])
-  .range([height - 50, 20]);
-
-  //areas where linear gradient is applied
-    const area = d3
-    .area()
-    .x((d) => x(d.date))
-    .y0(height)
-    .y1((d) => yScale(d.count))
-    .curve(d3.curveMonotoneX);
-
+      
     svg
       .append("text")
       .attr("text-anchor", "end")
@@ -309,18 +285,6 @@ const yScale = d3
       .attr("y", height + 40)
       .text("Months");
 
-
-      //areas where gradient applied
-      svg
-      .selectAll(".area")
-      .data(allData)
-      .join("path")
-      .attr("class", "area")
-      .attr("fill", "url(#areaGradient)") //linear gradient being added here--
-      .attr("d", (d) => area(d.symptomData.values))
-      // .attr("transform", `translate(${margin.left},${margin.top})`);
-  
-
     const updateAxis = ({ target }) => {
       let newStartDate = new Date(dateRange[1]);
       newStartDate.setMonth(newStartDate.getMonth() - target.value);
@@ -330,6 +294,20 @@ const yScale = d3
       x.domain(newRange);
 
       xAxis.transition().duration(500).call(d3.axisBottom(x).ticks(6));
+
+      setDateRange(newRange);
+
+      areas
+        .data(allData)
+        .join("path")
+        .transition()
+        .duration(500)
+        .attr(
+          "d",
+          area(
+            symptomData.values.filter((symptom) => symptom.date >= newRange[0])
+          )
+        );
 
       dots
         .data(data)
@@ -347,8 +325,6 @@ const yScale = d3
         .transition()
         .duration(500)
         .attr("d", (d) => line(d.values));
-
-      setDateRange(newRange);
     };
 
     d3.selectAll('input[type="range"]').on("change", updateAxis);
@@ -381,52 +357,53 @@ const yScale = d3
                   "-webkit-overflow-scrolling": "touch",
                 }}
               >
-                <svg
-                  ref={svgRef}
-                  viewBox="50 0 700 360"
-                  // preserveAspectRatio="XMaxYMid meet"
-                  // style={{ margin: "8rem", marginRight: "0" }}
-                ></svg>
+                <svg ref={svgRef} viewBox="50 0 700 360"></svg>
               </Container>
             </Row>
-            {/* <Button.Group bordered> */}
-                {legend?.slice(1).map(({ name, color }, i) => {
-                  return (
-                    <Container flex row css={{ display: "flex", flexDirection: "row"}}>
-                    {/* <> */}
-                      {/* <Row justify="flex-end"> */}
-                      <Container flex row css={{ display: "flex", flexDirection: "row"}}>
-                        <Text
-                          size={15}
-                          css={{
-                            color: color,
-                            width: "5rem",
-                            textAlign: "right",
-                          }}
-                        >
-                          {name}
-                        </Text>
-                        <Spacer x={0.5} />
-                        <Switch
-                          color="green"
-                          checkedColor="green"
-                          key={i}
-                          className="legendSwitch"
-                          size="sm"
-                          bordered
-                          checked={[...currentFoods, ...currentGroups].includes(
-                            name
-                          )}
-                          onChange={() => toggleLine(name)}
-                          />
-                        </Container>
-                      {/* </Row> */}
-                      {/* <Spacer y={0.7} /> */}
-                    {/* // </> */}
-                      </Container>
-                  );
-                })}
-              {/* </Button.Group> */}
+            <Container
+              css={{
+                display: "flex",
+                flexDirection: "row",
+                wrap: "wrap",
+                padding: 0,
+                margin: "1rem",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "1rem",
+                maxWidth: "100%",
+              }}
+            >
+              {legend?.slice(1).map(({ name, color }, i) => {
+                return (
+                  <>
+                    <Text
+                      size={15}
+                      css={{
+                        color: color,
+                        width: "8rem",
+                        textAlign: "right",
+                        margin: 0,
+                        padding: 0,
+                      }}
+                    >
+                      {name}
+                    </Text>
+                    <Switch
+                      color="green"
+                      key={i}
+                      size="sm"
+                      className="legendSwitch"
+                      bordered
+                      checked={[...currentFoods, ...currentGroups].includes(
+                        name
+                      )}
+                      onChange={() => toggleLine(name)}
+                    />
+                  </>
+                );
+              })}
+            </Container>
           </>
         </Container>
       )}

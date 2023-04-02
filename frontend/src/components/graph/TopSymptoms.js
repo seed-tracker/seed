@@ -100,16 +100,56 @@ const TopSymptoms = () => {
           .text("Times Logged");
       }
 
+      // g.selectAll("circle")
+      // .data(symptoms)
+      // .join("circle")
+      // .attr("cx", (d) => xScale(d.name))
+      // .attr("cy", (d) => yScale(d.count))
+      // .attr("fill", (d) => symptomColors[d.name])
+      // .attr("r", 2) // start with a radius of 2
+      // .transition() // add a transition
+      // .duration(110) // specify the duration of the animation in milliseconds
+      // .attr("r", (d) => d.count > 0 ? 8 : 2); 
+
       g.selectAll("circle")
       .data(symptoms)
-      .join("circle")
-      .attr("cx", (d) => xScale(d.name))
-      .attr("cy", (d) => yScale(d.count))
-      .attr("fill", (d) => symptomColors[d.name])
-      .attr("r", 2) // start with a radius of 2
-      .transition() // add a transition
-      .duration(110) // specify the duration of the animation in milliseconds
-      .attr("r", (d) => d.count > 0 ? 8 : 2); 
+      .join(
+        (enter) =>
+          enter
+            .append("circle")
+            .attr("cx", (food) => xScale(food.name) )
+            .attr("cy", (food) => yScale(food.count))
+            .attr("r", 0)
+            .attr("fill", (d) => symptomColors[d.name])
+            .style("opacity", 0.3)
+            .call((enter) =>
+              enter
+                .transition()
+                .duration(1000)
+                .delay((d, i) => i * 1000)
+                .ease(d3.easeElasticOut)
+                .attr("r", 20)
+            ),
+        (update) =>
+          update.call((update) =>
+            update
+              .transition()
+              .duration(1000)
+              .delay((d, i) => i * 1000)
+              .ease(d3.easeElasticOut)
+              .attr("cx", (d) => xScale(d.name) + xScale.bandwidth() / 2)
+              .attr("cy", (d) => yScale(d.count))
+          ),
+        (exit) =>
+          exit.call((exit) =>
+            exit
+              .transition()
+              .duration(1000)
+              .ease(d3.easeElasticOut)
+              .attr("r", 0)
+              .remove()
+          )
+      );
 
       for (let i = 0; i < symptoms.length; i++) {
         for (let j = 0; j < counts[i]; j++) {
@@ -121,7 +161,7 @@ const TopSymptoms = () => {
           if (j === counts[i] - 1) {
             g.append("text") // Label the count of that symptom
               .attr("x", xScale(symptoms[i].name))
-              .attr("y", yScale(j) - 20)
+              .attr("y", yScale(j) - 30)
               .attr("text-anchor", "middle")
               .text("Count: " + counts[i]);
           }
