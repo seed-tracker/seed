@@ -12,7 +12,6 @@ const ScatterPlot = ({ windowSize }) => {
   const [currentSymptom, setCurrentSymptom] = useState(null);
   const [dateRange, setDateRange] = useState([]);
   const [currentFoods, setCurrentFoods] = useState([]);
-  const [currentGroups, setCurrentGroups] = useState([]);
   const [legend, setLegend] = useState([]);
   const [colorPalette, setColorPalette] = useState([
     "#DC050C",
@@ -27,7 +26,6 @@ const ScatterPlot = ({ windowSize }) => {
   ]);
 
   const svgRef = useRef();
-  const areaGradient = useRef();
 
   useEffect(() => {
     if (chartData && chartData.length && corrData && corrData.length) {
@@ -58,7 +56,7 @@ const ScatterPlot = ({ windowSize }) => {
     if (!currentSymptom) {
       setCurrentSymptom(symptomData.name);
       if (foodData[0] && foodData[0].name) setCurrentFoods([foodData[0].name]);
-      else setCurrentGroups([groupData[0].name || null]);
+      else setCurrentFoods([groupData[0].name || null]);
     }
 
     setDateRange([
@@ -96,11 +94,8 @@ const ScatterPlot = ({ windowSize }) => {
 
     if (foodData.length) {
       setCurrentFoods([foodData[0].name]);
-      setCurrentGroups([]);
     } else {
-      setCurrentFoods([]);
-      if (groupData.length) setCurrentGroups([groupData[0].name]);
-      else setCurrentGroups([]);
+      if (groupData.length) setCurrentFoods([groupData[0].name]);
     }
   };
 
@@ -109,28 +104,29 @@ const ScatterPlot = ({ windowSize }) => {
   };
 
   const toggleLine = (name) => {
-    const nodes = d3.selectAll(`.${makeKey(name)}`);
-
-    if (!nodes) return;
-
-    // Change the opacity: from 0 to 1 or from 1 to 0
-    nodes.transition().style("opacity", nodes.style("opacity") == 1 ? 0 : 1);
+    const idx = currentFoods.findIndex((food) => food === name);
+    if (idx >= 0)
+      setCurrentFoods([
+        ...currentFoods.slice(0, idx),
+        ...currentFoods.slice(idx + 1),
+      ]);
+    else setCurrentFoods([...currentFoods, name]);
   };
 
   // set up container, scaling, axis, labeling, data
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
-    //const width = windowSize.width * 0.8;
-    const width = 800;
+    const width = windowSize.width * 0.6;
+    //const width = 800;
     const height = 300;
 
     const svg = d3.select(svgRef.current);
     svg.text("");
 
-    svg.attr("width", width).attr("height", height);
+    svg.attr("width", width + 70).attr("height", height + 50);
 
-    const labels = [currentSymptom, ...currentFoods, ...currentGroups];
+    const labels = [currentSymptom, ...currentFoods];
     //make a color range
     const colors = d3.scaleOrdinal().domain(labels).range(colorPalette);
 
@@ -155,11 +151,11 @@ const ScatterPlot = ({ windowSize }) => {
     //generagte x axis, date format
     const xAxis = svg
       .append("g")
-      .attr("transform", `translate(0, ${height})`)
+      .attr("transform", `translate(50, ${height})`)
       .call(axis);
 
     const y = d3.scaleLinear().domain([0, max_y]).range([height, 0]);
-    svg.append("g").transition().duration(500).call(d3.axisLeft(y));
+    svg.append("g").call(d3.axisLeft(y)).attr("transform", `translate(50, 0)`);
 
     //add the lines
     const line = d3
@@ -187,31 +183,33 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("clip-path", "url(#clip")
       .style("stroke-width", 4)
       .style("fill", "none")
-      .style("opacity", (d) =>
-        [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
-          ? 1
-          : 0
-      );
+      .style("opacity", (d) => {
+        if (d.name === currentSymptom) return 1;
+        if (currentFoods.includes(d.name)) return 1;
+        return 0;
+      })
+      .attr("transform", `translate(50, 0)`);
 
     const dots = svg
       .selectAll("myDots")
       .data(data)
       .join("g")
       .style("fill", (d) => colors(d.name))
-      .attr("clip-path", "url(#clip)")
-      .style("opacity", (d) =>
-        [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
-          ? 1
-          : 0
-      )
+      .style("opacity", (d) => {
+        if (d.name === currentSymptom) return 1;
+        if (currentFoods.includes(d.name)) return 1;
+        return 0;
+      })
       .attr("class", (d) => makeKey(d.name))
       .selectAll("myPoints")
       .data((d) => d.values)
       .join("circle")
       .attr("cx", (d) => x(d.date))
       .attr("cy", (d) => y(d.count))
+      .attr("clip-path", "url(#clip)")
       .attr("r", 5)
-      .attr("stroke", "white");
+      .attr("stroke", "white")
+      .attr("transform", `translate(50, 0)`);
 
     svg
       .selectAll("myLabels")
@@ -373,14 +371,16 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("transform", "rotate(-90)")
       .attr("y", -40)
       .attr("x", -25)
-      .text("Number of occurences per month");
+      .text("Number of occurences per month")
+      .attr("transform", `translate(50, 0)`);
 
     svg
       .append("text")
       .attr("text-anchor", "end")
       .attr("x", width / 2)
       .attr("y", height + 40)
-      .text("Months");
+      .text("Months")
+      .attr("transform", `translate(50, 0)`);
 
     const updateAxis = ({ target }) => {
       let newStartDate = new Date(dateRange[1]);
@@ -408,7 +408,7 @@ const ScatterPlot = ({ windowSize }) => {
     };
 
     d3.selectAll('input[type="range"]').on("change", updateAxis);
-  }, [allData, currentFoods, currentGroups, currentSymptom, windowSize]);
+  }, [allData, currentFoods, currentSymptom, windowSize]);
 
   return (
     <Container
@@ -438,16 +438,12 @@ const ScatterPlot = ({ windowSize }) => {
             />
           </Container>
           <Container
-            className="svg-container"
-            css={{
-              position: "relative",
-              overflow: "auto",
-              "-webkit-overflow-scrolling": "touch",
-            }}
+            align="flex-start"
+            justify="flex-start"
+            display="flex"
+            css={{ padding: "0" }}
           >
-            <div className="dataViz">
-              <svg ref={svgRef} viewBox="50 0 700 360"></svg>
-            </div>
+            <svg ref={svgRef}></svg>
           </Container>
           <Container
             className="switches"
@@ -501,7 +497,7 @@ const ScatterPlot = ({ windowSize }) => {
                     className="legendSwitch"
                     size="sm"
                     bordered
-                    checked={[...currentFoods, ...currentGroups].includes(name)}
+                    checked={currentFoods.includes(name)}
                     onChange={() => toggleLine(name)}
                   />
                   <Text

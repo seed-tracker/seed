@@ -100,12 +100,7 @@ const ScatterPlotMobile = ({ currentSymptom, item, windowSize }) => {
 
     //y axis, linear
     const y = d3.scaleLinear().domain([0, max_y]).range([height, 0]);
-    svg
-      .append("g")
-      .transition()
-      .duration(500)
-      .call(d3.axisLeft(y))
-      .attr("transform", `translate(30, 20)`);
+    svg.append("g").call(d3.axisLeft(y)).attr("transform", `translate(30, 20)`);
 
     //add the lines
     const line = d3

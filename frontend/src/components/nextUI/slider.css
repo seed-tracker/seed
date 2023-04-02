@@ -6,7 +6,7 @@ input[type="range"].range-slider {
   padding: 0.375rem 0;
   line-height: 1.5;
   font: 1rem/1 arial, sans-serif;
-  color: #ced4da;
+  color: #4d5d53cc !important;
   background-clip: padding-box;
   background: transparent;
   border: none;
@@ -35,7 +35,7 @@ input[type="range"].range-slider::-webkit-slider-runnable-track {
   box-sizing: border-box;
   border: none;
   height: 4px;
-  background: #ced4da;
+  background: #4d5d53cc;
   border-radius: 2px;
 }
 input[type="range"].range-slider::-moz-range-track {
