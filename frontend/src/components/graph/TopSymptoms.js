@@ -53,7 +53,7 @@ const TopSymptoms = () => {
     const width = 750 - margin.left - margin.right;
     const height = 60 - margin.top - margin.bottom;
 
-    if (symptoms && symptoms.length > 0) {
+    if (symptoms && symptoms.length > 1) {
       const xScale = scaleBand()
         .domain(symptoms.map((symptom) => symptom.name))
         .range([0, width]);
@@ -75,7 +75,7 @@ const TopSymptoms = () => {
 
       const yAxisLine = svg
         .append("g")
-        .attr("transform", `translate(${margin.left * 2}, ${margin.top * 2})`)
+        .attr("transform", `translate(${(margin.left * 2)}, ${margin.top * 2})`)
         .call(yAxis); // make the y-axis
 
       svg.selectAll(".tick text").on("click", (event, d) => {
@@ -87,32 +87,18 @@ const TopSymptoms = () => {
         .append("g")
         .attr(
           "transform",
-          `translate(${xScale.bandwidth() / 2 + margin.left * 2}, ${
-            margin.top * 2
-          })`
+          `translate(${xScale.bandwidth() / 2 + (margin.left * 2)}, ${margin.top * 2})`
         );
 
       if (symptoms && symptoms.length > 0) {
-        svg
-          .append("text")
-          .attr("x", height / 2)
+        svg.append("text")
+          .attr("x", (height / 2))
           .attr("y", margin.left)
           .attr("font-size", "20px")
           .attr("text-anchor", "middle")
           .attr("transform", "rotate(-90)")
           .text("Times Logged");
       }
-
-      // g.selectAll("circle")
-      // .data(symptoms)
-      // .join("circle")
-      // .attr("cx", (d) => xScale(d.name))
-      // .attr("cy", (d) => yScale(d.count))
-      // .attr("fill", (d) => symptomColors[d.name])
-      // .attr("r", 2) // start with a radius of 2
-      // .transition() // add a transition
-      // .duration(110) // specify the duration of the animation in milliseconds
-      // .attr("r", (d) => d.count > 0 ? 8 : 2); 
 
       g.selectAll("circle")
       .data(symptoms)
@@ -170,6 +156,13 @@ const TopSymptoms = () => {
           }
         }
       }
+    } else {
+      svg.append("text")
+        .attr("x", `${(width / 2) + margin.left}`)
+        .attr("y", `${-(height + margin.top)}`)
+        .attr("font-size", "20px")
+        .attr("text-anchor", "middle")
+        .text("Sorry not enough data for this time period.");
     }
   }, [data]);
 
@@ -208,25 +201,11 @@ const TopSymptoms = () => {
         justify={"center"}
       >
         <Container
-          css={{
-            position: "relative",
-            overflow: "auto",
-            "-webkit-overflow-scrolling": "touch",
-          }}
+          css={{position: "relative", overflow: "auto", "-webkit-overflow-scrolling": "touch"}}
         >
-          <svg
-            ref={svgRef}
-            viewBox="0 0 750 350"
-            width="900"
-            height="360"
-          ></svg>
+          <svg ref={svgRef} preserveAspectRatio="XMaxYMid meet" viewBox="0 0 750 350" width="900" height="360"></svg>
         </Container>
-        <Container
-          display="flex"
-          alignItems="center"
-          justify="center"
-          css={{ gap: "1rem" }}
-        >
+        <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
           <Text h4>Filter data by</Text>
             <Button
               onPress={handleGetAllTime}
@@ -244,12 +223,12 @@ const TopSymptoms = () => {
             />
             <Button
               onPress={handleGetOneYear}
+              // onPressChange={handlePressChange}
               type="button"
               aria-label="Button to filter chart top symptoms view by one year"
               size="sm"
               text="1 Year"
             />
-
         </Container>
       </Container>
     </>

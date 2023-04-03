@@ -387,20 +387,6 @@ const ScatterPlot = ({ windowSize }) => {
                 justifyContent: "center",
                 gap: "0.5rem",
               },
-              "@md": {
-                textAlign: "left",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                gap: "0.5rem",
-              },
-              "@lg": {
-                textAlign: "left",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                gap: "0.5rem",
-              },
             }}
           >
             {legend?.slice(1).map(({ name, color }, i) => {
