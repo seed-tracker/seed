@@ -10,8 +10,8 @@ import {
   getUserStats,
 } from "../../store/statsSlice";
 import * as d3 from "d3";
-import { Container, Text, Row } from "@nextui-org/react";
-import { HeaderText, Button } from "../nextUI";
+import { Container, Text, Button } from "@nextui-org/react";
+import { HeaderText } from "../nextUI";
 
 /**
  * This chart shows the user's top five symptoms with the highest counts during a certain time period and a legend.
@@ -21,6 +21,7 @@ import { HeaderText, Button } from "../nextUI";
  */
 const TopSymptoms = () => {
   const [showChart, setShowChart] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("allTime");
   const svgRef = useRef();
   const allSymptoms = useSelector(selectSymptoms);
   const dispatch = useDispatch();
@@ -48,10 +49,11 @@ const TopSymptoms = () => {
   }
 
   const handleGetAllTime = async (all) => {
+    setSelectedFilter("allTime");
     await dispatch(getUserStats("all"));
-    // const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
   };
   const handleGetSixMonths = async (halfYear) => {
+    setSelectedFilter("sixMonths");
     await dispatch(getUserStats(180));
     if (!data.symptoms || data.symptoms.length <= 1) {
       alert("No data currently to show");
@@ -61,6 +63,7 @@ const TopSymptoms = () => {
     }
   };
   const handleGetOneYear = async (oneYear) => {
+    setSelectedFilter("oneYear");
     await dispatch(getUserStats(365));
   };
 
@@ -247,25 +250,40 @@ const TopSymptoms = () => {
           <Button
             onPress={handleGetAllTime}
             type="button"
-            text="All Time"
             size="sm"
             aria-label="Button to filter chart top symptoms view by all time"
-          />
+            css={{
+              backgroundColor:
+                selectedFilter === "allTime" ? "#5b6c61" : "#7a918d",
+            }}
+          >
+            All Time
+          </Button>
           <Button
             onPress={handleGetSixMonths}
             type="button"
             size="sm"
             aria-label="Button to filter chart top symptoms view by six months"
-            text="6 Months"
-          />
+            css={{
+              backgroundColor:
+                selectedFilter === "sixMonths" ? "#5b6c61" : "#7a918d",
+            }}
+          >
+            6 Months
+          </Button>
           <Button
             onPress={handleGetOneYear}
             // onPressChange={handlePressChange}
             type="button"
             aria-label="Button to filter chart top symptoms view by one year"
             size="sm"
-            text="1 Year"
-          />
+            css={{
+              backgroundColor:
+                selectedFilter === "oneYear" ? "#5b6c61" : "#7a918d",
+            }}
+          >
+            1 Year
+          </Button>
         </Container>
       </Container>
     </>
