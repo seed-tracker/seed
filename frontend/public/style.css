@@ -122,6 +122,8 @@ input[type="range"]::-moz-range-track {
 @media (max-width: 640px) {
   .bookend {
     background-size: auto 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
   }
 
   .homehero {
