@@ -176,7 +176,7 @@ const SymptomForm = () => {
               css={{ padding: "1rem" }}
               description="Recent symptoms table"
               headers={[
-                { key: "name", label: "Your recent symptoms" },
+                { key: "name", label: "YOUR RECENT SYMPTOMS" },
                 { key: "button", label: "" },
               ]}
               rows={recentSymptoms}
@@ -195,7 +195,7 @@ const SymptomForm = () => {
             css={{ margin: 0, padding: 0 }}
           >
             <label htmlFor="severity">
-              Severity: {severity}
+              <Text css={{textAlign:"center", letterSpacing:"$normal"}}>Severity:</Text>
               <Slider
                 min={0}
                 max={10}

@@ -124,25 +124,14 @@ const ScatterPlot = () => {
 
   // set up container, scaling, axis, labeling, data
   useEffect(() => {
-    
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
     const width = 800;
     const height = 300;
 
-    // const svg = d3.select(svgRef.current);
- 
     const svg = d3.select(svgRef.current);
     svg.text("");
-    // Set the viewBox attribute
-    svg.attr("viewBox", "280 0 200 340");
 
-    // Set the width and height using CSS
-    // svg.style("width", "100%");
-    // svg.style("height", "100%");
-
-    // const width = svg.node().getBoundingClientRect().width;
-    // const height = svg.node().getBoundingClientRect().height;
     // svg.selectAll("*").remove();
 
     svg
