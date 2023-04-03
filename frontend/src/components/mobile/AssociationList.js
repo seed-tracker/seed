@@ -161,11 +161,13 @@ const AssociationList = ({ windowSize }) => {
               </Grid>
             );
           })}
-          <Text h5 css={{ mt: "2rem" }}>
-            {!isMobile || (isMobile && windowSize.height < 750)
-              ? "Login on a larger device to see more detail!"
-              : null}
-          </Text>{" "}
+          {!(windowSize.height >= 750 && isMobile) && (
+            <Text h5 css={{ mt: "2rem" }}>
+              {window.screen.width >= 750
+                ? "Expand the browser to see more detail!"
+                : "Log in on a larger device to see more detail!"}
+            </Text>
+          )}{" "}
         </Grid.Container>
       ) : null}
     </>
