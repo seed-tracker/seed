@@ -309,14 +309,14 @@ const ScatterPlot = ({ windowSize }) => {
       }
     }
 
-    svg
-      .append("text")
-      .style("text-anchor", "end")
-      .attr("y", 55)
-      .attr("x", 300)
-      .text("Times recorded per month")
-      .attr("transform", "translate(60, 0) rotate(90)")
-      .style("font-size", "20px");
+    svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -20) 
+    .attr("x", -200) 
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Times recorded per month")
+    .style("font-size", "20px");
 
     svg
       .append("text")
