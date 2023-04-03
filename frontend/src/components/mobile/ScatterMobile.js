@@ -122,7 +122,7 @@ const ScatterPlotMobile = ({ currentSymptom, item, windowSize }) => {
       .style("fill", "none")
       .attr("transform", `translate(30, 20)`);
 
-    const dots = svg
+    svg
       .selectAll("myDots")
       .data(data)
       .join("g")

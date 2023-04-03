@@ -117,8 +117,8 @@ const SymptomForm = () => {
           justify="space-around"
           wrap="wrap"
           alignItems="center"
-          css={{ margin: "2vw" }}
-          gap={4}
+          css={{ margin: "0" }}
+          gap={1}
         >
           {" "}
           <Grid display="flex" justify="center" xs={12}>
@@ -168,7 +168,13 @@ const SymptomForm = () => {
           <Grid
             display={"flex"}
             direction="column"
-            css={{ margin: 0, padding: 0, maxWidth: "30vw", minWidth: "15rem" }}
+            css={{
+              margin: 0,
+              padding: 0,
+              maxWidth: "30vw",
+              minWidth: "15rem",
+              marginTop: "2rem",
+            }}
             lg={4}
             md={3}
             xs={7}

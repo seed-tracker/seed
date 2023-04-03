@@ -70,6 +70,7 @@ function MealEntryOverview() {
           flexDirection: "column",
           maxWidth: "80vw",
         },
+        marginTop: "5vw",
       }}
     >
       {loading ? (

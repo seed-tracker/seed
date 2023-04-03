@@ -177,7 +177,7 @@ const Profile = () => {
                       width: "auto",
                       padding: "1rem",
                       marginTop: "1rem",
-                      height: "45rem",
+                      height: "100%",
                     }}
                   >
                     <section style={{ display: getDisplay(0) }}>

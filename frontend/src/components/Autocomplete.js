@@ -18,6 +18,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
   const [value, setValue] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedGroups, setSelectedGroups] = useState([]);
+  const [error, setError] = useState("");
 
   const chosenGroups = useMemo(
     () => Array.from(selectedGroups),
@@ -71,7 +72,11 @@ const Autocomplete = ({ addFood, allGroups }) => {
 
   //add a new food (not found through the database)
   const handleAddNewFood = () => {
-    if (chosenGroups.length < 1) return;
+    if (chosenGroups.length < 1) {
+      setError("Please choose a group");
+      return;
+    }
+    setError("");
     addFood({ name: value, groups: chosenGroups });
     setValue("");
     setShowDropdown(false);
@@ -82,6 +87,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
   const cancelNewFood = () => {
     setShowDropdown(false);
     setSelectedGroups([]);
+    setError("");
   };
 
   return (
@@ -195,22 +201,32 @@ const Autocomplete = ({ addFood, allGroups }) => {
               }}
             />
           </Grid>
+          {error && selectedGroups.length < 1 ? (
+            <Text color="error" css={{ mb: "1rem" }}>
+              Please choose a food group
+            </Text>
+          ) : (
+            ""
+          )}
           <Spacer y={1} />
           <Grid xs={12}>
-            <Button
+            <NextUIButton
               size="sm"
               ariaLabel="Add a new food"
-              text="Add food"
               onPress={handleAddNewFood}
-              color="$warning"
-              disabled={!chosenGroups.length || !value.length}
-            />
+              css={{
+                maxWidth: "10rem",
+                background: "#7a918d",
+                padding: "1rem",
+              }}
+            >
+              Add Food
+            </NextUIButton>
             <Spacer x={1} />
             <Button
               size="sm"
               ariaLabel="Cancel adding a new food"
               text="Cancel"
-              color="error"
               onPress={cancelNewFood}
             />
           </Grid>

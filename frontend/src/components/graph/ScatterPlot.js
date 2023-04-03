@@ -127,12 +127,12 @@ const ScatterPlot = ({ windowSize }) => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
     const width = 800;
-    const height = 300;
+    const height = 350;
 
     const svg = d3.select(svgRef.current);
     svg.text("");
 
-    svg.attr("viewBox", `0 0 ${width + 150} ${height + 50}`);
+    svg.attr("viewBox", `-15 0 ${width + 150} ${height + 50}`);
 
     const labels = [currentSymptom, ...currentFoods];
     //make a color range
@@ -160,10 +160,15 @@ const ScatterPlot = ({ windowSize }) => {
     const xAxis = svg
       .append("g")
       .attr("transform", `translate(60, ${height})`)
-      .call(axis);
+      .call(axis)
+      .style("font-size", "13px");
 
     const y = d3.scaleLinear().domain([0, max_y]).range([height, 0]);
-    svg.append("g").call(d3.axisLeft(y)).attr("transform", `translate(60, 0)`);
+    svg
+      .append("g")
+      .call(d3.axisLeft(y))
+      .attr("transform", `translate(60, 0)`)
+      .style("font-size", "13px");
 
     //add the lines
     const line = d3
@@ -223,9 +228,10 @@ const ScatterPlot = ({ windowSize }) => {
       .append("text")
       .style("text-anchor", "end")
       .attr("y", 55)
-      .attr("x", 250)
+      .attr("x", 300)
       .text("Times recorded per month")
-      .attr("transform", "translate(60, 0) rotate(90)");
+      .attr("transform", "translate(60, 0) rotate(90)")
+      .style("font-size", "20px");
 
     svg
       .append("text")
@@ -233,7 +239,8 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("x", width / 2)
       .attr("y", height + 40)
       .text("Months")
-      .attr("transform", `translate(60, 0)`);
+      .attr("transform", `translate(70, 5)`)
+      .style("font-size", "20px");
 
     const updateAxis = ({ target }) => {
       let newStartDate = new Date(dateRange[1]);
@@ -296,7 +303,7 @@ const ScatterPlot = ({ windowSize }) => {
             display="flex"
             css={{ padding: "0" }}
           >
-            <svg ref={svgRef} height="100%" width="90%"></svg>
+            <svg ref={svgRef} height="100%" width="100%"></svg>
           </Container>
           <Container
             className="switches"
