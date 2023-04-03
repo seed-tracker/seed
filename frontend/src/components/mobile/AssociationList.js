@@ -110,9 +110,6 @@ const AssociationList = ({ windowSize }) => {
           <Grid>
             <HeaderText text="Your top associations" />
             <Text h4>Ordered by strongest relationship</Text>
-            {windowSize.height >= 750 && isMobile && (
-              <Text>Turn your device sideways to see more detail!</Text>
-            )}
           </Grid>
           <Grid xs={12} justify="center" align="center">
             <Text>Symptoms:</Text>
@@ -171,6 +168,9 @@ const AssociationList = ({ windowSize }) => {
                 : "Log in on a larger device to see more detail!"}
             </Text>
           )}{" "}
+          {windowSize.height >= 750 && isMobile && (
+            <Text>Turn your device sideways to see more detail!</Text>
+          )}
         </Grid.Container>
       ) : null}
     </>
