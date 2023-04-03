@@ -127,6 +127,7 @@ const CirclePacking = () => {
     .append("circle")
     .attr("fill", (d) => d.data.color)
     .attr("r", (d) => d.r)
+    .style("filter", "drop-shadow(2px 4px 3px rgba(0,0,0,0.5))")
     .on("mouseover", function (event, d) {
       d3.select(this).transition().attr("r", d.r + 5);
     })
