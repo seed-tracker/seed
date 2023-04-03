@@ -388,7 +388,7 @@ const ScatterPlot = ({ windowSize }) => {
             display="flex"
             css={{ padding: "0", marginTop: "3vh" }}
           >
-            <svg ref={svgRef} height="90%" width="90%"></svg>
+            <svg ref={svgRef} height="95%" width="95%"></svg>
           </Container>
           <Container
             className="switches"
