@@ -319,6 +319,7 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("transform", `translate(70, 5)`)
       .style("font-size", "20px");
 
+
     const updateAxis = ({ target }) => {
       let newStartDate = new Date(dateRange[1]);
       newStartDate.setMonth(newStartDate.getMonth() - target.value);
