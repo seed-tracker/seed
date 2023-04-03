@@ -122,7 +122,7 @@ const SymptomForm = () => {
         >
           {" "}
           <Grid display="flex" justify="center" xs={12}>
-            <HeaderText text="Add a symptom" />
+            <HeaderText text="Add a Symptom" />
           </Grid>
           <Grid
             md={2}
@@ -179,19 +179,18 @@ const SymptomForm = () => {
             md={3}
             xs={7}
           >
-
             <Table
               color="primary"
               css={{ padding: "1rem", maxWidth: "20rem" }}
               description="Recent symptoms table"
               headers={[
-                { key: "name", label: "RECENT SYMPTOMS" },
+                { key: "name", label: "YOUR RECENT SYMPTOMS" },
                 { key: "button", label: "" },
               ]}
               rows={recentSymptoms}
               button={{
                 buttonDescription: "Button to add a recent symptom",
-                text: "Add",
+                text: "Select",
                 onPress: (e) => setSymptom([e.name]),
               }}
             />
