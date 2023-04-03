@@ -56,7 +56,7 @@ function SymptomEntryOverview() {
   };
 
   const handleEntryDelete = async (id) => {
-    await dispatch(deleteSymptomEntry(id));
+    dispatch(deleteSymptomEntry(id));
     dispatch(fetchAllSymptomEntries(page));
   };
 

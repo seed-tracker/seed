@@ -68,7 +68,7 @@ const Profile = () => {
   const getDisplay = (idx) => {
     return idx === graphIdx ? "" : "none";
   };
-  const buttonMargin = { marginRight: "0.5rem" };
+  const buttonMargin = { marginRight: "0.5rem", marginTop: "1vh" };
 
   const getCss = (idx) => {
     const isActive = idx === graphIdx;
@@ -175,7 +175,7 @@ const Profile = () => {
                       width: "auto",
                       padding: "1rem",
                       marginTop: "1rem",
-                      height: "100%",
+                      maxWidth: "90vw",
                     }}
                   >
                     <section style={{ display: getDisplay(0) }}>

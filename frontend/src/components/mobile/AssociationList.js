@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Grid, Switch, Text, Button, Spacer } from "@nextui-org/react";
-import { HeaderText, PageLoading } from "../nextUI";
+import { HeaderText } from "../nextUI";
 import { useSelector } from "react-redux";
 import AssociationCard from "./AssociationCard";
-import ScatterPlotMobile from "./ScatterMobile";
 
+// A list of foods that are most associated with top symptoms
+//replaces graphs in mobile view, or any screens/browser under 750px in width
 const AssociationList = ({ windowSize }) => {
   const { correlations } = useSelector((state) => state);
   const [currentSymptom, setCurrentSymptom] = useState("");
@@ -12,6 +13,7 @@ const AssociationList = ({ windowSize }) => {
   const [showGroups, setShowGroups] = useState(false);
   const [data, setData] = useState([]);
 
+  //detect whether it's a mobile device, used to update message to the user
   function detectMobile() {
     const devices = [
       /Android/i,
@@ -30,7 +32,6 @@ const AssociationList = ({ windowSize }) => {
 
   //initialize once correlations load
   useEffect(() => {
-    //if the correlations are empty or already showing, return
     if (
       !correlations ||
       !correlations.data.length > 0 ||
@@ -50,6 +51,7 @@ const AssociationList = ({ windowSize }) => {
     }
   }, [correlations]);
 
+  //update when the user toggles whether foods and/or groups are showing
   useEffect(() => {
     if (!currentSymptom.length) return;
 
@@ -58,7 +60,7 @@ const AssociationList = ({ windowSize }) => {
       ({ symptom }) => symptom === currentSymptom
     );
 
-    if (showFoods) updated = [...symptomData.top_foods];
+    if (showFoods) updated = symptomData.top_foods;
 
     if (showGroups) updated = [...updated, ...symptomData.top_groups];
 
@@ -67,6 +69,7 @@ const AssociationList = ({ windowSize }) => {
     setData(updated);
   }, [showFoods, showGroups]);
 
+  //update when user changes the symptom
   useEffect(() => {
     if (!currentSymptom.length > 0) return;
 
