@@ -117,14 +117,14 @@ const ScatterPlot = ({ windowSize }) => {
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
-    const width = windowSize.width * 0.6;
+    const width = windowSize.width * 0.58;
     //const width = 800;
     const height = 300;
 
     const svg = d3.select(svgRef.current);
     svg.text("");
 
-    svg.attr("width", width + 70).attr("height", height + 50);
+    svg.attr("width", width + 130).attr("height", height + 50);
 
     const labels = [currentSymptom, ...currentFoods];
     //make a color range
@@ -210,6 +210,83 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("r", 5)
       .attr("stroke", "white")
       .attr("transform", `translate(50, 0)`);
+
+    svg
+      .selectAll("myLabels")
+      .data(data)
+      .join("g")
+      .append("text")
+      .datum((d) => {
+        return { name: d.name, value: d.values[d.values.length - 1] };
+      }) // keep only the last value of each time series
+      .attr(
+        "transform",
+        (d) => `translate(${x(d.value.date)},${y(d.value.count)})`
+      ) // Put the text at the position of the last point
+      .attr("x", 50)
+      .attr("class", function (d) {
+        return makeKey(d.name);
+      })
+      .text((d) => (d.name.includes(currentSymptom) ? d.name : ""))
+      .style("fill", (d) => colors(d.name))
+      .style("font-size", 15)
+      .style("opacity", (d) => (d.name.includes(currentSymptom) ? 1 : 0))
+      .call(wrap, 100);
+
+    function wrap(text, width) {
+      text.each(function () {
+        var text = d3.select(this),
+          textContent = text.text(),
+          tempWord = addBreakSpace(textContent).split(/\s+/),
+          x = text.attr("x"),
+          y = text.attr("y"),
+          dy = parseFloat(text.attr("dy") || 0),
+          tspan = text
+            .text(null)
+            .append("tspan")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("dy", dy + "em");
+
+        textContent = tempWord.join(" ");
+        var words = textContent.split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 1.1, // ems
+          spanContent,
+          breakChars = ["/", "&", "-"];
+        while ((word = words.pop())) {
+          line.push(word);
+          tspan.text(line.join(" "));
+          if (tspan.node().getComputedTextLength() > width) {
+            line.pop();
+            spanContent = line.join(" ");
+            breakChars.forEach(function (char) {
+              // Remove spaces trailing breakChars that were added above
+              spanContent = spanContent.replace(char + " ", char);
+            });
+            tspan.text(spanContent);
+            line = [word];
+            tspan = text
+              .append("tspan")
+              .attr("x", x)
+              .attr("y", y)
+              .attr("dy", ++lineNumber * lineHeight + dy + "em")
+              .text(word);
+          }
+        }
+      });
+
+      function addBreakSpace(inputString) {
+        var breakChars = ["/", "&", "-"];
+        breakChars.forEach(function (char) {
+          // Add a space after each break char for the function to use to determine line breaks
+          inputString = inputString.replace(char, char + " ");
+        });
+        return inputString;
+      }
+    }
 
     svg
       .append("text")
