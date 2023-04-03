@@ -165,26 +165,19 @@ const SymptomForm = () => {
               status={validate && !symptom.length ? "error" : "default"}
             />
           </Grid>
-          <Grid
-            display={"flex"}
-            direction="column"
-            css={{ margin: 0, padding: 0, maxWidth: "30vw", minWidth: "15rem" }}
-            lg={4}
-            md={3}
-            xs={7}
-          >
+          <Grid display={"flex"} direction="column" lg={4} md={3} xs={15}>
             <Table
               color="primary"
               css={{ padding: "1rem", maxWidth: "20rem" }}
               description="Recent symptoms table"
               headers={[
-                { key: "name", label: "YOUR RECENT SYMPTOMS" },
+                { key: "name", label: "RECENT SYMPTOMS" },
                 { key: "button", label: "" },
               ]}
               rows={recentSymptoms}
               button={{
                 buttonDescription: "Button to add a recent symptom",
-                text: "Select",
+                text: "Add",
                 onPress: (e) => setSymptom([e.name]),
               }}
             />

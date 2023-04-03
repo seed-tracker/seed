@@ -1,6 +1,6 @@
-* {
-  /* border: 1px solid #555555; */
-}
+/* * {
+  /* border: 1px solid #555555;
+} */
 
 @font-face {
   font-family: "Lovechild";
@@ -97,7 +97,9 @@ input[type="range"]::-moz-range-track {
 
 .bookend {
   background-image: url("seed-bg.png");
-  background-size: auto 100vh;
+
+  min-width: 100vw;
+  min-height: 100vh;
   margin: 0;
   background-repeat: no-repeat;
   background-position: center;
@@ -120,6 +122,8 @@ input[type="range"]::-moz-range-track {
 @media (max-width: 640px) {
   .bookend {
     background-size: auto 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
   }
 
   .homehero {
@@ -164,5 +168,5 @@ th {
 }
 
 .material-symbols-rounded {
-  color: #7a918d;
+  color: #035043;
 }

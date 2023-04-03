@@ -12,7 +12,6 @@ const ScatterPlot = ({ windowSize }) => {
   const [currentSymptom, setCurrentSymptom] = useState(null);
   const [dateRange, setDateRange] = useState([]);
   const [currentFoods, setCurrentFoods] = useState([]);
-  const [currentGroups, setCurrentGroups] = useState([]);
   const [legend, setLegend] = useState([]);
   const [colorPalette, setColorPalette] = useState([
     "#DC050C",
@@ -27,7 +26,6 @@ const ScatterPlot = ({ windowSize }) => {
   ]);
 
   const svgRef = useRef();
-  const areaGradient = useRef();
 
   useEffect(() => {
     if (chartData && chartData.length && corrData && corrData.length) {
@@ -58,7 +56,7 @@ const ScatterPlot = ({ windowSize }) => {
     if (!currentSymptom) {
       setCurrentSymptom(symptomData.name);
       if (foodData[0] && foodData[0].name) setCurrentFoods([foodData[0].name]);
-      else setCurrentGroups([groupData[0].name || null]);
+      else setCurrentFoods([groupData[0].name || null]);
     }
 
     setDateRange([
@@ -96,11 +94,8 @@ const ScatterPlot = ({ windowSize }) => {
 
     if (foodData.length) {
       setCurrentFoods([foodData[0].name]);
-      setCurrentGroups([]);
     } else {
-      setCurrentFoods([]);
-      if (groupData.length) setCurrentGroups([groupData[0].name]);
-      else setCurrentGroups([]);
+      if (groupData.length) setCurrentFoods([groupData[0].name]);
     }
   };
 
@@ -109,28 +104,29 @@ const ScatterPlot = ({ windowSize }) => {
   };
 
   const toggleLine = (name) => {
-    const nodes = d3.selectAll(`.${makeKey(name)}`);
-
-    if (!nodes) return;
-
-    // Change the opacity: from 0 to 1 or from 1 to 0
-    nodes.transition().style("opacity", nodes.style("opacity") == 1 ? 0 : 1);
+    const idx = currentFoods.findIndex((food) => food === name);
+    if (idx >= 0)
+      setCurrentFoods([
+        ...currentFoods.slice(0, idx),
+        ...currentFoods.slice(idx + 1),
+      ]);
+    else setCurrentFoods([...currentFoods, name]);
   };
 
   // set up container, scaling, axis, labeling, data
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
-    //const width = windowSize.width * 0.8;
-    const width = 800;
+    const width = windowSize.width * 0.58;
+    //const width = 800;
     const height = 300;
 
     const svg = d3.select(svgRef.current);
     svg.text("");
 
-    svg.attr("width", width).attr("height", height);
+    svg.attr("width", width + 130).attr("height", height + 50);
 
-    const labels = [currentSymptom, ...currentFoods, ...currentGroups];
+    const labels = [currentSymptom, ...currentFoods];
     //make a color range
     const colors = d3.scaleOrdinal().domain(labels).range(colorPalette);
 
@@ -155,11 +151,11 @@ const ScatterPlot = ({ windowSize }) => {
     //generagte x axis, date format
     const xAxis = svg
       .append("g")
-      .attr("transform", `translate(0, ${height})`)
+      .attr("transform", `translate(50, ${height})`)
       .call(axis);
 
     const y = d3.scaleLinear().domain([0, max_y]).range([height, 0]);
-    svg.append("g").transition().duration(500).call(d3.axisLeft(y));
+    svg.append("g").call(d3.axisLeft(y)).attr("transform", `translate(50, 0)`);
 
     //add the lines
     const line = d3
@@ -177,43 +173,6 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("x", 0)
       .attr("y", 0);
 
-    //areas where linear gradient is applied
-    // const area = d3
-    //   .area()
-    //   .x((d) => x(d.date))
-    //   .y0(height)
-    //   .y1((d) => y(d.count));
-
-    // const areaGradient = svg
-    //   .append("defs")
-    //   .append("linearGradient")
-    //   .attr("id", "areaGradient")
-    //   .attr("x1", "0%")
-    //   .attr("y1", "0%")
-    //   .attr("x2", "0%")
-    //   .attr("y2", "100%");
-
-    // areaGradient
-    //   .append("stop")
-    //   .attr("offset", "0%")
-    //   .attr("stop-color", "red")
-    //   .attr("stop-opacity", 0.3)
-    //   .attr("gradientTransform", "rotate(-45)");
-
-    // areaGradient
-    //   .append("stop")
-    //   .attr("offset", "80%")
-    //   .attr("stop-color", "white")
-    //   .attr("stop-opacity", 0);
-
-    // const areas = svg
-    //   .selectAll(".area")
-    //   .data(allData)
-    //   .join("path")
-    //   .attr("class", "area")
-    //   .attr("fill", "url(#areaGradient)") //linear gradient being added here--
-    //   .attr("d", area(symptomData.values));
-
     const lines = svg
       .selectAll("myLines")
       .data(data)
@@ -224,31 +183,110 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("clip-path", "url(#clip")
       .style("stroke-width", 4)
       .style("fill", "none")
-      .style("opacity", (d) =>
-        [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
-          ? 1
-          : 0
-      );
+      .style("opacity", (d) => {
+        if (d.name === currentSymptom) return 1;
+        if (currentFoods.includes(d.name)) return 1;
+        return 0;
+      })
+      .attr("transform", `translate(50, 0)`);
 
     const dots = svg
       .selectAll("myDots")
       .data(data)
       .join("g")
       .style("fill", (d) => colors(d.name))
-      .attr("clip-path", "url(#clip)")
-      .style("opacity", (d) =>
-        [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
-          ? 1
-          : 0
-      )
+      .style("opacity", (d) => {
+        if (d.name === currentSymptom) return 1;
+        if (currentFoods.includes(d.name)) return 1;
+        return 0;
+      })
       .attr("class", (d) => makeKey(d.name))
       .selectAll("myPoints")
       .data((d) => d.values)
       .join("circle")
       .attr("cx", (d) => x(d.date))
       .attr("cy", (d) => y(d.count))
+      .attr("clip-path", "url(#clip)")
       .attr("r", 5)
-      .attr("stroke", "white");
+      .attr("stroke", "white")
+      .attr("transform", `translate(50, 0)`);
+
+    svg
+      .selectAll("myLabels")
+      .data(data)
+      .join("g")
+      .append("text")
+      .datum((d) => {
+        return { name: d.name, value: d.values[d.values.length - 1] };
+      }) // keep only the last value of each time series
+      .attr(
+        "transform",
+        (d) => `translate(${x(d.value.date)},${y(d.value.count)})`
+      ) // Put the text at the position of the last point
+      .attr("x", 50)
+      .attr("class", function (d) {
+        return makeKey(d.name);
+      })
+      .text((d) => (d.name.includes(currentSymptom) ? d.name : ""))
+      .style("fill", (d) => colors(d.name))
+      .style("font-size", 15)
+      .style("opacity", (d) => (d.name.includes(currentSymptom) ? 1 : 0))
+      .call(wrap, 100);
+
+    function wrap(text, width) {
+      text.each(function () {
+        var text = d3.select(this),
+          textContent = text.text(),
+          tempWord = addBreakSpace(textContent).split(/\s+/),
+          x = text.attr("x"),
+          y = text.attr("y"),
+          dy = parseFloat(text.attr("dy") || 0),
+          tspan = text
+            .text(null)
+            .append("tspan")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("dy", dy + "em");
+
+        textContent = tempWord.join(" ");
+        var words = textContent.split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 1.1, // ems
+          spanContent,
+          breakChars = ["/", "&", "-"];
+        while ((word = words.pop())) {
+          line.push(word);
+          tspan.text(line.join(" "));
+          if (tspan.node().getComputedTextLength() > width) {
+            line.pop();
+            spanContent = line.join(" ");
+            breakChars.forEach(function (char) {
+              // Remove spaces trailing breakChars that were added above
+              spanContent = spanContent.replace(char + " ", char);
+            });
+            tspan.text(spanContent);
+            line = [word];
+            tspan = text
+              .append("tspan")
+              .attr("x", x)
+              .attr("y", y)
+              .attr("dy", ++lineNumber * lineHeight + dy + "em")
+              .text(word);
+          }
+        }
+      });
+
+      function addBreakSpace(inputString) {
+        var breakChars = ["/", "&", "-"];
+        breakChars.forEach(function (char) {
+          // Add a space after each break char for the function to use to determine line breaks
+          inputString = inputString.replace(char, char + " ");
+        });
+        return inputString;
+      }
+    }
 
     svg
       .append("text")
@@ -256,14 +294,16 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("transform", "rotate(-90)")
       .attr("y", -40)
       .attr("x", -25)
-      .text("Number of occurences per month");
+      .text("Number of occurences per month")
+      .attr("transform", `translate(50, 0)`);
 
     svg
       .append("text")
       .attr("text-anchor", "end")
       .attr("x", width / 2)
       .attr("y", height + 40)
-      .text("Months");
+      .text("Months")
+      .attr("transform", `translate(50, 0)`);
 
     const updateAxis = ({ target }) => {
       let newStartDate = new Date(dateRange[1]);
@@ -276,37 +316,6 @@ const ScatterPlot = ({ windowSize }) => {
       xAxis.transition().duration(500).call(d3.axisBottom(x).ticks(6));
 
       setDateRange(newRange);
-
-      // areas
-      //   .data(allData)
-      //   .join("path")
-      //   .transition()
-      //   .duration(500)
-      //   .attr(
-      //     "d",
-      //     area(
-      //       symptomData.values.filter((symptom) => symptom.date >= newRange[0])
-      //     )
-      //   );
-
-      // const dots = svg
-      // .selectAll("myDots")
-      // .data(data)
-      // .join("g")
-      // .style("fill", (d) => colors(d.name))
-      // .style("opacity", (d) =>
-      //   [...currentFoods, ...currentGroups, currentSymptom].includes(d.name)
-      //     ? 1
-      //     : 0
-      // )
-      // .attr("class", (d) => makeKey(d.name))
-      // .selectAll("myPoints")
-      // .data((d) => d.values)
-      // .join("circle")
-      // .attr("cx", (d) => x(d.date))
-      // .attr("cy", (d) => y(d.count))
-      // .attr("r", 5)
-      // .attr("stroke", "white");
 
       dots
         .transition()
@@ -322,7 +331,7 @@ const ScatterPlot = ({ windowSize }) => {
     };
 
     d3.selectAll('input[type="range"]').on("change", updateAxis);
-  }, [allData, currentFoods, currentGroups, currentSymptom, windowSize]);
+  }, [allData, currentFoods, currentSymptom, windowSize]);
 
   return (
     <Container
@@ -352,16 +361,12 @@ const ScatterPlot = ({ windowSize }) => {
             />
           </Container>
           <Container
-            className="svg-container"
-            css={{
-              position: "relative",
-              overflow: "auto",
-              "-webkit-overflow-scrolling": "touch",
-            }}
+            align="flex-start"
+            justify="flex-start"
+            display="flex"
+            css={{ padding: "0" }}
           >
-            <div className="dataViz">
-              <svg ref={svgRef} viewBox="50 0 700 360"></svg>
-            </div>
+            <svg ref={svgRef}></svg>
           </Container>
           <Container
             className="switches"
@@ -415,7 +420,7 @@ const ScatterPlot = ({ windowSize }) => {
                     className="legendSwitch"
                     size="sm"
                     bordered
-                    checked={[...currentFoods, ...currentGroups].includes(name)}
+                    checked={currentFoods.includes(name)}
                     onChange={() => toggleLine(name)}
                   />
                   <Text
