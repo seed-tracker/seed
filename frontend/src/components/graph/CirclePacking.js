@@ -9,7 +9,6 @@ import * as d3 from "d3";
 import { Container, Text } from "@nextui-org/react";
 import { HeaderText } from "../nextUI";
 
-
 /**
  * This component displays a circle packing chart and a legend of the user's most associated food groups and symptoms
  * (as calculated by lift from fpGrowth algorithm).
@@ -43,7 +42,18 @@ const CirclePacking = () => {
 
   const userSymptoms = datas.map((obj) => obj.symptom); // Get an array of the user's symptoms
 
-  const colorPalette = ["A8E6Ce","#478c80","#167288", "#b45248","#8cdaec", "#d48c84", "#a89a49", "#9bddb1", "#836394", "#3cb464", ]; // Define a color palette for the symptoms and map each symptom to a unique color
+  const colorPalette = [
+    "#A8E6Ce",
+    "#478c80",
+    "#167288",
+    "#f3929c",
+    "#8cdaec",
+    "#ffc02e",
+    "#c48cf5",
+    "#d93f7a",
+    "#836394",
+    "#0c97ed",
+  ]; // Define a color palette for the symptoms and map each symptom to a unique color
   const symptomColors = {};
   for (let i = 0; i < symptoms.length; i++) {
     const symptomName = symptoms[i].name;
@@ -53,29 +63,34 @@ const CirclePacking = () => {
 
   const svgRef = useRef(); // allow the svg element to be accessed and manipulated in the React component using the current property of the svgRef object
 
-
   // Create the circle packing chart and the legend
   useEffect(() => {
     const svg = d3.select(svgRef.current);
-     // Set the viewBox attribute
-     svg.attr("viewBox", "400 8 100 500");
+    // Set the viewBox attribute
+    svg.attr("viewBox", "400 8 100 500");
 
-     // Set the width and height using CSS
-     svg.style("width", "100%");
-     svg.style("height", "100%");
- 
-     const width = svg.node().getBoundingClientRect().width;
-     const height = svg.node().getBoundingClientRect().height;
+    // Set the width and height using CSS
+    svg.style("width", "100%");
+    svg.style("height", "100%");
+
+    const width = svg.node().getBoundingClientRect().width;
+    const height = svg.node().getBoundingClientRect().height;
     // const width = +svg.attr("width");
     // const height = +svg.attr("height");
 
-    const simulation = d3.forceSimulation()
-    .force("x", d3.forceX(width / 2).strength(0.05))
-    .force("y", d3.forceY(height / 2).strength(0.05))
-    .force("collide", d3.forceCollide().radius(d => d.r + 1).iterations(1))
-    .stop();
+    const simulation = d3
+      .forceSimulation()
+      .force("x", d3.forceX(width / 2).strength(0.05))
+      .force("y", d3.forceY(height / 2).strength(0.05))
+      .force(
+        "collide",
+        d3
+          .forceCollide()
+          .radius((d) => d.r + 1)
+          .iterations(1)
+      )
+      .stop();
 
-    
     const pack = (data) =>
       d3
         .pack() // Define the circle packing layout
@@ -114,8 +129,6 @@ const CirclePacking = () => {
       }
     }
 
-    
-
     const leaf = svg // Select all groups and bind them to the data for the leaf nodes of the tree
       .selectAll("g")
       .data(root.leaves())
@@ -124,6 +137,7 @@ const CirclePacking = () => {
 
     // Create a circle for each leaf node, with radius based on node size, fill color based on symptom color
     leaf
+
     .append("circle")
     .attr("fill", (d) => d.data.color)
     .attr("r", (d) => d.r)
@@ -134,6 +148,7 @@ const CirclePacking = () => {
     .on("mouseout", function (event, d) {
       d3.select(this).transition().attr("r", d.r);
     });
+
 
     leaf
       .append("foreignObject") // Add text labels to each leaf node, with the symptom name as the label text
@@ -149,7 +164,6 @@ const CirclePacking = () => {
       .style("word-break", "break-word")
       .style("justify-content", "center");
   }, [result]);
-  
 
   return (
     <>
@@ -180,7 +194,11 @@ const CirclePacking = () => {
           </div>
         ))}
         <Container
-          css={{position: "relative", overflow: "auto", "-webkit-overflow-scrolling": "touch"}}
+          css={{
+            position: "relative",
+            overflow: "auto",
+            "-webkit-overflow-scrolling": "touch",
+          }}
         >
           <svg ref={svgRef} width="950" height="500"></svg>
         </Container>

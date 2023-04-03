@@ -62,9 +62,9 @@ const TopFoods = () => {
     "#00bcd4",
     "#009688",
     "#4caf50",
-    "#8bc34a",
+    "#f7803b",
     "#cddc39",
-    "#ffeb3b",
+    "#b9d402",
     "#ffc107",
     "#ff9800",
     "#ff5722",
@@ -158,36 +158,28 @@ const TopFoods = () => {
         const currentFood = topFoods[i];
         const groupName = currentFood.groups[0];
         for (let j = 0; j < counts[i]; j++) {
-          console.log(counts[i]);
           g.append("circle")
-            .attr(
-              "cx",
-              xScale(currentFood.name) + xScale.bandwidth() / 2
-            )
+            .attr("cx", xScale(currentFood.name) + xScale.bandwidth() / 2)
             .attr("cy", yScale(j))
             .attr("fill", foodsColors[groupName])
             .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
           if (j === counts[i] - 1) {
             g.append("text")
-              .attr(
-                "x",
-                xScale(currentFood.name) + xScale.bandwidth() / 2
-              )
+              .attr("x", xScale(currentFood.name) + xScale.bandwidth() / 2)
               .attr("y", yScale(j) - 30)
               .attr("text-anchor", "middle")
               .text("Count: " + counts[i]);
           }
         }
       }
-      } else {
-        g.append("text")
-          .attr("x", `${width / 2}`)
-          .attr("y", `${height / 2}`)
-          .attr("font-size", "20px")
-          .attr("text-anchor", "middle")
-          .text("Sorry not enough data for this time period.");
-      }
-
+    } else {
+      g.append("text")
+        .attr("x", `${width / 2}`)
+        .attr("y", `${height / 2}`)
+        .attr("font-size", "20px")
+        .attr("text-anchor", "middle")
+        .text("Sorry not enough data for this time period.");
+    }
   }, [data]);
 
   return (
@@ -196,9 +188,10 @@ const TopFoods = () => {
       <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
         {topFoods
           .filter(
-            (foodObj, index, group) => foodObj.groups &&
+            (foodObj, index, group) =>
+              foodObj.groups &&
               group.findIndex((t) => t.groups[0] === foodObj.groups[0]) ===
-              index
+                index
           )
           .map((groupName) => (
             <div
@@ -253,7 +246,6 @@ const TopFoods = () => {
         >
           <Text h4>Filter data by</Text>
           <Button
-
             onPress={handleGetAllTime}
             type="button"
             aria-label="Button to filter chart top foods view by all time"
