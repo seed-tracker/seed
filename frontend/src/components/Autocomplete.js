@@ -95,7 +95,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
       <Grid xs={12}>
         <section
           css={{
-            marginTop: "0",
+            margin: "0",
             width: "20vw",
             backgroundColor: "transparent",
           }}
@@ -104,7 +104,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
           <Card
             css={{
               backgroundColor: "transparent",
-              padding: "0.5rem",
+              padding: "0.5rem 0.5rem 0.5rem 0.1rem",
               cursor: "pointer",
               margin: "0",
               border: "0",
@@ -112,6 +112,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
             shadow={false}
           >
             <Input
+              label="Search for a food"
               aria-label="Search for a food"
               value={value}
               onChange={handleChange}
@@ -121,14 +122,14 @@ const Autocomplete = ({ addFood, allGroups }) => {
               color="secondary"
               size="md"
               css={{
+                margin: 0,
+                padding: 0,
                 "@xs": {
                   width: "90vw",
                 },
                 "@sm": {
-                  width: "25vw",
+                  width: "20vw",
                 },
-                maxWidth: "25rem",
-                minWidth: "13rem",
               }}
             />
 
