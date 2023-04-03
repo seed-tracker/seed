@@ -4,19 +4,11 @@ import { select, create } from "d3-selection";
 import { scaleBand, scaleLinear } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
 import { easeElasticOut } from "d3-ease";
-import {
-  statsSlice,
-  selectUserStats,
-  getUserStats,
-} from "../../store/statsSlice";
-import {
-  foodGroupsSlice,
-  fetchAllFoodGroups,
-  selectFoodGroups,
-} from "../../store/foodGroupsSlice";
-import * as d3 from "d3";
-import { HeaderText, Button } from "../nextUI/";
-import { Container, Text, Row } from "@nextui-org/react";
+import { selectUserStats, getUserStats } from "../../store/statsSlice";
+import { selectFoodGroups } from "../../store/foodGroupsSlice";
+
+import { HeaderText } from "../nextUI/";
+import { Container, Text, Button } from "@nextui-org/react";
 
 /**
  * This chart shows the user's top ten food groups eaten during a certain time period and a legend.
@@ -36,7 +28,7 @@ const TopFoods = () => {
   const topFoods = data.foods ? data.foods.slice(0, 10) : [];
 
   const counts = topFoods ? topFoods.map((food) => food.count) : [];
-  const [selectedFilter, setSelectedFilter] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("allTime");
 
   const handleGetAllTime = async (all) => {
     setSelectedFilter("allTime");
@@ -160,34 +152,27 @@ const TopFoods = () => {
         for (let j = 0; j < counts[i]; j++) {
           console.log(counts[i]);
           g.append("circle")
-            .attr(
-              "cx",
-              xScale(currentFood.name) + xScale.bandwidth() / 2
-            )
+            .attr("cx", xScale(currentFood.name) + xScale.bandwidth() / 2)
             .attr("cy", yScale(j))
             .attr("fill", foodsColors[groupName])
             .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
           if (j === counts[i] - 1) {
             g.append("text")
-              .attr(
-                "x",
-                xScale(currentFood.name) + xScale.bandwidth() / 2
-              )
+              .attr("x", xScale(currentFood.name) + xScale.bandwidth() / 2)
               .attr("y", yScale(j) - 30)
               .attr("text-anchor", "middle")
               .text("Count: " + counts[i]);
           }
         }
       }
-      } else {
-        g.append("text")
-          .attr("x", `${width / 2}`)
-          .attr("y", `${height / 2}`)
-          .attr("font-size", "20px")
-          .attr("text-anchor", "middle")
-          .text("Sorry not enough data for this time period.");
-      }
-
+    } else {
+      g.append("text")
+        .attr("x", `${width / 2}`)
+        .attr("y", `${height / 2}`)
+        .attr("font-size", "20px")
+        .attr("text-anchor", "middle")
+        .text("Sorry not enough data for this time period.");
+    }
   }, [data]);
 
   return (
@@ -196,9 +181,10 @@ const TopFoods = () => {
       <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
         {topFoods
           .filter(
-            (foodObj, index, group) => foodObj.groups &&
+            (foodObj, index, group) =>
+              foodObj.groups &&
               group.findIndex((t) => t.groups[0] === foodObj.groups[0]) ===
-              index
+                index
           )
           .map((groupName) => (
             <div
@@ -253,28 +239,42 @@ const TopFoods = () => {
         >
           <Text h4>Filter data by</Text>
           <Button
-
             onPress={handleGetAllTime}
             type="button"
             aria-label="Button to filter chart top foods view by all time"
             size="sm"
-            text="All Time"
-          />
+            css={{
+              backgroundColor:
+                selectedFilter === "allTime" ? "#5b6c61" : "#7a918d",
+            }}
+          >
+            All Time
+          </Button>
           <Button
             onPress={handleGetSixMonths}
             value="180"
             type="button"
             aria-label="Button to filter chart top foods view by six months"
             size="sm"
-            text="6 Months"
-          />
+            css={{
+              backgroundColor:
+                selectedFilter === "sixMonths" ? "#5b6c61" : "#7a918d",
+            }}
+          >
+            6 Months
+          </Button>
           <Button
             onPress={handleGetOneYear}
             type="button"
             size="sm"
             aria-label="Button to filter chart top foods view by one year"
-            text="1 Year"
-          />
+            css={{
+              backgroundColor:
+                selectedFilter === "oneYear" ? "#5b6c61" : "#7a918d",
+            }}
+          >
+            1 Year
+          </Button>
         </Container>
       </Container>
     </>
