@@ -10,6 +10,7 @@ import topFoods from "../img/top-foods.png";
 import topSymptoms from "../img/top-symptoms.png";
 import { me } from "../store/authSlice";
 import { Links } from "./nextUI";
+import logo from "../img/seed-logo.png";
 
 /**
  * Component for the homepage
@@ -46,7 +47,12 @@ const Home = () => {
         }}
       >
         <h2 style={{ fontSize: "10vh", color: "#444c38" }}>
-          <span style={{ fontFamily: "Lovechild" }}>SEED</span> <br />
+          <img
+            src={logo}
+            alt="seed logo"
+            style={{ maxHeight: "8rem", margin: 0, padding: 0 }}
+          />
+          <br />
           No Roots <br />
           No Growth
         </h2>

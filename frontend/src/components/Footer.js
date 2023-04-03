@@ -2,9 +2,6 @@ import React from "react";
 import { Container, Row, Col, Text, Spacer } from "@nextui-org/react";
 import Links from "./nextUI/Links";
 import logo from "../img/seed-logo.png";
-import logo2 from "../img/logo-2.png";
-import logo3 from "../img/Seed06.png";
-import logo4 from "../img/logo4.png";
 
 /**
  * Component for the footer
@@ -32,7 +29,7 @@ const Footer = () => {
           css={{
             "@xs": {
               margin: 0,
-              padding: "1vw",
+              padding: "0 1vw",
               maxWidth: "100vw",
             },
             "@sm": {
@@ -41,18 +38,15 @@ const Footer = () => {
             },
           }}
         >
-          <img src={logo} alt="seed logo" />
-          <img src={logo2} alt="seed logo" />
-          <img src={logo3} alt="seed logo" />
           <img
-            src={logo4}
-            style={{ width: "5rem", height: "5rem" }}
+            src={logo}
             alt="seed logo"
+            style={{
+              margin: 0,
+              padding: 0,
+              maxWidth: "7rem",
+            }}
           />
-          <Text h1 css={{ fontFamily: "Lovechild" }} color="$secondary">
-            SEED
-          </Text>
-
           <Text>Follow Us:</Text>
           <Links
             css={{ display: "block" }}
