@@ -20,13 +20,14 @@ import { HeaderText, Button } from "../nextUI";
  * @returns three <button> elements: filter by (1) all time, (2) half a year, (3) 1 year
  */
 const TopSymptoms = () => {
+  const [showChart, setShowChart] = useState(false);
   const svgRef = useRef();
   const allSymptoms = useSelector(selectSymptoms);
   const dispatch = useDispatch();
   const data = useSelector(selectUserStats);
   const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
   const counts = symptoms ? symptoms.map((symptom) => symptom.count) : [];
-  const colorPalette = d3.schemeSet3; // Define a color palette for the symptoms and map each symptom to a unique color
+  const colorPalette = ["A8E6Ce","#478c80","#167288", "#b45248","#8cdaec", "#d48c84", "#a89a49", "#9bddb1", "#836394", "#3cb464", ]; // Define a color palette for the symptoms and map each symptom to a unique color
 
   const symptomColors = {};
   for (let i = 0; i < allSymptoms.length; i++) {
@@ -39,9 +40,15 @@ const TopSymptoms = () => {
     await dispatch(getUserStats("all"));
     // const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
   };
-  const handleGetSixMonths = async (halfYear) => {
-    await dispatch(getUserStats(180));
-  };
+const handleGetSixMonths = async (halfYear) => {
+  await dispatch(getUserStats(180));
+  if (!data.symptoms || data.symptoms.length <= 1) {
+    alert("No data currently to show");
+    setShowChart(false);
+  } else {
+    setShowChart(true);
+  }
+};
   const handleGetOneYear = async (oneYear) => {
     await dispatch(getUserStats(365));
   };
@@ -53,7 +60,7 @@ const TopSymptoms = () => {
     const width = 750 - margin.left - margin.right;
     const height = 60 - margin.top - margin.bottom;
 
-    if (symptoms && symptoms.length > 0) {
+    if (symptoms && symptoms.length > 1) {
       const xScale = scaleBand()
         .domain(symptoms.map((symptom) => symptom.name))
         .range([0, width]);
@@ -75,7 +82,7 @@ const TopSymptoms = () => {
 
       const yAxisLine = svg
         .append("g")
-        .attr("transform", `translate(${margin.left * 2}, ${margin.top * 2})`)
+        .attr("transform", `translate(${(margin.left * 2)}, ${margin.top * 2})`)
         .call(yAxis); // make the y-axis
 
       svg.selectAll(".tick text").on("click", (event, d) => {
@@ -87,32 +94,18 @@ const TopSymptoms = () => {
         .append("g")
         .attr(
           "transform",
-          `translate(${xScale.bandwidth() / 2 + margin.left * 2}, ${
-            margin.top * 2
-          })`
+          `translate(${xScale.bandwidth() / 2 + (margin.left * 2)}, ${margin.top * 2})`
         );
 
       if (symptoms && symptoms.length > 0) {
-        svg
-          .append("text")
-          .attr("x", height / 2)
+        svg.append("text")
+          .attr("x", (height / 2))
           .attr("y", margin.left)
           .attr("font-size", "20px")
           .attr("text-anchor", "middle")
           .attr("transform", "rotate(-90)")
           .text("Times Logged");
       }
-
-      // g.selectAll("circle")
-      // .data(symptoms)
-      // .join("circle")
-      // .attr("cx", (d) => xScale(d.name))
-      // .attr("cy", (d) => yScale(d.count))
-      // .attr("fill", (d) => symptomColors[d.name])
-      // .attr("r", 2) // start with a radius of 2
-      // .transition() // add a transition
-      // .duration(110) // specify the duration of the animation in milliseconds
-      // .attr("r", (d) => d.count > 0 ? 8 : 2); 
 
       g.selectAll("circle")
       .data(symptoms)
@@ -170,6 +163,13 @@ const TopSymptoms = () => {
           }
         }
       }
+    } else {
+      svg.append("text")
+        .attr("x", `${(width / 2) + margin.left}`)
+        .attr("y", `${-(height + margin.top)}`)
+        .attr("font-size", "20px")
+        .attr("text-anchor", "middle")
+        .text("Sorry not enough data for this time period.");
     }
   }, [data]);
 
@@ -208,25 +208,11 @@ const TopSymptoms = () => {
         justify={"center"}
       >
         <Container
-          css={{
-            position: "relative",
-            overflow: "auto",
-            "-webkit-overflow-scrolling": "touch",
-          }}
+          css={{position: "relative", overflow: "auto", "-webkit-overflow-scrolling": "touch"}}
         >
-          <svg
-            ref={svgRef}
-            viewBox="0 0 750 350"
-            width="900"
-            height="360"
-          ></svg>
+          <svg ref={svgRef} preserveAspectRatio="XMaxYMid meet" viewBox="0 0 750 350" width="900" height="360"></svg>
         </Container>
-        <Container
-          display="flex"
-          alignItems="center"
-          justify="center"
-          css={{ gap: "1rem" }}
-        >
+        <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
           <Text h4>Filter data by</Text>
             <Button
               onPress={handleGetAllTime}
@@ -244,12 +230,12 @@ const TopSymptoms = () => {
             />
             <Button
               onPress={handleGetOneYear}
+              // onPressChange={handlePressChange}
               type="button"
               aria-label="Button to filter chart top symptoms view by one year"
               size="sm"
               text="1 Year"
             />
-
         </Container>
       </Container>
     </>

@@ -43,7 +43,7 @@ const CirclePacking = () => {
 
   const userSymptoms = datas.map((obj) => obj.symptom); // Get an array of the user's symptoms
 
-  const colorPalette = d3.schemeSet3; // Define a color palette for the symptoms and map each symptom to a unique color
+  const colorPalette = ["A8E6Ce","#478c80","#167288", "#b45248","#8cdaec", "#d48c84", "#a89a49", "#9bddb1", "#836394", "#3cb464", ]; // Define a color palette for the symptoms and map each symptom to a unique color
   const symptomColors = {};
   for (let i = 0; i < symptoms.length; i++) {
     const symptomName = symptoms[i].name;
@@ -58,7 +58,7 @@ const CirclePacking = () => {
   useEffect(() => {
     const svg = d3.select(svgRef.current);
      // Set the viewBox attribute
-     svg.attr("viewBox", "400 18 100 520");
+     svg.attr("viewBox", "400 8 100 500");
 
      // Set the width and height using CSS
      svg.style("width", "100%");

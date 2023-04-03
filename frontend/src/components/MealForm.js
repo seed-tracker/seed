@@ -187,7 +187,7 @@ function MealForm() {
           }}
         >
           <Container display={"flex"} justify={"center"}>
-            <HeaderText text="Add a meal" />
+            <HeaderText text="Add a Meal" />
           </Container>
           <Container
             display={"flex"}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { select, create } from "d3-selection";
 import { scaleBand, scaleLinear } from "d3-scale";
@@ -36,14 +36,18 @@ const TopFoods = () => {
   const topFoods = data.foods ? data.foods.slice(0, 10) : [];
 
   const counts = topFoods ? topFoods.map((food) => food.count) : [];
+  const [selectedFilter, setSelectedFilter] = useState("");
 
   const handleGetAllTime = async (all) => {
+    setSelectedFilter("allTime");
     await dispatch(getUserStats("all"));
   };
   const handleGetSixMonths = async (halfYear) => {
+    setSelectedFilter("sixMonths");
     await dispatch(getUserStats(180));
   };
   const handleGetOneYear = async (oneYear) => {
+    setSelectedFilter("oneYear");
     await dispatch(getUserStats(365));
   };
 
@@ -79,8 +83,6 @@ const TopFoods = () => {
 
   useEffect(() => {
     const svg = select(svgRef.current);
-    // .style("position", "absolute")
-    // .style("pointer-events", "none");
     svg.selectAll("*").remove();
     const margin = { top: 10, right: 10, bottom: 130, left: 100 };
     const width = 950 - margin.left - margin.right;
@@ -102,8 +104,7 @@ const TopFoods = () => {
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    if (topFoods && topFoods.length > 0) {
-      // y axis label
+    if (topFoods.length === 10) {
       g.append("text")
         .attr("x", -(height / 2))
         .attr("y", -55)
@@ -157,10 +158,11 @@ const TopFoods = () => {
         const currentFood = topFoods[i];
         const groupName = currentFood.groups[0];
         for (let j = 0; j < counts[i]; j++) {
+          console.log(counts[i]);
           g.append("circle")
             .attr(
               "cx",
-              xScale(currentFood.name) + margin.left / 2 - margin.right + 2
+              xScale(currentFood.name) + xScale.bandwidth() / 2
             )
             .attr("cy", yScale(j))
             .attr("fill", foodsColors[groupName])
@@ -169,7 +171,7 @@ const TopFoods = () => {
             g.append("text")
               .attr(
                 "x",
-                xScale(currentFood.name) + margin.left / 2 - margin.right
+                xScale(currentFood.name) + xScale.bandwidth() / 2
               )
               .attr("y", yScale(j) - 30)
               .attr("text-anchor", "middle")
@@ -177,7 +179,15 @@ const TopFoods = () => {
           }
         }
       }
-    }
+      } else {
+        g.append("text")
+          .attr("x", `${width / 2}`)
+          .attr("y", `${height / 2}`)
+          .attr("font-size", "20px")
+          .attr("text-anchor", "middle")
+          .text("Sorry not enough data for this time period.");
+      }
+
   }, [data]);
 
   return (
@@ -186,7 +196,7 @@ const TopFoods = () => {
       <Container display={"flex"} align="center" justify="center" wrap={"wrap"}>
         {topFoods
           .filter(
-            (foodObj, index, group) =>
+            (foodObj, index, group) => foodObj.groups &&
               group.findIndex((t) => t.groups[0] === foodObj.groups[0]) ===
               index
           )
@@ -243,6 +253,7 @@ const TopFoods = () => {
         >
           <Text h4>Filter data by</Text>
           <Button
+
             onPress={handleGetAllTime}
             type="button"
             aria-label="Button to filter chart top foods view by all time"
