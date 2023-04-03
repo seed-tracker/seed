@@ -127,13 +127,12 @@ const ScatterPlot = ({ windowSize }) => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
     const width = 800;
-    const height = 350;
+    const height = 400;
 
     const svg = d3.select(svgRef.current);
     svg.text("");
 
     svg.attr("viewBox", `-15 0 ${width + 150} ${height + 50}`);
-
 
     const labels = [currentSymptom, ...currentFoods];
     //make a color range
@@ -235,7 +234,7 @@ const ScatterPlot = ({ windowSize }) => {
       }) // keep only the last value of each time series
       .attr(
         "transform",
-        (d) => `translate(${x(d.value.date)},${y(d.value.count)})`
+        (d) => `translate(${x(d.value.date) + 15},${y(d.value.count)})`
       ) // Put the text at the position of the last point
       .attr("x", 50)
       .attr("class", function (d) {
