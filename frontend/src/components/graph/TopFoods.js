@@ -54,9 +54,9 @@ const TopFoods = () => {
     "#00bcd4",
     "#009688",
     "#4caf50",
-    "#8bc34a",
+    "#f7803b",
     "#cddc39",
-    "#ffeb3b",
+    "#b9d402",
     "#ffc107",
     "#ff9800",
     "#ff5722",
@@ -150,7 +150,6 @@ const TopFoods = () => {
         const currentFood = topFoods[i];
         const groupName = currentFood.groups[0];
         for (let j = 0; j < counts[i]; j++) {
-          console.log(counts[i]);
           g.append("circle")
             .attr("cx", xScale(currentFood.name) + xScale.bandwidth() / 2)
             .attr("cy", yScale(j))

@@ -29,16 +29,16 @@ const TopSymptoms = () => {
   const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
   const counts = symptoms ? symptoms.map((symptom) => symptom.count) : [];
   const colorPalette = [
-    "A8E6Ce",
+    "#A8E6Ce",
     "#478c80",
     "#167288",
-    "#b45248",
+    "#f3929c",
     "#8cdaec",
-    "#d48c84",
-    "#a89a49",
-    "#9bddb1",
+    "#ffc02e",
+    "#4e49a8",
+    "#d93f7a",
     "#836394",
-    "#3cb464",
+    "#0c97ed",
   ]; // Define a color palette for the symptoms and map each symptom to a unique color
 
   const symptomColors = {};
