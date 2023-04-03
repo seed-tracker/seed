@@ -20,13 +20,14 @@ import { HeaderText, Button } from "../nextUI";
  * @returns three <button> elements: filter by (1) all time, (2) half a year, (3) 1 year
  */
 const TopSymptoms = () => {
+  const [showChart, setShowChart] = useState(false);
   const svgRef = useRef();
   const allSymptoms = useSelector(selectSymptoms);
   const dispatch = useDispatch();
   const data = useSelector(selectUserStats);
   const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
   const counts = symptoms ? symptoms.map((symptom) => symptom.count) : [];
-  const colorPalette = d3.schemeSet3; // Define a color palette for the symptoms and map each symptom to a unique color
+  const colorPalette = ["A8E6Ce","#478c80","#167288", "#b45248","#8cdaec", "#d48c84", "#a89a49", "#9bddb1", "#836394", "#3cb464", ]; // Define a color palette for the symptoms and map each symptom to a unique color
 
   const symptomColors = {};
   for (let i = 0; i < allSymptoms.length; i++) {
@@ -39,9 +40,15 @@ const TopSymptoms = () => {
     await dispatch(getUserStats("all"));
     // const symptoms = data.symptoms ? data.symptoms.slice(0, 5) : [];
   };
-  const handleGetSixMonths = async (halfYear) => {
-    await dispatch(getUserStats(180));
-  };
+const handleGetSixMonths = async (halfYear) => {
+  await dispatch(getUserStats(180));
+  if (!data.symptoms || data.symptoms.length <= 1) {
+    alert("No data currently to show");
+    setShowChart(false);
+  } else {
+    setShowChart(true);
+  }
+};
   const handleGetOneYear = async (oneYear) => {
     await dispatch(getUserStats(365));
   };

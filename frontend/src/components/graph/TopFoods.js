@@ -36,14 +36,18 @@ const TopFoods = () => {
   const topFoods = data.foods ? data.foods.slice(0, 10) : [];
 
   const counts = topFoods ? topFoods.map((food) => food.count) : [];
+  const [selectedFilter, setSelectedFilter] = useState("");
 
   const handleGetAllTime = async (all) => {
+    setSelectedFilter("allTime");
     await dispatch(getUserStats("all"));
   };
   const handleGetSixMonths = async (halfYear) => {
+    setSelectedFilter("sixMonths");
     await dispatch(getUserStats(180));
   };
   const handleGetOneYear = async (oneYear) => {
+    setSelectedFilter("oneYear");
     await dispatch(getUserStats(365));
   };
 
@@ -154,6 +158,7 @@ const TopFoods = () => {
         const currentFood = topFoods[i];
         const groupName = currentFood.groups[0];
         for (let j = 0; j < counts[i]; j++) {
+          console.log(counts[i]);
           g.append("circle")
             .attr(
               "cx",
@@ -248,6 +253,7 @@ const TopFoods = () => {
         >
           <Text h4>Filter data by</Text>
           <Button
+
             onPress={handleGetAllTime}
             type="button"
             aria-label="Button to filter chart top foods view by all time"

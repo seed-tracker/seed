@@ -104,6 +104,15 @@ const ScatterPlot = ({ windowSize }) => {
   };
 
   const toggleLine = (name) => {
+    //make the line visible or not visible
+    const nodes = d3.selectAll(`.${makeKey(name)}`);
+
+    if (!nodes) return;
+
+    // Change the opacity: from 0 to 1 or from 1 to 0
+    nodes.transition().style("opacity", nodes.style("opacity") == 1 ? 0 : 1);
+
+    //then update the current foods, in order to avoid issues with the switches
     const idx = currentFoods.findIndex((food) => food === name);
     if (idx >= 0)
       setCurrentFoods([
@@ -117,14 +126,13 @@ const ScatterPlot = ({ windowSize }) => {
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
-    const width = windowSize.width * 0.58;
-    //const width = 800;
-    const height = 300;
+    const width = 800;
+    const height = 400;
 
     const svg = d3.select(svgRef.current);
     svg.text("");
 
-    svg.attr("width", width + 130).attr("height", height + 50);
+    svg.attr("viewBox", `-15 0 ${width + 150} ${height + 50}`);
 
     const labels = [currentSymptom, ...currentFoods];
     //make a color range
@@ -151,11 +159,16 @@ const ScatterPlot = ({ windowSize }) => {
     //generagte x axis, date format
     const xAxis = svg
       .append("g")
-      .attr("transform", `translate(50, ${height})`)
-      .call(axis);
+      .attr("transform", `translate(60, ${height})`)
+      .call(axis)
+      .style("font-size", "13px");
 
     const y = d3.scaleLinear().domain([0, max_y]).range([height, 0]);
-    svg.append("g").call(d3.axisLeft(y)).attr("transform", `translate(50, 0)`);
+    svg
+      .append("g")
+      .call(d3.axisLeft(y))
+      .attr("transform", `translate(60, 0)`)
+      .style("font-size", "13px");
 
     //add the lines
     const line = d3
@@ -188,7 +201,7 @@ const ScatterPlot = ({ windowSize }) => {
         if (currentFoods.includes(d.name)) return 1;
         return 0;
       })
-      .attr("transform", `translate(50, 0)`);
+      .attr("transform", `translate(60, 0)`);
 
     const dots = svg
       .selectAll("myDots")
@@ -209,7 +222,7 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("clip-path", "url(#clip)")
       .attr("r", 5)
       .attr("stroke", "white")
-      .attr("transform", `translate(50, 0)`);
+      .attr("transform", `translate(60, 0)`);
 
     svg
       .selectAll("myLabels")
@@ -221,7 +234,7 @@ const ScatterPlot = ({ windowSize }) => {
       }) // keep only the last value of each time series
       .attr(
         "transform",
-        (d) => `translate(${x(d.value.date)},${y(d.value.count)})`
+        (d) => `translate(${x(d.value.date) + 15},${y(d.value.count)})`
       ) // Put the text at the position of the last point
       .attr("x", 50)
       .attr("class", function (d) {
@@ -290,12 +303,12 @@ const ScatterPlot = ({ windowSize }) => {
 
     svg
       .append("text")
-      .attr("text-anchor", "end")
-      .attr("transform", "rotate(-90)")
-      .attr("y", -40)
-      .attr("x", -25)
-      .text("Number of occurences per month")
-      .attr("transform", `translate(50, 0)`);
+      .style("text-anchor", "end")
+      .attr("y", 55)
+      .attr("x", 300)
+      .text("Times recorded per month")
+      .attr("transform", "translate(60, 0) rotate(90)")
+      .style("font-size", "20px");
 
     svg
       .append("text")
@@ -303,7 +316,9 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("x", width / 2)
       .attr("y", height + 40)
       .text("Months")
-      .attr("transform", `translate(50, 0)`);
+      .attr("transform", `translate(70, 5)`)
+      .style("font-size", "20px");
+
 
     const updateAxis = ({ target }) => {
       let newStartDate = new Date(dateRange[1]);
@@ -331,7 +346,7 @@ const ScatterPlot = ({ windowSize }) => {
     };
 
     d3.selectAll('input[type="range"]').on("change", updateAxis);
-  }, [allData, currentFoods, currentSymptom, windowSize]);
+  }, [allData, currentSymptom]);
 
   return (
     <Container
@@ -362,11 +377,11 @@ const ScatterPlot = ({ windowSize }) => {
           </Container>
           <Container
             align="flex-start"
-            justify="flex-start"
+            justify="center"
             display="flex"
             css={{ padding: "0" }}
           >
-            <svg ref={svgRef}></svg>
+            <svg ref={svgRef} height="100%" width="100%"></svg>
           </Container>
           <Container
             className="switches"
@@ -378,7 +393,9 @@ const ScatterPlot = ({ windowSize }) => {
               "@xs": {
                 textAlign: "left",
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
+                justifyContent: "center",
+                gap: "0.3rem",
               },
               "@sm": {
                 textAlign: "left",
