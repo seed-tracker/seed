@@ -104,6 +104,15 @@ const ScatterPlot = ({ windowSize }) => {
   };
 
   const toggleLine = (name) => {
+    //make the line visible or not visible
+    const nodes = d3.selectAll(`.${makeKey(name)}`);
+
+    if (!nodes) return;
+
+    // Change the opacity: from 0 to 1 or from 1 to 0
+    nodes.transition().style("opacity", nodes.style("opacity") == 1 ? 0 : 1);
+
+    //then update the current foods, in order to avoid issues with the switches
     const idx = currentFoods.findIndex((food) => food === name);
     if (idx >= 0)
       setCurrentFoods([
@@ -254,7 +263,7 @@ const ScatterPlot = ({ windowSize }) => {
     };
 
     d3.selectAll('input[type="range"]').on("change", updateAxis);
-  }, [allData, currentFoods, currentSymptom, windowSize]);
+  }, [allData, currentSymptom, windowSize]);
 
   return (
     <Container
