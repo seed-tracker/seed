@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
 import { selectError } from "../store/authSlice";
 import { UserForm } from "./nextUI";
+
 /**
-  The Login component is used for Login
+  Form for user's to log in. Uses UserForm template
 **/
 const Login = () => {
   const error = useSelector(selectError);

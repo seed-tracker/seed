@@ -13,16 +13,8 @@ Add Food
 import { Input as NextUiInput, Spacer } from "@nextui-org/react";
 
 function Inputs(inputProps) {
-  const {
-    required,
-    type,
-    label,
-    helperText,
-    value,
-    onChange,
-    useRegex,
-    status,
-  } = inputProps;
+  const { required, type, label, helperText, value, onChange, status } =
+    inputProps;
 
   if (type.split(" ")[0] === "password") {
     const pattern =
@@ -41,7 +33,6 @@ function Inputs(inputProps) {
           required={required}
           label={label}
           helperText={helperText && helperText}
-          value={value}
           onChange={onChange}
           css={{
             "@xs": {
@@ -51,9 +42,10 @@ function Inputs(inputProps) {
               width: "20vw",
             },
             maxWidth: "25rem",
-            minWidth: "13rem",
+            minWidth: "16rem",
           }}
           status={status}
+          initialValue={value}
         />
         <Spacer y={1.5} />
       </>
@@ -69,7 +61,6 @@ function Inputs(inputProps) {
           required={required}
           label={label}
           helperText={helperText && helperText}
-          value={value}
           onChange={onChange}
           css={{
             "@xs": {
@@ -79,9 +70,10 @@ function Inputs(inputProps) {
               width: "20vw",
             },
             maxWidth: "25rem",
-            minWidth: "13rem",
+            minWidth: "16rem",
           }}
           status={status}
+          initialValue={value}
         />
         <Spacer y={1.5} />
       </>

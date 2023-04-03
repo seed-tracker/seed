@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { Text, Button, Row } from "@nextui-org/react";
 import { Slider } from "../nextUI";
 
+/**
+ * Controls for the connected scatter plot
+ * @returns a slider, label, and button group
+ */
 const ScatterControls = ({
   symptomList,
   toggleSymptom,

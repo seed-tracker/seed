@@ -5,6 +5,10 @@ import ScatterControls from "./ScatterControls";
 import { HeaderText } from "../nextUI";
 import { Container, Switch, Text, Spacer } from "@nextui-org/react";
 
+/**
+ * A connected scatter plot showing the monthly count of foods and associated symptoms, with the x axis representing the months and the y axis representing the count
+ * @returns one <svg> connected scatter graph, switches for toggling which foods to show, buttons to toggle the symptom
+ */
 const ScatterPlot = ({ windowSize }) => {
   const { data: chartData, maxMonths } = useSelector((state) => state.scatter);
   const { data: corrData } = useSelector((state) => state.correlations);
@@ -27,12 +31,14 @@ const ScatterPlot = ({ windowSize }) => {
 
   const svgRef = useRef();
 
+  //once the data is recieved, format it for the graph
   useEffect(() => {
     if (chartData && chartData.length && corrData && corrData.length) {
       formatData();
     }
   }, [chartData]);
 
+  //format the data from the server
   const formatData = () => {
     const formattedData = chartData.map((d) => {
       const ranked = corrData.find((corr) => corr.symptom == d["symptom"]);
@@ -68,6 +74,7 @@ const ScatterPlot = ({ windowSize }) => {
   const createDate = (data) =>
     d3.timeParse("%m/%Y")(`${data["month"]}/${data["year"]}`);
 
+  //format and rank the foods
   const formatFoods = (data, ranked) => {
     if (!ranked) return [];
 
@@ -84,6 +91,7 @@ const ScatterPlot = ({ windowSize }) => {
     });
   };
 
+  //toggle the symptom
   const toggleSymptom = (symptom) => {
     if (!allData || !allData.length) return;
 
@@ -103,8 +111,8 @@ const ScatterPlot = ({ windowSize }) => {
     return text.split(" ").join("_").split(",").join("_");
   };
 
+  //toggle which lines are showing
   const toggleLine = (name) => {
-    //make the line visible or not visible
     const nodes = d3.selectAll(`.${makeKey(name)}`);
 
     if (!nodes) return;
@@ -112,7 +120,7 @@ const ScatterPlot = ({ windowSize }) => {
     // Change the opacity: from 0 to 1 or from 1 to 0
     nodes.transition().style("opacity", nodes.style("opacity") == 1 ? 0 : 1);
 
-    //then update the current foods, in order to avoid issues with the switches
+    //update the current foods, in order to avoid issues with the switches
     const idx = currentFoods.findIndex((food) => food === name);
     if (idx >= 0)
       setCurrentFoods([
@@ -378,9 +386,9 @@ const ScatterPlot = ({ windowSize }) => {
             align="flex-start"
             justify="center"
             display="flex"
-            css={{ padding: "0" }}
+            css={{ padding: "0", marginTop: "3vh" }}
           >
-            <svg ref={svgRef} height="100%" width="100%"></svg>
+            <svg ref={svgRef} height="90%" width="90%"></svg>
           </Container>
           <Container
             className="switches"

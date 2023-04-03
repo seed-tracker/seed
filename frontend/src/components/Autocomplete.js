@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef } from "react";
 import apiClient from "../client";
 import {
   Card,
-  Row,
   Grid,
   Spacer,
   Input,
@@ -11,7 +10,7 @@ import {
 } from "@nextui-org/react";
 import { Button, Dropdown } from "./nextUI";
 
-//autocomplete component for meal form
+//autocomplete component for the meal form
 const Autocomplete = ({ addFood, allGroups }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [suggestionIndex, setSuggestionIndex] = useState(0);
@@ -24,6 +23,8 @@ const Autocomplete = ({ addFood, allGroups }) => {
     () => Array.from(selectedGroups),
     [selectedGroups]
   );
+
+  const ref = useRef(null);
 
   //send a query to the server when the input value changes
   const handleChange = async (e) => {
@@ -52,6 +53,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
     addFood(suggestions[idx]);
     setSuggestions([]);
     setValue("");
+    if (ref.current) ref.current.value = "";
   };
 
   const handleKeyDown = (e) => {
@@ -73,7 +75,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
   //add a new food (not found through the database)
   const handleAddNewFood = () => {
     if (chosenGroups.length < 1) {
-      setError("Please choose a group");
+      setError("Please choose at least one group");
       return;
     }
     setError("");
@@ -81,6 +83,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
     setValue("");
     setShowDropdown(false);
     setSelectedGroups([]);
+    if (ref.current) ref.current.value = "";
   };
 
   //cancel adding a new food
@@ -114,7 +117,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
             <Input
               label="Search for a food"
               aria-label="Search for a food"
-              value={value}
+              initialValue={value}
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               required={false}
@@ -131,6 +134,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
                   width: "20vw",
                 },
               }}
+              ref={ref}
             />
 
             {value.length > 1 && !showDropdown ? (
@@ -192,7 +196,7 @@ const Autocomplete = ({ addFood, allGroups }) => {
               selectionMode="multiple"
               ariaLabel="Dropdown to select a food group"
               onChange={setSelectedGroups}
-              defaultName="Choose a food group"
+              defaultName="Choose one or more food groups"
               items={allGroups.map(({ name }) => ({ name: name, key: name }))}
               color="#7A918D"
               css={{
