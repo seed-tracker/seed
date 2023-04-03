@@ -62,7 +62,7 @@ const NavigationBar = () => {
       </Navbar.Brand>
       {isLoggedIn ? (
         <Navbar.Content>
-          <Navbar.Link onPress={() => navigate("/profile")}>
+          <Navbar.Link underline block onPress={() => navigate("/profile")}>
             My Profile
           </Navbar.Link>
           <Navbar.Item>
