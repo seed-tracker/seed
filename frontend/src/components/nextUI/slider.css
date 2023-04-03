@@ -476,10 +476,10 @@ input[type="range"].range-slider::-ms-tooltip {
   height: 26px;
   line-height: 26px;
   /* judybooty tooltip text color */
-  color: #444c38;
+  color: white;
   text-align: center;
   /* judybooty tooltip background color */
-  background-color: white;
+  background-color: #444c38;
   opacity: 0.9;
   border-radius: 0.25rem;
   box-sizing: border-box;
@@ -514,7 +514,7 @@ input[type="range"].range-slider::-ms-tooltip {
   top: 0;
   border-width: 0.4rem 0.4rem 0;
   /* judybooty tooltip caret/arrow */
-  border-top-color: white;
+  border-top-color: #444c38;
 }
 .range-slider__wrap
   .range-slider__tooltip.range-slider__tooltip--bottom
@@ -527,7 +527,7 @@ input[type="range"].range-slider::-ms-tooltip {
   bottom: 0;
   border-width: 0 0.4rem 0.4rem;
   /* judybooty tooltip caret/arrow */
-  border-bottom-color: white;
+  border-bottom-color: #444c38;
 }
 .range-slider__wrap.range-slider__wrap--sm {
   height: calc(1.5em + 0.5rem + 2px);

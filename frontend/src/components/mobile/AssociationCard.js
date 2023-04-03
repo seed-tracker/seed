@@ -2,6 +2,8 @@ import { Card, Grid, Text, Button } from "@nextui-org/react";
 import ScatterPlotMobile from "./ScatterMobile";
 import { useState } from "react";
 
+//A card in the association list for mobile view, with details on the relationship between a given food and symptoms
+//shows a collapsable, mini version of the connected scatter graph
 const AssociationCard = ({
   name,
   count,
@@ -20,7 +22,8 @@ const AssociationCard = ({
       <Card.Body>
         <Text>Recorded {count} times total</Text>
         <Text>
-          Average {symptom.toLowerCase()} severity after eating: {avg_severity}
+          Average severity of {symptom.toLowerCase()} when recorded after eating{" "}
+          {name.toLowerCase()}: {avg_severity}
         </Text>
       </Card.Body>
       <Card.Divider />

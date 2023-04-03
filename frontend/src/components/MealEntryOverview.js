@@ -11,6 +11,8 @@ import { v4 as uuidv4 } from "uuid";
 import { HeaderText, MealCard, Pagination, PageLoading } from "./nextUI/index";
 import { Grid, Container } from "@nextui-org/react";
 
+//list of all of the user's previous meals
+//includes button to delete each meal
 function MealEntryOverview() {
   const [meals, setMeals] = useState([]);
   const [count, setCount] = useState(0);

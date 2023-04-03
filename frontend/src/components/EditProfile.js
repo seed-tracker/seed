@@ -5,6 +5,7 @@ import { UserForm } from "./nextUI";
 import { me } from "../store/authSlice";
 import apiClient from "../client";
 
+// form for editing a user's name, email, and password
 function EditProfile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,6 +20,7 @@ function EditProfile() {
 
   const { me: user } = useSelector((state) => state.auth);
 
+  //validate and send a request to the server
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (newPassword !== confirmationPassword) return;
@@ -47,6 +49,7 @@ function EditProfile() {
     }
   };
 
+  //update the form
   useEffect(() => {
     if (user && user.name) {
       setName(user.name);
@@ -54,6 +57,7 @@ function EditProfile() {
     }
   }, [user]);
 
+  //inputs to pass as props to the user form template
   const inputs = [
     {
       name: "name",
@@ -86,6 +90,7 @@ function EditProfile() {
       required: password.length > 1,
       onChange: (e) => setNewPassword(e.target.value),
       label: "New Password",
+      helperText: `8 characters, 1 number, 1 uppercase character, 1 special character`,
     },
     {
       name: "verify password",

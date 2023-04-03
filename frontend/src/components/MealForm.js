@@ -8,6 +8,7 @@ import { Button, Table, Inputs, HeaderText } from "./nextUI/index";
 import SuccessMessage from "./SuccessMessage";
 
 //form for entering a meal
+//includes options to add a meal name, date, time. Includes a table of the user's recent foods with buttons to add them to the current meal
 function MealForm() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -186,7 +187,7 @@ function MealForm() {
           }}
         >
           <Container display={"flex"} justify={"center"}>
-            <HeaderText text="Add a meal" />
+            <HeaderText text="Add a Meal" />
           </Container>
           <Container
             display={"flex"}

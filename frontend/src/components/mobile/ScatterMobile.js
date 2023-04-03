@@ -14,13 +14,14 @@ const ScatterPlotMobile = ({ currentSymptom, item, windowSize }) => {
 
   const gRef = useRef();
 
+  //format once chart data, symptom, item are set
   useEffect(() => {
     if (chartData && chartData.length && currentSymptom && item) {
       formatData();
     }
   }, [chartData, currentSymptom, item]);
 
-  //finds and formats the data for the given symptom and item
+  //find and format the data for the given symptom and item
   const formatData = () => {
     const symptomData = chartData.find((d) => d.symptom === currentSymptom);
 
