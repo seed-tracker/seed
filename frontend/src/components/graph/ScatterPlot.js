@@ -126,14 +126,13 @@ const ScatterPlot = ({ windowSize }) => {
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
-    const width = windowSize.width * 0.55;
-    //const width = 800;
+    const width = 800;
     const height = 300;
 
     const svg = d3.select(svgRef.current);
     svg.text("");
 
-    svg.attr("width", width + 100).attr("height", height + 50);
+    svg.attr("viewBox", `0 0 ${width + 150} ${height + 50}`);
 
     const labels = [currentSymptom, ...currentFoods];
     //make a color range
@@ -262,7 +261,7 @@ const ScatterPlot = ({ windowSize }) => {
     };
 
     d3.selectAll('input[type="range"]').on("change", updateAxis);
-  }, [allData, currentSymptom, windowSize]);
+  }, [allData, currentSymptom]);
 
   return (
     <Container
@@ -297,7 +296,7 @@ const ScatterPlot = ({ windowSize }) => {
             display="flex"
             css={{ padding: "0" }}
           >
-            <svg ref={svgRef}></svg>
+            <svg ref={svgRef} height="100%" width="90%"></svg>
           </Container>
           <Container
             className="switches"
@@ -309,7 +308,9 @@ const ScatterPlot = ({ windowSize }) => {
               "@xs": {
                 textAlign: "left",
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
+                justifyContent: "center",
+                gap: "0.3rem",
               },
               "@sm": {
                 textAlign: "left",

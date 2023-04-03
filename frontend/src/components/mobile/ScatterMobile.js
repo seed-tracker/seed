@@ -70,14 +70,15 @@ const ScatterPlotMobile = ({ currentSymptom, item, windowSize }) => {
     if (!data || !data.length) return;
 
     //base width, height on window size
-    const width = windowSize.width * 0.55;
-    const height = width * 0.7;
+    const width = 300;
+    const height = 150;
 
     const svg = d3.select(gRef.current);
 
     svg.text("");
 
-    svg.attr("width", width + 300).attr("height", height + 70);
+    // svg.attr("width", width + 300).attr("height", height + 70);
+    svg.attr("viewBox", `0 0 ${width + 150} ${height + 50}`);
 
     //find max value on the y axis
     const max_y = data.reduce(
@@ -120,7 +121,22 @@ const ScatterPlotMobile = ({ currentSymptom, item, windowSize }) => {
       .style("stroke-width", 4)
       .style("fill", "none")
       .attr("transform", `translate(30, 20)`);
-  }, [data, windowSize]);
+
+    const dots = svg
+      .selectAll("myDots")
+      .data(data)
+      .join("g")
+      .style("fill", (d, i) => colorPalette[i])
+      .selectAll("myPoints")
+      .data((d) => d.values)
+      .join("circle")
+      .attr("cx", (d) => x(d.date))
+      .attr("cy", (d) => y(d.count))
+      .attr("clip-path", "url(#clip)")
+      .attr("r", 4)
+      .attr("stroke", "white")
+      .attr("transform", `translate(30, 20)`);
+  }, [data]);
 
   return (
     <Collapse.Group>
@@ -131,7 +147,7 @@ const ScatterPlotMobile = ({ currentSymptom, item, windowSize }) => {
         expanded={showGraph}
         onChange={() => setShowGraph(!showGraph)}
       >
-        <Text b>Times logged per month</Text>
+        <Text b>Times recorded per month</Text>
         <svg ref={gRef}></svg>{" "}
         <Row align="flex-end" justify="flex-end">
           <Text css={{ color: colorPalette[0] }}>{currentSymptom}</Text>

@@ -168,3 +168,11 @@ th {
 .material-symbols-rounded {
   color: #7a918d;
 }
+
+.svgContainer {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  vertical-align: middle;
+  overflow: hidden;
+}
