@@ -236,36 +236,50 @@ const TopFoods = () => {
         justify={"center"}
       >
         <Container
-          css={{position: "relative", overflow: "auto", "-webkit-overflow-scrolling": "touch"}}
+          css={{
+            position: "relative",
+            overflow: "auto",
+            "-webkit-overflow-scrolling": "touch",
+          }}
         >
-          <svg ref={svgRef} preserveAspectRatio="XMaxYmid meet" viewBox="0 0 950 550" width="950" height="580"></svg>
+          <svg
+            ref={svgRef}
+            preserveAspectRatio="XMaxYmid meet"
+            viewBox="0 0 950 550"
+            width="950"
+            height="580"
+          ></svg>
         </Container>
-        <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
+        <Container
+          display="flex"
+          alignItems="center"
+          justify="center"
+          css={{ gap: "1rem" }}
+        >
           <Text h4>Filter data by</Text>
           <Button
-        onPress={handleGetAllTime}
-        type="button"
-        aria-label="Button to filter chart top foods view by all time"
-        size="sm"
-        color={selectedFilter === "allTime" ? "secondary" : "default"}
-        text="All Time"
-      />
-      <Button
-        onPress={handleGetSixMonths}
-        type="button"
-        aria-label="Button to filter chart top foods view by six months"
-        size="sm"
-        color={selectedFilter === "sixMonths" ? "secondary" : "default"}
-        text="6 Months"
-      />
-      <Button
-        onPress={handleGetOneYear}
-        type="button"
-        size="sm"
-        aria-label="Button to filter chart top foods view by one year"
-        color={selectedFilter === "oneYear" ? "secondary" : "default"}
-        text="1 Year"
-      />
+
+            onPress={handleGetAllTime}
+            type="button"
+            aria-label="Button to filter chart top foods view by all time"
+            size="sm"
+            text="All Time"
+          />
+          <Button
+            onPress={handleGetSixMonths}
+            value="180"
+            type="button"
+            aria-label="Button to filter chart top foods view by six months"
+            size="sm"
+            text="6 Months"
+          />
+          <Button
+            onPress={handleGetOneYear}
+            type="button"
+            size="sm"
+            aria-label="Button to filter chart top foods view by one year"
+            text="1 Year"
+          />
         </Container>
       </Container>
     </>

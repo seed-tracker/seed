@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { me } from "../store/authSlice";
 import apiClient from "../client";
-import { Text, Spacer, Container } from "@nextui-org/react";
+import { Text, Spacer, Container, Grid } from "@nextui-org/react";
 import { Inputs, Button, Dropdown, Table, HeaderText, Slider } from "./nextUI";
 import SuccessMessage from "./SuccessMessage";
 
@@ -16,6 +16,7 @@ const SymptomForm = () => {
   const [recentSymptoms, setRecentSymptoms] = useState([]);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [validate, setValidate] = useState(false);
 
   const user = useSelector((state) => state.auth.me);
 
@@ -48,6 +49,7 @@ const SymptomForm = () => {
         dateTime("");
         setSeverity(5);
         setSymptom("");
+        setValidate(false);
       } else {
         setError(
           "There was an issue adding your symptom. Please try again later."
@@ -108,31 +110,25 @@ const SymptomForm = () => {
   };
 
   return (
-    <form onSubmit={handleSymptomSubmit}>
+    <form onSubmit={handleSymptomSubmit} className="entryForm">
       {!success ? (
-        <Container
-          display={"flex"}
-          justify={"space-between"}
-          wrap={"wrap"}
-          css={{ margin: "2vw", width: "65vw" }}
+        <Grid.Container
+          display="flex"
+          justify="space-around"
+          wrap="wrap"
+          alignItems="center"
+          css={{ margin: "0" }}
+          gap={1}
         >
           {" "}
-          <Container display={"flex"} justify={"center"}>
+          <Grid display="flex" justify="center" xs={12}>
             <HeaderText text="Add a symptom" />
-          </Container>
-          <Container
-            display={"flex"}
+          </Grid>
+          <Grid
+            md={2}
+            display="flex"
             direction="column"
-            css={{
-              "@xs": {
-                margin: 0,
-                width: "100vw",
-              },
-              "@sm": {
-                flexDirection: "column",
-                maxWidth: "20vw",
-              },
-            }}
+            css={{ minWidth: "15rem" }}
           >
             <Inputs
               type={"date"}
@@ -141,61 +137,76 @@ const SymptomForm = () => {
               value={date}
               onChange={(event) => setDate(event.target.value)}
               helperText={"required"}
+              status={validate && !date.length ? "error" : "default"}
             />
             <Inputs
-              type={"time"}
+              type="time"
               required={true}
-              label={"Time:"}
+              label="Time:"
               value={time}
               onChange={(event) => setTime(event.target.value)}
-              helperText={"required"}
+              helperText="required"
+              status={validate && !time.length ? "error" : "default"}
             />
 
             <label htmlFor="symptoms">Select symptom(s):</label>
             <Dropdown
-              color={"#7A918D"}
+              color="#7A918D"
               css={{
                 background: "#7a918d",
                 padding: "1rem",
+                maxWidth: "10rem",
               }}
               selectedKeys={symptom}
               ariaLabel="Select Symptom Dropdown"
               onChange={({ currentKey }) => setSymptom([currentKey])}
               items={symptoms}
-              defaultName={"How are you feeling?"}
+              defaultName="How are you feeling?"
+              status={validate && !symptom.length ? "error" : "default"}
             />
-          </Container>
-          <Spacer y={1} />
-          <Container
+          </Grid>
+          <Grid
             display={"flex"}
             direction="column"
-            css={{ margin: 0, padding: 0, maxWidth: "30vw" }}
+            css={{
+              margin: 0,
+              padding: 0,
+              maxWidth: "30vw",
+              minWidth: "15rem",
+              marginTop: "2rem",
+            }}
+            lg={4}
+            md={3}
+            xs={7}
           >
+
             <Table
               color="primary"
-              css={{ padding: "1rem" }}
+              css={{ padding: "1rem", maxWidth: "20rem" }}
               description="Recent symptoms table"
               headers={[
-                { key: "name", label: "YOUR RECENT SYMPTOMS" },
+                { key: "name", label: "RECENT SYMPTOMS" },
                 { key: "button", label: "" },
               ]}
               rows={recentSymptoms}
               button={{
                 buttonDescription: "Button to add a recent symptom",
-                text: "Select symptom",
+                text: "Add",
                 onPress: (e) => setSymptom([e.name]),
               }}
             />
             <Spacer y={2} />
-          </Container>
+          </Grid>
           <Container
-            display={"flex"}
-            direction={"column"}
-            alignItems={"center"}
+            display="flex"
+            direction="column"
+            alignItems="center"
             css={{ margin: 0, padding: 0 }}
           >
             <label htmlFor="severity">
-              <Text css={{textAlign:"center", letterSpacing:"$normal"}}>Severity:</Text>
+              <Text css={{ textAlign: "center", letterSpacing: "$normal" }}>
+                Severity:
+              </Text>
               <Slider
                 min={0}
                 max={10}
@@ -206,16 +217,17 @@ const SymptomForm = () => {
             </label>
             <Spacer y={2} />
             <Button
-              text={"Add Entry"}
-              arialabel={"Submit Symptom Entry Form Button"}
-              type={"submit"}
+              text="Add Entry"
+              arialabel="Submit Symptom Entry Form Button"
+              type="submit"
+              onPress={() => setValidate(true)}
             />
             <Spacer y={1} />
           </Container>
           {error.length > 1 && <Text color="red">{error}</Text>}
-        </Container>
+        </Grid.Container>
       ) : (
-        <Container display={"flex"} css={{ margin: "5vh 15vw" }}>
+        <Container display="flex" css={{ margin: "5vh 15vw" }}>
           <SuccessMessage
             title="Thanks for adding a symptom!"
             message="Every symptom you add makes our predictions better."

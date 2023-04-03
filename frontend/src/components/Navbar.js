@@ -5,6 +5,10 @@ import { logout } from "../store/authSlice";
 import { me } from "../store/authSlice";
 import { clearStore } from "../store";
 import { Text, Navbar, Link, Button } from "@nextui-org/react";
+import logo from "../img/seed-logo.png";
+import logo2 from "../img/logo-2.png";
+import logo3 from "../img/Seed06.png";
+import logo4 from "../img/logo4.png";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -39,12 +43,16 @@ const NavigationBar = () => {
       }}
     >
       <Navbar.Brand css={{ alignItems: "center" }}>
+        <img src={logo} alt="seed logo" style={{ maxHeight: "5rem" }} />
+        <img src={logo2} alt="seed logo" style={{ maxHeight: "10rem" }} />{" "}
+        <img src={logo3} alt="seed logo" style={{ maxHeight: "5rem" }} />
+        <img src={logo4} alt="seed logo" style={{ maxHeight: "5rem" }} />
         <Text
           h1
           css={{
             fontFamily: "Lovechild",
             alignItems: "center",
-            margin: 0,
+            margin: ".5rem 0 0 0",
           }}
           color="$secondary"
           onClick={() => navigate("/")}
@@ -54,7 +62,7 @@ const NavigationBar = () => {
       </Navbar.Brand>
       {isLoggedIn ? (
         <Navbar.Content>
-          <Navbar.Link onPress={() => navigate("/profile")}>
+          <Navbar.Link underline block onPress={() => navigate("/profile")}>
             My Profile
           </Navbar.Link>
           <Navbar.Item>
@@ -79,6 +87,8 @@ const NavigationBar = () => {
                 color="secondary"
                 css={{
                   minWidth: "100%",
+                  textDecoration: "none",
+                  color: "$secondary",
                 }}
                 href="/login"
               >

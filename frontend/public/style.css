@@ -1,10 +1,32 @@
+/* * {
+  /* border: 1px solid #555555;
+} */
+
 @font-face {
   font-family: "Lovechild";
   src: url(./Lovechild-Regular.otf);
 }
 
+@font-face {
+  font-family: "Euclid Regular";
+  src: url(./EuclidCircularB-Regular.otf);
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Euclid Medium";
+  src: url(./EuclidCircularB-Medium.otf);
+  font-style: medium;
+}
+
+@font-face {
+  font-family: "Euclid Bold";
+  src: url(./EuclidCircularB-Bold.otf);
+  font-style: bold;
+}
+
 body {
-  font-family: Lovechild, sans-serif;
+  font-family: "Euclid", sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -55,7 +77,7 @@ text {
   border: 1px solid rgba(41, 124, 76, 0.26);
 }
 
-.glassmorpheus-graph1{
+.glassmorpheus-graph1 {
   /* From https://css.glass */
   background: rgba(2, 80, 74, 0.31);
   border-radius: 16px;
@@ -75,7 +97,9 @@ input[type="range"]::-moz-range-track {
 
 .bookend {
   background-image: url("seed-bg.png");
-  background-size: 100vw auto;
+
+  min-width: 100vw;
+  min-height: 100vh;
   margin: 0;
   background-repeat: no-repeat;
   background-position: center;
@@ -98,6 +122,8 @@ input[type="range"]::-moz-range-track {
 @media (max-width: 640px) {
   .bookend {
     background-size: auto 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
   }
 
   .homehero {
@@ -131,3 +157,24 @@ th {
   font-size: small !important;
 }
 
+.nextui-input-helper-text {
+  letter-spacing: normal !important;
+}
+
+.nextui-pagination-highlight--active {
+  background: #7a918d !important;
+  background-color: #7a918d !important;
+  color: #ffffff !important;
+}
+
+.material-symbols-rounded {
+  color: #035043;
+}
+
+.svgContainer {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  vertical-align: middle;
+  overflow: hidden;
+}

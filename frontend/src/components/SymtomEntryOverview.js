@@ -99,6 +99,7 @@ function SymptomEntryOverview() {
         "@md": {
           padding: "5vw",
         },
+        marginTop: "5vw",
       }}
     >
       {loading ? (

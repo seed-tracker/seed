@@ -1,6 +1,10 @@
 import React from "react";
 import { Container, Row, Col, Text, Spacer } from "@nextui-org/react";
 import Links from "./nextUI/Links";
+import logo from "../img/seed-logo.png";
+import logo2 from "../img/logo-2.png";
+import logo3 from "../img/Seed06.png";
+import logo4 from "../img/logo4.png";
 
 /**
  * Component for the footer
@@ -37,6 +41,14 @@ const Footer = () => {
             },
           }}
         >
+          <img src={logo} alt="seed logo" />
+          <img src={logo2} alt="seed logo" />
+          <img src={logo3} alt="seed logo" />
+          <img
+            src={logo4}
+            style={{ width: "5rem", height: "5rem" }}
+            alt="seed logo"
+          />
           <Text h1 css={{ fontFamily: "Lovechild" }} color="$secondary">
             SEED
           </Text>
@@ -44,10 +56,10 @@ const Footer = () => {
           <Text>Follow Us:</Text>
           <Links
             css={{ display: "block" }}
-            href={"instagram.com"}
+            href={"http://instagram.com"}
             text={"Instagram"}
           />
-          <Links href={"twitter.com"} text={"Twitter"} />
+          <Links href={"http://twitter.com"} text={"Twitter"} />
 
           <Spacer y={1} />
 
@@ -104,10 +116,10 @@ const Footer = () => {
             Medical Advice Disclaimer
           </Text>
           <Text size={14}>
-            This web site is intended for informational purposes only
-            and should not be used to diagnose, treat, cure, or 
-            prevent any disease. Those seeking personal
-            medical advice should consult with a licensed physician. <br />
+            This web site is intended for informational purposes only and should
+            not be used to diagnose, treat, cure, or prevent any disease. Those
+            seeking personal medical advice should consult with a licensed
+            physician. <br />
           </Text>
           <Text size={16}>
             <strong>
