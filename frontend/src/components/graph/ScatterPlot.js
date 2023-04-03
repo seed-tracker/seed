@@ -126,14 +126,14 @@ const ScatterPlot = ({ windowSize }) => {
   useEffect(() => {
     if (!allData || !allData.length || !allData[0].symptomData) return;
 
-    const width = windowSize.width * 0.6;
+    const width = windowSize.width * 0.55;
     //const width = 800;
     const height = 300;
 
     const svg = d3.select(svgRef.current);
     svg.text("");
 
-    svg.attr("width", width + 70).attr("height", height + 50);
+    svg.attr("width", width + 100).attr("height", height + 50);
 
     const labels = [currentSymptom, ...currentFoods];
     //make a color range
@@ -160,11 +160,11 @@ const ScatterPlot = ({ windowSize }) => {
     //generagte x axis, date format
     const xAxis = svg
       .append("g")
-      .attr("transform", `translate(50, ${height})`)
+      .attr("transform", `translate(60, ${height})`)
       .call(axis);
 
     const y = d3.scaleLinear().domain([0, max_y]).range([height, 0]);
-    svg.append("g").call(d3.axisLeft(y)).attr("transform", `translate(50, 0)`);
+    svg.append("g").call(d3.axisLeft(y)).attr("transform", `translate(60, 0)`);
 
     //add the lines
     const line = d3
@@ -197,7 +197,7 @@ const ScatterPlot = ({ windowSize }) => {
         if (currentFoods.includes(d.name)) return 1;
         return 0;
       })
-      .attr("transform", `translate(50, 0)`);
+      .attr("transform", `translate(60, 0)`);
 
     const dots = svg
       .selectAll("myDots")
@@ -218,16 +218,15 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("clip-path", "url(#clip)")
       .attr("r", 5)
       .attr("stroke", "white")
-      .attr("transform", `translate(50, 0)`);
+      .attr("transform", `translate(60, 0)`);
 
     svg
       .append("text")
-      .attr("text-anchor", "end")
-      .attr("transform", "rotate(-90)")
-      .attr("y", -40)
-      .attr("x", -25)
-      .text("Number of occurences per month")
-      .attr("transform", `translate(50, 0)`);
+      .style("text-anchor", "end")
+      .attr("y", 55)
+      .attr("x", 250)
+      .text("Times recorded per month")
+      .attr("transform", "translate(60, 0) rotate(90)");
 
     svg
       .append("text")
@@ -235,7 +234,7 @@ const ScatterPlot = ({ windowSize }) => {
       .attr("x", width / 2)
       .attr("y", height + 40)
       .text("Months")
-      .attr("transform", `translate(50, 0)`);
+      .attr("transform", `translate(60, 0)`);
 
     const updateAxis = ({ target }) => {
       let newStartDate = new Date(dateRange[1]);
@@ -294,7 +293,7 @@ const ScatterPlot = ({ windowSize }) => {
           </Container>
           <Container
             align="flex-start"
-            justify="flex-start"
+            justify="center"
             display="flex"
             css={{ padding: "0" }}
           >
