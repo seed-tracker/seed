@@ -50,17 +50,15 @@ const Profile = () => {
   const buttonMargin = { marginRight: "0.5rem" };
 
   const getCss = (idx) => {
-    if (idx === graphIdx) {
-      return {
-        backgroundColor: "#7a918d",
-        color: "white",
-      };
-    } else {
-      return {
-        backgroundColor: "#7a918d",
-        color: "white",
-      };
-    }
+    const isActive = idx === graphIdx;
+    return {
+      backgroundColor: isActive ? "#4c6357" : "#7a918d",
+      color: "white",
+      "&:active": {
+        backgroundColor: isActive ? "#2d3b33" : "#4c6357",
+      },
+      marginRight: "0.5rem",
+    };
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { select, create } from "d3-selection";
 import { scaleBand, scaleLinear } from "d3-scale";
@@ -36,14 +36,18 @@ const TopFoods = () => {
   const topFoods = data.foods ? data.foods.slice(0, 10) : [];
 
   const counts = topFoods ? topFoods.map((food) => food.count) : [];
+  const [selectedFilter, setSelectedFilter] = useState("");
 
   const handleGetAllTime = async (all) => {
+    setSelectedFilter("allTime");
     await dispatch(getUserStats("all"));
   };
   const handleGetSixMonths = async (halfYear) => {
+    setSelectedFilter("sixMonths");
     await dispatch(getUserStats(180));
   };
   const handleGetOneYear = async (oneYear) => {
+    setSelectedFilter("oneYear");
     await dispatch(getUserStats(365));
   };
 
@@ -78,30 +82,32 @@ const TopFoods = () => {
   }
 
   useEffect(() => {
-    const svg = select(svgRef.current)
-      // .style("position", "absolute")
-      // .style("pointer-events", "none");
+    const svg = select(svgRef.current);
+    // .style("position", "absolute")
+    // .style("pointer-events", "none");
     svg.selectAll("*").remove();
     const margin = { top: 10, right: 10, bottom: 130, left: 100 };
     const width = 950 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
 
     const parent = create("div");
-    parent.append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .style("position", "absolute")
-        .style("pointer-events", "none")
-        .style("z-index", 1)
-        .style("overflow-x", "scroll")
-        .style("-webkit-overflow-scrolling", "touch")
-        .call(svg => svg.append("g"));
+    parent
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .style("position", "absolute")
+      .style("pointer-events", "none")
+      .style("z-index", 1)
+      .style("overflow-x", "scroll")
+      .style("-webkit-overflow-scrolling", "touch")
+      .call((svg) => svg.append("g"));
 
     const g = svg
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    if (topFoods && topFoods.length > 0) {
+    for (const topFood of topFoods) {
+      if (topFood.count > 10) {
       // y axis label
       g.append("text")
         .attr("x", -(height / 2))
@@ -133,24 +139,22 @@ const TopFoods = () => {
 
       g.append("g").call(yAxis);
 
-      const nodes = g
-      .selectAll("circle")
-      .data(topFoods)
+      const nodes = g.selectAll("circle").data(topFoods);
 
       nodes
-      .enter()
-      .append("circle")
-      .attr("cx", (food) => xScale(food.name) + xScale.bandwidth() / 2)
-      .attr("cy", (food) => yScale(food.count))
-      .attr("r", 10)
-      .attr("fill",  (d)=>foodsColors[d.groups[0]])
-      .style("opacity", 0.3)
-      .transition()
-      .duration(1000)
-      .delay((d, i) => i * 1000)
-      .ease(easeElasticOut)
-      .attr("r", 20);
-      nodes.exit().remove()
+        .enter()
+        .append("circle")
+        .attr("cx", (food) => xScale(food.name) + xScale.bandwidth() / 2)
+        .attr("cy", (food) => yScale(food.count))
+        .attr("r", 10)
+        .attr("fill", (d) => foodsColors[d.groups[0]])
+        .style("opacity", 0.3)
+        .transition()
+        .duration(1000)
+        .delay((d, i) => i * 1000)
+        .ease(easeElasticOut)
+        .attr("r", 20);
+      nodes.exit().remove();
 
       g.selectAll("circle").data(topFoods).join("circle");
 
@@ -158,10 +162,11 @@ const TopFoods = () => {
         const currentFood = topFoods[i];
         const groupName = currentFood.groups[0];
         for (let j = 0; j < counts[i]; j++) {
+          console.log(counts[i]);
           g.append("circle")
             .attr(
               "cx",
-              xScale(currentFood.name) + margin.left / 2 - margin.right + 2
+              xScale(currentFood.name) + xScale.bandwidth() / 2
             )
             .attr("cy", yScale(j))
             .attr("fill", foodsColors[groupName])
@@ -170,7 +175,7 @@ const TopFoods = () => {
             g.append("text")
               .attr(
                 "x",
-                xScale(currentFood.name) + margin.left / 2 - margin.right
+                xScale(currentFood.name) + xScale.bandwidth() / 2
               )
               .attr("y", yScale(j) - 30)
               .attr("text-anchor", "middle")
@@ -178,7 +183,16 @@ const TopFoods = () => {
           }
         }
       }
+      } else {
+        g.append("text")
+        .attr("x", `${width - margin.left}`)
+        .attr("y", `${height / 2}`)
+          .attr("font-size", "20px")
+          .attr("text-anchor", "middle")
+          .text("Sorry not enough data for this time period.");
+      }
     }
+
   }, [data]);
 
   return (
@@ -228,27 +242,30 @@ const TopFoods = () => {
         </Container>
         <Container display="flex" alignItems="center" justify="center" css={{gap: "1rem"}}>
           <Text h4>Filter data by</Text>
-            <Button
-              onPress={handleGetAllTime}
-              type="button"
-              aria-label="Button to filter chart top foods view by all time"
-              size="sm"
-              text="All Time"
-            />
-            <Button
-              onPress={handleGetSixMonths}
-              type="button"
-              aria-label="Button to filter chart top foods view by six months"
-              size="sm"
-              text="6 Months"
-            />
-            <Button
-              onPress={handleGetOneYear}
-              type="button"
-              size="sm"
-              aria-label="Button to filter chart top foods view by one year"
-              text="1 Year"
-            />
+          <Button
+        onPress={handleGetAllTime}
+        type="button"
+        aria-label="Button to filter chart top foods view by all time"
+        size="sm"
+        color={selectedFilter === "allTime" ? "secondary" : "default"}
+        text="All Time"
+      />
+      <Button
+        onPress={handleGetSixMonths}
+        type="button"
+        aria-label="Button to filter chart top foods view by six months"
+        size="sm"
+        color={selectedFilter === "sixMonths" ? "secondary" : "default"}
+        text="6 Months"
+      />
+      <Button
+        onPress={handleGetOneYear}
+        type="button"
+        size="sm"
+        aria-label="Button to filter chart top foods view by one year"
+        color={selectedFilter === "oneYear" ? "secondary" : "default"}
+        text="1 Year"
+      />
         </Container>
       </Container>
     </>

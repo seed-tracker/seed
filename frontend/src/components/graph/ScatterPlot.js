@@ -285,6 +285,7 @@ const ScatterPlot = () => {
       .attr("y", height + 40)
       .text("Months");
 
+
     const updateAxis = ({ target }) => {
       let newStartDate = new Date(dateRange[1]);
       newStartDate.setMonth(newStartDate.getMonth() - target.value);
