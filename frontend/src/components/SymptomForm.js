@@ -179,18 +179,19 @@ const SymptomForm = () => {
             md={3}
             xs={7}
           >
+
             <Table
               color="primary"
               css={{ padding: "1rem", maxWidth: "20rem" }}
               description="Recent symptoms table"
               headers={[
-                { key: "name", label: "YOUR RECENT SYMPTOMS" },
+                { key: "name", label: "RECENT SYMPTOMS" },
                 { key: "button", label: "" },
               ]}
               rows={recentSymptoms}
               button={{
                 buttonDescription: "Button to add a recent symptom",
-                text: "Select",
+                text: "Add",
                 onPress: (e) => setSymptom([e.name]),
               }}
             />

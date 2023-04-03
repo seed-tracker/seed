@@ -51,8 +51,8 @@ const Table = ({ description, headers, rows, button }) => {
             {headers.map(({ key }) =>
               key !== "button" ? (
                 <NextUITable.Cell key={row.key}>
-                  {windowWidth < 800 && row[key].length > 25
-                    ? row[key].slice(0, 25) + "..."
+                  {windowWidth < 800 && row[key].length > 16
+                    ? row[key].slice(0, 16) + "..."
                     : row[key]}
                 </NextUITable.Cell>
               ) : (
