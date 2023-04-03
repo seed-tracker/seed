@@ -121,21 +121,6 @@ const ScatterPlotMobile = ({ currentSymptom, item, windowSize }) => {
       .style("stroke-width", 4)
       .style("fill", "none")
       .attr("transform", `translate(30, 20)`);
-
-    svg
-      .selectAll("myDots")
-      .data(data)
-      .join("g")
-      .style("fill", (d, i) => colorPalette[i])
-      .selectAll("myPoints")
-      .data((d) => d.values)
-      .join("circle")
-      .attr("cx", (d) => x(d.date))
-      .attr("cy", (d) => y(d.count))
-      .attr("clip-path", "url(#clip)")
-      .attr("r", 4)
-      .attr("stroke", "white")
-      .attr("transform", `translate(30, 20)`);
   }, [data]);
 
   return (
