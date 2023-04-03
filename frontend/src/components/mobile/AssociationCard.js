@@ -18,9 +18,12 @@ const AssociationCard = ({
       </Card.Header>
       <Card.Divider />
       <Card.Body>
-        <Text>Recorded {count} times total</Text>
         <Text>
-          Average {symptom.toLowerCase()} severity after eating: {avg_severity}
+          Recorded <b>{count}</b> times total
+        </Text>
+        <Text>
+          Average severity of {symptom.toLowerCase()} when recorded after eating{" "}
+          {name.toLowerCase()}: {avg_severity}
         </Text>
       </Card.Body>
       <Card.Divider />
