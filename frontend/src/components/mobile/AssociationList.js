@@ -60,10 +60,10 @@ const AssociationList = ({ windowSize }) => {
       ({ symptom }) => symptom === currentSymptom
     );
 
-    if (showFoods) updated = symptomData.top_foods;
+    if (showFoods) updated = [...symptomData.top_foods];
 
     if (showGroups) updated = [...updated, ...symptomData.top_groups];
-
+    if (!updated.length) return;
     updated = updated.sort((a, b) => b.lift - a.lift);
 
     setData(updated);
