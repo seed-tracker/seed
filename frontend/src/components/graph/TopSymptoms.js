@@ -23,7 +23,7 @@ const TopSymptoms = () => {
   const [showChart, setShowChart] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("allTime");
   const [animationStarted, setAnimationStarted] = useState(false);
-  
+
   const svgRef = useRef();
   const allSymptoms = useSelector(selectSymptoms);
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ const TopSymptoms = () => {
     symptomColors[symptomName] = colorPalette[colorIndex];
   }
 
-const handleGetAllTime = async (all) => {
+  const handleGetAllTime = async (all) => {
     setSelectedFilter("allTime");
     await dispatch(getUserStats("all"));
   };
@@ -63,7 +63,7 @@ const handleGetAllTime = async (all) => {
     await dispatch(getUserStats(365));
   };
 
-useEffect(() => {
+  useEffect(() => {
     const svg = select(svgRef.current);
     svg.selectAll("*").remove();
     const margin = { top: 140, right: 10, bottom: 200, left: 50 };
@@ -76,7 +76,7 @@ useEffect(() => {
     const yScale = scaleLinear()
       .domain([Math.max(...counts) * 2, 0])
       .range([height, 0]);
-    const xAxis = axisBottom(xScale).tickSizeOuter(0);
+    const xAxis = axisBottom(xScale);
     const yAxis = axisLeft(yScale).ticks(5);
 
     const xAxisLine = svg
