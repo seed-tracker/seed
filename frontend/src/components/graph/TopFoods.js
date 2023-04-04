@@ -96,81 +96,72 @@ const TopFoods = () => {
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    if (topFoods.length === 10) {
-      g.append("text")
-        .attr("x", -(height / 2))
-        .attr("y", -55)
-        .attr("font-size", "20px")
-        .attr("text-anchor", "middle")
-        .attr("transform", "rotate(-90)")
-        .text("Times Logged");
+    g.append("text")
+      .attr("x", -(height / 2))
+      .attr("y", -55)
+      .attr("font-size", "20px")
+      .attr("text-anchor", "middle")
+      .attr("transform", "rotate(-90)")
+      .text("Times Logged");
 
-      const xScale = scaleBand()
-        .domain(topFoods.map((food) => food.name))
-        .range([0, width]);
+    const xScale = scaleBand()
+      .domain(topFoods.map((food) => food.name))
+      .range([0, width]);
 
-      const yScale = scaleLinear()
-        .domain([Math.max(...counts) * 2, 0])
-        .range([0, height]);
+    const yScale = scaleLinear()
+      .domain([Math.max(...counts) * 2, 0])
+      .range([0, height]);
 
-      const xAxis = axisBottom(xScale);
-      const yAxis = axisLeft(yScale).ticks(5);
+    const xAxis = axisBottom(xScale);
+    const yAxis = axisLeft(yScale).ticks(5);
 
-      g.append("g")
-        .attr("transform", `translate(0, ${height})`)
-        .call(xAxis)
-        .selectAll("text")
-        .attr("transform", "rotate(-45)")
-        .attr("text-anchor", "end")
-        .attr("x", "-5")
-        .attr("y", "10");
+    g.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(xAxis)
+      .selectAll("text")
+      .attr("transform", "rotate(-45)")
+      .attr("text-anchor", "end")
+      .attr("x", "-5")
+      .attr("y", "10");
 
-      g.append("g").call(yAxis);
+    g.append("g").call(yAxis);
 
-      const nodes = g.selectAll("circle").data(topFoods);
+    const nodes = g.selectAll("circle").data(topFoods);
 
-      nodes
-        .enter()
-        .append("circle")
-        .attr("cx", (food) => xScale(food.name) + xScale.bandwidth() / 2)
-        .attr("cy", (food) => yScale(food.count))
-        .attr("r", 10)
-        .attr("fill", (d) => foodsColors[d.groups[0]])
-        .style("opacity", 0.3)
-        .transition()
-        .duration(1000)
-        .delay((d, i) => i * 1000)
-        .ease(easeElasticOut)
-        .attr("r", 20);
-      nodes.exit().remove();
+    nodes
+      .enter()
+      .append("circle")
+      .attr("cx", (food) => xScale(food.name) + xScale.bandwidth() / 2)
+      .attr("cy", (food) => yScale(food.count))
+      .attr("r", 10)
+      .attr("fill", (d) => foodsColors[d.groups[0]])
+      .style("opacity", 0.3)
+      .transition()
+      .duration(1000)
+      .delay((d, i) => i * 1000)
+      .ease(easeElasticOut)
+      .attr("r", 20);
+    nodes.exit().remove();
 
-      g.selectAll("circle").data(topFoods).join("circle");
+    g.selectAll("circle").data(topFoods).join("circle");
 
-      for (let i = 0; i < topFoods.length; i++) {
-        const currentFood = topFoods[i];
-        const groupName = currentFood.groups[0];
-        for (let j = 0; j < counts[i]; j++) {
-          g.append("circle")
-            .attr("cx", xScale(currentFood.name) + xScale.bandwidth() / 2)
-            .attr("cy", yScale(j))
-            .attr("fill", foodsColors[groupName])
-            .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
-          if (j === counts[i] - 1) {
-            g.append("text")
-              .attr("x", xScale(currentFood.name) + xScale.bandwidth() / 2)
-              .attr("y", yScale(j) - 30)
-              .attr("text-anchor", "middle")
-              .text("Count: " + counts[i]);
-          }
+    for (let i = 0; i < topFoods.length; i++) {
+      const currentFood = topFoods[i];
+      const groupName = currentFood.groups[0];
+      for (let j = 0; j < counts[i]; j++) {
+        g.append("circle")
+          .attr("cx", xScale(currentFood.name) + xScale.bandwidth() / 2)
+          .attr("cy", yScale(j + 1))
+          .attr("fill", foodsColors[groupName])
+          .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
+        if (j === counts[i] - 1) {
+          g.append("text")
+            .attr("x", xScale(currentFood.name) + xScale.bandwidth() / 2)
+            .attr("y", yScale(j + 1) - 30)
+            .attr("text-anchor", "middle")
+            .text("Count: " + counts[i]);
         }
       }
-    } else {
-      g.append("text")
-        .attr("x", `${width / 2}`)
-        .attr("y", `${height / 2}`)
-        .attr("font-size", "20px")
-        .attr("text-anchor", "middle")
-        .text("Sorry not enough data for this time period.");
     }
   }, [data]);
 
