@@ -10,8 +10,8 @@ import {
   getUserStats,
 } from "../../store/statsSlice";
 import * as d3 from "d3";
-import { Container, Text, Button } from "@nextui-org/react";
-import { HeaderText } from "../nextUI";
+import { Container, Text, Row } from "@nextui-org/react";
+import { HeaderText, Button } from "../nextUI";
 
 /**
  * This chart shows the user's top five symptoms with the highest counts during a certain time period and a legend.
@@ -23,7 +23,7 @@ const TopSymptoms = () => {
   const [showChart, setShowChart] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("allTime");
   const [animationStarted, setAnimationStarted] = useState(false);
-
+  
   const svgRef = useRef();
   const allSymptoms = useSelector(selectSymptoms);
   const dispatch = useDispatch();
@@ -50,155 +50,128 @@ const TopSymptoms = () => {
     symptomColors[symptomName] = colorPalette[colorIndex];
   }
 
-  const handleGetAllTime = async (all) => {
+const handleGetAllTime = async (all) => {
     setSelectedFilter("allTime");
     await dispatch(getUserStats("all"));
   };
   const handleGetSixMonths = async (halfYear) => {
     setSelectedFilter("sixMonths");
     await dispatch(getUserStats(160));
-    if (!data.symptoms || data.symptoms.length <= 1) {
-      alert("No data currently to show");
-      setShowChart(false);
-    } else {
-      setShowChart(true);
-    }
   };
   const handleGetOneYear = async (oneYear) => {
     setSelectedFilter("oneYear");
     await dispatch(getUserStats(365));
   };
 
-  useEffect(() => {
+useEffect(() => {
     const svg = select(svgRef.current);
     svg.selectAll("*").remove();
     const margin = { top: 140, right: 10, bottom: 200, left: 50 };
     const width = 750 - margin.left - margin.right;
-    const height = 60 - margin.top - margin.bottom;
+    const height = 100 - margin.top - margin.bottom;
 
-    if (symptoms && symptoms.length >= 1) {
-      const xScale = scaleBand()
-        .domain(symptoms.map((symptom) => symptom.name))
-        .range([0, width]);
-      const yScale = scaleLinear()
-        .domain([Math.max(...counts) * 2, 0])
-        .range([height, 0]);
-      const xAxis = axisBottom(xScale).tickSizeOuter(0);
-      const yAxis = axisLeft(yScale).ticks(5);
+    const xScale = scaleBand()
+      .domain(symptoms.map((symptom) => symptom.name))
+      .range([0, width]);
+    const yScale = scaleLinear()
+      .domain([Math.max(...counts) * 2, 0])
+      .range([height, 0]);
+    const xAxis = axisBottom(xScale).tickSizeOuter(0);
+    const yAxis = axisLeft(yScale).ticks(5);
 
-      const xAxisLine = svg
-        .append("g")
-        .attr("transform", `translate(${margin.left * 2}, ${margin.top * 2})`)
-        .attr("class", "x-axis")
-        .call(xAxis); // make the x-axis
+    const xAxisLine = svg
+      .append("g")
+      .attr("transform", `translate(${margin.left * 2}, ${margin.top * 2})`)
+      .attr("class", "x-axis")
+      .call(xAxis); // make the x-axis
 
-      xAxisLine.selectAll("text").on("click", (event, d) => {
-        svg.select(".x-axis").transition().duration(500).call(xAxis);
-      });
+    xAxisLine.selectAll("text").on("click", (event, d) => {
+      svg.select(".x-axis").transition().duration(500).call(xAxis);
+    });
 
-      const yAxisLine = svg
-        .append("g")
-        .attr("transform", `translate(${margin.left * 2}, ${margin.top * 2})`)
-        .call(yAxis); // make the y-axis
+    const yAxisLine = svg
+      .append("g")
+      .attr("transform", `translate(${margin.left * 2}, ${margin.top * 2})`)
+      .call(yAxis); // make the y-axis
 
-      svg.selectAll(".tick text").on("click", (event, d) => {
-        svg.select(".x-axis").transition().duration(500).call(xAxis);
-      });
+    svg.selectAll(".tick text").on("click", (event, d) => {
+      svg.select(".x-axis").transition().duration(500).call(xAxis);
+    });
 
-      // Create lollipop chart
-      const g = svg
-        .append("g")
-        .attr(
-          "transform",
-          `translate(${xScale.bandwidth() / 2 + margin.left * 2}, ${
-            margin.top * 2
-          })`
-        );
+    // Create lollipop chart
+    const g = svg
+      .append("g")
+      .attr(
+        "transform",
+        `translate(${xScale.bandwidth() / 2 + margin.left * 2}, ${
+          margin.top * 2
+        })`
+      );
 
-      if (symptoms && symptoms.length >= 1) {
-        svg
-          .append("text")
-          .attr("x", height / 2)
-          .attr("y", margin.left)
-          .attr("font-size", "20px")
-          .attr("text-anchor", "middle")
-          .attr("transform", "rotate(-90)")
-          .text("Times Logged");
-      }
-  if (symptoms.length === 1){
+    svg
+      .append("text")
+      .attr("x", height / 2)
+      .attr("y", margin.left)
+      .attr("font-size", "20px")
+      .attr("text-anchor", "middle")
+      .attr("transform", "rotate(-90)")
+      .text("Times Logged");
 
-    g.append("circle")
-    .attr("cx", xScale(symptoms[0].name))
-    .attr("cy", yScale.range()[0])
-    .attr("r", 5)
-    .style("fill", symptomColors[symptoms[0].name])
-    .style("stroke", "none");
-} else{
-      g.selectAll("circle")
-        .data(symptoms)
-        .join(
-          (enter) =>
-            enter
-              .append("circle")
-              .attr("cx", (food) => xScale(food.name))
-              .attr("cy", (food) => yScale(food.count))
-              .attr("r", 0)
-              .attr("fill", (d) => symptomColors[d.name])
-              .style("opacity", 0.3)
-              .call((enter) =>
-                enter
-                  .transition()
-                  .duration(1000)
-                  .delay((d, i) => i * 1000)
-                  .ease(d3.easeElasticOut)
-                  .attr("r", 20)
-              ),
-          (update) =>
-            update.call((update) =>
-              update
+    g.selectAll("circle")
+      .data(symptoms)
+      .join(
+        (enter) =>
+          enter
+            .append("circle")
+            .attr("cx", (food) => xScale(food.name))
+            .attr("cy", (food) => yScale(food.count))
+            .attr("r", 0)
+            .attr("fill", (d) => symptomColors[d.name])
+            .style("opacity", 0.3)
+            .call((enter) =>
+              enter
                 .transition()
                 .duration(1000)
                 .delay((d, i) => i * 1000)
                 .ease(d3.easeElasticOut)
-                .attr("cx", (d) => xScale(d.name) + xScale.bandwidth() / 2)
-                .attr("cy", (d) => yScale(d.count))
+                .attr("r", 20)
             ),
-          (exit) =>
-            exit.call((exit) =>
-              exit
-                .transition()
-                .duration(1000)
-                .ease(d3.easeElasticOut)
-                .attr("r", 0)
-                .remove()
-            )
-        );
-        
+        (update) =>
+          update.call((update) =>
+            update
+              .transition()
+              .duration(1000)
+              .delay((d, i) => i * 1000)
+              .ease(d3.easeElasticOut)
+              .attr("cx", (d) => xScale(d.name) + xScale.bandwidth() / 2)
+              .attr("cy", (d) => yScale(d.count))
+          ),
+        (exit) =>
+          exit.call((exit) =>
+            exit
+              .transition()
+              .duration(1000)
+              .ease(d3.easeElasticOut)
+              .attr("r", 0)
+              .remove()
+          )
+      );
+
+    for (let i = 0; i < symptoms.length; i++) {
+      for (let j = 0; j < counts[i]; j++) {
+        g.append("circle")
+          .attr("cx", xScale(symptoms[i].name))
+          .attr("cy", yScale(j + 1))
+          .attr("fill", symptomColors[symptoms[i].name])
+          .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
+        if (j === counts[i] - 1) {
+          g.append("text") // Label the count of that symptom
+            .attr("x", xScale(symptoms[i].name))
+            .attr("y", yScale(j + 1) - 30)
+            .attr("text-anchor", "middle")
+            .text("Count: " + counts[i]);
         }
-        for (let i = 0; i < symptoms.length; i++) {
-          for (let j = 0; j < counts[i]; j++) {
-            g.append("circle")
-              .attr("cx", xScale(symptoms[i].name))
-              .attr("cy", yScale(j+1)) 
-              .attr("fill", symptomColors[symptoms[i].name])
-              .attr("r", j === counts[i] - 1 ? 8 : 2); 
-            if (j === counts[i] - 1) {
-              g.append("text") 
-                .attr("x", xScale(symptoms[i].name))
-                .attr("y", yScale(j+1) - 30) 
-                .attr("text-anchor", "middle")
-                .text("Count: " + counts[i]);
-            }
-          }
-        }
-    } else {
-      svg
-        .append("text")
-        .attr("x", `${width / 2 + margin.left}`)
-        .attr("y", `${-(height + margin.top)}`)
-        .attr("font-size", "20px")
-        .attr("text-anchor", "middle")
-        .text("Sorry not enough data for this time period.");
+      }
     }
   }, [data]);
 
@@ -261,40 +234,25 @@ const TopSymptoms = () => {
           <Button
             onPress={handleGetAllTime}
             type="button"
+            text="All Time"
             size="sm"
             aria-label="Button to filter chart top symptoms view by all time"
-            css={{
-              backgroundColor:
-                selectedFilter === "allTime" ? "#5b6c61" : "#7a918d",
-            }}
-          >
-            All Time
-          </Button>
+          />
           <Button
             onPress={handleGetSixMonths}
             type="button"
             size="sm"
             aria-label="Button to filter chart top symptoms view by six months"
-            css={{
-              backgroundColor:
-                selectedFilter === "sixMonths" ? "#5b6c61" : "#7a918d",
-            }}
-          >
-            6 Months
-          </Button>
+            text="6 Months"
+          />
           <Button
             onPress={handleGetOneYear}
             // onPressChange={handlePressChange}
             type="button"
             aria-label="Button to filter chart top symptoms view by one year"
             size="sm"
-            css={{
-              backgroundColor:
-                selectedFilter === "oneYear" ? "#5b6c61" : "#7a918d",
-            }}
-          >
-            1 Year
-          </Button>
+            text="1 Year"
+          />
         </Container>
       </Container>
     </>
