@@ -129,15 +129,16 @@ const CirclePacking = () => {
       }
     }
 
+
+    
     const leaf = svg // Select all groups and bind them to the data for the leaf nodes of the tree
       .selectAll("g")
       .data(root.leaves())
       .join("g")
-      .attr("transform", (d) => `translate(${d.x + 1},${d.y + 1})`);
+      .attr("transform", (d) => `translate(${d.x + 1},${d.y + 1})`)
 
     // Create a circle for each leaf node, with radius based on node size, fill color based on symptom color
     leaf
-
     .append("circle")
     .attr("fill", (d) => d.data.color)
     .attr("r", (d) => d.r)

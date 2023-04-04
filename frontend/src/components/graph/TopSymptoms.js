@@ -74,7 +74,7 @@ const TopSymptoms = () => {
     svg.selectAll("*").remove();
     const margin = { top: 140, right: 10, bottom: 200, left: 50 };
     const width = 750 - margin.left - margin.right;
-    const height = 60 - margin.top - margin.bottom;
+    const height = 100 - margin.top - margin.bottom;
 
     if (symptoms && symptoms.length >= 1) {
       const xScale = scaleBand()
