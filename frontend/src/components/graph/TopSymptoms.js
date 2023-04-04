@@ -21,6 +21,9 @@ import { HeaderText, Button } from "../nextUI";
  */
 const TopSymptoms = () => {
   const [showChart, setShowChart] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("allTime");
+  const [animationStarted, setAnimationStarted] = useState(false);
+  
   const svgRef = useRef();
   const allSymptoms = useSelector(selectSymptoms);
   const dispatch = useDispatch();
@@ -47,28 +50,25 @@ const TopSymptoms = () => {
     symptomColors[symptomName] = colorPalette[colorIndex];
   }
 
-  const handleGetAllTime = async (all) => {
+const handleGetAllTime = async (all) => {
+    setSelectedFilter("allTime");
     await dispatch(getUserStats("all"));
   };
   const handleGetSixMonths = async (halfYear) => {
-    await dispatch(getUserStats(180));
-    if (!data.symptoms || data.symptoms.length <= 1) {
-      alert("No data currently to show");
-      setShowChart(false);
-    } else {
-      setShowChart(true);
-    }
+    setSelectedFilter("sixMonths");
+    await dispatch(getUserStats(160));
   };
   const handleGetOneYear = async (oneYear) => {
+    setSelectedFilter("oneYear");
     await dispatch(getUserStats(365));
   };
 
-  useEffect(() => {
+useEffect(() => {
     const svg = select(svgRef.current);
     svg.selectAll("*").remove();
     const margin = { top: 140, right: 10, bottom: 200, left: 50 };
     const width = 750 - margin.left - margin.right;
-    const height = 60 - margin.top - margin.bottom;
+    const height = 100 - margin.top - margin.bottom;
 
     const xScale = scaleBand()
       .domain(symptoms.map((symptom) => symptom.name))
