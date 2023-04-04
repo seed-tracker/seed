@@ -168,13 +168,13 @@ const TopSymptoms = () => {
         for (let j = 0; j < counts[i]; j++) {
           g.append("circle")
             .attr("cx", xScale(symptoms[i].name))
-            .attr("cy", yScale(j))
+            .attr("cy", yScale(j + 1))
             .attr("fill", symptomColors[symptoms[i].name])
             .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
           if (j === counts[i] - 1) {
             g.append("text") // Label the count of that symptom
               .attr("x", xScale(symptoms[i].name))
-              .attr("y", yScale(j) - 30)
+              .attr("y", yScale(j + 1) - 30)
               .attr("text-anchor", "middle")
               .text("Count: " + counts[i]);
           }

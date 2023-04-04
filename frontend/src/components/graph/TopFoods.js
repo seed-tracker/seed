@@ -152,13 +152,13 @@ const TopFoods = () => {
         for (let j = 0; j < counts[i]; j++) {
           g.append("circle")
             .attr("cx", xScale(currentFood.name) + xScale.bandwidth() / 2)
-            .attr("cy", yScale(j))
+            .attr("cy", yScale(j + 1))
             .attr("fill", foodsColors[groupName])
             .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
           if (j === counts[i] - 1) {
             g.append("text")
               .attr("x", xScale(currentFood.name) + xScale.bandwidth() / 2)
-              .attr("y", yScale(j) - 30)
+              .attr("y", yScale(j + 1) - 30)
               .attr("text-anchor", "middle")
               .text("Count: " + counts[i]);
           }
