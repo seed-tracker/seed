@@ -30,7 +30,7 @@ const Demo = () => {
   };
 
   useEffect(() => {
-    if (user.username === "harperamanda") setLoading(false);
+    if (user.username === process.env.REACT_APP_DEMO_USER) setLoading(false);
     else if (authError) {
       setError("There was an issue logging you in.");
       setLoading(false);
