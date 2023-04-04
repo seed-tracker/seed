@@ -22,6 +22,8 @@ import { HeaderText } from "../nextUI";
 const TopSymptoms = () => {
   const [showChart, setShowChart] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("allTime");
+  const [animationStarted, setAnimationStarted] = useState(false);
+
   const svgRef = useRef();
   const allSymptoms = useSelector(selectSymptoms);
   const dispatch = useDispatch();
@@ -54,7 +56,7 @@ const TopSymptoms = () => {
   };
   const handleGetSixMonths = async (halfYear) => {
     setSelectedFilter("sixMonths");
-    await dispatch(getUserStats(180));
+    await dispatch(getUserStats(160));
     if (!data.symptoms || data.symptoms.length <= 1) {
       alert("No data currently to show");
       setShowChart(false);
@@ -74,7 +76,7 @@ const TopSymptoms = () => {
     const width = 750 - margin.left - margin.right;
     const height = 60 - margin.top - margin.bottom;
 
-    if (symptoms && symptoms.length > 1) {
+    if (symptoms && symptoms.length >= 1) {
       const xScale = scaleBand()
         .domain(symptoms.map((symptom) => symptom.name))
         .range([0, width]);
@@ -113,7 +115,7 @@ const TopSymptoms = () => {
           })`
         );
 
-      if (symptoms && symptoms.length > 0) {
+      if (symptoms && symptoms.length >= 1) {
         svg
           .append("text")
           .attr("x", height / 2)
@@ -123,7 +125,15 @@ const TopSymptoms = () => {
           .attr("transform", "rotate(-90)")
           .text("Times Logged");
       }
+  if (symptoms.length === 1){
 
+    g.append("circle")
+    .attr("cx", xScale(symptoms[0].name))
+    .attr("cy", yScale.range()[0])
+    .attr("r", 5)
+    .style("fill", symptomColors[symptoms[0].name])
+    .style("stroke", "none");
+} else{
       g.selectAll("circle")
         .data(symptoms)
         .join(
@@ -163,23 +173,24 @@ const TopSymptoms = () => {
                 .remove()
             )
         );
-
-      for (let i = 0; i < symptoms.length; i++) {
-        for (let j = 0; j < counts[i]; j++) {
-          g.append("circle")
-            .attr("cx", xScale(symptoms[i].name))
-            .attr("cy", yScale(j))
-            .attr("fill", symptomColors[symptoms[i].name])
-            .attr("r", j === counts[i] - 1 ? 8 : 2); // larger radius for last element
-          if (j === counts[i] - 1) {
-            g.append("text") // Label the count of that symptom
-              .attr("x", xScale(symptoms[i].name))
-              .attr("y", yScale(j) - 30)
-              .attr("text-anchor", "middle")
-              .text("Count: " + counts[i]);
+        
+        }
+        for (let i = 0; i < symptoms.length; i++) {
+          for (let j = 0; j < counts[i]; j++) {
+            g.append("circle")
+              .attr("cx", xScale(symptoms[i].name))
+              .attr("cy", yScale(j+1)) 
+              .attr("fill", symptomColors[symptoms[i].name])
+              .attr("r", j === counts[i] - 1 ? 8 : 2); 
+            if (j === counts[i] - 1) {
+              g.append("text") 
+                .attr("x", xScale(symptoms[i].name))
+                .attr("y", yScale(j+1) - 30) 
+                .attr("text-anchor", "middle")
+                .text("Count: " + counts[i]);
+            }
           }
         }
-      }
     } else {
       svg
         .append("text")
