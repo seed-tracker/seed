@@ -12,6 +12,7 @@ import EditProfile from "../components/EditProfile";
 import MealEntryOverview from "../components/MealEntryOverview";
 import SymptomEntryOverview from "../components/SymtomEntryOverview";
 import Sidebar from "../components/Sidebar";
+import Demo from "../components/Demo";
 import { Container } from "@nextui-org/react";
 import apiClient from "../client";
 
@@ -68,6 +69,7 @@ const AppRoutes = () => {
               <Sidebar />
               <Routes>
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/demo/login" element={<Demo />} />
                 <Route path="/add/symptom" element={<SymptomForm />} />
                 <Route path="/user/addFood" element={<MealForm />}></Route>
                 <Route
@@ -96,6 +98,7 @@ const AppRoutes = () => {
               <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/demo/login" element={<Demo />} />
                 <Route path="/*" element={<Home />} />
               </Routes>
             </Container>

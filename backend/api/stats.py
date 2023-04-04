@@ -134,12 +134,6 @@ def get_monthly_data(user):
         # get username from auth middleware
         username = user["username"]
 
-        # get months, or set to default (12)
-        months = request.args.get("months")
-        months = int(months) if months else 12
-
-        # find min date to search for
-        min_date = get_last_date(username) - relativedelta(months=months)
         delta = relativedelta(get_last_date(username), datetime.now())
 
         # get user's correlated symptoms
@@ -247,21 +241,21 @@ def get_monthly_data(user):
 
             if len(sym["top_foods"]):
                 data[i]["top_foods"] = get_food_data(
-                    "food", sym["top_foods"], username, min_date, delta.months
+                    "food", sym["top_foods"], username, delta.months
                 )
 
             if len(sym["top_groups"]):
                 data[i]["top_groups"] = get_food_data(
-                    "group", sym["top_groups"], username, min_date, delta.months
+                    "group", sym["top_groups"], username, delta.months
                 )
 
         return (
-            jsonify({"data": data, "max_months": get_date_range(username)}),
+            jsonify({"data": data}),
             200,
         )
 
     except Exception as e:
-        print(e)
+        print(str(e))
         return {
             "message": str(e),
             "error": "Error fetching user's monthly data",
@@ -284,31 +278,11 @@ def get_last_date(username):
     ][0]["datetime"]
 
 
-# get the total range of time that the user has been entering data in months
-def get_date_range(username):
-    range = relativedelta(
-        get_last_date(username),
-        [
-            m
-            for m in db.meals.aggregate(
-                [
-                    {"$match": {"username": username}},
-                    {"$sort": {"datetime": 1}},
-                    {"$project": {"datetime": 1}},
-                    {"$limit": 1},
-                ]
-            )
-        ][0]["datetime"],
-    )
-
-    return range.months + range.years * 12
-
-
 # array = array of foods to search
 # type = food or group
 # array = foods/groups to search
 # returns food/group data, grouped by month and year, including count
-def get_food_data(type, array, username, min_date, delta):
+def get_food_data(type, array, username, delta):
     pipeline = [
         {"$match": {"username": username}},
         {"$unwind": f"${type}s"},
@@ -353,4 +327,3 @@ def get_food_data(type, array, username, min_date, delta):
     ]
 
     return list(db.meals.aggregate(pipeline))
-

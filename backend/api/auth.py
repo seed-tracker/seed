@@ -125,3 +125,17 @@ def authenticate(user):
         return user, 200
     except Exception as e:
         return "Authentication failed", 401
+
+
+@auth.route("/demo", methods=["POST"])
+def login_demo():
+    try:
+        return {
+            "token": jwt.encode(
+                {"username": os.environ.get("DEMO_USER")}, secret, algorithm="HS256"
+            )
+        }, 200
+
+    except Exception as e:
+        print(str(e))
+        return "Authentication failed", 500
