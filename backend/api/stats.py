@@ -135,6 +135,7 @@ def get_monthly_data(user):
         username = user["username"]
 
         delta = relativedelta(get_last_date(username), datetime.now())
+        delta.months = 0
 
         # get user's correlated symptoms
         pipeline = [

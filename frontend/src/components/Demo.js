@@ -1,11 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { logout, me } from "../store/authSlice";
+import { me } from "../store/authSlice";
 import { useEffect, useState } from "react";
 import { PageLoading, HeaderText, Button } from "./nextUI";
 import { useNavigate } from "react-router-dom";
 import { Text, Card, Spacer } from "@nextui-org/react";
 import apiClient from "../client";
-import { clearStore } from "../store";
 
 const Demo = () => {
   const dispatch = useDispatch();
