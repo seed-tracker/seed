@@ -76,7 +76,6 @@ const ScatterPlot = ({ windowSize }) => {
   };
 
   const getMonthDiff = (array) => {
-    console.log(array);
     const date1 = new Date(array[0]);
     const date2 = new Date(array[1]);
 

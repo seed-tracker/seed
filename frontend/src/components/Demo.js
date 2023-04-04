@@ -44,16 +44,17 @@ const Demo = () => {
       <Card
         justify="center"
         align="center"
-        display="flex"
         css={{
           minWidth: "40vw",
           maxWidth: "70vw",
           maxWidth: "30rem",
           marginLeft: "9vw",
-          maxHeight: "30rem",
+          marginRight: "5vw",
           padding: "3rem",
           marginTop: "3rem",
           marginBottom: "5rem",
+          display: "inline-block",
+          height: "fit-content",
         }}
       >
         <HeaderText text="Welcome to Seed!" />
