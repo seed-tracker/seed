@@ -70,7 +70,7 @@ const TopSymptoms = () => {
     const width = 750 - margin.left - margin.right;
     const height = 60 - margin.top - margin.bottom;
 
-    if (symptoms && symptoms.length > 1) {
+    if (symptoms && symptoms.length > 0) {
       const xScale = scaleBand()
         .domain(symptoms.map((symptom) => symptom.name))
         .range([0, width]);
@@ -109,16 +109,14 @@ const TopSymptoms = () => {
           })`
         );
 
-      if (symptoms && symptoms.length > 0) {
-        svg
-          .append("text")
-          .attr("x", height / 2)
-          .attr("y", margin.left)
-          .attr("font-size", "20px")
-          .attr("text-anchor", "middle")
-          .attr("transform", "rotate(-90)")
-          .text("Times Logged");
-      }
+      svg
+        .append("text")
+        .attr("x", height / 2)
+        .attr("y", margin.left)
+        .attr("font-size", "20px")
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .text("Times Logged");
 
       g.selectAll("circle")
         .data(symptoms)
