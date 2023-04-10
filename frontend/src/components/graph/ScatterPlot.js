@@ -10,14 +10,14 @@ import { Container, Switch, Text, Spacer } from "@nextui-org/react";
  * @returns one <svg> connected scatter graph, switches for toggling which foods to show, buttons to toggle the symptom
  */
 const ScatterPlot = ({ windowSize }) => {
-  const { data: chartData, maxMonths } = useSelector((state) => state.scatter);
+  const { data: chartData } = useSelector((state) => state.scatter);
   const { data: corrData } = useSelector((state) => state.correlations);
   const [allData, setAllData] = useState([]);
   const [currentSymptom, setCurrentSymptom] = useState(null);
   const [dateRange, setDateRange] = useState([]);
   const [currentFoods, setCurrentFoods] = useState([]);
   const [legend, setLegend] = useState([]);
-  const [colorPalette, setColorPalette] = useState([
+  const colorPalette = [
     "#DC050C",
     "#882E72",
     "#eb38bf",
@@ -27,7 +27,8 @@ const ScatterPlot = ({ windowSize }) => {
     "#90C987",
     "#E8601C",
     "#DDAA33",
-  ]);
+  ];
+  const [maxMonths, setMaxMonths] = useState(null);
 
   const svgRef = useRef();
 
@@ -65,10 +66,24 @@ const ScatterPlot = ({ windowSize }) => {
       else setCurrentFoods([groupData[0].name || null]);
     }
 
-    setDateRange([
+    const dates = [
       symptomData.values[0].date,
       symptomData.values[symptomData.values.length - 1].date,
-    ]);
+    ];
+
+    setMaxMonths(getMonthDiff(dates));
+    setDateRange(dates);
+  };
+
+  const getMonthDiff = (array) => {
+    const date1 = new Date(array[0]);
+    const date2 = new Date(array[1]);
+
+    return Math.abs(
+      date1.getMonth() -
+        date2.getMonth() +
+        12 * (date1.getFullYear() - date2.getFullYear())
+    );
   };
 
   const createDate = (data) =>
@@ -309,14 +324,15 @@ const ScatterPlot = ({ windowSize }) => {
       }
     }
 
-    svg.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", -20) 
-    .attr("x", -200) 
-    .attr("dy", "1em")
-    .style("text-anchor", "middle")
-    .text("Times recorded per month")
-    .style("font-size", "20px");
+    svg
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", -20)
+      .attr("x", -200)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Times recorded per month")
+      .style("font-size", "20px");
 
     svg
       .append("text")
@@ -326,7 +342,6 @@ const ScatterPlot = ({ windowSize }) => {
       .text("Months")
       .attr("transform", `translate(70, 5)`)
       .style("font-size", "20px");
-
 
     const updateAxis = ({ target }) => {
       let newStartDate = new Date(dateRange[1]);
@@ -389,7 +404,7 @@ const ScatterPlot = ({ windowSize }) => {
             display="flex"
             css={{ padding: "0", marginTop: "3vh" }}
           >
-            <svg ref={svgRef} height="90%" width="90%"></svg>
+            <svg ref={svgRef} height="95%" width="95%"></svg>
           </Container>
           <Container
             className="switches"

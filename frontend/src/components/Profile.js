@@ -85,7 +85,8 @@ const Profile = () => {
   return (
     <Container
       display="flex"
-      align="center"
+      align="flex-start"
+      justify="flex-start"
       css={{
         "@xs": {
           margin: 0,
@@ -175,7 +176,12 @@ const Profile = () => {
                       width: "auto",
                       padding: "1rem",
                       marginTop: "1rem",
-                      maxWidth: "90vw",
+                      minWidth: "70vw",
+                      maxWidth: "100vw",
+                      display: "inline",
+                      height: "fit-content",
+                      width: "fit-content",
+                      marginBottom: "2vw",
                     }}
                   >
                     <section style={{ display: getDisplay(0) }}>

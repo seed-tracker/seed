@@ -62,7 +62,7 @@ function MealEntryOverview() {
       css={{
         "@xs": {
           margin: 0,
-          padding: "1vw",
+          padding: "3vw",
           textAlign: "center",
           maxWidth: "100vw",
         },
@@ -72,7 +72,7 @@ function MealEntryOverview() {
           flexDirection: "column",
           maxWidth: "80vw",
         },
-        marginTop: "5vw",
+        padding: "3vw",
       }}
     >
       {loading ? (

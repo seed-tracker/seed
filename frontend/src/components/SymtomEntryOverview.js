@@ -88,18 +88,17 @@ function SymptomEntryOverview() {
     <Container
       css={{
         margin: 0,
-        padding: "1vw",
+        marginTop: "2vw",
         textAlign: "center",
         maxWidth: "100vw",
         "@sm": {
-          padding: "3vw",
+          padding: "1vw",
           flexDirection: "column",
           maxWidth: "69vw",
         },
         "@md": {
-          padding: "5vw",
+          padding: "1vw",
         },
-        marginTop: "5vw",
       }}
     >
       {loading ? (
@@ -117,7 +116,7 @@ function SymptomEntryOverview() {
           </aside>
           {symptoms && symptoms.length && !error ? (
             <>
-              <Grid.Container gap={3} justify="center" align="flex-end">
+              <Grid.Container gap={3} justify="center" align="center">
                 {symptoms.map((symptom) => {
                   return (
                     <Grid xs={4} key={uuidv4()} css={{ minWidth: "16rem" }}>

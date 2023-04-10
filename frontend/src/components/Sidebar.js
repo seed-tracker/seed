@@ -19,6 +19,7 @@ const Sidebar = () => {
           flexWrap: "wrap",
           flexDirection: "row",
           maxWidth: "100vw",
+          height: "fit-content",
         },
         "@sm": {
           gap: "1rem",
