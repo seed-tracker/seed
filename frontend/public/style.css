@@ -1,0 +1,180 @@
+/* * {
+  /* border: 1px solid #555555;
+} */
+
+@font-face {
+  font-family: "Lovechild";
+  src: url(./Lovechild-Regular.otf);
+}
+
+@font-face {
+  font-family: "Euclid Regular";
+  src: url(./EuclidCircularB-Regular.otf);
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Euclid Medium";
+  src: url(./EuclidCircularB-Medium.otf);
+  font-style: medium;
+}
+
+@font-face {
+  font-family: "Euclid Bold";
+  src: url(./EuclidCircularB-Bold.otf);
+  font-style: bold;
+}
+
+body {
+  font-family: "Euclid", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  min-height: 100vh;
+  /* background-color: #cfdbd1; */
+}
+
+text {
+  z-index: 1;
+}
+
+.mainpage-center {
+  background-image: url("greenmarble.jpeg");
+
+  width: 100vw;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.homehero {
+  display: flex;
+  background-image: url("hero-img.png");
+  margin: 0;
+  padding: 0;
+  height: 95vh;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.glassmorpheus {
+  /* From https://css.glass */
+  background: rgba(41, 124, 76, 0.23);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(11.9px);
+  -webkit-backdrop-filter: blur(11.9px);
+  border: 1px solid rgba(41, 124, 76, 0.26);
+}
+
+.glassmorpheus-graph {
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(11.9px);
+  -webkit-backdrop-filter: blur(11.9px);
+  border: 1px solid rgba(41, 124, 76, 0.26);
+}
+
+.glassmorpheus-graph1 {
+  /* From https://css.glass */
+  background: rgba(2, 80, 74, 0.31);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(2, 80, 74, 0.1);
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background-color: "#7a918d";
+}
+
+input[type="range"]::-moz-range-track {
+  background: "#7a918d";
+}
+
+.bookend {
+  background-image: url("seed-bg.png");
+
+  min-width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.nextui-switch--unchecked {
+  border-color: #7a918d !important;
+}
+
+.nextui-switch--checked {
+  background-color: #72c589cc !important;
+}
+
+.nextui-switch-circle {
+  background: #c2e6cd !important;
+  border: #7a918d !important;
+}
+
+@media (max-width: 640px) {
+  .bookend {
+    background-size: auto 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+  }
+
+  .homehero {
+    background-image: none;
+    height: fit-content;
+    padding: 2rem;
+  }
+}
+
+.nextui-dropdown-button {
+  color: #ffffff !important;
+  background: #7a918d !important;
+}
+
+.nextui-dropdown-menu {
+  background: #5b6c61cc !important;
+  background-color: #5b6c61cc !important;
+  color: #ffffff !important;
+}
+
+.nextui-dropdown-item {
+  color: #ffffff !important;
+}
+
+.nextui-button-text {
+  color: #ffffff !important;
+}
+
+th {
+  color: #444c38 !important;
+  font-size: small !important;
+}
+
+.nextui-input-helper-text {
+  letter-spacing: normal !important;
+}
+
+.nextui-pagination-highlight--active {
+  background: #7a918d !important;
+  background-color: #7a918d !important;
+  color: #ffffff !important;
+}
+
+.material-symbols-rounded {
+  color: #035043;
+}
+
+.svgContainer {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  vertical-align: middle;
+  overflow: hidden;
+}

@@ -1,2 +1,13 @@
 # ignore virtualenv
 /seed
+env
+.env
+.vscode
+*.pyc
+**/__pycache__
+**/seed/
+/venv
+**/...
+...
+static
+build
